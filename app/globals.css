@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background-rgb: 240, 240, 240;
-  --foreground-rgb: 20, 20, 20;
+  --background-rgb: rgb(226, 232, 240);
+  --foreground-rgb: rgb(2, 6, 23);
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -16,10 +16,7 @@
 } */
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+  color: var(--foreground-rgb);
+  background: var(--background-rgb);
 }
 
-.bg-chats {
-    background: url("./img/chats.png");
-}

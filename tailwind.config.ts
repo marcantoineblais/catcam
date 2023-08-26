@@ -10,7 +10,7 @@ const config: Config = {
         extend: {
             backgroundImage: {
                 'menu-icon': 'url(./img/menu-icon.png")',
-                // 'chats': "url('./img/chats.png')",
+                'chats': "url('./img/chats.png')",
             },
         },
     },

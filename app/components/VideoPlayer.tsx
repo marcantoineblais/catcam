@@ -1,39 +1,49 @@
-import { useEffect, useRef, useState } from "react"
-import "../style/VideoPlayer.scss"
+import React from "react"
 import Hls from "hls.js"
+import { useRouter } from "next/navigation"
 
-const VideoPlayer = ({ videoSource, videoRef }) => {
+export default function VideoPlayer({ videoSource, videoRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null> }) {
 
-    const [videoTime, setVideoTime] = useState("")
-    const [videoEnd, setVideoEnd] = useState("")
-    const [duration, setDuration] = useState("")
-    const [overlayTimeouts] = useState([])
-    const [dblClicksTimeouts] = useState([])
-    const videoContainerRef = useRef()
-    const overlayRef = useRef()
-    const playPause = useRef()
-    const videoSeekingRef = useRef()
-    const progressBarRef = useRef()
-    const bufferBarRef = useRef()
+    const [videoTime, setVideoTime] = React.useState<string>("")
+    const [videoEnd, setVideoEnd] = React.useState<string>("")
+    const [duration, setDuration] = React.useState<number>(0)
+    const [overlayTimeouts] = React.useState<any[]>([])
+    const [dblClicksTimeouts] = React.useState<any[]>([])
+    const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
+    const overlayRef = React.useRef<HTMLDivElement|null>(null)
+    const playPause = React.useRef<HTMLButtonElement|null>(null)
+    const videoSeekingRef = React.useRef<HTMLDivElement|null>(null)
+    const progressBarRef = React.useRef<HTMLDivElement|null>(null)
+    const bufferBarRef = React.useRef<HTMLDivElement|null>(null)
+    const router = useRouter()
 
-    useEffect(() => {
+    React.useEffect(() => {
         const video = videoRef.current
-        const progress = progressBarRef.current
-        progress.style.left = ""
-        progress.style.right = ""
+        // const progress = progressBarRef.current
+
+        if (!videoSource)
+            return
+
+        // progress.style.left = ""
+        // progress.style.right = ""
         
-        if (videoSource.format === "hls" && Hls.isSupported()) {
+        if (Hls.isSupported()) {
             const hls = new Hls()
-            hls.loadSource(videoSource.url)
+            hls.loadSource(videoSource)
             hls.attachMedia(video)
         } else 
-            video.src = videoSource.url
+            video.src = videoSource
+
+        console.log(video.src);
+        
     }, [videoSource, videoRef])
 
 
     // Resize streaming or recording video element when resizing window
-    useEffect(() => {
+    React.useEffect(() => {
         const video = videoContainerRef.current
+        if (!video)
+            return
 
         const resize = () => {
             video.style.height = (video.clientWidth / 16) * 9 + "px"
@@ -48,32 +58,22 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
     }, [videoSource])
 
 
-    const stopBodyScrolling = (e) => {
-        const video = videoRef.current
-
-        if (video.seeking)
-            e.stopPropagation()
-    }
-
     const setFullScreen = () => {
         const video = videoRef.current
+        if (!video)
+            return
 
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.mozRequestFullScreen) {
-            video.mozRequestFullScreen();
-        } else if (video.webkitRequestFullscreen) {
-            video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) {
-            video.msRequestFullscreen();
-        }
-
-        video.classList.remove("visible-important")
+        if (video.requestFullscreen)
+            video.requestFullscreen()
     }
 
     const playPauseVideo = async () => {
         const video = videoRef.current
         const overlay = overlayRef.current
+        const playPauseBtn = playPause.current
+
+        if (!video || !overlay || !playPauseBtn)
+            return
         
         if (video.ended)
             video.currentTime = 0
@@ -81,7 +81,7 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
         if (video.paused) {
             try {
                 await video.play()
-                playPause.current.classList.add("pause")
+                playPauseBtn.classList.add("pause")
                 overlay.classList.remove("visible-important")
             } catch (ex) {
                 window.location.reload()
@@ -89,204 +89,224 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
         } else if (!video.paused) {
             try {
                 video.pause()
-                playPause.current.classList.remove("pause")
+                playPauseBtn.classList.remove("pause")
             } catch (ex) {
                 window.location.reload()
             }
         }
     }
 
-    const getTimeString = (time) => {
-        let seconds = Math.floor(time % 60).toString()
-        const minutes = Math.floor(time / 60).toString()
+    // const getTimeString = (time: number) => {
+    //     let seconds = Math.floor(time % 60).toString()
+    //     const minutes = Math.floor(time / 60).toString()
 
-        if (seconds.length === 1)
-            seconds = "0" + seconds
+    //     if (seconds.length === 1)
+    //         seconds = "0" + seconds
 
-        return minutes + ":" + seconds
-    }
+    //     return minutes + ":" + seconds
+    // }
 
-    const updateDuration = () => {
-        const video = videoRef.current
-        const time = video.duration
+    // const updateDuration = () => {
+    //     const video = videoRef.current
+    //     if (!video)
+    //         return
 
-        setDuration(time)
-        setVideoEnd(getTimeString(time))
-    }
+    //     const time = video.duration
 
-    const updateProgressBar = () => {
-        if (duration <= 0)
-            return
+    //     setDuration(time)
+    //     setVideoEnd(getTimeString(time))
+    // }
 
-        const video = videoRef.current
-        const time = video.currentTime
-        const progress = progressBarRef.current
+    // const updateProgressBar = () => {
+    //     const video = videoRef.current
+    //     const progress = progressBarRef.current
+        
+    //     if (duration <= 0 || !video || !progress)
+    //         return
 
-        progress.style.width = (time / duration) * 100 + "%"
-        setVideoTime(getTimeString(time))
-    }
+    //     const time = video.currentTime
 
-    const updateBufferBar = () => {
-        const video = videoRef.current
-        const buffer = bufferBarRef.current
-        const buffers = video.buffered
+    //     progress.style.width = (time / duration) * 100 + "%"
+    //     setVideoTime(getTimeString(time))
+    // }
 
-        if (!buffers.length)
-            return
+    // const updateBufferBar = () => {
+    //     const video = videoRef.current
+    //     const buffer = bufferBarRef.current
+        
+    //     if (!video || !buffer)
+    //     return
+    
+    //     const buffers = video.buffered
 
-        const end = buffers.end(buffers.length - 1)
-        const videoDuration = video.duration || end
+    //     if (!buffers.length)
+    //         return
 
-        let position = 100 - ((end / videoDuration) * 100)
+    //     const end = buffers.end(buffers.length - 1)
+    //     const videoDuration = video.duration || end
 
-        if (position > 100)
-            position = 100
-        else if (position < 0)
-            position = 0
+    //     let position = 100 - ((end / videoDuration) * 100)
 
-        buffer.style.left = 0
-        buffer.style.right = position + "%"
-        setDuration(videoDuration)
-        setVideoEnd(getTimeString(videoDuration))
-    }
+    //     if (position > 100)
+    //         position = 100
+    //     else if (position < 0)
+    //         position = 0
 
-    const toggleOverlay = (e) => {
-        e.stopPropagation()
+    //     buffer.style.left = "0"
+    //     buffer.style.right = position + "%"
+    //     setDuration(videoDuration)
+    //     setVideoEnd(getTimeString(videoDuration))
+    // }
 
-        const overlay = overlayRef.current
+    // const toggleOverlay = (e: React.MouseEvent) => {
+    //     e.stopPropagation()
+    //     const overlay = overlayRef.current
 
-        if (overlay.classList.contains("video-overlay-visible"))
-            hideOverlay(e)
-        else
-            showOverlay(e)
-    }
+    //     if (!overlay)
+    //         return
 
-    const hideOverlay = (e) => {
-        e.stopPropagation()
-        const overlay = overlayRef.current
+    //     if (overlay.classList.contains("video-overlay-visible"))
+    //         hideOverlay(e)
+    //     else
+    //         showOverlay(e)
+    // }
 
-        overlay.classList.remove("video-overlay-visible")
-        overlay.classList.remove("visible-important")
-    }
+    // const hideOverlay = (e: React.MouseEvent) => {
+    //     e.stopPropagation()
+    //     const overlay = overlayRef.current
 
-    const showOverlay = (e) => {
-        e.stopPropagation()
+    //     if (!overlay)
+    //         return
 
-        const overlay = overlayRef.current
-        let n;
+    //     overlay.classList.remove("video-overlay-visible")
+    //     overlay.classList.remove("visible-important")
+    // }
 
-        overlayTimeouts.forEach(t => {
-            clearTimeout(t)
-            n ++
-        })
-        overlayTimeouts.splice(0, n)
-        overlay.classList.add("video-overlay-visible")
+    // const showOverlay = (e: React.MouseEvent) => {
+    //     e.stopPropagation()
 
-        overlayTimeouts.push(setTimeout(() => {
-            overlay.classList.remove("video-overlay-visible")
-        }, 2000))
-    }
+    //     const overlay = overlayRef.current
+    //     let n: number = 0;
 
-    const videoSeeking = async (e) => {
-        const video = videoRef.current
-        const paused = video.paused
-        const seekBar = videoSeekingRef.current
-        const progress = progressBarRef.current
-        const start = seekBar.getBoundingClientRect().left
-        const end = seekBar.getBoundingClientRect().right
+    //     if (!overlay)
+    //         return
 
-        if (video.seeking)
-            return
+    //     overlayTimeouts.forEach(t => {
+    //         clearTimeout(t)
+    //         n ++
+    //     })
+    //     overlayTimeouts.splice(0, n)
+    //     overlay.classList.add("video-overlay-visible")
 
-        if (!paused) {
-            try {
-                await video.pause()
-            } catch (ex) {
-                window.location.reload()
-            }
-        }
+    //     overlayTimeouts.push(setTimeout(() => {
+    //         overlay.classList.remove("video-overlay-visible")
+    //     }, 2000))
+    // }
 
-        const seek = (e) => {
-            const position = e.clientX || e.touches[0].clientX
+    // const videoSeeking = async (e) => {
+    //     const video = videoRef.current
+    //     const seekBar = videoSeekingRef.current
 
-            if (position >= start && position <= end) {
-                const progressFraction = 1 - ((end - position) / (end - start))
-                progress.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * duration
-            }
-        }
+    //     if (!video || !seekBar)
+    //         return
 
-        const clear = () => {
-            window.removeEventListener("mouseup", clear)
-            window.removeEventListener("mousemove", seek)
-            seekBar.removeEventListener("touchend", clear)
-            seekBar.removeEventListener("touchmove", seek)
-            if (!paused) {
-                playPauseVideo()
-            }
-        }
+    //     const paused = video.paused
+    //     const progress = progressBarRef.current
+    //     const start = seekBar.getBoundingClientRect().left
+    //     const end = seekBar.getBoundingClientRect().right
 
-        window.addEventListener("mouseup", clear)
-        window.addEventListener("mousemove", seek)
-        seekBar.addEventListener("touchend", clear)
-        seekBar.addEventListener("touchmove", seek)
-        seek(e)
-    }
+    //     if (video.seeking)
+    //         return
 
-    const seekOnDblClick = (e, value) => {
-        e.stopPropagation()
+    //     if (!paused) {
+    //         try {
+    //             await video.pause()
+    //         } catch (ex) {
+    //             router.refresh()
+    //         }
+    //     }
 
-        const target = e.currentTarget
-        const removeTimeouts = () => {
-            let n
-            dblClicksTimeouts.forEach(t => {
-                clearTimeout(t)
-                n++
-            })
-            dblClicksTimeouts.splice(0, n)
-        }
-        const seek = (e) => {
-            e.stopPropagation()
-            removeTimeouts()
-            showOverlay(e)
-            target.removeEventListener("click", seek)
-            const video = videoRef.current
-            const time = video.currentTime
+    //     const seek = (e: React.MouseEvent|React.TouchEvent) => {
+    //         const position = e.clientX || e.touches[0].clientX
 
-            if (value > 0 && value + time <= duration)
-                video.currentTime = time + value
-            else if (value < 0 && value + time >= 0)
-                video.currentTime = time + value
-        }
+    //         if (position >= start && position <= end) {
+    //             const progressFraction = 1 - ((end - position) / (end - start))
+    //             progress.style.width = progressFraction * 100 + "%"
+    //             video.currentTime = progressFraction * duration
+    //         }
+    //     }
 
-        if (dblClicksTimeouts.length === 0)
-            toggleOverlay(e)
+    //     const clear = () => {
+    //         window.removeEventListener("mouseup", clear)
+    //         window.removeEventListener("mousemove", seek)
+    //         seekBar.removeEventListener("touchend", clear)
+    //         seekBar.removeEventListener("touchmove", seek)
+    //         if (!paused) {
+    //             playPauseVideo()
+    //         }
+    //     }
 
-        target.addEventListener("click", seek)
-        overlayTimeouts.push(setTimeout(() => {
-            removeTimeouts()
-            target.removeEventListener("click", seek)
-        }, 300))
-    }
+    //     window.addEventListener("mouseup", clear)
+    //     window.addEventListener("mousemove", seek)
+    //     seekBar.addEventListener("touchend", clear)
+    //     seekBar.addEventListener("touchmove", seek)
+    //     seek(e)
+    // }
 
-    const onVideoEnd = () => {
-        playPause.current.classList.remove("pause")
-        overlayRef.current.classList.add("visible-important")
-    }
+    // const seekOnDblClick = (e, value) => {
+    //     e.stopPropagation()
+
+    //     const target = e.currentTarget
+    //     const removeTimeouts = () => {
+    //         let n
+    //         dblClicksTimeouts.forEach(t => {
+    //             clearTimeout(t)
+    //             n++
+    //         })
+    //         dblClicksTimeouts.splice(0, n)
+    //     }
+    //     const seek = (e) => {
+    //         e.stopPropagation()
+    //         removeTimeouts()
+    //         showOverlay(e)
+    //         target.removeEventListener("click", seek)
+    //         const video = videoRef.current
+    //         const time = video.currentTime
+
+    //         if (value > 0 && value + time <= duration)
+    //             video.currentTime = time + value
+    //         else if (value < 0 && value + time >= 0)
+    //             video.currentTime = time + value
+    //     }
+
+    //     if (dblClicksTimeouts.length === 0)
+    //         toggleOverlay(e)
+
+    //     target.addEventListener("click", seek)
+    //     overlayTimeouts.push(setTimeout(() => {
+    //         removeTimeouts()
+    //         target.removeEventListener("click", seek)
+    //     }, 300))
+    // }
+
+    // const onVideoEnd = () => {
+    //     playPause.current.classList.remove("pause")
+    //     overlayRef.current.classList.add("visible-important")
+    // }
 
     return (
-        <div className="video-player">
-            <div ref={videoContainerRef} className="video-container" onTouchMove={(e) => stopBodyScrolling(e)}>
+        <div className="flex justify-center">
+            <div ref={videoContainerRef} className="video-container">
                 <video
-                    ref={videoRef}
-                    onTimeUpdate={() => updateProgressBar()}
-                    onProgress={() => updateBufferBar()}
-                    onLoadedMetadata={() => updateDuration()}
-                    onLoadedData={() => playPauseVideo()}
-                    onPause={() => overlayRef.current.classList.add("visible-important")}
-                    onEnded={() => onVideoEnd()}
-                    onMouseMove={(e) => showOverlay(e)}
-                    onClick={(e) => showOverlay(e)}
+                    // ref={videoRef}
+                    // onTimeUpdate={() => updateProgressBar()}
+                    // onProgress={() => updateBufferBar()}
+                    // onLoadedMetadata={() => updateDuration()}
+                    // onLoadedData={() => playPauseVideo()}
+                    // onPause={() => overlayRef.current.classList.add("visible-important")}
+                    // onEnded={() => onVideoEnd()}
+                    // onMouseMove={(e) => showOverlay(e)}
+                    // onClick={(e) => showOverlay(e)}
                     autoPlay
                     muted
                     playsInline
@@ -297,10 +317,10 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
                 </video>
                 
                 <div
-                    className="video-overlay"
+                    className="video-overlay hidden"
                     ref={overlayRef}
-                    onMouseMove={(e) => showOverlay(e)}
-                    onClick={(e) => toggleOverlay(e)}
+                    // onMouseMove={(e) => showOverlay(e)}
+                    // onClick={(e) => toggleOverlay(e)}
                 >
                     <div className="button-bg" onClick={() => playPauseVideo()}>
                         <button
@@ -313,9 +333,9 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
                         <div id="current" className="time">{videoTime}</div>
                         <div
                             className="bars"
-                            onMouseDown={(e) => videoSeeking(e)}
-                            onTouchStart={(e) => videoSeeking(e)}
-                            onTouchMove={(e) => e.stopPropagation(e)}
+                            // onMouseDown={(e) => videoSeeking(e)}
+                            // onTouchStart={(e) => videoSeeking(e)}
+                            // onTouchMove={(e) => e.stopPropagation()}
                         >
                             <div ref={videoSeekingRef} className="seeking">
                                 <div ref={bufferBarRef} className="buffer"></div>
@@ -330,15 +350,13 @@ const VideoPlayer = ({ videoSource, videoRef }) => {
                 </div>
                 <div
                     className="tap-backward"
-                    onClick={(e) => seekOnDblClick(e, -10)}
+                    // onClick={(e) => seekOnDblClick(e, -10)}
                 ></div>
                     <div
                         className="tap-forward"
-                        onClick={(e) => seekOnDblClick(e, 10)}
+                        // onClick={(e) => seekOnDblClick(e, 10)}`
                 ></div>
             </div>
         </div>
     )
 }
-
-export default VideoPlayer
