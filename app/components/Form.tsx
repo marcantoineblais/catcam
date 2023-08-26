@@ -31,8 +31,6 @@ export default function Form() {
         const email: string = form.email.value
         const password: string = form.password.value
         const machineID: string|null = ip
-        const now: Date = new Date(Date.now())
-        const exp = isStoreCreds ? now.setMonth(now.getMonth() + 1) : now.setMinutes(now.getMinutes() + 15)
         
         
         const body: {
@@ -54,15 +52,18 @@ export default function Form() {
         })
         const data = await response.json()
         
-        if (data.ok) {
+        if (data.ok && isStoreCreds) {
             secureLocalStorage.setItem("object", {
-                user: {
-                    auth_token: data.$user.auth_token,
-                    ke: data.$user.ke,
-                    uid: data.$user.uid,
-                },    
-                ipAddress: ip,
-                exp: exp })
+                auth_token: data.$user.auth_token,
+                ke: data.$user.ke,
+                uid: data.$user.uid,    
+                ipAddress: ip
+            })
+            router.push("/")
+        } else if (data.ok) {
+            sessionStorage.setItem("auth_token", data.$user.auth_token)
+            sessionStorage.setItem("ke", data.$user.ke)
+            sessionStorage.setItem("uid", data.$user.uid)
             router.push("/")
         }
         else {

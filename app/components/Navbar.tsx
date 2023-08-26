@@ -27,7 +27,8 @@ const Navbar = () => {
     }, [])
 
     function logout() {
-        secureLocalStorage.removeItem("object")
+        secureLocalStorage.clear()
+        sessionStorage.clear()
         router.push('/login')
     }
 
