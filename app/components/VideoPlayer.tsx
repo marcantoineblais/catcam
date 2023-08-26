@@ -320,12 +320,12 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={(e) => showOverlay(e)}
                 >
-                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 w-24 h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={(e) => playPauseVideo(e)}>
-                        <img className="absolute p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
-                        <img className="absolute p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
+                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={(e) => playPauseVideo(e)}>
+                        <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
+                        <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
                     </div>
 
-                    <div className="px-5 absolute h-12 bottom-0 w-full flex gap-8 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
+                    <div className="px-5 absolute h-8 bottom-0 w-full flex gap-8 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
                         <div className="text-neutral-50">{videoTime}</div>
                         <div
                             className="flex items-center flex-grow"
@@ -341,7 +341,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
                             </div>
                         </div>
                         <div className="text-neutral-50">{videoEnd}</div>
-                        <img src="Fullscreen.svg" className="h-full py-3 object-contain cursor-pointer" onClick={() => setFullScreen()} />
+                        <img src="Fullscreen.svg" className="h-full py-1 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
                 </div>
                 <div

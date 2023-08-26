@@ -26,7 +26,7 @@ export default function Form() {
         if (!form)
             return
 
-        const isStoreCreds: boolean = form.rememberMe.checked
+        const rememberMe: boolean = form.rememberMe.checked
         const baseurl: string = 'https://catcam.source.marchome.xyz/?json=true'
         const email: string = form.email.value
         const password: string = form.password.value
@@ -52,7 +52,7 @@ export default function Form() {
         })
         const data = await response.json()
         
-        if (data.ok && isStoreCreds) {
+        if (data.ok && rememberMe) {
             secureLocalStorage.setItem("object", {
                 auth_token: data.$user.auth_token,
                 ke: data.$user.ke,
@@ -60,15 +60,18 @@ export default function Form() {
                 ipAddress: ip
             })
             router.push("/")
+            return
         } else if (data.ok) {
-            sessionStorage.setItem("auth_token", data.$user.auth_token)
-            sessionStorage.setItem("ke", data.$user.ke)
-            sessionStorage.setItem("uid", data.$user.uid)
+            sessionStorage.setItem("session", JSON.stringify({
+                auth_token: data.$user.auth_token,
+                ke: data.$user.ke,
+                uid: data.$user.uid,    
+                ipAddress: ip
+            }))
             router.push("/")
-        }
-        else {
+            return
+        } else {
             form.password.value = ""
-            form.classList.add("alert")
         }
     }
 
@@ -84,22 +87,22 @@ export default function Form() {
                 <h1 className="w-full pb-10 text-center text-3xl">Login</h1>
 
                 <label className="flex pt-3">
-                <p className="w-32">Email</p>
-                <input className="px-3 grow bg-neutral-200 rounded" name="email"></input>
+                    <p className="w-32">Email</p>
+                    <input className="px-3 grow bg-neutral-200 rounded" name="email"></input>
                 </label>
 
                 <label className="flex pt-3">
-                <p className="w-32">Password</p>
-                <input className="px-3 grow bg-neutral-200 rounded" name="password" type="password"></input>
+                    <p className="w-32">Password</p>
+                    <input className="px-3 grow bg-neutral-200 rounded" name="password" type="password"></input>
                 </label>
                 
                 <label className="flex pt-3">
-                <p className="w-32">Remember me</p>
-                <input  className="ml-3 px-3 bg-neutral-200 rounded" id="remember-me" name="rememberMe" type="checkbox"></input>
+                    <p className="w-32">Remember me</p>
+                    <input className="ml-3 px-3 bg-neutral-200 rounded" id="remember-me" name="rememberMe" type="checkbox"></input>
                 </label>
                 
                 <div className="pt-5 flex justify-center">
-                <button className="py-2 w-32 bg-sky-800 text-neutral-50 rounded duration-200 hover:bg-sky-700" ref={submitRef} form="login" type="submit" onClick={() => {submitForm()}}>Submit</button>
+                    <button className="py-2 w-32 bg-sky-800 text-neutral-50 rounded duration-200 hover:bg-sky-700" ref={submitRef} form="login" type="submit" onClick={() => {submitForm()}}>Submit</button>
                 </div>
             </form>
         </div>

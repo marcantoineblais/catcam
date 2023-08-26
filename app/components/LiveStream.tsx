@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
 import VideoPlayer from "./VideoPlayer";
 import requestJSON from "../util/requestJSON"
