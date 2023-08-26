@@ -11,51 +11,50 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
     const [dblClicksTimeouts] = React.useState<any[]>([])
     const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
     const overlayRef = React.useRef<HTMLDivElement|null>(null)
-    const playPause = React.useRef<HTMLButtonElement|null>(null)
+    const playBtnRef = React.useRef<HTMLDivElement|null>(null)
     const videoSeekingRef = React.useRef<HTMLDivElement|null>(null)
     const progressBarRef = React.useRef<HTMLDivElement|null>(null)
     const bufferBarRef = React.useRef<HTMLDivElement|null>(null)
     const router = useRouter()
 
+
     React.useEffect(() => {
         const video = videoRef.current
-        // const progress = progressBarRef.current
+        const progress = progressBarRef.current
 
-        if (!videoSource)
+        if (!video || !videoSource || !progress)
             return
 
-        // progress.style.left = ""
-        // progress.style.right = ""
+        progress.style.left = ""
+        progress.style.right = ""
         
         if (Hls.isSupported()) {
             const hls = new Hls()
             hls.loadSource(videoSource)
             hls.attachMedia(video)
+            
         } else 
             video.src = videoSource
-
-        console.log(video.src);
-        
     }, [videoSource, videoRef])
 
 
     // Resize streaming or recording video element when resizing window
     React.useEffect(() => {
-        const video = videoContainerRef.current
-        if (!video)
+        const container = videoContainerRef.current
+        if (!container)
             return
 
         const resize = () => {
-            video.style.height = (video.clientWidth / 16) * 9 + "px"
+            container.style.height = (container.clientWidth / 16) * 9 + "px"
         }
 
-        video.style.height = (video.clientWidth / 16) * 9 + "px"
+        container.style.height = (container.clientWidth / 16) * 9 + "px"
         window.addEventListener('resize', resize)
 
         return () => {
             window.removeEventListener('resize', resize)
         }
-    }, [videoSource])
+    }, [videoContainerRef])
 
 
     const setFullScreen = () => {
@@ -67,12 +66,12 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
             video.requestFullscreen()
     }
 
-    const playPauseVideo = async () => {
+    const playPauseVideo = async (e: React.MouseEvent) => {
         const video = videoRef.current
         const overlay = overlayRef.current
-        const playPauseBtn = playPause.current
+        const playBtn = playBtnRef.current
 
-        if (!video || !overlay || !playPauseBtn)
+        if (!video || !overlay || !playBtn)
             return
         
         if (video.ended)
@@ -81,127 +80,127 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         if (video.paused) {
             try {
                 await video.play()
-                playPauseBtn.classList.add("pause")
-                overlay.classList.remove("visible-important")
             } catch (ex) {
-                window.location.reload()
+                router.refresh()
             }
         } else if (!video.paused) {
             try {
                 video.pause()
-                playPauseBtn.classList.remove("pause")
             } catch (ex) {
-                window.location.reload()
+                router.refresh()
             }
+        }
+
+        for (let i: number = 0; i < playBtn.children.length; i++){
+            playBtn.children[i].classList.toggle("opacity-0")
         }
     }
 
-    // const getTimeString = (time: number) => {
-    //     let seconds = Math.floor(time % 60).toString()
-    //     const minutes = Math.floor(time / 60).toString()
+    const getTimeString = (time: number) => {
+        let seconds = Math.floor(time % 60).toString()
+        const minutes = Math.floor(time / 60).toString()
 
-    //     if (seconds.length === 1)
-    //         seconds = "0" + seconds
+        if (seconds.length === 1)
+            seconds = "0" + seconds
 
-    //     return minutes + ":" + seconds
-    // }
+        return minutes + ":" + seconds
+    }
 
-    // const updateDuration = () => {
-    //     const video = videoRef.current
-    //     if (!video)
-    //         return
+    const updateDuration = () => {
+        const video = videoRef.current
+        if (!video)
+            return
 
-    //     const time = video.duration
+        const time = video.duration
 
-    //     setDuration(time)
-    //     setVideoEnd(getTimeString(time))
-    // }
+        setDuration(time)
+        setVideoEnd(getTimeString(time))
+    }
 
-    // const updateProgressBar = () => {
-    //     const video = videoRef.current
-    //     const progress = progressBarRef.current
+    const updateProgressBar = () => {
+        const video = videoRef.current
+        const progress = progressBarRef.current
         
-    //     if (duration <= 0 || !video || !progress)
-    //         return
+        if (duration <= 0 || !video || !progress)
+            return
 
-    //     const time = video.currentTime
+        const time = video.currentTime
 
-    //     progress.style.width = (time / duration) * 100 + "%"
-    //     setVideoTime(getTimeString(time))
-    // }
+        progress.style.width = (time / duration) * 100 + "%"
+        setVideoTime(getTimeString(time))
+    }
 
-    // const updateBufferBar = () => {
-    //     const video = videoRef.current
-    //     const buffer = bufferBarRef.current
+    const updateBufferBar = () => {
+        const video = videoRef.current
+        const buffer = bufferBarRef.current
         
-    //     if (!video || !buffer)
-    //     return
+        if (!video || !buffer)
+        return
     
-    //     const buffers = video.buffered
+        const buffers = video.buffered
 
-    //     if (!buffers.length)
-    //         return
+        if (!buffers.length)
+            return
 
-    //     const end = buffers.end(buffers.length - 1)
-    //     const videoDuration = video.duration || end
+        const end = buffers.end(buffers.length - 1)
+        const videoDuration = video.duration || end
 
-    //     let position = 100 - ((end / videoDuration) * 100)
+        let position = 100 - ((end / videoDuration) * 100)
 
-    //     if (position > 100)
-    //         position = 100
-    //     else if (position < 0)
-    //         position = 0
+        if (position > 100)
+            position = 100
+        else if (position < 0)
+            position = 0
 
-    //     buffer.style.left = "0"
-    //     buffer.style.right = position + "%"
-    //     setDuration(videoDuration)
-    //     setVideoEnd(getTimeString(videoDuration))
-    // }
+        buffer.style.left = "0"
+        buffer.style.right = position + "%"
+        setDuration(videoDuration)
+        setVideoEnd(getTimeString(videoDuration))
+    }
 
-    // const toggleOverlay = (e: React.MouseEvent) => {
-    //     e.stopPropagation()
-    //     const overlay = overlayRef.current
+    const toggleOverlay = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        const overlay = overlayRef.current
 
-    //     if (!overlay)
-    //         return
+        if (!overlay)
+            return
 
-    //     if (overlay.classList.contains("video-overlay-visible"))
-    //         hideOverlay(e)
-    //     else
-    //         showOverlay(e)
-    // }
+        if (overlay.classList.contains("video-overlay-visible"))
+            hideOverlay(e)
+        else
+            showOverlay(e)
+    }
 
-    // const hideOverlay = (e: React.MouseEvent) => {
-    //     e.stopPropagation()
-    //     const overlay = overlayRef.current
+    const hideOverlay = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        const overlay = overlayRef.current
 
-    //     if (!overlay)
-    //         return
+        if (!overlay)
+            return
 
-    //     overlay.classList.remove("video-overlay-visible")
-    //     overlay.classList.remove("visible-important")
-    // }
+        overlay.classList.add("invisible")
+    }
 
-    // const showOverlay = (e: React.MouseEvent) => {
-    //     e.stopPropagation()
+    const showOverlay = (e: React.MouseEvent) => {
+        e.stopPropagation()
 
-    //     const overlay = overlayRef.current
-    //     let n: number = 0;
+        const overlay = overlayRef.current
+        let n: number = 0;
 
-    //     if (!overlay)
-    //         return
+        if (!overlay)
+            return
 
-    //     overlayTimeouts.forEach(t => {
-    //         clearTimeout(t)
-    //         n ++
-    //     })
-    //     overlayTimeouts.splice(0, n)
-    //     overlay.classList.add("video-overlay-visible")
+        overlayTimeouts.forEach(t => {
+            clearTimeout(t)
+            n ++
+        })
+        overlayTimeouts.splice(0, n)
+        overlay.classList.remove("opacity-0")
 
-    //     overlayTimeouts.push(setTimeout(() => {
-    //         overlay.classList.remove("video-overlay-visible")
-    //     }, 2000))
-    // }
+        overlayTimeouts.push(setTimeout(() => {
+            overlay.classList.add("opacity-0")
+        }, 2000))
+    }
 
     // const videoSeeking = async (e) => {
     //     const video = videoRef.current
@@ -289,24 +288,22 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
     //     }, 300))
     // }
 
-    // const onVideoEnd = () => {
-    //     playPause.current.classList.remove("pause")
-    //     overlayRef.current.classList.add("visible-important")
-    // }
+    const onVideoEnd = () => {
+        // playPause.current.classList.remove("pause")
+        overlayRef.current?.classList.remove("opacity-0")
+    }
 
     return (
-        <div className="flex justify-center">
-            <div ref={videoContainerRef} className="video-container">
+        <div className="pt-3 flex justify-center">
+            <div ref={videoContainerRef} className="w-full h-full relative">
                 <video
-                    // ref={videoRef}
-                    // onTimeUpdate={() => updateProgressBar()}
-                    // onProgress={() => updateBufferBar()}
-                    // onLoadedMetadata={() => updateDuration()}
-                    // onLoadedData={() => playPauseVideo()}
-                    // onPause={() => overlayRef.current.classList.add("visible-important")}
-                    // onEnded={() => onVideoEnd()}
-                    // onMouseMove={(e) => showOverlay(e)}
-                    // onClick={(e) => showOverlay(e)}
+                    className="w-full h-full object-fill"
+                    ref={videoRef}
+                    onTimeUpdate={() => updateProgressBar()}
+                    onProgress={() => updateBufferBar()}
+                    onLoadedMetadata={() => updateDuration()}
+                    onPause={() => overlayRef.current?.classList.remove("opacity-0")}
+                    onEnded={() => onVideoEnd()}
                     autoPlay
                     muted
                     playsInline
@@ -317,35 +314,34 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
                 </video>
                 
                 <div
-                    className="video-overlay hidden"
+                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 duration-200"
                     ref={overlayRef}
                     // onMouseMove={(e) => showOverlay(e)}
-                    // onClick={(e) => toggleOverlay(e)}
+                    onClick={(e) => toggleOverlay(e)}
+                    onMouseMove={(e) => showOverlay(e)}
                 >
-                    <div className="button-bg" onClick={() => playPauseVideo()}>
-                        <button
-                            ref={playPause}
-                            className="play-btn"
-                        ></button>
+                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 right-1/2 w-24 h-24 rounded-full bg-neutral-950/75 cursor-pointer" onClick={(e) => playPauseVideo(e)}>
+                        <img className="absolute p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Play.svg" />
+                        <img className="absolute p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Pause.svg" />
                     </div>
 
-                    <div className="bottom" onClick={(e) => e.stopPropagation()}>
-                        <div id="current" className="time">{videoTime}</div>
+                    <div className="px-5 absolute h-12 bottom-0 w-full flex gap-8 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-neutral-50">{videoTime}</div>
                         <div
-                            className="bars"
+                            className="flex items-center flex-grow"
                             // onMouseDown={(e) => videoSeeking(e)}
                             // onTouchStart={(e) => videoSeeking(e)}
                             // onTouchMove={(e) => e.stopPropagation()}
                         >
-                            <div ref={videoSeekingRef} className="seeking">
-                                <div ref={bufferBarRef} className="buffer"></div>
-                                <div ref={progressBarRef} className="progress">
-                                    <div className="progress-btn"></div>
+                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
+                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
+                                <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
+                                    <div className="absolute h-4 w-4 right-0 bg-slate-100 rounded-full -translate-y-1/4 cursor-pointer"></div>
                                 </div>
                             </div>
                         </div>
-                        <div id="end" className="time">{videoEnd}</div>
-                        <button className="fullscreen-btn" onClick={() => setFullScreen()}>⛶</button>
+                        <div className="text-neutral-50">{videoEnd}</div>
+                        <img src="Fullscreen.svg" className="h-full py-3 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
                 </div>
                 <div

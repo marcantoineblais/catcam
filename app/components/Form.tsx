@@ -78,27 +78,27 @@ export default function Form() {
     }
 
     return (
-        <div className="pb-5 max-w-screen-md h-screen flex items-center container mx-auto" onKeyUp={(e) => manageKeyUp(e)}>
-            <form  className="w-full p-5 bg-slate-50 rounded" ref={formRef} autoComplete="on">
+        <div className="pt-16 max-w-screen-md container mx-auto" onKeyUp={(e) => manageKeyUp(e)}>
+            <form  className="w-full p-5 bg-neutral-50 rounded" ref={formRef} autoComplete="on">
                 <h1 className="w-full pb-10 text-center text-3xl">Login</h1>
 
                 <label className="flex pt-3">
                 <p className="w-32">Email</p>
-                <input className="px-3 grow bg-slate-200 rounded" name="email"></input>
+                <input className="px-3 grow bg-neutral-200 rounded" name="email"></input>
                 </label>
 
                 <label className="flex pt-3">
                 <p className="w-32">Password</p>
-                <input className="px-3 grow bg-slate-200 rounded" name="password" type="password"></input>
+                <input className="px-3 grow bg-neutral-200 rounded" name="password" type="password"></input>
                 </label>
                 
                 <label className="flex pt-3">
                 <p className="w-32">Remember me</p>
-                <input  className="ml-3 px-3 bg-slate-200 rounded" id="remember-me" name="rememberMe" type="checkbox"></input>
+                <input  className="ml-3 px-3 bg-neutral-200 rounded" id="remember-me" name="rememberMe" type="checkbox"></input>
                 </label>
                 
-                <div className="flex justify-center">
-                <button className="py-2 w-32 bg-sky-800 text-sky-50 rounded" ref={submitRef} form="login" type="submit" onClick={() => {submitForm()}}>Submit</button>
+                <div className="pt-5 flex justify-center">
+                <button className="py-2 w-32 bg-sky-800 text-neutral-50 rounded duration-200 hover:bg-sky-700" ref={submitRef} form="login" type="submit" onClick={() => {submitForm()}}>Submit</button>
                 </div>
             </form>
         </div>

@@ -30,6 +30,7 @@ const router = useRouter()
             if (userData.exp < Date.now() || ip !== userData.ipAddress) {
                 secureLocalStorage.clear()
                 router.push("/login")
+                
             } else {
                 setUser(userData.user)
             }        
@@ -41,7 +42,7 @@ const router = useRouter()
     React.useEffect(() => {
         if (!user)
             return
-
+        
         async function getLiveStream() {
             const baseURL = 'https://catcam.source.marchome.xyz'
             const ext = 's.m3u8'
@@ -52,12 +53,13 @@ const router = useRouter()
             while (!videoFeed) {
                 videoFeed = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             }
-            setVideoSource([baseURL, key, "monitor", groupKey, videoFeed].join("/"))
+            setVideoSource([baseURL, key, "hls", groupKey, videoFeed, ext].join("/"))
         }
 
         getLiveStream()
+        
     }, [user])
-
+    
     return ( 
         <>
             <Navbar />
