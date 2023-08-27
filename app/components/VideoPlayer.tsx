@@ -1,6 +1,7 @@
 import React from "react"
 import Hls from "hls.js"
 import { useRouter } from "next/navigation"
+import { Console } from "console"
 
 export default function VideoPlayer({ videoSource, videoRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null> }) {
 
@@ -47,8 +48,8 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         const resize = () => {
             container.style.height = (container.clientWidth / 16) * 9 + "px"
         }
-
         container.style.height = (container.clientWidth / 16) * 9 + "px"
+       
         window.addEventListener('resize', resize)
 
         return () => {
@@ -57,7 +58,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
     }, [videoContainerRef])
 
 
-    const setFullScreen = () => {
+    function setFullScreen() {
         const video = videoRef.current
         if (!video)
             return
@@ -66,7 +67,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
             video.requestFullscreen()
     }
 
-    const playPauseVideo = async (e: React.MouseEvent) => {
+    function playPauseVideo() {
         const video = videoRef.current
         const overlay = overlayRef.current
         const playBtn = playBtnRef.current
@@ -79,7 +80,8 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
 
         if (video.paused) {
             try {
-                await video.play()
+                video.play()
+                overlay.classList.remove("opacity-100")
             } catch (ex) {
                 router.refresh()
             }
@@ -96,7 +98,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         }
     }
 
-    const getTimeString = (time: number) => {
+    function getTimeString(time: number) {
         let seconds = Math.floor(time % 60).toString()
         const minutes = Math.floor(time / 60).toString()
 
@@ -106,7 +108,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         return minutes + ":" + seconds
     }
 
-    const updateDuration = () => {
+    function updateDuration() {
         const video = videoRef.current
         if (!video)
             return
@@ -117,7 +119,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         setVideoEnd(getTimeString(time))
     }
 
-    const updateProgressBar = () => {
+    function updateProgressBar() {
         const video = videoRef.current
         const progress = progressBarRef.current
         
@@ -130,7 +132,7 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         setVideoTime(getTimeString(time))
     }
 
-    const updateBufferBar = () => {
+    function updateBufferBar() {
         const video = videoRef.current
         const buffer = bufferBarRef.current
         
@@ -158,32 +160,28 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         setVideoEnd(getTimeString(videoDuration))
     }
 
-    const toggleOverlay = (e: React.MouseEvent) => {
-        e.stopPropagation()
+    function toggleOverlay() {
         const overlay = overlayRef.current
-
+        
         if (!overlay)
-            return
-
-        if (overlay.classList.contains("video-overlay-visible"))
-            hideOverlay(e)
+        return
+        
+        if (overlay.classList.contains("opacity-0"))
+            showOverlay()
         else
-            showOverlay(e)
+            hideOverlay()
     }
 
-    const hideOverlay = (e: React.MouseEvent) => {
-        e.stopPropagation()
+    function hideOverlay() {
         const overlay = overlayRef.current
 
         if (!overlay)
             return
 
-        overlay.classList.add("invisible")
+        overlay.classList.add("opacity-0")
     }
 
-    const showOverlay = (e: React.MouseEvent) => {
-        e.stopPropagation()
-
+    function showOverlay() {
         const overlay = overlayRef.current
         let n: number = 0;
 
@@ -202,107 +200,147 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
         }, 2000))
     }
 
-    // const videoSeeking = async (e) => {
-    //     const video = videoRef.current
-    //     const seekBar = videoSeekingRef.current
+    function videoSeekingOnMouseDown(e: React.MouseEvent) {
+        const video = videoRef.current
+        const seekBar = videoSeekingRef.current
 
-    //     if (!video || !seekBar)
-    //         return
+        if (!video || !seekBar)
+            return
 
-    //     const paused = video.paused
-    //     const progress = progressBarRef.current
-    //     const start = seekBar.getBoundingClientRect().left
-    //     const end = seekBar.getBoundingClientRect().right
+        const paused = video.paused
+        const progressBar = progressBarRef.current
+        const start = seekBar.getBoundingClientRect().left
+        const end = seekBar.getBoundingClientRect().right
 
-    //     if (video.seeking)
-    //         return
+        if (video.seeking)
+            return
 
-    //     if (!paused) {
-    //         try {
-    //             await video.pause()
-    //         } catch (ex) {
-    //             router.refresh()
-    //         }
-    //     }
+        if (!paused) {
+            playPauseVideo()
+        }
 
-    //     const seek = (e: React.MouseEvent|React.TouchEvent) => {
-    //         const position = e.clientX || e.touches[0].clientX
+        const seek = (e: MouseEvent|React.MouseEvent) => {
+            const position = e.clientX
+            showOverlay()
+            if (position >= start && position <= end && progressBar) {
+                const progressFraction = 1 - ((end - position) / (end - start))
+                progressBar.style.width = progressFraction * 100 + "%"
+                video.currentTime = progressFraction * duration
+            }
+        }
 
-    //         if (position >= start && position <= end) {
-    //             const progressFraction = 1 - ((end - position) / (end - start))
-    //             progress.style.width = progressFraction * 100 + "%"
-    //             video.currentTime = progressFraction * duration
-    //         }
-    //     }
+        const clear = () => {
+            window.removeEventListener("mouseup", clear)
+            window.removeEventListener("mousemove", seek)
+            if (!paused) {
+                playPauseVideo()
+            }
+        }
 
-    //     const clear = () => {
-    //         window.removeEventListener("mouseup", clear)
-    //         window.removeEventListener("mousemove", seek)
-    //         seekBar.removeEventListener("touchend", clear)
-    //         seekBar.removeEventListener("touchmove", seek)
-    //         if (!paused) {
-    //             playPauseVideo()
-    //         }
-    //     }
+        window.addEventListener("mouseup", clear)
+        window.addEventListener("mousemove", seek)
+        seek(e)
+    }
+    
+    function videoSeekingOnTouchStart(e: React.TouchEvent) {
+        const video = videoRef.current
+        const seekBar = videoSeekingRef.current
 
-    //     window.addEventListener("mouseup", clear)
-    //     window.addEventListener("mousemove", seek)
-    //     seekBar.addEventListener("touchend", clear)
-    //     seekBar.addEventListener("touchmove", seek)
-    //     seek(e)
-    // }
+        if (!video || !seekBar || e.touches.length > 1)
+            return
 
-    // const seekOnDblClick = (e, value) => {
-    //     e.stopPropagation()
+        const paused = video.paused
+        const progressBar = progressBarRef.current
+        const start = seekBar.getBoundingClientRect().left
+        const end = seekBar.getBoundingClientRect().right
 
-    //     const target = e.currentTarget
-    //     const removeTimeouts = () => {
-    //         let n
-    //         dblClicksTimeouts.forEach(t => {
-    //             clearTimeout(t)
-    //             n++
-    //         })
-    //         dblClicksTimeouts.splice(0, n)
-    //     }
-    //     const seek = (e) => {
-    //         e.stopPropagation()
-    //         removeTimeouts()
-    //         showOverlay(e)
-    //         target.removeEventListener("click", seek)
-    //         const video = videoRef.current
-    //         const time = video.currentTime
+        if (video.seeking)
+            return
 
-    //         if (value > 0 && value + time <= duration)
-    //             video.currentTime = time + value
-    //         else if (value < 0 && value + time >= 0)
-    //             video.currentTime = time + value
-    //     }
+        if (!paused) {
+            playPauseVideo()
+        }
 
-    //     if (dblClicksTimeouts.length === 0)
-    //         toggleOverlay(e)
+        const seek = (e: TouchEvent|React.TouchEvent) => {
+            const position = e.touches[0].clientX
+            showOverlay()
+            if (position >= start && position <= end && progressBar) {
+                const progressFraction = 1 - ((end - position) / (end - start))
+                progressBar.style.width = progressFraction * 100 + "%"
+                video.currentTime = progressFraction * duration
+            }
+        }
 
-    //     target.addEventListener("click", seek)
-    //     overlayTimeouts.push(setTimeout(() => {
-    //         removeTimeouts()
-    //         target.removeEventListener("click", seek)
-    //     }, 300))
-    // }
+        const clear = () => {
+            seekBar.removeEventListener("touchend", clear)
+            seekBar.removeEventListener("touchmove", seek)
+            if (!paused) {
+                playPauseVideo()
+            }
+        }
+
+        seekBar.addEventListener("touchend", clear)
+        seekBar.addEventListener("touchmove", seek)
+        seek(e)
+    }
+
+    const seekOnDblClick = (e: React.MouseEvent, value: number) => {
+        const video = videoRef.current
+        if (!video)
+            return
+    
+        e.stopPropagation()
+        const removeTimeouts = () => {
+            let n: number = 0
+            dblClicksTimeouts.forEach(t => {
+                clearTimeout(t)
+                n++
+            })
+            dblClicksTimeouts.splice(0, n)
+        }
+        const seek = () => {
+            e.stopPropagation()
+            removeTimeouts()
+            showOverlay()
+            const time = video.currentTime
+
+            if (value > 0 && value + time <= duration)
+                video.currentTime = time + value
+            else if (value < 0 && value + time >= 0)
+                video.currentTime = time + value
+        }
+        
+        if (dblClicksTimeouts.length === 0) {
+            toggleOverlay()
+            dblClicksTimeouts.push(setTimeout(() => {
+                removeTimeouts()
+            }, 300))
+        } else if (dblClicksTimeouts.length === 1)
+            seek()
+    }
 
     const onVideoEnd = () => {
-        // playPause.current.classList.remove("pause")
-        overlayRef.current?.classList.remove("opacity-0")
+        const playBtn = playBtnRef.current
+        overlayRef.current?.classList.add("opacity-100")
+        
+        if (!playBtn)
+            return 
+
+        for (let i: number = 0; i < playBtn.children.length; i++){
+            playBtn.children[i].classList.toggle("opacity-0")
+        }
     }
 
     return (
         <div className="pt-3 flex justify-center">
             <div ref={videoContainerRef} className="w-full h-full relative">
                 <video
-                    className="w-full h-full object-fill"
+                    className="w-full h-full object-fill scale-100"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onPause={() => overlayRef.current?.classList.remove("opacity-0")}
+                    onPause={() => overlayRef.current?.classList.add("opacity-100")}
                     onEnded={() => onVideoEnd()}
                     autoPlay
                     muted
@@ -314,44 +352,42 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
                 </video>
                 
                 <div
-                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 duration-200"
+                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 duration-1000"
                     ref={overlayRef}
-                    // onMouseMove={(e) => showOverlay(e)}
-                    onClick={(e) => toggleOverlay(e)}
-                    onMouseMove={(e) => showOverlay(e)}
+                    onClick={() => toggleOverlay()}
+                    onMouseMove={() => showOverlay()}
                 >
-                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={(e) => playPauseVideo(e)}>
+                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
                         <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
                         <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
                     </div>
 
-                    <div className="px-5 absolute h-8 bottom-0 w-full flex gap-8 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
-                        <div className="text-neutral-50">{videoTime}</div>
+                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-2 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-neutral-50 lg:pl-6">{videoTime}</div>
                         <div
                             className="flex items-center flex-grow"
-                            // onMouseDown={(e) => videoSeeking(e)}
-                            // onTouchStart={(e) => videoSeeking(e)}
-                            // onTouchMove={(e) => e.stopPropagation()}
+                            onMouseDown={(e) => videoSeekingOnMouseDown(e)}
+                            onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
                             <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
                                 <div ref={bufferBarRef} className="top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                                    <div className="absolute h-4 w-4 right-0 bg-slate-100 rounded-full -translate-y-1/4 cursor-pointer"></div>
+                                    <div className="absolute h-4 w-4 right-0 bg-slate-100 rounded-full -translate-y-1/4 translate-x-1/2 cursor-pointer"></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="text-neutral-50">{videoEnd}</div>
+                        <div className="text-neutral-50 lg:pr-6">{videoEnd}</div>
                         <img src="Fullscreen.svg" className="h-full py-1 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
-                </div>
-                <div
-                    className="tap-backward"
-                    // onClick={(e) => seekOnDblClick(e, -10)}
-                ></div>
                     <div
-                        className="tap-forward"
-                        // onClick={(e) => seekOnDblClick(e, 10)}`
-                ></div>
+                        className=" absolute top-0 bottom-8 left-0 w-1/5"
+                        onClick={(e) => seekOnDblClick(e, -10)}
+                    ></div>
+                        <div
+                            className="absolute top-0 bottom-8 right-0 w-1/5"
+                            onClick={(e) => seekOnDblClick(e, 10)}
+                    ></div>
+                </div>
             </div>
         </div>
     )

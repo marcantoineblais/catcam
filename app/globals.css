@@ -15,8 +15,13 @@
   }
 } */
 
+* {
+    user-select: none;
+}
+
 body {
   color: var(--foreground-rgb);
   background: var(--background-rgb);
+  overflow: hidden;
 }
 
