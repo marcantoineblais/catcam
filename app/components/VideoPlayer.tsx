@@ -2,7 +2,7 @@ import React from "react"
 import Hls from "hls.js"
 import { useRouter } from "next/navigation"
 
-export default function VideoPlayer({ videoSource, videoRef, containerRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null> }) {
+export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiveStream }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null>, isLiveStream: boolean }) {
 
     const [videoTime, setVideoTime] = React.useState<string>("")
     const [videoEnd, setVideoEnd] = React.useState<string>("")
@@ -29,14 +29,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
         progress.style.left = ""
         progress.style.right = ""
         
-        if (Hls.isSupported()) {
+        if (isLiveStream && Hls.isSupported()) {
             const hls = new Hls()
             hls.loadSource(videoSource)
             hls.attachMedia(video)
             
         } else 
             video.src = videoSource
-    }, [videoSource, videoRef])
+    }, [videoSource, videoRef, isLiveStream])
 
 
     // Resize streaming or recording video element when resizing window
@@ -341,6 +341,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
             playBtn.children[i].classList.toggle("opacity-0")
         }
     }
+
+    if (!videoSource)
+        return (
+            <div ref={videoContainerRef} className="rounded">
+                <img src="logo.png" alt="cat logo" className="w-full h-full object-contain"/>
+            </div>
+        )
 
     return (
         <div className="pt-3 flex justify-center">

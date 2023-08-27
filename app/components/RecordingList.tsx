@@ -2,22 +2,20 @@ import { useEffect, useRef, useState } from "react"
 import ZoomPad from "./ZoomPad"
 
 
-const RecordingList = ({ recordings, setVideoSource, containerRef, videoRef }) => {
+const RecordingList = ({ recordings, setVideoSource, containerRef }: { recordings: any[]|null, setVideoSource: Function, containerRef: React.MutableRefObject<HTMLDivElement|null> }) => {
 
-    const [renderedVideoCards, setRenderedVideoCards] = useState(null)
-    const [visibleVideoCards, setVisibleVideoCards] = useState(null)
-    const [activeVideoIndex, setActiveVideoIndex] = useState(null)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [lastPage, setLastPage] = useState(1)
-    const [subMenu, setSubMenu] = useState("recordings")
-    const recordingBtnRef = useRef()
-    const zoomBtnRef = useRef()
-    const scrollableRef = useRef()
-    const cardsRef = useRef()
-    const zoomPadRef = useRef()
-    const pageBtnRef = useRef()
-    const nextRef = useRef()
-    const previousRef = useRef()
+    const [activeVideoIndex, setActiveVideoIndex] = useState<number|null>(null)
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [lastPage, setLastPage] = useState<number>(1)
+    const [subMenu, setSubMenu] = useState<string>("recordings")
+    const recordingBtnRef = useRef<HTMLDivElement|null>(null)
+    const zoomBtnRef = useRef<HTMLButtonElement|null>(null)
+    const scrollableRef = useRef<HTMLDivElement|null>(null)
+    const cardsRef = useRef<HTMLDivElement|null>(null)
+    const zoomPadRef = useRef<HTMLDivElement|null>(null)
+    const pageBtnRef = useRef<HTMLDivElement|null>(null)
+    const nextRef = useRef<HTMLButtonElement|null>()
+    const previousRef = useRef<HTMLButtonElement|null>()
 
 
     // Resize cards when resizing window
@@ -213,42 +211,20 @@ const RecordingList = ({ recordings, setVideoSource, containerRef, videoRef }) =
 
     return (
         <div className="recordings-container">
-            <div className="recording-buttons">
-                <button
-                    ref={recordingBtnRef}
-                    className="recording-btn active"
-                    onClick={() => setSubMenu("recordings")}
-                >
-                    Recordings
-                </button>
-                <button
-                    ref={zoomBtnRef}
-                    className="recording-btn"
-                    onClick={() => setSubMenu("zoom")}
-                >
-                    Zoom
-                </button>
-            </div>
+            
 
-            <div className="scrollable" ref={scrollableRef}>
-                <div
+            <div
                     className="recordings"
                     ref={cardsRef}
                     onTouchStart={(e) => removeScroll(e)}
                     onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
                 >
-                    {visibleVideoCards}
-                </div>
-
-                <div ref={pageBtnRef} className="buttons">
-                    <button ref={previousRef} onClick={() => previousPage()}><div className="arrow hidden"></div></button>
-                    <p>Page {currentPage} of {lastPage}</p>
-                    <button ref={nextRef} onClick={() => nextPage()}><div className="arrow reverse-arrow"></div></button>
-                </div>
-
-                <div ref={zoomPadRef} className="recordings-zoom-pad right">
-                    <ZoomPad videoRef={videoRef} containerRef={containerRef} />
-                </div>
+                {visibleVideoCards}
+            </div>
+            <div ref={pageBtnRef} className="buttons">
+                <button ref={previousRef} onClick={() => previousPage()}><div className="arrow hidden"></div></button>
+                <p>Page {currentPage} of {lastPage}</p>
+                <button ref={nextRef} onClick={() => nextPage()}><div className="arrow reverse-arrow"></div></button>
             </div>
         </div>
     )

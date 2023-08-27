@@ -4,7 +4,7 @@ import React from "react";
 import LiveStream from "./components/LiveStream";
 import AuthManager from "./components/AuthManager";
 
-export default function Home() {
+export default function HomePage() {
     
     const [session, setSession] = React.useState<any>(null)
 
