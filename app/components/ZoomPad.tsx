@@ -16,7 +16,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             const parentHeight = parent.clientHeight
             let width = container.clientWidth * 0.8
             let height = (width / 16) * 9
-            if (height >= parentHeight) {
+            if (height >= parentHeight * 0.8) {
                 height = parentHeight * 0.8
                 width = (height / 9 * 16)
             }

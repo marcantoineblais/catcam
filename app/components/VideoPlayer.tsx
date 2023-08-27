@@ -1,7 +1,6 @@
 import React from "react"
 import Hls from "hls.js"
 import { useRouter } from "next/navigation"
-import { Console } from "console"
 
 export default function VideoPlayer({ videoSource, videoRef, containerRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null> }) {
 
@@ -16,6 +15,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
     const videoSeekingRef = React.useRef<HTMLDivElement|null>(null)
     const progressBarRef = React.useRef<HTMLDivElement|null>(null)
     const bufferBarRef = React.useRef<HTMLDivElement|null>(null)
+    const trackingHeadRef = React.useRef<HTMLDivElement|null>(null)
     const router = useRouter()
 
 
@@ -125,13 +125,20 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
     function updateProgressBar() {
         const video = videoRef.current
         const progress = progressBarRef.current
+        const head = trackingHeadRef.current
         
-        if (duration <= 0 || !video || !progress)
+        if (duration <= 0 || !video || !progress || !head)
             return
-
         const time = video.currentTime
+        let position = time / duration
 
-        progress.style.width = (time / duration) * 100 + "%"
+        if (position > 1)
+            position = 1
+        else if (position < 0)
+            position = 0
+
+        progress.style.transform = `scaleX(${position})`
+        head.style.transform = `scaleX(${1 / position})`
         setVideoTime(getTimeString(time))
     }
 
@@ -150,15 +157,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
         const end = buffers.end(buffers.length - 1)
         const videoDuration = video.duration || end
 
-        let position = 100 - ((end / videoDuration) * 100)
+        let position = end / videoDuration
 
-        if (position > 100)
-            position = 100
+        if (position > 1)
+            position = 1
         else if (position < 0)
             position = 0
 
-        buffer.style.left = "0"
-        buffer.style.right = position + "%"
+        buffer.style.transform = `scaleX(${position})`
         setDuration(videoDuration)
         setVideoEnd(getTimeString(videoDuration))
     }
@@ -206,12 +212,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
     function videoSeekingOnMouseDown(e: React.MouseEvent) {
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
+        const head = trackingHeadRef.current
+        const progressBar = progressBarRef.current
 
-        if (!video || !seekBar)
+        if (!video || !seekBar || !progressBar || !head)
             return
 
         const paused = video.paused
-        const progressBar = progressBarRef.current
         const start = seekBar.getBoundingClientRect().left
         const end = seekBar.getBoundingClientRect().right
 
@@ -226,9 +233,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
             const position = e.clientX
             showOverlay()
             if (position >= start && position <= end && progressBar) {
-                const progressFraction = 1 - ((end - position) / (end - start))
-                progressBar.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * duration
+                const progressFraction = 1 - (end - position) / (end - start)
+                progressBar.style.transform = `scaleX(${progressFraction})`
+                head.style.transform = `scaleX(${1 / progressFraction})`
+                video.currentTime = progressFraction * video.duration
             }
         }
 
@@ -373,9 +381,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef }: { v
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
                             <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
-                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
-                                <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                                    <div className="absolute h-4 w-4 right-0 bg-slate-100 rounded-full -translate-y-1/4 translate-x-1/2 cursor-pointer"></div>
+                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 w-full bg-neutral-500 rounded origin-left"></div>
+                                <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 w-full bg-sky-700 rounded cursor-pointer origin-left">
+                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer"></div>
                                 </div>
                             </div>
                         </div>

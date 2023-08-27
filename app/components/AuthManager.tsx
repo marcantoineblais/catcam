@@ -39,7 +39,7 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
         }
 
         getSession()
-    }, [])
+    }, [router, setSession])
 
     return null
 }

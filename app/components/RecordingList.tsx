@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import ZoomPad from "./ZoomPad"
 
 
-const Recording = ({ recordings, setVideoSource, containerRef, videoRef }) => {
+const RecordingList = ({ recordings, setVideoSource, containerRef, videoRef }) => {
 
     const [renderedVideoCards, setRenderedVideoCards] = useState(null)
     const [visibleVideoCards, setVisibleVideoCards] = useState(null)
@@ -254,4 +254,4 @@ const Recording = ({ recordings, setVideoSource, containerRef, videoRef }) => {
     )
 }
 
-export default Recording
+export default RecordingList

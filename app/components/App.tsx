@@ -93,170 +93,170 @@ const App = () => {
         getRecordings()
     }, [recordingsURL])
 
-    useEffect(() => {
-        const renderLoginPage = () => {
-            if (page === "login") {
-                return (
-                    <SignIn setUser={setUser} setPage={setPage} logoOnly={page === "login"} />
-                )
-            }
-        }
+//     useEffect(() => {
+//         const renderLoginPage = () => {
+//             if (page === "login") {
+//                 return (
+//                     <SignIn setUser={setUser} setPage={setPage} logoOnly={page === "login"} />
+//                 )
+//             }
+//         }
 
-        // Render HLS VideoPlayer for livestreaming for recordings
-        const renderLivePage = () => {
-            if (page === "live" && liveFeed) {
-                setVideoSource(liveFeed)
-                return (
-                    <Fragment>
-                        <VideoPlayer
-                            videoSource={liveFeed}
-                            videoRef={videoRef}
-                        />
-                        <ZoomPad videoRef={videoRef} containerRef={containerRef} />
-                    </Fragment>
-                )
-            }
-        }
+//         // Render HLS VideoPlayer for livestreaming for recordings
+//         const renderLivePage = () => {
+//             if (page === "live" && liveFeed) {
+//                 setVideoSource(liveFeed)
+//                 return (
+//                     <Fragment>
+//                         <VideoPlayer
+//                             videoSource={liveFeed}
+//                             videoRef={videoRef}
+//                         />
+//                         <ZoomPad videoRef={videoRef} containerRef={containerRef} />
+//                     </Fragment>
+//                 )
+//             }
+//         }
 
-        const renderRecordingsPage = () => {
-            if (page === "recordings") {
-                return (
-                    <Fragment>
-                        <VideoPlayer
-                            videoSource={videoSource}
-                            videoRef={videoRef}
-                        />
-                        <Recording
-                            recordings={recordings}
-                            setVideoSource={setVideoSource}
-                            containerRef={containerRef}
-                            videoRef={videoRef}
-                        />
-                    </Fragment>
-                )
-            }
-        }
+//         const renderRecordingsPage = () => {
+//             if (page === "recordings") {
+//                 return (
+//                     <Fragment>
+//                         <VideoPlayer
+//                             videoSource={videoSource}
+//                             videoRef={videoRef}
+//                         />
+//                         <Recording
+//                             recordings={recordings}
+//                             setVideoSource={setVideoSource}
+//                             containerRef={containerRef}
+//                             videoRef={videoRef}
+//                         />
+//                     </Fragment>
+//                 )
+//             }
+//         }
 
-        switch (page) {
-            case "login":
-                setRenderedPage(renderLoginPage())
-                break
-            case "live":
-                setRenderedPage(renderLivePage())
-                break
-            case "recordings":
-                setRenderedPage(renderRecordingsPage())
-                break
-            default:
-                setRenderedPage(renderLoginPage())
-                setPage("login")
-        }
-    }, [page, liveFeed, recordings, videoSource])
+//         switch (page) {
+//             case "login":
+//                 setRenderedPage(renderLoginPage())
+//                 break
+//             case "live":
+//                 setRenderedPage(renderLivePage())
+//                 break
+//             case "recordings":
+//                 setRenderedPage(renderRecordingsPage())
+//                 break
+//             default:
+//                 setRenderedPage(renderLoginPage())
+//                 setPage("login")
+//         }
+//     }, [page, liveFeed, recordings, videoSource])
 
-    useEffect(() => {
-        const refreshPage = (e) => {
-            const body = document.getElementById("root")
-            const refreshIcon = document.getElementById("refresh-icon")
-            const start = e.touches[0].clientY
+//     useEffect(() => {
+//         const refreshPage = (e) => {
+//             const body = document.getElementById("root")
+//             const refreshIcon = document.getElementById("refresh-icon")
+//             const start = e.touches[0].clientY
 
-            const clearListeners = () => {
-                refreshTimer.forEach(t => clearTimeout(t))
-                refreshTimer.splice(0, refreshTimer.length)
-                window.removeEventListener("touchmove", scrollToRefresh)
-                window.removeEventListener("touchend", refresh)
-                body.style.transform = ""
-            }
+//             const clearListeners = () => {
+//                 refreshTimer.forEach(t => clearTimeout(t))
+//                 refreshTimer.splice(0, refreshTimer.length)
+//                 window.removeEventListener("touchmove", scrollToRefresh)
+//                 window.removeEventListener("touchend", refresh)
+//                 body.style.transform = ""
+//             }
 
-            const refresh = () => {
-                clearListeners()
-                window.location.reload()
-            }
+//             const refresh = () => {
+//                 clearListeners()
+//                 window.location.reload()
+//             }
 
-            const scrollToRefresh = (e) => {
-                if (e.touches.length > 1) {
-                    clearListeners()
-                    return
-                }
+//             const scrollToRefresh = (e) => {
+//                 if (e.touches.length > 1) {
+//                     clearListeners()
+//                     return
+//                 }
 
-                const position = e.touches[0].clientY
-                const scrollValue = ((position - start) / body.clientHeight) * 100
+//                 const position = e.touches[0].clientY
+//                 const scrollValue = ((position - start) / body.clientHeight) * 100
 
-                if (scrollValue > 25) {
-                    body.style.transform = `translateY(12%)`
-                    refreshIcon.classList.add("animate")
-                    if (refreshTimer.length === 0) {
-                        refreshTimer.push(setTimeout(() => {
-                            window.removeEventListener("touchend", clearListeners)
-                            window.addEventListener("touchend", refresh)
-                            refreshTimer.forEach(t => clearTimeout(t))
-                            refreshTimer.splice(0, refreshTimer.length)
-                        }, 350))
-                    }
-                } else {
-                    refreshIcon.classList.remove("animate")
-                    body.style.transform = ""
+//                 if (scrollValue > 25) {
+//                     body.style.transform = `translateY(12%)`
+//                     refreshIcon.classList.add("animate")
+//                     if (refreshTimer.length === 0) {
+//                         refreshTimer.push(setTimeout(() => {
+//                             window.removeEventListener("touchend", clearListeners)
+//                             window.addEventListener("touchend", refresh)
+//                             refreshTimer.forEach(t => clearTimeout(t))
+//                             refreshTimer.splice(0, refreshTimer.length)
+//                         }, 350))
+//                     }
+//                 } else {
+//                     refreshIcon.classList.remove("animate")
+//                     body.style.transform = ""
 
-                    refreshTimer.forEach(t => clearTimeout(t))
-                    refreshTimer.splice(0, refreshTimer.length)
-                    window.removeEventListener("touchend", refresh)
-                    window.addEventListener("touchend", clearListeners)
-                }
-            }
+//                     refreshTimer.forEach(t => clearTimeout(t))
+//                     refreshTimer.splice(0, refreshTimer.length)
+//                     window.removeEventListener("touchend", refresh)
+//                     window.addEventListener("touchend", clearListeners)
+//                 }
+//             }
 
-            window.addEventListener("touchend", clearListeners)
-            window.addEventListener("touchmove", scrollToRefresh)
-        }
+//             window.addEventListener("touchend", clearListeners)
+//             window.addEventListener("touchmove", scrollToRefresh)
+//         }
 
-        window.addEventListener("touchstart", refreshPage)
+//         window.addEventListener("touchstart", refreshPage)
 
-        return () => {
-            window.removeEventListener("touchstart", refreshPage)
-        }
-    }, [refreshTimer])
+//         return () => {
+//             window.removeEventListener("touchstart", refreshPage)
+//         }
+//     }, [refreshTimer])
 
-    const removeScroll = (e) => {
-        const container = containerRef.current
-        const start = e.touches[0].clientY
-        const scrollHeight = container.scrollHeight
-        const height = container.clientHeight
+//     const removeScroll = (e) => {
+//         const container = containerRef.current
+//         const start = e.touches[0].clientY
+//         const scrollHeight = container.scrollHeight
+//         const height = container.clientHeight
 
-        const stopScroll = (e) => {
-            const position = e.touches[0].clientY
-            const containerScroll = container.scrollTop
+//         const stopScroll = (e) => {
+//             const position = e.touches[0].clientY
+//             const containerScroll = container.scrollTop
 
-            if (containerScroll <= 0 && start - position <= 0)
-                container.classList.add("no-scroll")
-            else if (scrollHeight - containerScroll <= height && start - position >= 0)
-                container.classList.add("no-scroll")
-            else
-                container.classList.remove("no-scroll")
+//             if (containerScroll <= 0 && start - position <= 0)
+//                 container.classList.add("no-scroll")
+//             else if (scrollHeight - containerScroll <= height && start - position >= 0)
+//                 container.classList.add("no-scroll")
+//             else
+//                 container.classList.remove("no-scroll")
 
-            if (containerScroll > 0)
-                e.stopPropagation()
-        }
+//             if (containerScroll > 0)
+//                 e.stopPropagation()
+//         }
 
-        const removeListeners = () => {
-            container.classList.remove("no-scroll")
-            container.removeEventListener("touchmove", stopScroll)
-            container.removeEventListener("touchend", removeListeners)
+//         const removeListeners = () => {
+//             container.classList.remove("no-scroll")
+//             container.removeEventListener("touchmove", stopScroll)
+//             container.removeEventListener("touchend", removeListeners)
 
-        }
+//         }
 
-        if (container.scrollTop > 0)
-            e.stopPropagation()
+//         if (container.scrollTop > 0)
+//             e.stopPropagation()
 
-        container.addEventListener("touchmove", stopScroll)
-        container.addEventListener("touchend", removeListeners)
-    }
+//         container.addEventListener("touchmove", stopScroll)
+//         container.addEventListener("touchend", removeListeners)
+//     }
 
-    return (
-        <Fragment>
-            <Navbar setUser={setUser} setPage={setPage} logoOnly={page === "login"} />
-            <div className="container" ref={containerRef} onTouchStart={(e) => removeScroll(e)}>
-                {renderedPage}
-            </div>
-        </Fragment>
-    )
-}
+//     return (
+//         <Fragment>
+//             <Navbar setUser={setUser} setPage={setPage} logoOnly={page === "login"} />
+//             <div className="container" ref={containerRef} onTouchStart={(e) => removeScroll(e)}>
+//                 {renderedPage}
+//             </div>
+//         </Fragment>
+//     )
+// }
 
-export default App;
+// export default App;
