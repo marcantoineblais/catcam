@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState, Fragment } from "react";
 import Navbar from "./Navbar";
 import VideoPlayer from "./VideoPlayer";
-import SignIn from "./SignIn";
 import Recording from "./Recording";
 import ZoomPad from "./ZoomPad";
-import requestJSON from "../util/request";
+import requestJSON from "../util/requestJSON";
 import "../style/App.scss"
 
 const App = () => {
