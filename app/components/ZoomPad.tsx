@@ -1,14 +1,16 @@
-import { useEffect, useRef } from "react"
-import "../style/ZoomPad.scss"
+import React from "react"
 
-const ZoomPad = ({ videoRef, containerRef }) => {
+const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null> }) => {
 
-    const zoomPadRef = useRef()
+    const zoomPadRef = React.useRef<HTMLDivElement|null>(null)
 
-    useEffect(() => {
+    React.useEffect(() => {
         const zoomPad = zoomPadRef.current
-        const parent = zoomPad.parentNode
         const container = containerRef.current
+        const parent: any = zoomPad?.parentNode
+
+        if (!zoomPad || !container || !parent)
+            return
         
         const resize = () => {        
             const parentHeight = parent.clientHeight
@@ -33,80 +35,97 @@ const ZoomPad = ({ videoRef, containerRef }) => {
         }
     }, [containerRef])
 
-    const zoomVideo = (e) => {
+    const zoomVideoOnMouse = (e: React.MouseEvent) => {
         e.stopPropagation()
 
         const video = videoRef.current
         const container = containerRef.current
-        const zoomPad = zoomPadRef.current.getBoundingClientRect()
-        const x = e.clientX || e.touches[0].clientX
-        const y = e.clientY || e.touches[0].clientY
-        const zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
-        const zoomY = ((y - zoomPad.top) / (zoomPad.bottom - zoomPad.top)) * 100
-        
-        container.classList.add("no-scroll")
-        video.style.transform = `scale(4)`
-        video.style.transformOrigin = `${zoomX}% ${zoomY}%`
+        const zoomPad = zoomPadRef.current?.getBoundingClientRect()
+
+        if (!video || !container || !zoomPad)
+            return
+
+        const zoom = (e: MouseEvent|React.MouseEvent) => {
+            const x = e.clientX
+            const y = e.clientY
+            let zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
+            let zoomY = ((y - zoomPad.top) / (zoomPad.bottom - zoomPad.top)) * 100
+            if (zoomX > 100) zoomX = 100
+            else if (zoomX < 0) zoomX = 0
+
+            if (zoomY > 100) zoomY = 100
+            else if (zoomY < 0) zoomY = 0
+            
+            video.style.transform = `scale(4)`
+            video.style.transformOrigin = `${zoomX}% ${zoomY}%`
+        }
 
         const clearListeners = () => {
             unZoomVideo()
             window.removeEventListener("mouseup", clearListeners)
+            window.removeEventListener("mousemove", zoom)
+        }
+        
+        window.addEventListener("mouseup", clearListeners)
+        window.addEventListener("mousemove", zoom)
+        zoom(e)
+    }
+
+    const zoomVideoOnTouch = (e: React.TouchEvent) => {
+        e.stopPropagation()
+
+        const video = videoRef.current
+        const container = containerRef.current
+        const zoomPad = zoomPadRef.current?.getBoundingClientRect()
+
+        if (!video || !container || !zoomPad || e.touches.length > 1)
+            return
+
+        const zoom = () => {
+            const x = e.touches[0].clientX
+            const y = e.touches[0].clientY
+            let zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
+            let zoomY = ((y - zoomPad.top) / (zoomPad.bottom - zoomPad.top)) * 100
+            if (zoomX > 100) zoomX = 100
+            else if (zoomX < 0) zoomX = 0
+
+            if (zoomY > 100) zoomY = 100
+            else if (zoomY < 0) zoomY = 0
+            
+            video.style.transform = `scale(4)`
+            video.style.transformOrigin = `${zoomX}% ${zoomY}%`
         }
 
-        window.addEventListener("mouseup", clearListeners)
+        const clearListeners = () => {
+            unZoomVideo()
+            window.removeEventListener("touchend", clearListeners)
+            window.removeEventListener("touchmove", zoom)
+        }
+
+        window.addEventListener("touchend", clearListeners)
+        window.addEventListener("touchmouve", zoom)
     }
 
     const unZoomVideo = () => {
         const video = videoRef.current
         const container = containerRef.current
+
+        if (!video || !container)
+            return
+
         video.style.transform = ""
         container.classList.remove("no-scroll")
     }
 
-    const trackZoom = (e) => {
-        if (e.touches && e.touches.length > 1) {
-            unZoomVideo()
-            return
-        }
-        
-        const video = videoRef.current
-        const zoomPad = zoomPadRef.current.getBoundingClientRect()
-        const x = e.clientX || e.touches[0].clientX
-        const y = e.clientY || e.touches[0].clientY
-        let zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
-        let zoomY = ((y - zoomPad.top) / (zoomPad.bottom - zoomPad.top)) * 100
-
-        if (zoomX > 100)
-            zoomX = 100
-        else if (zoomX < 0)
-            zoomX = 0
-
-        if (zoomY > 100)
-            zoomY = 100
-        else if (zoomY < 0)
-            zoomY = 0
-
-        video.style.transformOrigin = `${zoomX}% ${zoomY}%`
-    }
-
-    const handleScroll = (e) => {
-        if (e.touches.length < 2 && e.target !== e.currentTarget)
-            e.stopPropagation()
-    }
-
     return (
-        <div className="zoom-pad-container" onTouchMove={(e) => handleScroll(e)}>
+        <div className="w-full flex-grow flex justify-center items-center">
             <div
                 ref={zoomPadRef}
-                className="zoom-pad"
-                onMouseDown={(e) => zoomVideo(e)}
-                onTouchStart={(e) => zoomVideo(e)}
-                onTouchEnd={(e) => unZoomVideo(e)}
-                onMouseMove={(e) => trackZoom(e)}
-                onTouchMove={(e) => trackZoom(e)}
-                onTouchCancel={() => unZoomVideo()}
+                className="flex justify-center items-center bg-neutral-50 border-double border-8 border-neutral-700 rounded"
+                onMouseDown={(e) => zoomVideoOnMouse(e)}
+                onTouchStart={(e) => zoomVideoOnTouch(e)}
             >
-                <h2>Zoom</h2>
+                <h2 className="p-3 text-center text-5xl">Zoom</h2>
             </div>
         </div>
     )

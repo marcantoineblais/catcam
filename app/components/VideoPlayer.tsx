@@ -3,7 +3,7 @@ import Hls from "hls.js"
 import { useRouter } from "next/navigation"
 import { Console } from "console"
 
-export default function VideoPlayer({ videoSource, videoRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null> }) {
+export default function VideoPlayer({ videoSource, videoRef, containerRef }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null> }) {
 
     const [videoTime, setVideoTime] = React.useState<string>("")
     const [videoEnd, setVideoEnd] = React.useState<string>("")
@@ -41,15 +41,18 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
 
     // Resize streaming or recording video element when resizing window
     React.useEffect(() => {
-        const container = videoContainerRef.current
-        if (!container)
+        const videoContainer = videoContainerRef.current
+        const container = containerRef.current
+
+        if (!container || !videoContainer)
             return
 
         const resize = () => {
-            container.style.height = (container.clientWidth / 16) * 9 + "px"
+            videoContainer.style.width = container.clientWidth + "px"
+            videoContainer.style.height = (container.clientWidth / 16) * 9 + "px"
         }
-        container.style.height = (container.clientWidth / 16) * 9 + "px"
-       
+        
+        resize()
         window.addEventListener('resize', resize)
 
         return () => {
@@ -333,9 +336,9 @@ export default function VideoPlayer({ videoSource, videoRef }: { videoSource: st
 
     return (
         <div className="pt-3 flex justify-center">
-            <div ref={videoContainerRef} className="w-full h-full relative">
+            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden">
                 <video
-                    className="w-full h-full object-fill scale-100"
+                    className="w-full h-full object-fill scale-100 rounded"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}

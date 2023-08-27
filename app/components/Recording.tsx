@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import ZoomPad from "./ZoomPad"
-import "../style/Recording.scss"
 
 
 const Recording = ({ recordings, setVideoSource, containerRef, videoRef }) => {

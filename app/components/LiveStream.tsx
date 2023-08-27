@@ -4,11 +4,13 @@ import React from "react";
 import Navbar from "./Navbar";
 import VideoPlayer from "./VideoPlayer";
 import requestJSON from "../util/requestJSON"
+import ZoomPad from "./ZoomPad";
 
 export default function LiveStream({ session }: { session: any}) {
 
     const [videoSource, setVideoSource] = React.useState<string|null>(null)
     const videoRef = React.useRef<HTMLVideoElement|null>(null)
+    const containerRef = React.useRef<HTMLDivElement|null>(null)
 
     React.useEffect(() => {
         if (!session || Object.entries(session).some(([_k, v]) => !v))
@@ -34,8 +36,9 @@ export default function LiveStream({ session }: { session: any}) {
     return ( 
         <>
             <Navbar />
-            <div className="container mx-auto">
-                <VideoPlayer videoSource={videoSource} videoRef={videoRef} />
+            <div ref={containerRef} className="container mx-auto h-full flex flex-col justify-center items-center pb-5">
+                <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} />
+                <ZoomPad videoRef={videoRef} containerRef={containerRef} />
             </div>
         </>
     )
