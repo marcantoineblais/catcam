@@ -5,14 +5,26 @@ import { useRouter } from "next/navigation";
 import secureLocalStorage from "react-secure-storage";
 import requestJSON from "../util/requestJSON";
 
-export default function AuthManager({ setSession }: { setSession: Function }) {    
+export default function AuthManager({ location, setLocation, session, setSession }: { location: any, setLocation: Function, session: any|null, setSession: Function|null }) {    
 
     const router = useRouter()
 
     React.useEffect(() => {
-        async function getSession() {
+        async function getLocation() {
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
             const data = await requestJSON(url + process.env.geolocationAPIKey)
+            
+            setLocation(data)
+        }
+
+        getLocation()
+    }, [setLocation])
+
+    React.useEffect(() => {
+        async function getSession() {
+            if (!setSession || !location)
+                return
+
             let sessionInfo: any = secureLocalStorage.getItem("object")         
             
             if (!sessionInfo || Object.entries(sessionInfo).some(([_k, v]) => !v)) {
@@ -28,7 +40,7 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
                 return
             }
             
-            if (!sessionInfo || (sessionInfo.location.city !== data.city && sessionInfo.location.ip !== data.ip)) {
+            if (!sessionInfo || sessionInfo.location.country_name !== location.country_name || (sessionInfo.location.ip !== location.ip && sessionInfo.location.city !== location.city)) {
                 secureLocalStorage.clear()
                 sessionStorage.clear()
                 setSession(null)
@@ -40,7 +52,41 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
         }
 
         getSession()
-    }, [router, setSession])
+    }, [router, location, setSession])
+
+    React.useEffect(() => {
+        function storeSession() {
+            if (!session || !location)
+                return
+
+            const sessionInfo = session.session
+
+            if (session.rememberMe) {
+                secureLocalStorage.setItem("object", {
+                    auth_token: sessionInfo.$user.auth_token,
+                    ke: sessionInfo.$user.ke,
+                    uid: sessionInfo.$user.uid,    
+                    location: {
+                        ip: location.ip,
+                        city: location.city,
+                        country_name: location.country_name,
+                        time_zone: location.time_zone
+                    }
+                })
+            } else {
+                sessionStorage.setItem("session", JSON.stringify({
+                    auth_token: sessionInfo.$user.auth_token,
+                    ke: sessionInfo.$user.ke,
+                    uid: sessionInfo.$user.uid,    
+                    location: location
+                }))
+            }
+
+            router.push("/")
+        }
+
+        storeSession()
+    }, [router, location, session, setSession])
 
     return null
 }

@@ -1,27 +1,11 @@
 "use client"
 
 import React from "react"
-import  secureLocalStorage  from  "react-secure-storage"
-import { useRouter } from "next/navigation"
-import requestJSON from "../util/requestJSON"
 
-export default function Login() {
+export default function Login({ location, setSession }: { location: any, setSession: Function }) {
 
-    const [location, setLocation] = React.useState<any>(null)
     const formRef = React.useRef<HTMLFormElement|null>(null)
     const submitRef = React.useRef<HTMLButtonElement|null>(null)
-    const router = useRouter()
-
-    React.useEffect(() => {
-        async function getLocation() {
-            const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
-            const data = await requestJSON(url + process.env.geolocationAPIKey)
-            
-            setLocation(data)
-        }
-
-        getLocation()
-    }, [])
 
     async function submitForm() {
         const form: HTMLFormElement|null = formRef.current
@@ -52,26 +36,9 @@ export default function Login() {
             body: JSON.stringify(body)
         })
         const data = await response.json()
-        
-        if (data.ok && rememberMe) {
-            secureLocalStorage.setItem("object", {
-                auth_token: data.$user.auth_token,
-                ke: data.$user.ke,
-                uid: data.$user.uid,    
-                location: location
-            })
-            router.push("/")
-            return
-        } else if (data.ok) {
-            sessionStorage.setItem("session", JSON.stringify({
-                auth_token: data.$user.auth_token,
-                ke: data.$user.ke,
-                uid: data.$user.uid,    
-                location: location
-            }))
-            router.push("/")
-            return
-        } else {
+        if (data.ok)
+            setSession({ session: data, rememberMe: rememberMe }) 
+        else {
             form.password.value = ""
         }
     }

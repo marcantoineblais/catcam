@@ -14,9 +14,10 @@ const Navbar = () => {
     React.useEffect(() => {
         const menuIcon = menuIconRef.current
         const navBtn = navBtnRef.current
+        
         function closeMenu() {
             navBtn?.classList.add("scale-y-0")
-            menuIcon?.classList.remove("rotate-90")
+            menuIcon?.classList.remove("-rotate-90")
         }
 
         window.addEventListener("click", closeMenu)
@@ -48,7 +49,7 @@ const Navbar = () => {
                 <div className="bg-chats bg-bottom bg-contain bg-origin-content bg-clip-text text-transparent">
                     <h1 className="text-5xl font-extrabold tracking-widest text-neutral-700/10">CATCAM</h1>
                 </div>
-                <menu className="h-full relative">
+                <menu className="h-full relative flex justify-end items-center">
                     <img ref={menuIconRef} className="w-9 h-full duration-200 object-contain md:hidden" src="Menu.svg" alt="menu icon" onClick={(e: React.MouseEvent) => showMenu(e)}></img>
                     <div ref={navBtnRef} className="flex flex-col gap-2 justify-end items-center rounded absolute top-14 right-0 z-50 bg-neutral-200 p-2 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
                         <button className="py-2 w-32 bg-neutral-700 text-neutral-50 rounded duration-200 hover:bg-neutral-600" onClick={() => router.push('/')}>Live</button>
