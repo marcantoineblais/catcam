@@ -35,7 +35,7 @@ export default function LiveStream({ session }: { session: any}) {
     
     return ( 
         <>
-            <Navbar />
+            <Navbar activePage="live" />
             <div ref={containerRef} className="container mx-auto flex flex-col flex-grow justify-center items-center pb-5">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={true} />
                 <ZoomPad videoRef={videoRef} containerRef={containerRef} />

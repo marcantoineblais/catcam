@@ -367,7 +367,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div className="pt-3 flex flex-grow justify-center">
-            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden">
+            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow-md">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}

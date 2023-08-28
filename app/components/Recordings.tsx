@@ -66,7 +66,7 @@ export default function Recordings({ session }: { session: any }) {
     
     return (
         <>
-            <Navbar />
+            <Navbar activePage="recording" />
             <div ref={containerRef} className="container mx-auto overflow-hidden flex flex-col flex-grow">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="w-full flex justify-between">

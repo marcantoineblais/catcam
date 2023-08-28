@@ -37,18 +37,15 @@ export default function AuthManager({ location, setLocation, session, setSession
                 sessionStorage.clear()
                 setSession(null)
                 router.push("/login")
-                return
             }
             
-            if (!sessionInfo || sessionInfo.location.country_name !== location.country_name || (sessionInfo.location.ip !== location.ip && sessionInfo.location.city !== location.city)) {
+            if (sessionInfo.location && (sessionInfo.location.country_name !== location.country_name || (sessionInfo.location.ip !== location.ip && sessionInfo.location.city !== location.city))) {
                 secureLocalStorage.clear()
                 sessionStorage.clear()
                 setSession(null)
                 router.push("/login")
-                return
             } else
-                setSession(sessionInfo)
-       
+                setSession(sessionInfo)   
         }
 
         getSession()
@@ -60,25 +57,29 @@ export default function AuthManager({ location, setLocation, session, setSession
                 return
 
             const sessionInfo = session.session
+            const sessionLocation = {
+                ip: location.ip,
+                city: location.city,
+                country_name: location.country_name,
+                time_zone: location.time_zone
+            }
+
+            if (Object.entries(sessionLocation).some(([_k, v]) => !v))
+                session.rememberMe = false
 
             if (session.rememberMe) {
                 secureLocalStorage.setItem("object", {
                     auth_token: sessionInfo.$user.auth_token,
                     ke: sessionInfo.$user.ke,
                     uid: sessionInfo.$user.uid,    
-                    location: {
-                        ip: location.ip,
-                        city: location.city,
-                        country_name: location.country_name,
-                        time_zone: location.time_zone
-                    }
+                    location: sessionLocation
                 })
             } else {
                 sessionStorage.setItem("session", JSON.stringify({
                     auth_token: sessionInfo.$user.auth_token,
                     ke: sessionInfo.$user.ke,
-                    uid: sessionInfo.$user.uid,    
-                    location: location
+                    uid: sessionInfo.$user.uid,
+                    location: sessionLocation
                 }))
             }
 

@@ -121,7 +121,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
         <div className="w-full flex-grow flex justify-center items-center">
             <div
                 ref={zoomPadRef}
-                className="flex justify-center items-center bg-neutral-50 border-double border-8 border-neutral-700 rounded"
+                className="flex justify-center items-center bg-neutral-50 border-double border-8 border-neutral-700 rounded shadow-md"
                 onMouseDown={(e) => zoomVideoOnMouse(e)}
                 onTouchStart={(e) => zoomVideoOnTouch(e)}
             >
