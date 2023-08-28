@@ -77,7 +77,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const playBtn = playBtnRef.current
         const pauseBtn = pauseBtnRef.current
 
-        if (!video || !overlay || !playBtn || !pauseBtn)
+        if (!video || !overlay || !playBtn || !pauseBtn || !video.src)
             return
         
         if (video.ended)
@@ -221,15 +221,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const head = trackingHeadRef.current
         const progressBar = progressBarRef.current
 
-        if (!video || !seekBar || !progressBar || !head)
+        if (!video || !seekBar || !progressBar || !head || !video.src || video.seeking)
             return
 
         const paused = video.paused
         const start = seekBar.getBoundingClientRect().left
         const end = seekBar.getBoundingClientRect().right
-
-        if (video.seeking)
-            return
 
         if (!paused) {
             playPauseVideo()
@@ -262,17 +259,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     function videoSeekingOnTouchStart(e: React.TouchEvent) {
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
+        const progressBar = progressBarRef.current
 
-        if (!video || !seekBar || e.touches.length > 1)
+        if (!video || !seekBar || !progressBar|| !video.src || video.seeking || e.touches.length > 1)
             return
 
         const paused = video.paused
-        const progressBar = progressBarRef.current
         const start = seekBar.getBoundingClientRect().left
         const end = seekBar.getBoundingClientRect().right
-
-        if (video.seeking)
-            return
 
         if (!paused) {
             playPauseVideo()
@@ -349,18 +343,22 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         pauseBtn.classList.add("opacity-0")
     }
 
-    if (!videoSource)
-        return (
-            <div ref={videoContainerRef} className="rounded">
-                <img src="logo.png" alt="cat logo" className="w-full h-full object-contain"/>
-            </div>
-        )
+    function loadingImage() {
+        const video = videoRef.current
+        if (!video)
+            return null
+
+        if (video.src || isLiveStream)
+            return <img src="Loading.svg" alt="loading icon" className="w-1/12 object-contain animate-spin"/>
+        else
+            return <img src="Logo.png" alt="loading icon" className="object-contain"/>
+    }
 
     return (
-        <div className="pt-3 flex justify-center">
+        <div className="pt-3 flex flex-grow justify-center">
             <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden">
                 <video
-                    className="w-full h-full object-fill scale-100 rounded"
+                    className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
@@ -375,7 +373,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 >
                     Your browser does not support HTML5 video.
                 </video>
-                
+                <div className="absolute -z-10 top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+                    { loadingImage() }
+                </div>
                 <div
                     className="absolute top-0 left-0 right-0 bottom-0 opacity-0 duration-1000"
                     ref={overlayRef}

@@ -9,7 +9,7 @@ export default function HomePage() {
     const [session, setSession] = React.useState<any>(null)
 
     return (
-        <main>
+        <main className="flex flex-col">
             <AuthManager setSession={setSession}/>
             { session ? <LiveStream session={session} /> : null }
         </main>

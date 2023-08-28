@@ -36,7 +36,7 @@ export default function Recordings({ session }: { session: any }) {
                 }
 
                 return ({
-                    videoSource: [baseURL, v.href].join('/'),
+                    videoSource: baseURL + v.href,
                     time: videoTime,
                     thumbnail: thumbnailUrl + "/" + thumbnail
                 })
@@ -67,23 +67,19 @@ export default function Recordings({ session }: { session: any }) {
     return (
         <>
             <Navbar />
-            <div ref={containerRef} className="container mx-auto">
+            <div ref={containerRef} className="container mx-auto overflow-hidden flex flex-col flex-grow">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
-                <div className="recording-buttons">
-                <button
-                    ref={recordingBtnRef}
-                    className="recording-btn active"
-                    onClick={() => setSubMenu("recordings")}
-                >Recordings</button>
-                <button
-                    ref={zoomBtnRef}
-                    className="recording-btn"
-                    onClick={() => setSubMenu("zoom")}
-                >Zoom</button>
-            </div>
-                <div className="scrollable" ref={scrollableRef}>
+                <div className="w-full flex justify-between">
+                    <button
+                        className="recording-btn active"
+                    >Recordings</button>
+                    <button
+                        className="recording-btn"
+                    >Zoom</button>
+                </div>
+                <div className="h-full flex flex-col overflow-hidden">
                     <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />
-                    <ZoomPad containerRef={containerRef} videoRef={videoRef} />
+                    {/* <ZoomPad containerRef={containerRef} videoRef={videoRef} /> */}
                 </div>
             </div>
         </>
