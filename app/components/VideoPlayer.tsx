@@ -82,7 +82,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         
         if (video.ended)
             video.currentTime = 0
-
+        
         if (video.paused) {
             try {
                 video.play()
@@ -90,21 +90,36 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 router.refresh()
             }
             
-            overlay.classList.remove("opacity-100")
-            pauseBtn.classList.add('opacity-0')
-            playBtn.classList.remove('opacity-0')
+            overlay.classList.remove("!opacity-100", "!visible")
+            overlay.classList.add("opacity-0", "insivible")
+            playBtn.classList.add('hidden')
+            pauseBtn.classList.remove('hidden')
             
-        } else if (!video.paused) {
+        } else {
             try {
                 video.pause()
             } catch (ex) {
                 router.refresh()
             }
-
-            overlay.classList.add("opacity-100")
-            playBtn.classList.add('opacity-0')
-            pauseBtn.classList.remove('opacity-0')
+            
+            overlay.classList.add("!opacity-100", "!visible")
+            overlay.classList.remove("opacity-0", "insivible")
+            pauseBtn.classList.add('hidden')
+            playBtn.classList.remove('hidden')
         }
+    }
+
+    function beforePlaying() {
+        const overlay = overlayRef.current
+        const playBtn = playBtnRef.current
+        const pauseBtn = pauseBtnRef.current
+
+        if (!overlay || !playBtn || !pauseBtn)
+            return
+
+        overlay.classList.remove("!opacity-100", "!visible")
+        playBtn.classList.add("hidden")
+        pauseBtn.classList.remove("hidden")
     }
 
     function getTimeString(time: number) {
@@ -181,7 +196,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!overlay)
         return
         
-        if (overlay.classList.contains("opacity-0"))
+        if (overlay.classList.contains("invisible"))
             showOverlay()
         else
             hideOverlay()
@@ -193,7 +208,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!overlay)
             return
 
-        overlay.classList.add("opacity-0")
+        overlay.classList.add("opacity-0", "invisible")
     }
 
     function showOverlay() {
@@ -208,10 +223,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             n ++
         })
         overlayTimeouts.splice(0, n)
-        overlay.classList.remove("opacity-0")
+        overlay.classList.remove("opacity-0", "invisible")
 
         overlayTimeouts.push(setTimeout(() => {
-            overlay.classList.add("opacity-0")
+            overlay.classList.add("opacity-0", "invisible")
         }, 2000))
     }
 
@@ -221,16 +236,15 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const head = trackingHeadRef.current
         const progressBar = progressBarRef.current
 
-        if (!video || !seekBar || !progressBar || !head || !video.src || video.seeking)
+        if (!video || !seekBar || !progressBar || !head || !video.src)
             return
 
         const paused = video.paused
         const start = seekBar.getBoundingClientRect().left
         const end = seekBar.getBoundingClientRect().right
-
-        if (!paused) {
+    
+        if (!paused)
             playPauseVideo()
-        }
 
         const seek = (e: MouseEvent|React.MouseEvent) => {
             const position = e.clientX
@@ -246,9 +260,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const clear = () => {
             window.removeEventListener("mouseup", clear)
             window.removeEventListener("mousemove", seek)
-            if (!paused) {
+            if (!paused)                
                 playPauseVideo()
-            }
         }
 
         window.addEventListener("mouseup", clear)
@@ -268,9 +281,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const start = seekBar.getBoundingClientRect().left
         const end = seekBar.getBoundingClientRect().right
 
-        if (!paused) {
+        if (!paused)
             playPauseVideo()
-        }
 
         const seek = (e: TouchEvent|React.TouchEvent) => {
             const position = e.touches[0].clientX
@@ -285,9 +297,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const clear = () => {
             seekBar.removeEventListener("touchend", clear)
             seekBar.removeEventListener("touchmove", seek)
-            if (!paused) {
+            if (!paused)
                 playPauseVideo()
-            }
         }
 
         seekBar.addEventListener("touchend", clear)
@@ -295,7 +306,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         seek(e)
     }
 
-    const seekOnDblClick = (e: React.MouseEvent, value: number) => {
+    function seekOnDblClick(e: React.MouseEvent, value: number) {
         const video = videoRef.current
         if (!video)
             return
@@ -309,8 +320,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             })
             dblClicksTimeouts.splice(0, n)
         }
+
         const seek = () => {
-            e.stopPropagation()
             removeTimeouts()
             showOverlay()
             const time = video.currentTime
@@ -338,9 +349,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!playBtn || !pauseBtn || !overlay)
             return 
 
-        overlay.classList.add("opacity-100")
-        playBtn.classList.remove("opacity-0")
-        pauseBtn.classList.add("opacity-0")
+        overlay.classList.add("!opacity-100" ,"!visible")
+        playBtn.classList.remove("hidden")
+        pauseBtn.classList.add("hidden")
     }
 
     function loadingImage() {
@@ -363,8 +374,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onPause={() => overlayRef.current?.classList.add("opacity-100")}
+                    onLoad={() => beforePlaying()}
                     onEnded={() => onVideoEnd()}
+                    onClick={() => toggleOverlay()}
+                    onMouseMove={() => showOverlay()}
                     autoPlay
                     muted
                     playsInline
@@ -377,14 +390,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     { loadingImage() }
                 </div>
                 <div
-                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 duration-1000"
+                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-1000"
                     ref={overlayRef}
                     onClick={() => toggleOverlay()}
                     onMouseMove={() => showOverlay()}
                 >
                     <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
-                        <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
-                        <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
+                        <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain hidden" src="Play.svg" />
+                        <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain" src="Pause.svg" />
                     </div>
 
                     <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-2 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
