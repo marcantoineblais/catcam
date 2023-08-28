@@ -11,7 +11,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const [dblClicksTimeouts] = React.useState<any[]>([])
     const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
     const overlayRef = React.useRef<HTMLDivElement|null>(null)
-    const playBtnRef = React.useRef<HTMLDivElement|null>(null)
+    const playBtnRef = React.useRef<HTMLImageElement|null>(null)
+    const pauseBtnRef = React.useRef<HTMLImageElement|null>(null)
     const videoSeekingRef = React.useRef<HTMLDivElement|null>(null)
     const progressBarRef = React.useRef<HTMLDivElement|null>(null)
     const bufferBarRef = React.useRef<HTMLDivElement|null>(null)
@@ -74,8 +75,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const video = videoRef.current
         const overlay = overlayRef.current
         const playBtn = playBtnRef.current
+        const pauseBtn = pauseBtnRef.current
 
-        if (!video || !overlay || !playBtn)
+        if (!video || !overlay || !playBtn || !pauseBtn)
             return
         
         if (video.ended)
@@ -84,20 +86,24 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (video.paused) {
             try {
                 video.play()
-                overlay.classList.remove("opacity-100")
             } catch (ex) {
                 router.refresh()
             }
+            
+            overlay.classList.remove("opacity-100")
+            pauseBtn.classList.add('opacity-0')
+            playBtn.classList.remove('opacity-0')
+            
         } else if (!video.paused) {
             try {
                 video.pause()
             } catch (ex) {
                 router.refresh()
             }
-        }
 
-        for (let i: number = 0; i < playBtn.children.length; i++){
-            playBtn.children[i].classList.toggle("opacity-0")
+            overlay.classList.add("opacity-100")
+            playBtn.classList.add('opacity-0')
+            pauseBtn.classList.remove('opacity-0')
         }
     }
 
@@ -332,14 +338,15 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     const onVideoEnd = () => {
         const playBtn = playBtnRef.current
-        overlayRef.current?.classList.add("opacity-100")
+        const pauseBtn = pauseBtnRef.current
+        const overlay = overlayRef.current
         
-        if (!playBtn)
+        if (!playBtn || !pauseBtn || !overlay)
             return 
 
-        for (let i: number = 0; i < playBtn.children.length; i++){
-            playBtn.children[i].classList.toggle("opacity-0")
-        }
+        overlay.classList.add("opacity-100")
+        playBtn.classList.remove("opacity-0")
+        pauseBtn.classList.add("opacity-0")
     }
 
     if (!videoSource)
@@ -375,9 +382,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={() => toggleOverlay()}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div ref={playBtnRef} className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
-                        <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
-                        <img className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
+                    <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
+                        <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200" src="Pause.svg" />
+                        <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain duration-200 opacity-0" src="Play.svg" />
                     </div>
 
                     <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-2 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>

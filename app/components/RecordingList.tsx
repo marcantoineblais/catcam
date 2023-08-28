@@ -214,11 +214,11 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             
 
             <div
-                    className="recordings"
-                    ref={cardsRef}
-                    onTouchStart={(e) => removeScroll(e)}
-                    onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
-                >
+                className="recordings"
+                ref={cardsRef}
+                onTouchStart={(e) => removeScroll(e)}
+                onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
+            >
                 {visibleVideoCards}
             </div>
             <div ref={pageBtnRef} className="buttons">

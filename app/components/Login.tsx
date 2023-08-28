@@ -3,22 +3,24 @@
 import React from "react"
 import  secureLocalStorage  from  "react-secure-storage"
 import { useRouter } from "next/navigation"
+import requestJSON from "../util/requestJSON"
 
-export default function Form() {
+export default function Login() {
 
-    const [ip, setIp] = React.useState(null)
+    const [location, setLocation] = React.useState<any>(null)
     const formRef = React.useRef<HTMLFormElement|null>(null)
     const submitRef = React.useRef<HTMLButtonElement|null>(null)
     const router = useRouter()
 
     React.useEffect(() => {
-        async function getIpAddress() {
-            const res = await fetch("https://api.ipify.org?format=json")
-            const data = await res.json()
-            setIp(data.ip)
+        async function getLocation() {
+            const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
+            const data = await requestJSON(url + process.env.geolocationAPIKey)
+            
+            setLocation(data)
         }
 
-        getIpAddress()
+        getLocation()
     }, [])
 
     async function submitForm() {
@@ -30,8 +32,7 @@ export default function Form() {
         const baseurl: string = 'https://catcam.source.marchome.xyz/?json=true'
         const email: string = form.email.value
         const password: string = form.password.value
-        const machineID: string|null = ip
-        
+        const machineID: string|null = location.ip
         
         const body: {
             machineID: string|null,
@@ -57,7 +58,7 @@ export default function Form() {
                 auth_token: data.$user.auth_token,
                 ke: data.$user.ke,
                 uid: data.$user.uid,    
-                ipAddress: ip
+                location: location
             })
             router.push("/")
             return
@@ -66,7 +67,7 @@ export default function Form() {
                 auth_token: data.$user.auth_token,
                 ke: data.$user.ke,
                 uid: data.$user.uid,    
-                ipAddress: ip
+                location: location
             }))
             router.push("/")
             return

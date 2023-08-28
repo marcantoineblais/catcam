@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import secureLocalStorage from "react-secure-storage";
+import requestJSON from "../util/requestJSON";
 
 export default function AuthManager({ setSession }: { setSession: Function }) {    
 
@@ -10,10 +11,9 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
 
     React.useEffect(() => {
         async function getSession() {
-            const res: Response = await fetch("https://api.ipify.org?format=json")
-            const data: {ip: string} = await res.json()
-            const ip: string|null = data.ip
-            let sessionInfo: any = secureLocalStorage.getItem("object")
+            const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
+            const data = await requestJSON(url + process.env.geolocationAPIKey)
+            let sessionInfo: any = secureLocalStorage.getItem("object")         
             
             if (!sessionInfo || Object.entries(sessionInfo).some(([_k, v]) => !v)) {
                 sessionInfo = sessionStorage.getItem("session")
@@ -28,7 +28,7 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
                 return
             }
             
-            if (!sessionInfo || (sessionInfo.ipAddress && ip !== sessionInfo.ipAddress)) {
+            if (!sessionInfo || (sessionInfo.location.city !== data.city && sessionInfo.location.ip !== data.ip)) {
                 secureLocalStorage.clear()
                 sessionStorage.clear()
                 setSession(null)
@@ -36,6 +36,7 @@ export default function AuthManager({ setSession }: { setSession: Function }) {
                 return
             } else
                 setSession(sessionInfo)
+       
         }
 
         getSession()
