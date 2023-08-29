@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import ZoomPad from "./ZoomPad"
+import { Container } from "postcss"
 
 
 const RecordingList = ({ recordings, setVideoSource, containerRef }: { recordings: any[]|null, setVideoSource: Function, containerRef: React.MutableRefObject<HTMLDivElement|null> }) => {
@@ -24,7 +25,7 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
 
             const currentWidth = container.clientWidth
             const rowSize = currentWidth > 720 ? 3 : 2
-            const width = (currentWidth / rowSize) - 20 + "px"
+            const width = (currentWidth / rowSize) - 8 + "px"
             const height = (parseInt(width) / 16) * 9 + "px"
 
             for (let i = 0; i < cards.children.length; i++) {
@@ -45,33 +46,52 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
     })
 
     useEffect(() => {
-        if (!recordings)
+        const container = containerRef.current
+        
+        if (!recordings || !container)
             return
+        
+        const currentWidth = container.clientWidth
+        const rowSize = currentWidth > 720 ? 3 : 2
+        const nbOfCards = recordings.length
+        const startIndex = (currentPage - 1) * 12
+        const endIndex = startIndex + 12 > nbOfCards ? nbOfCards : startIndex + 12
+        let key = 1
         
         function videoOnClick(video: any, index: number) {
             setActiveVideoIndex(index)
             setVideoSource(video.videoSource)
         }
 
-        const cards = recordings.map((v, i) => {
+        const cards = recordings.slice(startIndex, endIndex).map((v, i) => {
             const time = v.time.toTimeString().split(" ")[0]
             const date = v.time.toDateString().split(" ").slice(1, 4).join("-")
+            const activeStyle = i + startIndex === activeVideoIndex ? "bg-sky-700 text-neutral-50 cursor-default grayscale" : "bg-neutral-50 cursor-pointer hover:text-neutral-500 hover:blur-sm"
 
             return (
                 <div
-                    className={`thumbnail`}
-                    key={i}
+                    className={`mb-3 flex flex-col justify-center items-center rounded shadow-lg overflow-hidden duration-200 ${activeStyle}`}
+                    key={key++}
                     onClick={() => videoOnClick(v, i)}
                 >
-                    <img src={v.thumbnail} alt="camera snapshot" />
-                    <p>{date + ", " + time}</p>
+                    <img src={v.thumbnail} alt="camera snapshot" className="w-full h-full object-fill" />
+                    <p className="w-full text-center py-1 text-sm">{date + ", " + time}</p>
                 </div>
             )
         })
 
+        while (cards.length % rowSize !== 0) {
+            cards.push(
+                <div key={key++}>
+                    <div></div>
+                    <div></div>
+                </div>
+            )
+        }
+
         setRenderedVideoCards(cards)
         setLastPage(Math.ceil(cards.length / 12))
-    }, [recordings, setVideoSource])
+    }, [recordings, setVideoSource, activeVideoIndex, currentPage])
 
     // const stopScreenRefreshOnScroll = (e) => {
     //     const target = e.currentTarget
@@ -138,47 +158,21 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
     //     cards.addEventListener("touchend", removeListeners)
     // }
 
-    
-    function renderCards() {
-        const container = containerRef.current
-        if (!renderedVideoCards || !container)
-            return
-
-        const currentWidth = container.clientWidth
-        const rowSize = currentWidth > 720 ? 3 : 2
-        const nbOfCards = renderedVideoCards.length
-        const startIndex = (currentPage - 1) * 12
-        const endIndex = startIndex + 12 > nbOfCards ? nbOfCards : startIndex + 12
-
-        const cards = renderedVideoCards.slice(startIndex, endIndex)
-        let key = cards.length
-
-        while (cards.length % rowSize !== 0) {
-            cards.push(
-                <div key={key++}>
-                    <div></div>
-                    <div></div>
-                </div>
-            )
-        }
-
-        return cards
-    }
 
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="flex justify-between gap-1 flex-wrap flex-grow overflow-y-auto"
+                className="flex justify-between flex-wrap flex-grow overflow-y-auto"
                 ref={cardsRef}
                 // onTouchStart={(e) => removeScroll(e)}
                 // onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
             >
-                { renderCards() }
+                { renderedVideoCards }
             </div>
-            <div ref={pageBtnRef} className="buttons">
-                <button onClick={() => previousPage()}><div className="arrow hidden"></div></button>
+            <div ref={pageBtnRef} className="py-3 flex justify-between items-center">
+                <button onClick={() => previousPage()}></button>
                 <p>Page {currentPage} of {lastPage}</p>
-                <button onClick={() => nextPage()}><div className="arrow reverse-arrow"></div></button>
+                <button onClick={() => nextPage()}></button>
             </div>
         </div>
     )

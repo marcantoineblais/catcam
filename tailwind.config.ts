@@ -8,6 +8,9 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            grayscale: {
+                80: "80%"
+            },
             backgroundImage: {
                 'menu-icon': 'url(./img/menu-icon.png")',
                 'chats': "url('./img/chats.png')",

@@ -50,7 +50,7 @@ export default function Login({ location, setSession }: { location: any, setSess
     }
 
     return (
-        <div className="pt-16 max-w-screen-md container mx-auto" onKeyUp={(e) => manageKeyUp(e)}>
+        <div className="px-1 pt-16 max-w-screen-md container mx-auto" onKeyUp={(e) => manageKeyUp(e)}>
             <form  className="w-full p-5 bg-neutral-50 rounded" ref={formRef} autoComplete="on">
                 <h1 className="w-full pb-10 text-center text-3xl">Login</h1>
 

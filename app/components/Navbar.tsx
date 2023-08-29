@@ -58,16 +58,16 @@ const Navbar = ({ activePage }: { activePage: string }) => {
 
     return (
         <div className="border-b-2 border-neutral-700 shadow-md">
-            <div ref={containerRef} className="h-full container flex justify-between items-center mx-auto">
+            <div ref={containerRef} className="px-1 h-full container flex justify-between items-center mx-auto">
                 <div className="bg-chats bg-bottom bg-contain bg-origin-content bg-clip-text text-transparent">
                     <h1 className="text-5xl font-extrabold tracking-widest text-neutral-700/10">CATCAM</h1>
                 </div>
                 <menu className="h-full relative flex justify-end items-end">
                     <img ref={menuIconRef} className="w-9 h-full duration-200 object-contain md:hidden" src="Menu.svg" alt="menu icon" onClick={(e: React.MouseEvent) => showMenu(e)}></img>
-                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-14 right-0 z-50 bg-neutral-200 p-2 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
-                        <button className="py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-b-neutral-500" onClick={() => router.push('/')}>Live</button>
-                        <button className="py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-b-neutral-500" onClick={() => router.push('/recordings')}>Recordings</button>
-                        <button className="py-1 px-4 border-b-4 text-amber-600 duration-200 hover:text-amber-500 hover:border-b-amber-500" onClick={() => logout()}>Logout</button>
+                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-14 right-0 z-50 p-2 border-2 bg-neutral-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
+                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-neutral-500" onClick={() => router.push('/')}>Live</button>
+                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-neutral-500" onClick={() => router.push('/recordings')}>Recordings</button>
+                        <button className="w-full text-center py-1 px-4 border-b-4 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500" onClick={() => logout()}>Logout</button>
                     </div>
                 </menu>
             </div>

@@ -52,8 +52,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             let width = container.clientWidth
             let height = (width / 16) * 9
 
-            if (height > container.clientHeight * 0.6) {
-                height = container.clientHeight * 0.6
+            if (height > container.clientHeight * 0.5) {
+                height = container.clientHeight * 0.5
                 width = (height / 9) * 16
             } 
             videoContainer.style.width = width + "px"
@@ -165,8 +165,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         else if (position < 0)
             position = 0
 
-        progress.style.transform = `scaleX(${position})`
-        head.style.transform = `scaleX(${1 / position})`
+        progress.style.width = `${position * 100}%`
         setVideoTime(getTimeString(time))
     }
 
@@ -192,7 +191,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         else if (position < 0)
             position = 0
 
-        buffer.style.transform = `scaleX(${position})`
+        buffer.style.width = `${position * 100}%`
         setDuration(videoDuration)
         setVideoEnd(getTimeString(videoDuration))
     }
@@ -220,9 +219,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     function showOverlay() {
         const overlay = overlayRef.current
+        const video = videoRef.current
         let n: number = 0;
 
-        if (!overlay)
+        if (!overlay || !video || !video.src)
             return
 
         overlayTimeouts.forEach(t => {
@@ -258,8 +258,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             showOverlay()
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - (end - position) / (end - start)
-                progressBar.style.transform = `scaleX(${progressFraction})`
-                head.style.transform = `scaleX(${1 / progressFraction})`
+                progressBar.style.width = `${progressFraction * 100}%`
                 video.currentTime = progressFraction * video.duration
             }
         }
@@ -369,7 +368,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (video.src || isLiveStream)
             return <img src="Loading.svg" alt="loading icon" className="w-1/12 object-contain animate-spin"/>
         else
-            return <img src="Logo.png" alt="loading icon" className="object-contain"/>
+            return <img src="Logo.png" alt="loading icon" className="h-full w-full object-contain object-bottom"/>
     }
 
     return (
@@ -381,7 +380,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onLoad={() => beforePlaying()}
+                    onLoadedData={() => beforePlaying()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => toggleOverlay()}
                     onMouseMove={() => showOverlay()}
@@ -407,7 +406,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                         <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain" src="Pause.svg" alt="pause button" />
                     </div>
 
-                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-2 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
+                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
                         <div className="text-neutral-50 lg:pl-6">{videoTime}</div>
                         <div
                             className="flex items-center flex-grow"
@@ -415,14 +414,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
                             <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
-                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 w-full bg-neutral-500 rounded origin-left"></div>
-                                <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 w-full bg-sky-700 rounded cursor-pointer origin-left">
-                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer"></div>
+                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
+                                <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
+                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer translate-x-1/4"></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="text-neutral-50 lg:pr-6">{videoEnd}</div>
-                        <img src="Fullscreen.svg" className="h-full py-1 object-contain cursor-pointer" onClick={() => setFullScreen()} />
+                        <div className="text-neutral-50 lg:pr-3">{videoEnd}</div>
+                        <img src="Fullscreen.svg" className="h-full py-1.5 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
                     <div
                         className=" absolute top-0 bottom-8 left-0 w-1/5"

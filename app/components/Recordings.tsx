@@ -13,6 +13,9 @@ export default function Recordings({ session }: { session: any }) {
     const [recordings, setRecordings] = React.useState<any[]|null>(null)
     const videoRef = React.useRef<HTMLVideoElement|null>(null)
     const containerRef = React.useRef<HTMLDivElement|null>(null)
+    const recordingsBtnRef = React.useRef<HTMLButtonElement|null>(null)
+    const zoomBtnRef = React.useRef<HTMLButtonElement|null>(null)
+    
 
     React.useEffect(() => {
         if (!session || Object.entries(session).some(([_k, v]) => !v))
@@ -63,19 +66,35 @@ export default function Recordings({ session }: { session: any }) {
 
         getRecordings()
     }, [session])
+
+    function toggleSection(section: string) {
+        const recordingsBtn = recordingsBtnRef.current
+        const zoomBtn = zoomBtnRef.current
+
+        if (!recordingsBtn || !zoomBtn)
+            return
+        
+        if (section === "recordings") {
+            recordingsBtn.classList.add("border-sky-700", "text-neutral-500", "cursor-default")
+            recordingsBtn.classList.remove("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+            zoomBtn.classList.remove("border-sky-700", "text-neutral-500", "cursor-default")
+            zoomBtn.classList.add("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+        } else if (section === "zoom") {
+            zoomBtn.classList.add("border-sky-700", "text-neutral-500", "cursor-default")
+            zoomBtn.classList.remove("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+            recordingsBtn.classList.remove("border-sky-700", "text-neutral-500", "cursor-default")
+            recordingsBtn.classList.add("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+        }
+    }
     
     return (
         <>
             <Navbar activePage="recording" />
-            <div ref={containerRef} className="container mx-auto overflow-hidden flex flex-col flex-grow">
+            <div ref={containerRef} className="p-1 container mx-auto overflow-hidden flex flex-col flex-grow">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
-                <div className="w-full flex justify-between">
-                    <button
-                        className="recording-btn active"
-                    >Recordings</button>
-                    <button
-                        className="recording-btn"
-                    >Zoom</button>
+                <div className="w-full my-2 flex justify-between items-center shadow-lg">
+                    <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pt-5 h-full basis-1/2 border-b-4 border-sky-700 text-neutral-500 cursor-default text-xl text-left duration-200">Recordings</button>
+                    <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pt-5 h-full flex-grow border-neutral-700 border-b-4 text-xl text-right duration-200 hover:border-neutral-500 hover:text-neutral-500">Zoom</button>
                 </div>
                 <div className="h-full flex flex-col overflow-hidden">
                     <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />

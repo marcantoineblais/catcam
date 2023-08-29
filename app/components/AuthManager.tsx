@@ -22,6 +22,14 @@ export default function AuthManager({ location, setLocation, session, setSession
 
     React.useEffect(() => {
         
+        function logout() {
+            localStorage.clear()
+            sessionStorage.clear()
+            if (setSession)
+                setSession(null)
+            router.push("/login")
+        }
+
         async function getSession() {
             if (!setSession || !location)
                 return
@@ -31,36 +39,38 @@ export default function AuthManager({ location, setLocation, session, setSession
             let encryptedData: any = localStorage.getItem("JWT")
             
             if (encryptedData) {
-                decryptedData = await decryptData(encryptedData)
-                jwt = JSON.parse(decryptedData)
+                try {
+                    decryptedData = await decryptData(encryptedData)
+                    jwt = JSON.parse(decryptedData)
+                } catch(ex) {
+                    logout()
+                }
             }
-
+            
             if (!jwt || Object.entries(jwt).some(([_k, v]) => !v)) {
                 encryptedData = sessionStorage.getItem("JWT")
                 if (encryptedData) {
-                    decryptedData = await decryptData(encryptedData)
-                    jwt = JSON.parse(decryptedData)
+                    try {
+                        decryptedData = await decryptData(encryptedData)
+                        jwt = JSON.parse(decryptedData)
+                    } catch(ex) {
+                        logout()
+                    }
                 }                 
             }
-        
+            
             if (!jwt || Object.entries(jwt).some(([_k, v]) => !v)) {
-                localStorage.clear()
-                sessionStorage.clear()
-                setSession(null)
-                router.push("/login")
+                logout()
                 return
             }
-
+            
             if (
                 jwt.location && jwt.location.ip !== location.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 0.5 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 0.5 ||
                     parseInt(location.longitude) < parseInt(jwt.location.longitude) - 0.5 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 0.5 
                 )
             ) {
-                localStorage.clear()
-                sessionStorage.clear()
-                setSession(null)
-                router.push("/login")
+                logout()
                 return
             } else
                 setSession(jwt)          
