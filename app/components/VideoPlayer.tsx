@@ -49,8 +49,15 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
         const resize = () => {
-            videoContainer.style.width = container.clientWidth + "px"
-            videoContainer.style.height = (container.clientWidth / 16) * 9 + "px"
+            let width = container.clientWidth
+            let height = (width / 16) * 9
+
+            if (height > container.clientHeight * 0.6) {
+                height = container.clientHeight * 0.6
+                width = (height / 9) * 16
+            } 
+            videoContainer.style.width = width + "px"
+            videoContainer.style.height = height + "px"
         }
         
         resize()

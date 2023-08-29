@@ -1,6 +1,5 @@
 "use client"
 
-import secureLocalStorage from "react-secure-storage"
 import React from "react"
 import { useRouter } from "next/navigation"
 
@@ -42,7 +41,7 @@ const Navbar = ({ activePage }: { activePage: string }) => {
     }, [activePage])
 
     function logout() {
-        secureLocalStorage.clear()
+        localStorage.clear()
         sessionStorage.clear()
         router.push('/login')
     }

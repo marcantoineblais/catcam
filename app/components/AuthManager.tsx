@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import secureLocalStorage from "react-secure-storage";
 import requestJSON from "../util/requestJSON";
+import { encryptData, decryptData } from "../util/encryptor"
 
 export default function AuthManager({ location, setLocation, session, setSession }: { location: any, setLocation: Function, session: any|null, setSession: Function|null }) {    
 
@@ -21,68 +21,83 @@ export default function AuthManager({ location, setLocation, session, setSession
     }, [setLocation])
 
     React.useEffect(() => {
+        
         async function getSession() {
             if (!setSession || !location)
                 return
-
-            let sessionInfo: any = secureLocalStorage.getItem("object")         
             
-            if (!sessionInfo || Object.entries(sessionInfo).some(([_k, v]) => !v)) {
-                sessionInfo = sessionStorage.getItem("session")
-                if (sessionInfo) sessionInfo = JSON.parse(sessionInfo)                 
+            let jwt
+            let decryptedData
+            let encryptedData: any = localStorage.getItem("JWT")
+            
+            if (encryptedData) {
+                decryptedData = await decryptData(encryptedData)
+                jwt = JSON.parse(decryptedData)
+            }
+
+            if (!jwt || Object.entries(jwt).some(([_k, v]) => !v)) {
+                encryptedData = sessionStorage.getItem("JWT")
+                if (encryptedData) {
+                    decryptedData = await decryptData(encryptedData)
+                    jwt = JSON.parse(decryptedData)
+                }                 
             }
         
-            if (!sessionInfo || Object.entries(sessionInfo).some(([_k, v]) => !v)) {
-                secureLocalStorage.clear()
+            if (!jwt || Object.entries(jwt).some(([_k, v]) => !v)) {
+                localStorage.clear()
                 sessionStorage.clear()
                 setSession(null)
                 router.push("/login")
+                return
             }
-            
-            if (sessionInfo.location && (sessionInfo.location.country_name !== location.country_name || (sessionInfo.location.ip !== location.ip && sessionInfo.location.city !== location.city))) {
-                secureLocalStorage.clear()
+
+            if (
+                jwt.location && jwt.location.ip !== location.ip && (
+                    parseInt(location.latitude) < parseInt(jwt.location.latitude) - 0.5 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 0.5 ||
+                    parseInt(location.longitude) < parseInt(jwt.location.longitude) - 0.5 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 0.5 
+                )
+            ) {
+                localStorage.clear()
                 sessionStorage.clear()
                 setSession(null)
                 router.push("/login")
+                return
             } else
-                setSession(sessionInfo)   
+                setSession(jwt)          
         }
 
         getSession()
     }, [router, location, setSession])
 
     React.useEffect(() => {
-        function storeSession() {
+        async function storeSession() {
             if (!session || !location)
                 return
 
-            const sessionInfo = session.session
+            const jwt = session.session
             const sessionLocation = {
                 ip: location.ip,
-                city: location.city,
-                country_name: location.country_name,
+                latitude: location.latitude,
+                longitude: location.longitude,
                 time_zone: location.time_zone
             }
+            const sessionJSON = JSON.stringify({
+                auth_token: jwt.$user.auth_token,
+                ke: jwt.$user.ke,
+                uid: jwt.$user.uid,    
+                location: sessionLocation
+            })
 
+            const encryptedSession = await encryptData(sessionJSON)
             if (Object.entries(sessionLocation).some(([_k, v]) => !v))
                 session.rememberMe = false
 
             if (session.rememberMe) {
-                secureLocalStorage.setItem("object", {
-                    auth_token: sessionInfo.$user.auth_token,
-                    ke: sessionInfo.$user.ke,
-                    uid: sessionInfo.$user.uid,    
-                    location: sessionLocation
-                })
+                localStorage.setItem("JWT", encryptedSession)
             } else {
-                sessionStorage.setItem("session", JSON.stringify({
-                    auth_token: sessionInfo.$user.auth_token,
-                    ke: sessionInfo.$user.ke,
-                    uid: sessionInfo.$user.uid,
-                    location: sessionLocation
-                }))
+                sessionStorage.setItem("JWT", encryptedSession)
             }
-
+            
             router.push("/")
         }
 
