@@ -144,7 +144,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        const time = video.duration
+        const time = video.duration || video.buffered.end(video.buffered.length - 1)
 
         setDuration(time)
         setVideoEnd(getTimeString(time))
@@ -165,7 +165,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         else if (position < 0)
             position = 0
 
-        progress.style.width = `${position * 100}%`
+        if (!video.paused)
+            progress.style.width = `${position * 100}%`
+
         setVideoTime(getTimeString(time))
     }
 
@@ -199,8 +201,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     function toggleOverlay(e: React.MouseEvent|null) {
         e?.stopPropagation()
         const overlay = overlayRef.current
-        console.log("here");
-        
         
         if (!overlay)
         return
@@ -213,7 +213,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     function hideOverlay() {
         const overlay = overlayRef.current
-        console.log("here 2");
+
         if (!overlay)
             return
 
@@ -302,7 +302,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * duration
+                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
             }
         }
 
