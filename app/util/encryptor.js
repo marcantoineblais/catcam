@@ -1,4 +1,3 @@
-"use client"
 
 async function generateBrowserSpecificKey() {
     const combinedData = navigator.userAgent + navigator.languages + navigator.mediaCapabilities + navigator.maxTouchPoints + navigator.mediaSession + navigator.storage
