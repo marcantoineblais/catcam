@@ -36,14 +36,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             const clearListeners = () => {
                 refreshTimer.forEach(t => clearTimeout(t))
                 refreshTimer.splice(0, refreshTimer.length)
-                // refreshIcon.classList.add("-translate-y-36")
-                // refreshIcon.classList.remove("animate-spin")
+                refreshIcon.classList.add("-translate-y-16")
                 window.removeEventListener("touchmove", scrollToRefresh)
                 window.removeEventListener("touchend", refresh)
             }
 
             const refresh = () => {
-                refreshIcon.classList.add("animate-spin")
                 clearListeners()
                 router.refresh()
             }
@@ -59,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 
 
                 if (scrollValue > 0.1) {
-                    refreshIcon.classList.remove("-translate-y-36", "-rotate-180")
+                    refreshIcon.classList.remove("-translate-y-16")
                     if (refreshTimer.length === 0) {
                         refreshTimer.push(setTimeout(() => {
                             window.removeEventListener("touchend", clearListeners)
@@ -69,9 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         }, 200))
                     }
                 } else {
-                    refreshIcon.classList.remove("rotate-360")
-                    refreshIcon.classList.add("-translate-y-36")
-
+                    refreshIcon.classList.add("-translate-y-16")
                     refreshTimer.forEach(t => clearTimeout(t))
                     refreshTimer.splice(0, refreshTimer.length)
                     window.removeEventListener("touchend", refresh)
@@ -93,7 +89,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body className={inter.className}>
-                <img ref={refreshIconRef} src="Refresh.svg" alt="refresh icon" className="top-4 absolute w-full h-8 z-50 object-contain -rotate-180 duration-500 -translate-y-36" />
+                <div ref={refreshIconRef} className="absolute top-0 left-0 right-0 h-12 flex justify-center items-center bg-gray-950/10 -translate-y-16 duration-200">
+                    <img src="Refresh.svg" alt="refresh icon" className="w-full h-8 z-50 object-contain animate-spin" />
+                </div>
                 {children}
             </body>
         </html>

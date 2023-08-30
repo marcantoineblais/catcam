@@ -1,15 +1,22 @@
-const requestJSON = async (url) => {
-  const response =  await fetch(url, {
-    method: "GET",
-    mode: "cors",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    }
-  })
+async function requestJSON(url) {
+    let response
 
-  return await response.json()
+    try {
+        response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+    } catch(ex) {
+        console.log("Error fetching data.")
+        return null  
+    }
+
+    return await response.json()
 }
 
 export default requestJSON

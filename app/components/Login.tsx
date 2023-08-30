@@ -16,7 +16,7 @@ export default function Login({ location, setSession }: { location: any, setSess
         const baseurl: string = 'https://catcam.source.marchome.xyz/?json=true'
         const email: string = form.email.value
         const password: string = form.password.value
-        const machineID: string|null = location.ip
+        const machineID: string|null = location?.ip || form.email.value
         
         const body: {
             machineID: string|null,
