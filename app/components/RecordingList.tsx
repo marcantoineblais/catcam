@@ -50,6 +50,10 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         setLastPage(Math.ceil(recordings.length / 12))
     }, [recordings])
 
+    React.useEffect(() => {
+        window.dispatchEvent(new Event('resize'))
+    }, [recordings, currentPage])
+
     const stopScreenRefreshOnScroll = (e: React.TouchEvent) => {
         const target = e.currentTarget
         const scroll = target.scrollTop
@@ -161,7 +165,7 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
 
             return (
                 <div
-                    className={`mb-3 flex flex-col justify-center items-center rounded bg-gray-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
+                    className={`h-fit mb-3 flex flex-col rounded bg-gray-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
                     key={key++}
                     onClick={() => videoOnClick(v, i + startIndex)}
                 >
@@ -180,14 +184,13 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             )
         }
         
-        window.dispatchEvent(new Event('resize'))
         return cards
     }
 
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth"
+                className="w-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth"
                 ref={cardsRef}
                 onTouchStart={(e) => removeScroll(e)}
                 onTouchMove={(e) => stopScreenRefreshOnScroll(e)}

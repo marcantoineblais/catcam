@@ -101,7 +101,7 @@ export default function Recordings({ session }: { session: any }) {
                     <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="px-3 pt-5 h-full basis-1/2 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
                     <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="px-3 pt-5 h-full flex-grow border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
                 </div>
-                <div className="w-full overflow-hidden">
+                <div className="w-full flex-grow overflow-hidden">
                     <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between">
                         <div className="basis-1/2">
                             <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />
