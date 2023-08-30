@@ -64,10 +64,10 @@ const Navbar = ({ activePage }: { activePage: string }) => {
                 </div>
                 <menu className="h-full relative flex justify-end items-end">
                     <img ref={menuIconRef} className="w-9 h-full duration-200 object-contain md:hidden" src="Menu.svg" alt="menu icon" onClick={(e: React.MouseEvent) => showMenu(e)}></img>
-                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-12 right-0 z-50 p-2 bg-gray-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
-                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500" onClick={() => router.push('/')}>Live</button>
-                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500" onClick={() => router.push('/recordings')}>Recordings</button>
-                        <button className="w-full text-center py-1 px-4 border-b-4 border-gray-300 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500" onClick={() => logout()}>Logout</button>
+                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-12 right-0 z-50 bg-gray-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
+                        <button className="w-32 text-center py-3 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:py-1" onClick={() => router.push('/')}>Live</button>
+                        <button className="w-32 text-center py-3 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:py-1" onClick={() => router.push('/recordings')}>Recordings</button>
+                        <button className="w-32 text-center py-3 border-b-4 border-gray-300 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500 md:py-1" onClick={() => logout()}>Logout</button>
                     </div>
                 </menu>
             </div>
