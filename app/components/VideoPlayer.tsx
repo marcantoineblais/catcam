@@ -401,26 +401,26 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={() => toggleOverlay()}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-neutral-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
+                    <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
                         <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain hidden" src="Play.svg" alt="play button" />
                         <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain" src="Pause.svg" alt="pause button" />
                     </div>
 
-                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-neutral-950/75" onClick={(e) => e.stopPropagation()}>
-                        <div className="text-neutral-50 lg:pl-6">{videoTime}</div>
+                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-gray-950/75" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-gray-50 lg:pl-6">{videoTime}</div>
                         <div
                             className="flex items-center flex-grow"
                             onMouseDown={(e) => videoSeekingOnMouseDown(e)}
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
-                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
-                                <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
+                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-gray-800 rounded cursor-pointer">
+                                <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
                                     <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer translate-x-1/4"></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="text-neutral-50 lg:pr-3">{videoEnd}</div>
+                        <div className="text-gray-50 lg:pr-3">{videoEnd}</div>
                         <img src="Fullscreen.svg" alt="fullscreen icon" className="h-full py-1.5 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
                     <div

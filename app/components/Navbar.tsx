@@ -32,11 +32,11 @@ const Navbar = ({ activePage }: { activePage: string }) => {
             return
 
         if (activePage === "live") {
-            navBtn.children[0].classList.add("border-b-sky-700", "cursor-default", "text-neutral-500")
-            navBtn.children[0].classList.remove("hover:border-b-neutral-500", "hover:text-neutral-500")
+            navBtn.children[0].classList.add("border-b-sky-700", "cursor-default", "text-gray-500")
+            navBtn.children[0].classList.remove("hover:border-b-gray-500", "hover:text-gray-500")
         } else if (activePage === "recording") {
-            navBtn.children[1].classList.add("border-b-sky-700", "cursor-default", "text-neutral-500")
-            navBtn.children[1].classList.remove("hover:border-b-neutral-500", "hover:text-neutral-500")
+            navBtn.children[1].classList.add("border-b-sky-700", "cursor-default", "text-gray-500")
+            navBtn.children[1].classList.remove("hover:border-b-gray-500", "hover:text-gray-500")
         }
     }, [activePage])
 
@@ -57,17 +57,17 @@ const Navbar = ({ activePage }: { activePage: string }) => {
     }
 
     return (
-        <div className="border-b-2 border-neutral-700 shadow-md">
+        <div className="border-b-2 border-gray-700 shadow-md">
             <div ref={containerRef} className="px-1 h-full container flex justify-between items-center mx-auto">
                 <div className="bg-chats bg-bottom bg-contain bg-origin-content bg-clip-text text-transparent">
-                    <h1 className="text-5xl font-extrabold tracking-widest text-neutral-700/10">CATCAM</h1>
+                    <h1 className="text-5xl font-extrabold tracking-widest text-gray-700/10">CATCAM</h1>
                 </div>
                 <menu className="h-full relative flex justify-end items-end">
                     <img ref={menuIconRef} className="w-9 h-full duration-200 object-contain md:hidden" src="Menu.svg" alt="menu icon" onClick={(e: React.MouseEvent) => showMenu(e)}></img>
-                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-14 right-0 z-50 p-2 border-2 bg-neutral-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
-                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-neutral-500" onClick={() => router.push('/')}>Live</button>
-                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 hover:text-neutral-500 hover:border-neutral-500" onClick={() => router.push('/recordings')}>Recordings</button>
-                        <button className="w-full text-center py-1 px-4 border-b-4 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500" onClick={() => logout()}>Logout</button>
+                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-12 right-0 z-50 p-2 bg-gray-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
+                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500" onClick={() => router.push('/')}>Live</button>
+                        <button className="w-full text-center py-1 px-4 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500" onClick={() => router.push('/recordings')}>Recordings</button>
+                        <button className="w-full text-center py-1 px-4 border-b-4 border-gray-300 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500" onClick={() => logout()}>Logout</button>
                     </div>
                 </menu>
             </div>

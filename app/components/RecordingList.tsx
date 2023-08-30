@@ -90,7 +90,6 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             cards.classList.remove("no-scroll")
             cards.removeEventListener("touchmove", stopScroll)
             cards.removeEventListener("touchend", removeListeners)
-
         }
 
         cards.addEventListener("touchmove", stopScroll)
@@ -158,11 +157,11 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         const cards = recordings.slice(startIndex, endIndex).map((v, i) => {
             const time = v.time.toTimeString().split(" ")[0]
             const date = v.time.toDateString().split(" ").slice(1, 4).join("-")
-            const activeStyle = i + startIndex === activeVideoIndex ? "cursor-default brightness-50" : "cursor-pointer hover:text-neutral-500 hover:brightness-75"
+            const activeStyle = i + startIndex === activeVideoIndex ? "cursor-default brightness-50" : "cursor-pointer hover:text-gray-500 hover:brightness-75"
 
             return (
                 <div
-                    className={`mb-3 flex flex-col justify-center items-center rounded bg-neutral-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
+                    className={`mb-3 flex flex-col justify-center items-center rounded bg-gray-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
                     key={key++}
                     onClick={() => videoOnClick(v, i + startIndex)}
                 >
@@ -180,7 +179,8 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
                 </div>
             )
         }
-
+        
+        window.dispatchEvent(new Event('resize'))
         return cards
     }
 
@@ -194,7 +194,7 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             >
                 { renderCards() }
             </div>
-            <div className="w-full py-3 flex justify-between items-center">
+            <div className="w-full py-31 flex justify-between items-center">
                 <img ref={previousPageRef} src="Arrow.svg" alt="arrow pointing left" onClick={() => previousPage()} className="h-12 rotate-180 cursor-pointer invisible" />
                 <p>Page {currentPage} of { lastPage }</p>
                 <img ref={nextPageRef} src="Arrow.svg" alt="arrow pointing right" onClick={() => nextPage()} className="h-12 cursor-pointer" />
