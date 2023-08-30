@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Livestream of cats',
     start_url: '/',
     display: 'standalone',
-    background_color: '#F3f4f6',
+    background_color: '#006699',
     theme_color: '#006699',
     icons: [
       {
