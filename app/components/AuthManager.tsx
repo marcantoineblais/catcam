@@ -108,7 +108,7 @@ export default function AuthManager({ location, setLocation, session, setSession
                 sessionStorage.setItem("JWT", encryptedSession)
             }
             
-            router.push("/")
+            router.push("")
         }
 
         storeSession()
