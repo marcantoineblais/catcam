@@ -279,6 +279,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
     
     function videoSeekingOnTouchStart(e: React.TouchEvent) {
+        e.stopPropagation()
+
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
         const progressBar = progressBarRef.current
@@ -294,6 +296,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             playPauseVideo()
 
         const seek = (e: TouchEvent|React.TouchEvent) => {
+            e.stopPropagation()
             const position = e.touches[0].clientX
             showOverlay()
             if (position >= start && position <= end && progressBar) {
