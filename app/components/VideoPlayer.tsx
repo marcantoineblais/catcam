@@ -421,7 +421,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                             </div>
                         </div>
                         <div className="text-neutral-50 lg:pr-3">{videoEnd}</div>
-                        <img src="Fullscreen.svg" className="h-full py-1.5 object-contain cursor-pointer" onClick={() => setFullScreen()} />
+                        <img src="Fullscreen.svg" alt="fullscreen icon" className="h-full py-1.5 object-contain cursor-pointer" onClick={() => setFullScreen()} />
                     </div>
                     <div
                         className=" absolute top-0 bottom-8 left-0 w-1/5"
