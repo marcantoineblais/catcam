@@ -196,8 +196,11 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         setVideoEnd(getTimeString(videoDuration))
     }
 
-    function toggleOverlay() {
+    function toggleOverlay(e: React.MouseEvent|null) {
+        e?.stopPropagation()
         const overlay = overlayRef.current
+        console.log("here");
+        
         
         if (!overlay)
         return
@@ -210,7 +213,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     function hideOverlay() {
         const overlay = overlayRef.current
-
+        console.log("here 2");
         if (!overlay)
             return
 
@@ -301,14 +304,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
 
         const clear = () => {
-            seekBar.removeEventListener("touchend", clear)
-            seekBar.removeEventListener("touchmove", seek)
+            window.removeEventListener("touchend", clear)
+            window.removeEventListener("touchmove", seek)
             if (!paused)
                 playPauseVideo()
         }
 
-        seekBar.addEventListener("touchend", clear)
-        seekBar.addEventListener("touchmove", seek)
+        window.addEventListener("touchend", clear)
+        window.addEventListener("touchmove", seek)
         seek(e)
     }
 
@@ -339,7 +342,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
         
         if (dblClicksTimeouts.length === 0) {
-            toggleOverlay()
+            toggleOverlay(null)
             dblClicksTimeouts.push(setTimeout(() => {
                 removeTimeouts()
             }, 300))
@@ -382,7 +385,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onLoadedMetadata={() => updateDuration()}
                     onLoadedData={() => beforePlaying()}
                     onEnded={() => onVideoEnd()}
-                    onClick={() => toggleOverlay()}
+                    onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
                     autoPlay
                     muted
@@ -396,9 +399,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     { loadingImage() }
                 </div>
                 <div
-                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-1000"
+                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-500"
                     ref={overlayRef}
-                    onClick={() => toggleOverlay()}
+                    onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
                 >
                     <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>

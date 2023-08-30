@@ -82,7 +82,14 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
         if (!video || !container || !zoomPad || e.touches.length > 1)
             return
 
-        const zoom = () => {
+        const x = e.touches[0].clientX
+        const y = e.touches[0].clientY
+        const zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
+        const zoomY = ((y - zoomPad.top) / (zoomPad.bottom - zoomPad.top)) * 100
+        
+        const zoom = (e: TouchEvent) => {
+            e.stopPropagation()
+            
             const x = e.touches[0].clientX
             const y = e.touches[0].clientY
             let zoomX = ((x - zoomPad.left) / (zoomPad.right - zoomPad.left)) * 100
@@ -93,7 +100,6 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             if (zoomY > 100) zoomY = 100
             else if (zoomY < 0) zoomY = 0
             
-            video.style.transform = `scale(4)`
             video.style.transformOrigin = `${zoomX}% ${zoomY}%`
         }
 
@@ -105,7 +111,10 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
 
         container.classList.add("overflow-hidden")
         window.addEventListener("touchend", clearListeners)
-        window.addEventListener("touchmouve", zoom)
+        window.addEventListener("touchmove", zoom)
+
+        video.style.transform = `scale(4)`
+        video.style.transformOrigin = `${zoomX}% ${zoomY}%`
     }
 
     const unZoomVideo = () => {
