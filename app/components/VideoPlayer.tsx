@@ -374,7 +374,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (video.src || isLiveStream)
             return <img src="Loading.svg" alt="loading icon" className="w-1/12 object-contain animate-spin"/>
         else
-            return <img src="Logo.png" alt="loading icon" className="h-full w-full object-contain object-bottom"/>
+            return <img src="logo.png" alt="cat picture" className="h-full w-full object-contain object-bottom"/>
     }
 
     return (
