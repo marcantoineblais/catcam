@@ -8,7 +8,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
         const zoomPad = zoomPadRef.current
         const container = containerRef.current
         const parent: any = zoomPad?.parentNode
-
+        
         if (!zoomPad || !container || !parent)
             return
         
@@ -16,11 +16,11 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             const parentHeight = parent.clientHeight
             let width = container.clientWidth * 0.8
             let height = (width / 16) * 9
-            if (height >= parentHeight) {
-                height = parentHeight
+            if (height >= parentHeight * 0.8) {
+                height = parentHeight * 0.8
                 width = (height / 9 * 16)
             }
-
+            
             zoomPad.style.width = width + "px"
             zoomPad.style.height = height + "px"
             zoomPad.style.minHeight = zoomPad.style.height
@@ -29,11 +29,11 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
 
         resize()
         window.addEventListener("resize", resize)
-
+        
         return () => {
             window.removeEventListener("resize", resize)
         }
-    }, [containerRef])
+    }, [containerRef, zoomPadRef])
 
     const zoomVideoOnMouse = (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -66,6 +66,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             window.removeEventListener("mousemove", zoom)
         }
         
+        container.classList.add("overflow-hidden")
         window.addEventListener("mouseup", clearListeners)
         window.addEventListener("mousemove", zoom)
         zoom(e)
@@ -102,6 +103,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             window.removeEventListener("touchmove", zoom)
         }
 
+        container.classList.add("overflow-hidden")
         window.addEventListener("touchend", clearListeners)
         window.addEventListener("touchmouve", zoom)
     }
@@ -114,11 +116,11 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
             return
 
         video.style.transform = ""
-        container.classList.remove("no-scroll")
+        container.classList.remove("overflow-hidden")
     }
 
     return (
-        <div className="w-full flex-grow flex justify-center items-center">
+        <div className="h-full flex-grow flex justify-center items-center">
             <div
                 ref={zoomPadRef}
                 className="flex justify-center items-center bg-neutral-50 border-double border-8 border-neutral-700 rounded shadow-md"

@@ -190,7 +190,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             position = 1
         else if (position < 0)
             position = 0
-
+        
         buffer.style.width = `${position * 100}%`
         setDuration(videoDuration)
         setVideoEnd(getTimeString(videoDuration))
@@ -372,7 +372,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex flex-grow justify-center">
+        <div className="pt-3 flex max-h-1/2 justify-center">
             <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow-md">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
@@ -414,7 +414,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
                             <div ref={videoSeekingRef} className="h-2 w-full relative bg-neutral-800 rounded cursor-pointer">
-                                <div ref={bufferBarRef} className="top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
+                                <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-neutral-500 rounded"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
                                     <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer translate-x-1/4"></div>
                                 </div>

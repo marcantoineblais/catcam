@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react";
-import AuthManager from "../components/AuthManager";
-import Login from "../components/Login";
+import React from "react"
+import AuthManager from "../components/AuthManager"
+import Login from "../components/Login"
 
 export default function LoginPage() {
 
@@ -14,5 +14,6 @@ export default function LoginPage() {
             <AuthManager location={location} setLocation={setLocation} session={session} setSession={null} />
             <Login location={location} setSession={setSession} />
         </main>
+        
     )
 }

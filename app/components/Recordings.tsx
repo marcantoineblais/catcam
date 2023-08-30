@@ -15,7 +15,8 @@ export default function Recordings({ session }: { session: any }) {
     const containerRef = React.useRef<HTMLDivElement|null>(null)
     const recordingsBtnRef = React.useRef<HTMLButtonElement|null>(null)
     const zoomBtnRef = React.useRef<HTMLButtonElement|null>(null)
-    
+    const hscrollRef = React.useRef<HTMLDivElement|null>(null)
+    const zoomContainerRef = React.useRef<HTMLDivElement|null>(null)
 
     React.useEffect(() => {
         if (!session || Object.entries(session).some(([_k, v]) => !v))
@@ -70,8 +71,9 @@ export default function Recordings({ session }: { session: any }) {
     function toggleSection(section: string) {
         const recordingsBtn = recordingsBtnRef.current
         const zoomBtn = zoomBtnRef.current
+        const hscroll = hscrollRef.current
 
-        if (!recordingsBtn || !zoomBtn)
+        if (!recordingsBtn || !zoomBtn || !hscroll)
             return
         
         if (section === "recordings") {
@@ -79,12 +81,15 @@ export default function Recordings({ session }: { session: any }) {
             recordingsBtn.classList.remove("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
             zoomBtn.classList.remove("border-sky-700", "text-neutral-500", "cursor-default")
             zoomBtn.classList.add("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+            hscroll.classList.remove("-translate-x-1/2")
         } else if (section === "zoom") {
             zoomBtn.classList.add("border-sky-700", "text-neutral-500", "cursor-default")
             zoomBtn.classList.remove("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
             recordingsBtn.classList.remove("border-sky-700", "text-neutral-500", "cursor-default")
             recordingsBtn.classList.add("hover:border-neutral-500", "hover:text-neutral-500", "border-neutral-700")
+            hscroll.classList.add("-translate-x-1/2")
         }
+        window.dispatchEvent(new Event('resize'))
     }
     
     return (
@@ -93,13 +98,19 @@ export default function Recordings({ session }: { session: any }) {
             <div ref={containerRef} className="p-1 container mx-auto overflow-hidden flex flex-col flex-grow">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="w-full my-2 flex justify-between items-center shadow-lg">
-                    <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pt-5 h-full basis-1/2 border-b-4 border-sky-700 text-neutral-500 cursor-default text-xl text-left duration-200">Recordings</button>
-                    <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pt-5 h-full flex-grow border-neutral-700 border-b-4 text-xl text-right duration-200 hover:border-neutral-500 hover:text-neutral-500">Zoom</button>
+                    <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="px-3 pt-5 h-full basis-1/2 border-b-4 border-sky-700 text-neutral-500 cursor-default text-xl text-left duration-200">Recordings</button>
+                    <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="px-3 pt-5 h-full flex-grow border-neutral-700 border-b-4 text-xl text-right duration-200 hover:border-neutral-500 hover:text-neutral-500">Zoom</button>
                 </div>
-                <div className="h-full flex flex-col overflow-hidden">
-                    <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />
-                    {/* <ZoomPad containerRef={containerRef} videoRef={videoRef} /> */}
-                </div>
+                <div className="w-full overflow-clip">
+                    <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between">
+                        <div className="basis-1/2">
+                            <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />
+                        </div>
+                        <div ref={zoomContainerRef} className="basis-1/2 flex">
+                            <ZoomPad containerRef={zoomContainerRef} videoRef={videoRef} />
+                        </div>
+                    </div>
+                </div>        
             </div>
         </>
     )

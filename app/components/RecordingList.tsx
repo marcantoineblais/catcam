@@ -10,9 +10,8 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [lastPage, setLastPage] = useState<number>(1)
     const cardsRef = useRef<HTMLDivElement|null>(null)
-    const pageBtnRef = useRef<HTMLDivElement|null>(null)
-    const nextRef = useRef<HTMLButtonElement|null>()
-    const previousRef = useRef<HTMLButtonElement|null>()
+    const nextPageRef = useRef<HTMLImageElement|null>(null)
+    const previousPageRef = useRef<HTMLImageElement|null>(null)
 
 
     // Resize cards when resizing window
@@ -66,13 +65,13 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         const cards = recordings.slice(startIndex, endIndex).map((v, i) => {
             const time = v.time.toTimeString().split(" ")[0]
             const date = v.time.toDateString().split(" ").slice(1, 4).join("-")
-            const activeStyle = i + startIndex === activeVideoIndex ? "bg-sky-700 text-neutral-50 cursor-default grayscale" : "bg-neutral-50 cursor-pointer hover:text-neutral-500 hover:blur-sm"
+            const activeStyle = i + startIndex === activeVideoIndex ? "cursor-default brightness-50" : "cursor-pointer hover:text-neutral-500 hover:brightness-75"
 
             return (
                 <div
-                    className={`mb-3 flex flex-col justify-center items-center rounded shadow-lg overflow-hidden duration-200 ${activeStyle}`}
+                    className={`mb-3 flex flex-col justify-center items-center rounded bg-neutral-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
                     key={key++}
-                    onClick={() => videoOnClick(v, i)}
+                    onClick={() => videoOnClick(v, i + startIndex)}
                 >
                     <img src={v.thumbnail} alt="camera snapshot" className="w-full h-full object-fill" />
                     <p className="w-full text-center py-1 text-sm">{date + ", " + time}</p>
@@ -90,89 +89,111 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         }
 
         setRenderedVideoCards(cards)
-        setLastPage(Math.ceil(cards.length / 12))
+        setLastPage(Math.ceil(recordings.length / 12))
     }, [recordings, setVideoSource, activeVideoIndex, currentPage])
 
-    // const stopScreenRefreshOnScroll = (e) => {
-    //     const target = e.currentTarget
-    //     const scroll = target.scrollTop
+    const stopScreenRefreshOnScroll = (e: React.TouchEvent) => {
+        const target = e.currentTarget
+        const scroll = target.scrollTop
 
-    //     if (scroll !== 0)
-    //         e.stopPropagation()
-    // }
+        if (scroll !== 0)
+            e.stopPropagation()
+    }
 
     const nextPage = () => {
         const cards = cardsRef.current
-        if (!cards)
+        const nextPage = nextPageRef.current
+        const previousPage = previousPageRef.current
+
+        if (!cards || !nextPage || !previousPage)
             return
 
         if (currentPage < lastPage) {
             cards.scrollTo(0, 0)
             setCurrentPage(currentPage + 1)
         }
+        
+        previousPage.classList.remove("invisible")
+        if (currentPage + 1 === lastPage)
+            nextPage.classList.add("invisible")
+        else
+            nextPage.classList.remove("invisible")
     }
 
     const previousPage = () => {
         const cards = cardsRef.current
-        if (!cards)
+        const previousPage = previousPageRef.current
+        const nextPage = nextPageRef.current
+
+        if (!cards || !previousPage || !nextPage)
             return
 
         if (currentPage > 1) {
             cards.scrollTo(0, 0)
             setCurrentPage(currentPage - 1)
         }
+        
+        nextPage.classList.remove("invisible")
+        if (currentPage - 1 === 1)
+            previousPage.classList.add("invisible")
+        else
+            previousPage.classList.remove("invisible")
     }
 
-    // const removeScroll = (e) => {
-    //     const cards = cardsRef.current
-    //     const start = e.touches[0].clientY
-    //     const scrollHeight = cards.scrollHeight
-    //     const height = cards.clientHeight
+    const removeScroll = (e: React.TouchEvent) => {
+        const cards = cardsRef.current
 
-    //     const stopScroll = (e) => {
-    //         const position = e.touches[0].clientY
-    //         const cardsScroll = cards.scrollTop
+        if (!cards)
+            return
 
-    //         if (cardsScroll <= 0 && start - position <= 0)
-    //             cards.classList.add("no-scroll")
-    //         else if (scrollHeight - cardsScroll <= height && start - position >= 0)
-    //             cards.classList.add("no-scroll")
-    //         else
-    //             cards.classList.remove("no-scroll")
+        const start = e.touches[0].clientY
+        const scrollHeight = cards.scrollHeight
+        const height = cards.clientHeight
 
-    //         if (cardsScroll > 0)
-    //             e.stopPropagation()
-    //     }
+        const stopScroll = (e: TouchEvent) => {
+            const position = e.touches[0].clientY
+            const cardsScroll = cards.scrollTop
 
-    //     if (cards.scrollTop > 0)
-    //         e.stopPropagation()
+            if (cardsScroll <= 0 && start - position <= 0)
+                cards.classList.add("overflow-hidden")
+            else if (scrollHeight - cardsScroll <= height && start - position >= 0)
+                cards.classList.add("overflow-hidden")
+            else
+                cards.classList.remove("overflow-hidden")
 
-    //     const removeListeners = () => {
-    //         cards.classList.remove("no-scroll")
-    //         cards.removeEventListener("touchmove", stopScroll)
-    //         cards.removeEventListener("touchend", removeListeners)
+            if (cardsScroll > 0)
+                e.stopPropagation()
+        }
 
-    //     }
+        if (cards.scrollTop > 0)
+            e.stopPropagation()
 
-    //     cards.addEventListener("touchmove", stopScroll)
-    //     cards.addEventListener("touchend", removeListeners)
-    // }
+        const removeListeners = () => {
+            cards.classList.remove("no-scroll")
+            cards.removeEventListener("touchmove", stopScroll)
+            cards.removeEventListener("touchend", removeListeners)
+
+        }
+
+        cards.addEventListener("touchmove", stopScroll)
+        cards.addEventListener("touchend", removeListeners)
+    }
 
 
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="flex justify-between flex-wrap flex-grow overflow-y-auto"
+                className="flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth"
                 ref={cardsRef}
-                // onTouchStart={(e) => removeScroll(e)}
-                // onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
+                onTouchStart={(e) => removeScroll(e)}
+                onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
             >
                 { renderedVideoCards }
             </div>
-            <div ref={pageBtnRef} className="py-3 flex justify-between items-center">
-                <button onClick={() => previousPage()}></button>
+            <div className="w-full py-3 flex justify-between items-center">
+                <img ref={previousPageRef} src="Arrow.svg" alt="arrow pointing left" onClick={() => previousPage()} className="h-12 rotate-180 cursor-pointer invisible" />
                 <p>Page {currentPage} of {lastPage}</p>
-                <button onClick={() => nextPage()}></button>
+                <img ref={nextPageRef} src="Arrow.svg" alt="arrow pointing right" onClick={() => nextPage()} className="h-12 cursor-pointer" />
             </div>
         </div>
     )

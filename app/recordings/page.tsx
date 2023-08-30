@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react";
-import AuthManager from "../components/AuthManager";
-import Recordings from "../components/Recordings";
+import React from "react"
+import AuthManager from "../components/AuthManager"
+import Recordings from "../components/Recordings"
 
 export default function RecordingPage() {
     
