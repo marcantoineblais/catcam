@@ -407,7 +407,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div className="absolute top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
+                    <div className="absolute top-1/4 sm:top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
                         <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain hidden" src="Play.svg" alt="play button" />
                         <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain" src="Pause.svg" alt="pause button" />
                     </div>

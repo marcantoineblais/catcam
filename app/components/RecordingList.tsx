@@ -189,6 +189,9 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
 
     return (
         <div className="h-full w-full flex flex-col items-center">
+            <div className="absolute w-full h-8 -translate-y-8">
+                <img src="Unfold.svg" alt="upward arrow" className="w-full h-full object-contain duration-200"/>
+            </div>
             <div
                 className="w-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth"
                 ref={cardsRef}

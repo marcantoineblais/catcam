@@ -3,6 +3,7 @@
 import React from "react"
 import AuthManager from "../components/AuthManager"
 import Login from "../components/Login"
+import PageRefresh from "../components/PageRefresh"
 
 export default function LoginPage() {
 
@@ -12,6 +13,7 @@ export default function LoginPage() {
     return (
         <main>
             <AuthManager location={location} setLocation={setLocation} session={session} setSession={null} />
+            <PageRefresh />
             <Login location={location} setSession={setSession} />
         </main>
         

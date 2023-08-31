@@ -75,5 +75,9 @@ export default function PageRefresh() {
         }
     })
 
-    return null
+    return (
+        <div id="refresh" className="fixed top-0 left-0 right-0 h-12 flex justify-center items-center bg-gray-950/10 -translate-y-16 duration-200">
+            <img src="Refresh.svg" alt="refresh icon" className="w-full h-8 z-50 object-contain animate-spin" />
+        </div>
+    )
 }
