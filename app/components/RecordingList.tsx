@@ -4,8 +4,14 @@ import React from "react"
 
 
 const RecordingList = (
-    { recordings, setVideoSource, containerRef, recordingsListRef, foldRecordingsListOnSelect }:
-    { recordings: any[]|null, setVideoSource: Function, containerRef: React.MutableRefObject<HTMLDivElement|null>, recordingsListRef: React.MutableRefObject<HTMLDivElement|null>, foldRecordingsListOnSelect: Function }
+    { recordings, setVideoSource, containerRef, recordingsListRef, unfoldRecordingsList, foldRecordingsList }:
+    {
+        recordings: any[]|null,
+        setVideoSource: Function,
+        containerRef: React.MutableRefObject<HTMLDivElement|null>,
+        recordingsListRef: React.MutableRefObject<HTMLDivElement|null>,
+        unfoldRecordingsList: Function,
+        foldRecordingsList: Function }
 ) => {
 
     const [activeVideoIndex, setActiveVideoIndex] = React.useState<number|null>(null)
@@ -82,24 +88,27 @@ const RecordingList = (
                 recordingsList.classList.add("overflow-hidden")
             else if (scrollHeight - recordingsListScroll <= height && start - position >= 0)
                 recordingsList.classList.add("overflow-hidden")
-            else
-                recordingsList.classList.remove("overflow-hidden")
-
-            if (recordingsListScroll > 0)
+            else if (recordingsListScroll <= 0 && start - position > 0) {
                 e.stopPropagation()
+                unfoldRecordingsList()
+            } 
+
+            if (recordingsListScroll > 0) {
+                e.stopPropagation()
+            }
         }
 
         if (recordingsList.scrollTop > 0)
             e.stopPropagation()
 
         const removeListeners = () => {
-            recordingsList.classList.remove("no-scroll")
-            recordingsList.removeEventListener("touchmove", stopScroll)
-            recordingsList.removeEventListener("touchend", removeListeners)
+            recordingsList.classList.remove("overflow-hidden")
+            window.removeEventListener("touchmove", stopScroll)
+            window.removeEventListener("touchend", removeListeners)
         }
 
-        recordingsList.addEventListener("touchmove", stopScroll)
-        recordingsList.addEventListener("touchend", removeListeners)
+        window.addEventListener("touchmove", stopScroll)
+        window.addEventListener("touchend", removeListeners)
     }
 
     const nextPage = () => {
@@ -158,7 +167,7 @@ const RecordingList = (
         function videoOnClick(video: any, index: number) {
             setActiveVideoIndex(index)
             setVideoSource(video.videoSource)
-            foldRecordingsListOnSelect()
+            foldRecordingsList()
         }
 
         const recordingsList = recordings.slice(startIndex, endIndex).map((v, i) => {
