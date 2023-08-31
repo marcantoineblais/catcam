@@ -84,9 +84,10 @@ const RecordingList = (
             const position = e.touches[0].clientY
             const recordingsListScroll = recordingsList.scrollTop
 
-            if (recordingsListScroll <= 0 && start - position <= 0)
+            if (recordingsListScroll <= 0 && start - position <= 0) {
                 recordingsList.classList.add("overflow-hidden")
-            else if (scrollHeight - recordingsListScroll <= height && start - position >= 0)
+                foldRecordingsList()
+            } else if (scrollHeight - recordingsListScroll <= height && start - position >= 0)
                 recordingsList.classList.add("overflow-hidden")
             else if (recordingsListScroll <= 0 && start - position > 0) {
                 e.stopPropagation()

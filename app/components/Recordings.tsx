@@ -153,11 +153,11 @@ export default function Recordings({ session }: { session: any }) {
             <div ref={containerRef} className="p-1 h-full container mx-auto flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="relative h-full">
-                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-1000 bg-gray-100">
+                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100">
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow-lg">
                             <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
                             <div className="w-8 flex justify-center items-center border-gray-300 border-double">
-                                <img ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-200 delay-1000 cursor-pointer"/>
+                                <img ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-200 delay-300 cursor-pointer"/>
                             </div>
                             <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
                         </div>
