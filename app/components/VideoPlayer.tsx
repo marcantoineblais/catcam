@@ -262,7 +262,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
-                video.currentTime = progressFraction * video.duration
+                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
             }
         }
 
