@@ -8,7 +8,12 @@ import { encryptData, decryptData } from "../util/encryptor"
 export default function AuthManager({ location, setLocation, session, setSession }: { location: any, setLocation: Function, session: any|null, setSession: Function|null }) {    
 
     const router = useRouter()
-
+    
+    React.useEffect(() => {
+        if (window.top !== window.self)
+            window.location.href = document.location.href
+    }, [])
+    
     React.useEffect(() => {
         async function getLocation() {
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="

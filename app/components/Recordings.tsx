@@ -17,6 +17,9 @@ export default function Recordings({ session }: { session: any }) {
     const zoomBtnRef = React.useRef<HTMLButtonElement|null>(null)
     const hscrollRef = React.useRef<HTMLDivElement|null>(null)
     const zoomContainerRef = React.useRef<HTMLDivElement|null>(null)
+    const unfoldBtnRef = React.useRef<HTMLImageElement|null>(null)
+    const unfoldableRef = React.useRef<HTMLDivElement|null>(null)
+    const recordingsListRef = React.useRef<HTMLDivElement|null>(null)
 
     React.useEffect(() => {
         if (!session)
@@ -68,6 +71,52 @@ export default function Recordings({ session }: { session: any }) {
         getRecordings()
     }, [session])
 
+    function unfoldRecordingsList() {
+        const unfoldable = unfoldableRef.current
+        const unfoldBtn = unfoldBtnRef.current
+        const recordingsList = recordingsListRef.current
+        const container = containerRef.current
+
+        if (!unfoldable || !unfoldBtn || !recordingsList || !container)
+            return
+
+        let translation 
+        if (recordingsList.scrollHeight > container.clientHeight - 100)
+            translation = container.clientHeight - 100 - recordingsList.clientHeight
+        else
+            translation = recordingsList.scrollHeight - recordingsList.clientHeight
+        
+        if (unfoldBtn.classList.contains("rotate-180")) {
+            unfoldable.style.top = ""
+            unfoldable.style.minHeight = ""
+            unfoldBtn.classList.remove("rotate-180")
+        } else {
+            unfoldable.style.top = `${-translation}px`
+            unfoldable.style.minHeight = `${unfoldable.clientHeight + translation}px`
+            unfoldBtn.classList.add("rotate-180")
+        }    
+    }
+
+    function foldRecordingsListOnSelect() {
+        const unfoldable = unfoldableRef.current
+        const unfoldBtn = unfoldBtnRef.current
+        const recordingsList = recordingsListRef.current
+        const container = containerRef.current
+
+        if (!unfoldable || !unfoldBtn || !recordingsList || !container)
+            return
+
+        let translation 
+        if (recordingsList.scrollHeight > container.clientHeight - 100)
+            translation = container.clientHeight - 100 - recordingsList.clientHeight
+        else
+            translation = recordingsList.scrollHeight - recordingsList.clientHeight
+
+        unfoldable.style.top = ""
+        unfoldable.style.minHeight = ""
+        unfoldBtn.classList.remove("rotate-180")
+    }
+
     function toggleSection(section: string) {
         const recordingsBtn = recordingsBtnRef.current
         const zoomBtn = zoomBtnRef.current
@@ -95,22 +144,29 @@ export default function Recordings({ session }: { session: any }) {
     return (
         <>
             <Navbar activePage="recording" />
-            <div ref={containerRef} className="p-1 container mx-auto overflow-hidden flex flex-col flex-grow">
+            <div ref={containerRef} className="p-1 h-full container mx-auto flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
-                <div className="w-full my-2 flex justify-between items-center shadow-lg">
-                    <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="px-3 pt-5 h-full basis-1/2 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
-                    <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="px-3 pt-5 h-full flex-grow border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
-                </div>
-                <div className="w-full flex-grow overflow-hidden">
-                    <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between">
-                        <div className="basis-1/2">
-                            <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} />
+                <div className="relative h-full">
+                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-1000 bg-gray-100">
+                        <div className="w-full mt-3 mb-1 flex justify-between items-center shadow-lg">
+                            <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
+                            <div className="w-8 flex justify-center items-center border-gray-300 border-double">
+                                <img ref={unfoldBtnRef} onClick={() => unfoldRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-200 delay-1000 cursor-pointer"/>
+                            </div>
+                            <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
                         </div>
-                        <div ref={zoomContainerRef} className="basis-1/2 flex">
-                            <ZoomPad containerRef={zoomContainerRef} videoRef={videoRef} />
-                        </div>
+                        <div className="w-full flex-grow overflow-hidden">
+                            <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between overflow-hidden">
+                                <div className="h-full basis-1/2">
+                                    <RecordingList recordings={recordings} setVideoSource={setVideoSource} containerRef={containerRef} recordingsListRef={recordingsListRef} foldRecordingsListOnSelect={foldRecordingsListOnSelect} />
+                                </div>
+                                <div ref={zoomContainerRef} className="h-full basis-1/2 flex overflow-hidden">
+                                    <ZoomPad containerRef={zoomContainerRef} videoRef={videoRef} />
+                                </div>
+                            </div>
+                        </div>        
                     </div>
-                </div>        
+                </div>
             </div>
         </>
     )

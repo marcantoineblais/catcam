@@ -3,22 +3,24 @@
 import React from "react"
 
 
-const RecordingList = ({ recordings, setVideoSource, containerRef }: { recordings: any[]|null, setVideoSource: Function, containerRef: React.MutableRefObject<HTMLDivElement|null> }) => {
+const RecordingList = (
+    { recordings, setVideoSource, containerRef, recordingsListRef, foldRecordingsListOnSelect }:
+    { recordings: any[]|null, setVideoSource: Function, containerRef: React.MutableRefObject<HTMLDivElement|null>, recordingsListRef: React.MutableRefObject<HTMLDivElement|null>, foldRecordingsListOnSelect: Function }
+) => {
 
     const [activeVideoIndex, setActiveVideoIndex] = React.useState<number|null>(null)
     const [currentPage, setCurrentPage] = React.useState<number>(1)
     const [lastPage, setLastPage] = React.useState<number>(1)
-    const cardsRef = React.useRef<HTMLDivElement|null>(null)
     const nextPageRef = React.useRef<HTMLImageElement|null>(null)
     const previousPageRef = React.useRef<HTMLImageElement|null>(null)
 
 
-    // Resize cards when resizing window
+    // Resize recordingsList when resizing window
     React.useEffect(() => {
         const resize = () => {
             const container = containerRef.current
-            const cards = cardsRef.current
-            if (!container || !cards)
+            const recordingsList = recordingsListRef.current
+            if (!container || !recordingsList)
                 return
 
             const currentWidth = container.clientWidth
@@ -26,8 +28,8 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             const width = (currentWidth / rowSize) - 8 + "px"
             const height = (parseInt(width) / 16) * 9 + "px"
 
-            for (let i = 0; i < cards.children.length; i++) {
-                const card: any = cards.children[i]
+            for (let i = 0; i < recordingsList.children.length; i++) {
+                const card: any = recordingsList.children[i]
 
                 card.children[0].style.width = width
                 card.children[0].style.height = height
@@ -41,7 +43,7 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         return () => {
             window.removeEventListener('resize', resize)
         }
-    }, [containerRef, cardsRef])
+    }, [containerRef, recordingsListRef])
 
     React.useEffect(() => {
         if (!recordings)
@@ -63,53 +65,53 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
     }
     
     const removeScroll = (e: React.TouchEvent) => {
-        const cards = cardsRef.current
+        const recordingsList = recordingsListRef.current
 
-        if (!cards)
+        if (!recordingsList)
             return
 
         const start = e.touches[0].clientY
-        const scrollHeight = cards.scrollHeight
-        const height = cards.clientHeight
+        const scrollHeight = recordingsList.scrollHeight
+        const height = recordingsList.clientHeight
 
         const stopScroll = (e: TouchEvent) => {
             const position = e.touches[0].clientY
-            const cardsScroll = cards.scrollTop
+            const recordingsListScroll = recordingsList.scrollTop
 
-            if (cardsScroll <= 0 && start - position <= 0)
-                cards.classList.add("overflow-hidden")
-            else if (scrollHeight - cardsScroll <= height && start - position >= 0)
-                cards.classList.add("overflow-hidden")
+            if (recordingsListScroll <= 0 && start - position <= 0)
+                recordingsList.classList.add("overflow-hidden")
+            else if (scrollHeight - recordingsListScroll <= height && start - position >= 0)
+                recordingsList.classList.add("overflow-hidden")
             else
-                cards.classList.remove("overflow-hidden")
+                recordingsList.classList.remove("overflow-hidden")
 
-            if (cardsScroll > 0)
+            if (recordingsListScroll > 0)
                 e.stopPropagation()
         }
 
-        if (cards.scrollTop > 0)
+        if (recordingsList.scrollTop > 0)
             e.stopPropagation()
 
         const removeListeners = () => {
-            cards.classList.remove("no-scroll")
-            cards.removeEventListener("touchmove", stopScroll)
-            cards.removeEventListener("touchend", removeListeners)
+            recordingsList.classList.remove("no-scroll")
+            recordingsList.removeEventListener("touchmove", stopScroll)
+            recordingsList.removeEventListener("touchend", removeListeners)
         }
 
-        cards.addEventListener("touchmove", stopScroll)
-        cards.addEventListener("touchend", removeListeners)
+        recordingsList.addEventListener("touchmove", stopScroll)
+        recordingsList.addEventListener("touchend", removeListeners)
     }
 
     const nextPage = () => {
-        const cards = cardsRef.current
+        const recordingsList = recordingsListRef.current
         const nextPage = nextPageRef.current
         const previousPage = previousPageRef.current
 
-        if (!cards || !nextPage || !previousPage)
+        if (!recordingsList || !nextPage || !previousPage)
             return
 
         if (currentPage < lastPage) {
-            cards.scrollTo(0, 0)
+            recordingsList.scrollTo(0, 0)
             setCurrentPage(currentPage + 1)
         }
         
@@ -121,15 +123,15 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
     }
 
     const previousPage = () => {
-        const cards = cardsRef.current
+        const recordingsList = recordingsListRef.current
         const previousPage = previousPageRef.current
         const nextPage = nextPageRef.current
 
-        if (!cards || !previousPage || !nextPage)
+        if (!recordingsList || !previousPage || !nextPage)
             return
 
         if (currentPage > 1) {
-            cards.scrollTo(0, 0)
+            recordingsList.scrollTo(0, 0)
             setCurrentPage(currentPage - 1)
         }
         
@@ -140,7 +142,7 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             previousPage.classList.remove("invisible")
     }
 
-    function renderCards() {
+    function renderrecordingsList() {
         const container = containerRef.current
         
         if (!recordings || !container)
@@ -148,24 +150,25 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
         
         const currentWidth = container.clientWidth
         const rowSize = currentWidth > 720 ? 3 : 2
-        const nbOfCards = recordings.length
+        const nbOfrecordingsList = recordings.length
         const startIndex = (currentPage - 1) * 12
-        const endIndex = startIndex + 12 > nbOfCards ? nbOfCards : startIndex + 12
+        const endIndex = startIndex + 12 > nbOfrecordingsList ? nbOfrecordingsList : startIndex + 12
         let key = 1
         
         function videoOnClick(video: any, index: number) {
             setActiveVideoIndex(index)
             setVideoSource(video.videoSource)
+            foldRecordingsListOnSelect()
         }
 
-        const cards = recordings.slice(startIndex, endIndex).map((v, i) => {
+        const recordingsList = recordings.slice(startIndex, endIndex).map((v, i) => {
             const time = v.time.toTimeString().split(" ")[0]
             const date = v.time.toDateString().split(" ").slice(1, 4).join("-")
             const activeStyle = i + startIndex === activeVideoIndex ? "cursor-default brightness-50" : "cursor-pointer hover:text-gray-500 hover:brightness-75"
 
             return (
                 <div
-                    className={`h-fit mb-3 flex flex-col rounded bg-gray-50 shadow-lg overflow-hidden duration-200 ${activeStyle}`}
+                    className={`h-fit mb-3 flex flex-col rounded bg-gray-50 shadow-lg overflow-hidden duration-1000 ${activeStyle}`}
                     key={key++}
                     onClick={() => videoOnClick(v, i + startIndex)}
                 >
@@ -175,8 +178,8 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             )
         })
 
-        while (cards.length % rowSize !== 0) {
-            cards.push(
+        while (recordingsList.length % rowSize !== 0) {
+            recordingsList.push(
                 <div key={key++}>
                     <div></div>
                     <div></div>
@@ -184,21 +187,18 @@ const RecordingList = ({ recordings, setVideoSource, containerRef }: { recording
             )
         }
         
-        return cards
+        return recordingsList
     }
 
     return (
-        <div className="h-full w-full flex flex-col items-center">
-            <div className="absolute w-full h-8 -translate-y-8">
-                <img src="Unfold.svg" alt="upward arrow" className="w-full h-full object-contain duration-200"/>
-            </div>
+        <div className="h-full w-full flex flex-col items-center bg-inherit">
             <div
-                className="w-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth"
-                ref={cardsRef}
+                className="w-full h-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth duration-500"
+                ref={recordingsListRef}
                 onTouchStart={(e) => removeScroll(e)}
                 onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
             >
-                { renderCards() }
+                { renderrecordingsList() }
             </div>
             <div className="w-full py-31 flex justify-between items-center">
                 <img ref={previousPageRef} src="Arrow.svg" alt="arrow pointing left" onClick={() => previousPage()} className="h-12 rotate-180 cursor-pointer invisible" />

@@ -5,16 +5,11 @@ import React from "react"
 
 export default function PageRefresh() {
 
+    const refreshTimer: any[] = React.useState<any[]>([])
     const router = useRouter()
 
     React.useEffect(() => {
-        if (window.top !== window.self)
-            window.location.href = document.location.href
-    }, [])
-
-    React.useEffect(() => {
         const refreshPage = (e: TouchEvent) => {
-            const refreshTimer: any[] = []
             const refreshIcon = document.getElementById("refresh")
             const body = document.body
             const start = e.touches[0].clientY
