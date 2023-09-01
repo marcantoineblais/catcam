@@ -41,6 +41,7 @@ const RecordingList = (
                 card.children[0].style.height = height
                 card.children[1].style.width = width
             }
+            foldRecordingsList()
         }
 
         resize()
