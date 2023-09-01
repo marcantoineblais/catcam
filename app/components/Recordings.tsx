@@ -83,14 +83,14 @@ export default function Recordings({ session }: { session: any }) {
             unfoldRecordingsList()
     }
 
-    function unfoldRecordingsList() {
+    function unfoldRecordingsList(): boolean {
         const unfoldable = unfoldableRef.current
         const unfoldBtn = unfoldBtnRef.current
         const recordingsList = recordingsListRef.current
         const container = containerRef.current
 
         if (!unfoldable || !unfoldBtn || !recordingsList || !container || unfoldable.style.top)
-            return
+            return false
 
         let translation 
         if (recordingsList.scrollHeight > container.clientHeight - 100)
@@ -100,17 +100,19 @@ export default function Recordings({ session }: { session: any }) {
         
         unfoldable.style.top = `${-translation}px`
         unfoldable.style.minHeight = `${unfoldable.clientHeight + translation}px`
-        unfoldBtn.classList.add("rotate-180")   
+        unfoldBtn.classList.add("rotate-180")
+
+        return true
     }
 
-    function foldRecordingsList() {
+    function foldRecordingsList(): boolean {
         const unfoldable = unfoldableRef.current
         const unfoldBtn = unfoldBtnRef.current
         const recordingsList = recordingsListRef.current
         const container = containerRef.current
 
-        if (!unfoldable || !unfoldBtn || !recordingsList || !container)
-            return
+        if (!unfoldable || !unfoldBtn || !recordingsList || !container || !unfoldable.style.top)
+            return false
 
         let translation 
         if (recordingsList.scrollHeight > container.clientHeight - 100)
@@ -121,6 +123,8 @@ export default function Recordings({ session }: { session: any }) {
         unfoldable.style.top = ""
         unfoldable.style.minHeight = ""
         unfoldBtn.classList.remove("rotate-180")
+
+        return true
     }
 
     function toggleSection(section: string) {
@@ -157,7 +161,7 @@ export default function Recordings({ session }: { session: any }) {
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow-lg">
                             <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
                             <div className="w-8 flex justify-center items-center border-gray-300 border-double">
-                                <img ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-200 delay-300 cursor-pointer"/>
+                                <img ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-500 cursor-pointer"/>
                             </div>
                             <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
                         </div>

@@ -61,57 +61,65 @@ const RecordingList = (
     React.useEffect(() => {
         window.dispatchEvent(new Event('resize'))
     }, [recordings, currentPage])
-
-    const stopScreenRefreshOnScroll = (e: React.TouchEvent) => {
-        const target = e.currentTarget
-        const scroll = target.scrollTop
-
-        if (scroll !== 0)
-            e.stopPropagation()
-    }
     
-    const removeScroll = (e: React.TouchEvent) => {
+    const manageTouchMove = (e: React.TouchEvent) => {
         const recordingsList = recordingsListRef.current
-        const body = document.body
 
         if (!recordingsList)
             return
 
         const start = e.touches[0].clientY
         const scrollHeight = recordingsList.scrollHeight
+        const recordingsListScroll = recordingsList.scrollTop
         const height = recordingsList.clientHeight
-
+        let canRefresh = true
+        let canScroll = recordingsList.scrollTop > 0
+        
         const stopScroll = (e: TouchEvent) => {
+            
             const position = e.touches[0].clientY
-            const recordingsListScroll = recordingsList.scrollTop
 
-            if (recordingsListScroll <= 0 && start - position <= 0) {
-                foldRecordingsList()
-                removeListeners()
-            } else if (scrollHeight - recordingsListScroll <= height && start - position >= 0)
+            if (!canRefresh)
+                e.stopPropagation()
+            
+            
+            if (recordingsListScroll <= 0 && !canScroll && start - position <= 0) {     
+                if (foldRecordingsList()) {
+                    canRefresh = false
+                    recordingsList.classList.add("overflow-hidden")
+                    recordingsList.classList.remove("overflow-y-auto")
+                }
+            } else if (recordingsListScroll <= 0 && !canScroll && start - position >= 0) {
+                if (unfoldRecordingsList()) {
+                    canRefresh = false
+                    recordingsList.classList.add("overflow-hidden")
+                    recordingsList.classList.remove("overflow-y-auto")
+                }
+            } else if (scrollHeight - recordingsListScroll <= height && start - position >= 0) {
                 recordingsList.classList.add("overflow-hidden")
-            else if (recordingsListScroll <= 0 && start - position > 0) {
-                e.stopPropagation()
-                unfoldRecordingsList()
-                removeListeners()
-            } 
-
-            if (recordingsListScroll > 0) {
-                e.stopPropagation()
+                recordingsList.classList.remove("overflow-y-auto")
+            } else {
+                recordingsList.classList.remove("overflow-hidden")
+                recordingsList.classList.add("overflow-y-auto")
             }
+
+            if (recordingsList.scrollTop > 0 || start - position > 0) {
+                canRefresh = false           
+            }
+
+            canScroll = true
         }
-
-        if (recordingsList.scrollTop > 0)
-            e.stopPropagation()
-
+        
+        
         const removeListeners = () => {
             recordingsList.classList.remove("overflow-hidden")
-            window.removeEventListener("touchmove", stopScroll)
-            window.removeEventListener("touchend", removeListeners)
+            recordingsList.classList.add("overflow-y-auto")
+            recordingsList.removeEventListener("touchmove", stopScroll)
+            recordingsList.removeEventListener("touchend", removeListeners)
         }
 
-        window.addEventListener("touchmove", stopScroll)
-        window.addEventListener("touchend", removeListeners)
+        recordingsList.addEventListener("touchmove", stopScroll)
+        recordingsList.addEventListener("touchend", removeListeners)
     }
 
     const nextPage = () => {
@@ -207,8 +215,7 @@ const RecordingList = (
             <div
                 className="w-full h-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth duration-500"
                 ref={recordingsListRef}
-                onTouchStart={(e) => removeScroll(e)}
-                onTouchMove={(e) => stopScreenRefreshOnScroll(e)}
+                onTouchStart={(e) => manageTouchMove(e)}
             >
                 { renderrecordingsList() }
             </div>
