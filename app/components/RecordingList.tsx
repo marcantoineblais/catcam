@@ -90,14 +90,21 @@ const RecordingList = (
             if (start - position >= 0 && scrollHeight - recordingsListScroll >= height) {
                 if (unfoldRecordingsList()) {
                     recordingsList.classList.remove("overflow-y-auto")
+                    recordingsList.classList.add("overflow-y-hidden")
                     canRefresh = false
-                    setTimeout(() => recordingsList.classList.add("overflow-y-auto"), 500)
+                    setTimeout(() => {
+                        recordingsList.classList.add("overflow-y-auto")
+                        recordingsList.classList.remove("overflow-y-hidden")
+                    }, 500)
                 }
             } else if (recordingsListScroll <= 0 && start - position <= 0) {     
                 if (foldRecordingsList()) {
                     recordingsList.classList.remove("overflow-y-auto")
                     canRefresh = false
-                    setTimeout(() => recordingsList.classList.add("overflow-y-auto"), 500)
+                    setTimeout(() => {
+                        recordingsList.classList.add("overflow-y-auto")
+                        recordingsList.classList.remove("overflow-y-hidden")
+                    }, 500)
                 }
             }
 
