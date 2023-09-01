@@ -360,6 +360,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 video.currentTime = time + value
             else
                 video.currentTime = 0
+
+            if (video.paused)
+                updateProgressBar()
         }
         
         if (dblClicksTimeouts.length === 0) {
