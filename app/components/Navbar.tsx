@@ -15,8 +15,8 @@ const Navbar = ({ activePage }: { activePage: string }) => {
         const navBtn = navBtnRef.current
         
         function closeMenu() {
-            navBtn?.classList.add("scale-y-0")
-            menuIcon?.classList.remove("-rotate-90")
+            navBtn?.classList.add("scale-x-0")
+            menuIcon?.classList.remove("rotate-90")
         }
 
         window.addEventListener("click", closeMenu)
@@ -32,11 +32,11 @@ const Navbar = ({ activePage }: { activePage: string }) => {
             return
 
         if (activePage === "live") {
-            navBtn.children[0].classList.add("border-b-sky-700", "cursor-default", "text-gray-500")
-            navBtn.children[0].classList.remove("hover:border-b-gray-500", "hover:text-gray-500")
+            navBtn.children[0].classList.add("bg-sky-700", "border-sky-700", "cursor-default","text-gray-100", "md:text-gray-500")
+            navBtn.children[0].classList.remove("hover:border-gray-500", "hover:text-gray-500")
         } else if (activePage === "recording") {
-            navBtn.children[1].classList.add("border-b-sky-700", "cursor-default", "text-gray-500")
-            navBtn.children[1].classList.remove("hover:border-b-gray-500", "hover:text-gray-500")
+            navBtn.children[1].classList.add("bg-sky-700", "border-sky-700", "cursor-default","text-gray-100", "md:text-gray-500", "hover:border-sky-700")
+            navBtn.children[1].classList.remove("hover:border-gray-500", "hover:text-gray-500")
         }
     }, [activePage])
 
@@ -52,8 +52,8 @@ const Navbar = ({ activePage }: { activePage: string }) => {
         const navBtn = navBtnRef.current
         const menuIcon = e.currentTarget
         
-        navBtn?.classList.toggle('scale-y-0')
-        menuIcon.classList.toggle("-rotate-90")
+        navBtn?.classList.toggle('scale-x-0')
+        menuIcon.classList.toggle("rotate-90")
     }
 
     return (
@@ -64,10 +64,10 @@ const Navbar = ({ activePage }: { activePage: string }) => {
                 </div>
                 <menu className="h-full relative flex justify-end items-end">
                     <img ref={menuIconRef} className="w-9 h-full duration-200 object-contain md:hidden" src="Menu.svg" alt="menu icon" onClick={(e: React.MouseEvent) => showMenu(e)}></img>
-                    <div ref={navBtnRef} className="flex flex-col justify-end items-end rounded absolute top-12 right-0 z-50 bg-gray-50 scale-y-0 duration-200 origin-top md:bg-inherit md:static md:p-0 md:flex-row md:scale-y-100">
-                        <button className="w-32 text-center py-3 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:py-1" onClick={() => router.push('/')}>Live</button>
-                        <button className="w-32 text-center py-3 border-b-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:py-1" onClick={() => router.push('/recordings')}>Recordings</button>
-                        <button className="w-32 text-center py-3 border-b-4 border-gray-300 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500 md:py-1" onClick={() => logout()}>Logout</button>
+                    <div ref={navBtnRef} className="w-screen flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 scale-x-0 duration-200 origin-right md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:scale-x-100">
+                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit" onClick={() => router.push('/')}>Live</button>
+                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-300 hover:text-gray-500 hover:border-gray-500 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit" onClick={() => router.push('/recordings')}>Recordings</button>
+                        <button className="w-full text-center py-5 border-4 border-gray-300 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit" onClick={() => logout()}>Logout</button>
                     </div>
                 </menu>
             </div>
