@@ -90,21 +90,11 @@ const RecordingList = (
             if (start - position >= 0 && scrollHeight - recordingsListScroll >= height) {
                 if (unfoldRecordingsList()) {
                     canRefresh = false
-                    recordingsList.classList.add("overflow-hidden")
-                    recordingsList.classList.remove("overflow-y-auto")
                 }
             } else if (recordingsListScroll <= 0 && start - position <= 0) {     
                 if (foldRecordingsList()) {
                     canRefresh = false
-                    recordingsList.classList.add("overflow-hidden")
-                    recordingsList.classList.remove("overflow-y-auto")
                 }
-            } else if (scrollHeight - recordingsListScroll <= height && start - position >= 0) {
-                recordingsList.classList.add("overflow-hidden")
-                recordingsList.classList.remove("overflow-y-auto")
-            } else {
-                recordingsList.classList.remove("overflow-hidden")
-                recordingsList.classList.add("overflow-y-auto")
             }
 
             if (recordingsList.scrollTop > 0 || start - position > 0) {
@@ -165,7 +155,7 @@ const RecordingList = (
     }
 
     // create the cards to display the recordings list
-    function renderrecordingsList() {
+    function renderRecordingsList() {
         const container = containerRef.current
         
         if (!recordings || !container)
@@ -220,7 +210,7 @@ const RecordingList = (
                 ref={recordingsListRef}
                 onTouchStart={(e) => manageTouchMove(e)}
             >
-                { renderrecordingsList() }
+                { renderRecordingsList() }
             </div>
             <div className="w-full py-31 flex justify-between items-center">
                 <div ref={previousPageRef} onClick={() => previousPage()} className="h-12 w-16 px-3 flex items-center rotate-180 cursor-pointer invisible">
