@@ -89,6 +89,7 @@ const RecordingList = (
             
             if (start - position >= 0 && scrollHeight - recordingsListScroll >= height) {
                 if (unfoldRecordingsList()) {
+                    recordingsList.scrollTop = 0
                     recordingsList.classList.add("overflow-y-hidden")
                     recordingsList.classList.remove("overflow-y-auto")
                     canRefresh = false
@@ -99,6 +100,7 @@ const RecordingList = (
                 }
             } else if (recordingsListScroll <= 0 && start - position <= 0) {     
                 if (foldRecordingsList()) {
+                    recordingsList.scrollTop = 0
                     recordingsList.classList.add("overflow-y-hidden")
                     recordingsList.classList.remove("overflow-y-auto")
                     canRefresh = false
@@ -115,8 +117,6 @@ const RecordingList = (
         }
                
         const removeListeners = () => {
-            recordingsList.classList.remove("overflow-hidden")
-            recordingsList.classList.add("overflow-y-auto")
             recordingsList.removeEventListener("touchmove", stopScroll)
             recordingsList.removeEventListener("touchend", removeListeners)
         }
