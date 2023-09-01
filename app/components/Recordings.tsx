@@ -142,6 +142,7 @@ export default function Recordings({ session }: { session: any }) {
             zoomBtn.classList.add("hover:border-gray-500", "hover:text-gray-500", "border-gray-700")
             hscroll.classList.remove("-translate-x-1/2")
         } else if (section === "zoom") {
+            unfoldRecordingsList()
             zoomBtn.classList.add("border-sky-700", "text-gray-500", "cursor-default")
             zoomBtn.classList.remove("hover:border-gray-500", "hover:text-gray-500", "border-gray-700")
             recordingsBtn.classList.remove("border-sky-700", "text-gray-500", "cursor-default")
