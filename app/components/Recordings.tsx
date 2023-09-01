@@ -21,6 +21,8 @@ export default function Recordings({ session }: { session: any }) {
     const unfoldableRef = React.useRef<HTMLDivElement|null>(null)
     const recordingsListRef = React.useRef<HTMLDivElement|null>(null)
 
+    // API request to get the recordings
+    // If successful, create video object to be rendered
     React.useEffect(() => {
         if (!session)
             return
@@ -71,6 +73,7 @@ export default function Recordings({ session }: { session: any }) {
         getRecordings()
     }, [session])
 
+    // Open and close the recordings folding menu
     function toggleRecordingsList() {
         const unfoldBtn = unfoldBtnRef.current
 
@@ -127,6 +130,7 @@ export default function Recordings({ session }: { session: any }) {
         return true
     }
 
+    // Switch between recordings and zoom pad
     function toggleSection(section: string) {
         const recordingsBtn = recordingsBtnRef.current
         const zoomBtn = zoomBtnRef.current

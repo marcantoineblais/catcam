@@ -12,6 +12,7 @@ export default function LiveStream({ session }: { session: any}) {
     const videoRef = React.useRef<HTMLVideoElement|null>(null)
     const containerRef = React.useRef<HTMLDivElement|null>(null)
 
+    // API call to get the livefeed url using jwt
     React.useEffect(() => {
         if (!session || Object.entries(session).some(([_k, v]) => !v))
             return

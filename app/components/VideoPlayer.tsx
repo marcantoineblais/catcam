@@ -19,7 +19,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const trackingHeadRef = React.useRef<HTMLDivElement|null>(null)
     const router = useRouter()
 
-
+    // Use HLS plugin only when required
     React.useEffect(() => {
         const video = videoRef.current
         const progress = progressBarRef.current
@@ -40,7 +40,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }, [videoSource, videoRef, isLiveStream])
 
 
-    // Resize streaming or recording video element when resizing window
+    // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
         const videoContainer = videoContainerRef.current
         const container = containerRef.current
@@ -68,7 +68,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
     }, [videoContainerRef, containerRef])
 
-
+    // Fullscreen video
     function setFullScreen() {
         const video = videoRef.current
         if (!video)
@@ -78,6 +78,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             video.requestFullscreen()
     }
 
+    // Toggle between play and pause
     function playPauseVideo() {
         const video = videoRef.current
         const overlay = overlayRef.current
@@ -94,7 +95,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             try {
                 video.play()
             } catch (ex) {
-                router.refresh()
+                console.log("Playback issue just occured, reload if video is broken.")
+                
             }
             
             overlay.classList.remove("!opacity-100", "!visible")
@@ -106,7 +108,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             try {
                 video.pause()
             } catch (ex) {
-                router.refresh()
+                console.log("Playback issue just occured, reload if video is broken.")
             }
             
             overlay.classList.add("!opacity-100", "!visible")
@@ -116,6 +118,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
     }
 
+    // Reset overlay before playing new video
     function beforePlaying() {
         const overlay = overlayRef.current
         const playBtn = playBtnRef.current
@@ -129,6 +132,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         pauseBtn.classList.remove("hidden")
     }
 
+    // Convert the duration number into a string (m:ss)
     function getTimeString(time: number) {
         let seconds = Math.floor(time % 60).toString()
         const minutes = Math.floor(time / 60).toString()
@@ -139,8 +143,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         return minutes + ":" + seconds
     }
 
+    // Update video length when new metadata is loaded
     function updateDuration() {
         const video = videoRef.current
+        
         if (!video)
             return
 
@@ -150,6 +156,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         setVideoEnd(getTimeString(time))
     }
 
+    // Adjust the progress bar size when time passes
     function updateProgressBar() {
         const video = videoRef.current
         const progress = progressBarRef.current
@@ -171,6 +178,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         setVideoTime(getTimeString(time))
     }
 
+    // Adjust the buffer bar sizes when data is loaded
     function updateBufferBar() {
         const video = videoRef.current
         const buffer = bufferBarRef.current
@@ -198,6 +206,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         setVideoEnd(getTimeString(videoDuration))
     }
 
+    // Open overlay when closed and vice-versa
     function toggleOverlay(e: React.MouseEvent|null) {
         e?.stopPropagation()
         const overlay = overlayRef.current
@@ -220,6 +229,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         overlay.classList.add("opacity-0", "invisible")
     }
 
+    // Open overlay and create timeout to close it
     function showOverlay() {
         const overlay = overlayRef.current
         const video = videoRef.current
@@ -240,6 +250,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }, 2000))
     }
 
+    // Make the progress bar clickable to seek in video
     function videoSeekingOnMouseDown(e: React.MouseEvent) {
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
@@ -278,6 +289,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         seek(e)
     }
     
+    // Make the progress bar touchable to seek in video
     function videoSeekingOnTouchStart(e: React.TouchEvent) {
         e.stopPropagation()
 
@@ -318,6 +330,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         seek(e)
     }
 
+    // seek forward or backward when double clicking sides of the video
     function seekOnDblClick(e: React.MouseEvent, value: number) {
         const video = videoRef.current
         if (!video)
@@ -340,8 +353,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
             if (value > 0 && value + time <= duration)
                 video.currentTime = time + value
-            else if (value < 0 && value + time >= 0)
+            else if (value > 0) {
+                video.currentTime = duration
+                updateProgressBar()
+            } else if (value < 0 && value + time >= 0)
                 video.currentTime = time + value
+            else
+                video.currentTime = 0
         }
         
         if (dblClicksTimeouts.length === 0) {
@@ -353,6 +371,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             seek()
     }
 
+    // show overlay when video ends
     const onVideoEnd = () => {
         const playBtn = playBtnRef.current
         const pauseBtn = pauseBtnRef.current
@@ -366,6 +385,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         pauseBtn.classList.add("hidden")
     }
 
+    // Load logo when no video is selected, load loading svg when src is selected and video is loading
     function loadingImage() {
         const video = videoRef.current
         if (!video)
@@ -385,7 +405,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex max-h-1/2 justify-center">
+        <div className="pt-3 flex max-h-1/2 justify-center text-gray-50 dark:text-gray-200">
             <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow-md">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"

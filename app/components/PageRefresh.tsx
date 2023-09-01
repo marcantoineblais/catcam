@@ -8,6 +8,7 @@ export default function PageRefresh() {
     const refreshTimer: any[] = React.useState<any[]>([])
     const router = useRouter()
 
+    // Refresh page when scrolling down and releasing (overwrite default behavior)
     React.useEffect(() => {
         const refreshPage = (e: TouchEvent) => {
             const refreshIcon = document.getElementById("refresh")

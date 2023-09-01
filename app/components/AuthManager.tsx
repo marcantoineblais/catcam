@@ -4,16 +4,32 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import requestJSON from "../util/requestJSON";
 import { encryptData, decryptData } from "../util/encryptor"
+import { log } from "console";
 
-export default function AuthManager({ location, setLocation, session, setSession }: { location: any, setLocation: Function, session: any|null, setSession: Function|null }) {    
+export default function AuthManager(
+    { location, setLocation, session, setSession }:
+    { location: any, setLocation: Function, session: any|null, setSession: Function|null }
+) {    
 
     const router = useRouter()
     
+    // Check if dark mode was activated
+    React.useEffect(() => {
+        const dark = localStorage.getItem("dark")
+        
+        if (dark === "true")
+            document.body.classList.add("dark")
+        else
+            document.body.classList.remove("dark")
+    })
+
+    // Prevent use in Iframe
     React.useEffect(() => {
         if (window.top !== window.self)
             window.location.href = document.location.href
     }, [])
     
+    // Verify if the connected user is in a reasonnable area
     React.useEffect(() => {
         async function getLocation() {
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
@@ -25,11 +41,12 @@ export default function AuthManager({ location, setLocation, session, setSession
         getLocation()
     }, [setLocation])
 
-    React.useEffect(() => {
-        
+    // Check if jwt can be found in local or session storage
+    // If cannot be decrypted or some keys are missing, then wipe the storage and redirect to login
+    React.useEffect(() => {    
         function logout() {
-            localStorage.clear()
-            sessionStorage.clear()
+            localStorage.removeItem("JWT")
+            sessionStorage.removeItem("JWT")
             if (setSession)
                 setSession(null)
             router.push("/login")
@@ -84,6 +101,7 @@ export default function AuthManager({ location, setLocation, session, setSession
         getSession()
     }, [router, location, setSession])
 
+    // When login is successful, encrypt and store jwt in local or session storage
     React.useEffect(() => {
         async function storeSession() {
             if (!session || !location)

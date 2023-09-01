@@ -50,8 +50,9 @@ const RecordingList = (
         return () => {
             window.removeEventListener('resize', resize)
         }
-    }, [containerRef, recordingsListRef])
+    }, [containerRef, recordingsListRef, foldRecordingsList])
 
+    // Get the number of pages
     React.useEffect(() => {
         if (!recordings)
             return
@@ -59,10 +60,15 @@ const RecordingList = (
         setLastPage(Math.ceil(recordings.length / 12))
     }, [recordings])
 
+    // Force resize event when changing page or section
     React.useEffect(() => {
         window.dispatchEvent(new Event('resize'))
     }, [recordings, currentPage])
     
+    // Make sure that the good action triggers when manipulation the recordings list
+    // Cannot refresh page from menu if the menu is not scrolled up
+    // menu will open before scrolling
+    // menu will close only when scroll up (and disable refresh during this time)
     const manageTouchMove = (e: React.TouchEvent) => {
         const recordingsList = recordingsListRef.current
 
@@ -74,10 +80,8 @@ const RecordingList = (
         const recordingsListScroll = recordingsList.scrollTop
         const height = recordingsList.clientHeight
         let canRefresh = true
-        let canScroll = recordingsList.scrollTop > 0
         
         const stopScroll = (e: TouchEvent) => {
-            
             const position = e.touches[0].clientY
 
             if (!canRefresh)
@@ -106,11 +110,8 @@ const RecordingList = (
             if (recordingsList.scrollTop > 0 || start - position > 0) {
                 canRefresh = false           
             }
-
-            canScroll = true
         }
-        
-        
+               
         const removeListeners = () => {
             recordingsList.classList.remove("overflow-hidden")
             recordingsList.classList.add("overflow-y-auto")
@@ -122,6 +123,7 @@ const RecordingList = (
         recordingsList.addEventListener("touchend", removeListeners)
     }
 
+    // Change pages
     const nextPage = () => {
         const recordingsList = recordingsListRef.current
         const nextPage = nextPageRef.current
@@ -162,6 +164,7 @@ const RecordingList = (
             previousPage.classList.remove("invisible")
     }
 
+    // create the cards to display the recordings list
     function renderrecordingsList() {
         const container = containerRef.current
         
@@ -220,14 +223,14 @@ const RecordingList = (
                 { renderrecordingsList() }
             </div>
             <div className="w-full py-31 flex justify-between items-center">
-                <div ref={previousPageRef} onClick={() => previousPage()} className="h-12 w-12 rotate-180 cursor-pointer invisible">
+                <div ref={previousPageRef} onClick={() => previousPage()} className="h-12 w-16 px-3 flex items-center rotate-180 cursor-pointer invisible">
                     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                         <path fill="currentColor" d="M480.27,243.82,288.05,123.31a4.78,4.78,0,0,0-7.32,4v241a4.78,4.78,0,0,0,7.32,4.05L480.27,251.92A4.78,4.78,0,0,0,480.27,243.82Z"/>
                         <path fill="currentColor" d="M287.55,298.87H39.66a4.06,4.06,0,0,1-4.11-4v-94a4.06,4.06,0,0,1,4.11-4H287.55Z"/>
                     </svg>
                 </div>
                 <p>Page {currentPage} of { lastPage }</p>
-                <div ref={nextPageRef} onClick={() => nextPage()} className="h-12 w-12 cursor-pointer">
+                <div ref={nextPageRef} onClick={() => nextPage()} className="h-12 w-16 px-3 flex items-center cursor-pointer">
                     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                         <path fill="currentColor" d="M480.27,243.82,288.05,123.31a4.78,4.78,0,0,0-7.32,4v241a4.78,4.78,0,0,0,7.32,4.05L480.27,251.92A4.78,4.78,0,0,0,480.27,243.82Z"/>
                         <path fill="currentColor" d="M287.55,298.87H39.66a4.06,4.06,0,0,1-4.11-4v-94a4.06,4.06,0,0,1,4.11-4H287.55Z"/>

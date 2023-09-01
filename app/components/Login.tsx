@@ -7,6 +7,8 @@ export default function Login({ location, setSession }: { location: any, setSess
     const formRef = React.useRef<HTMLFormElement|null>(null)
     const submitRef = React.useRef<HTMLButtonElement|null>(null)
 
+    // API call to validate user credential
+    // Send user object to AuthManager when user is authorised
     async function submitForm() {
         const form: HTMLFormElement|null = formRef.current
         if (!form)

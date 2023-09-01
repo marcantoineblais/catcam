@@ -4,6 +4,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
 
     const zoomPadRef = React.useRef<HTMLDivElement|null>(null)
 
+    // Always keep the pad at a 16:9 ratio and make sure it fits inside his parent
     React.useEffect(() => {
         const zoomPad = zoomPadRef.current
         const container = containerRef.current
@@ -35,6 +36,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
         }
     }, [containerRef, zoomPadRef])
 
+    // Activate zoom and mouse move tracking on click down, release on click up
     const zoomVideoOnMouse = (e: React.MouseEvent) => {
         e.stopPropagation()
 
@@ -72,6 +74,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
         zoom(e)
     }
 
+    // Activate zoom and touch move tracking on touch start, release on touch end
     const zoomVideoOnTouch = (e: React.TouchEvent) => {
         e.stopPropagation()
 
