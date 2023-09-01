@@ -53,7 +53,7 @@ export default function Login({ location, setSession }: { location: any, setSess
 
     return (
         <div className="h-full px-1 pt-16 max-w-screen-md container mx-auto bg-[url('../public/logo.png')] bg-contain bg-no-repeat bg-bottom" onKeyUp={(e) => manageKeyUp(e)}>
-            <form  className="w-full p-5 bg-gray-50 rounded dark:bg-gray-700" ref={formRef} autoComplete="on">
+            <form  className="w-full p-5 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10" ref={formRef} autoComplete="on">
                 <h1 className="w-full pb-10 text-center text-3xl">Login</h1>
 
                 <label className="flex pt-3">

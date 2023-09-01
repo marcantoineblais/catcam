@@ -405,8 +405,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex max-h-1/2 justify-center text-gray-50 dark:text-gray-200">
-            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow-md">
+        <div className="pt-3 flex max-h-1/2 justify-center text-gray-50 dark:text-zinc-200">
+            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
@@ -434,7 +434,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div className="absolute top-1/4 sm:top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
+                    <div className="absolute top-1/4 sm:top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2 dark:bg-zinc-950/75" onClick={() => playPauseVideo()}>
                         <div ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 hidden">
                             <svg fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                                 <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
@@ -455,10 +455,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                             onMouseDown={(e) => videoSeekingOnMouseDown(e)}
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
-                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-gray-800 rounded cursor-pointer">
-                                <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded"></div>
+                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800">
+                                <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-gray-100 rounded-full cursor-pointer translate-x-1/4"></div>
+                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-gray-100 rounded-full cursor-pointer translate-x-1/4 dark:bg-zinc-200"></div>
                                 </div>
                             </div>
                         </div>

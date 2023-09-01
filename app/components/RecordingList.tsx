@@ -191,7 +191,7 @@ const RecordingList = (
 
             return (
                 <div
-                    className={`h-fit mb-3 flex flex-col rounded bg-gray-50 shadow-lg overflow-hidden duration-200 dark:bg-gray-700 ${activeStyle}`}
+                    className={`h-fit mb-3 flex flex-col rounded bg-gray-50 shadow overflow-hidden duration-200 dark:bg-zinc-800 dark:shadow-zinc-50/10 ${activeStyle}`}
                     key={key++}
                     onClick={() => videoOnClick(v, i + startIndex)}
                 >

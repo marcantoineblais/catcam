@@ -9,8 +9,9 @@
 
 
 .dark {
-    --foreground-rgb: rgb(209, 213, 219);
-    --background-rgb: rgb(17, 24, 39);
+    --foreground-rgb: rgb(228, 228, 231);
+    --background-rgb: rgb(24, 24, 27);
+    --tw-shadow-color: rgba(228, 228, 231, 1)
 }
 
 * {
