@@ -361,9 +361,19 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             else
                 video.currentTime = 0
 
-            if (video.paused)
-                updateProgressBar()
-        }
+            const progress = progressBarRef.current
+            let position = video.currentTime / duration
+
+            if (!progress)
+                return
+    
+            if (position > 1)
+                position = 1
+            else if (position < 0)
+                position = 0
+    
+            progress.style.width = `${position * 100}%`
+    }
         
         if (dblClicksTimeouts.length === 0) {
             toggleOverlay(null)
