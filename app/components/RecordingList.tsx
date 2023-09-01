@@ -82,15 +82,14 @@ const RecordingList = (
             if (!canRefresh)
                 e.stopPropagation()
             
-            
-            if (recordingsListScroll <= 0 && !canScroll && start - position <= 0) {     
-                if (foldRecordingsList()) {
+            if (start - position >= 0 && scrollHeight - recordingsListScroll >= height) {
+                if (unfoldRecordingsList()) {
                     canRefresh = false
                     recordingsList.classList.add("overflow-hidden")
                     recordingsList.classList.remove("overflow-y-auto")
                 }
-            } else if (recordingsListScroll <= 0 && !canScroll && start - position >= 0) {
-                if (unfoldRecordingsList()) {
+            } else if (recordingsListScroll <= 0 && start - position <= 0) {     
+                if (foldRecordingsList()) {
                     canRefresh = false
                     recordingsList.classList.add("overflow-hidden")
                     recordingsList.classList.remove("overflow-y-auto")
