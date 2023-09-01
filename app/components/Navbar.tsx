@@ -79,7 +79,7 @@ const Navbar = ({ activePage }: { activePage: string }) => {
 
     return (
         <div className="border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10">
-            <div ref={containerRef} className="px-1 h-full container flex justify-between items-center mx-auto">
+            <div ref={containerRef} className="px-1 h-full container max-w-screen-lg flex justify-between items-center mx-auto">
                 <div className="bg-chats bg-bottom bg-contain bg-origin-content bg-clip-text text-transparent">
                     <h1 className="text-5xl font-extrabold tracking-widest text-gray-950/20 dark:text-zinc-50/20 cursor-pointer" onClick={() => toggleDarkMode()}>CATCAM</h1>
                 </div>

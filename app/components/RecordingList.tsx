@@ -31,7 +31,8 @@ const RecordingList = (
 
             const currentWidth = container.clientWidth
             const rowSize = currentWidth > 720 ? 3 : 2
-            const width = (currentWidth / rowSize) - 8 + "px"
+            const availableWidth = currentWidth - (rowSize * 8)
+            const width = (availableWidth / rowSize) + "px"
             const height = (parseInt(width) / 16) * 9 + "px"
 
             for (let i = 0; i < recordingsList.children.length; i++) {
@@ -59,11 +60,6 @@ const RecordingList = (
 
         setLastPage(Math.ceil(recordings.length / 12))
     }, [recordings])
-
-    // Force resize event when changing page or section
-    React.useEffect(() => {
-        window.dispatchEvent(new Event('resize'))
-    }, [recordings, currentPage])
     
     // Make sure that the good action triggers when manipulation the recordings list
     // Cannot refresh page from menu if the menu is not scrolled up
@@ -175,10 +171,13 @@ const RecordingList = (
         
         const currentWidth = container.clientWidth
         const rowSize = currentWidth > 720 ? 3 : 2
+        const availableWidth = currentWidth - (rowSize * 8)
+        const width = (availableWidth / rowSize)
+        const height = (width / 16) * 9
         const nbOfrecordingsList = recordings.length
         const startIndex = (currentPage - 1) * 12
         const endIndex = startIndex + 12 > nbOfrecordingsList ? nbOfrecordingsList : startIndex + 12
-        let key = 1
+        let key = 0
         
         function videoOnClick(video: any, index: number) {
             setActiveVideoIndex(index)
@@ -197,20 +196,21 @@ const RecordingList = (
                     key={key++}
                     onClick={() => videoOnClick(v, i + startIndex)}
                 >
-                    <img src={v.thumbnail} alt="camera snapshot" className="w-full h-full object-fill" />
-                    <p className="w-full text-center py-1 text-sm">{date + ", " + time}</p>
+                    <img src={v.thumbnail} alt="camera snapshot" className="object-fill" style={{ width: width + "px", height: height + "px" }}/>
+                    <p className="text-center py-1 text-sm" style={{ width: width + "px" }}>{date + ", " + time}</p>
                 </div>
             )
         })
 
-        while (recordingsList.length % rowSize !== 0) {
+        while (recordingsList.length < 12) {
             recordingsList.push(
                 <div key={key++}>
-                    <div></div>
-                    <div></div>
+                    <div style={{ width: width + "px", height: height + "px" }}></div>
+                    <div style={{ width: width + "px" }}></div>
                 </div>
             )
         }
+
         
         return recordingsList
     }
@@ -218,7 +218,7 @@ const RecordingList = (
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="w-full h-full flex justify-between flex-wrap flex-grow overflow-y-auto scroll-smooth duration-500"
+                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow overflow-y-auto scroll-smooth duration-500"
                 ref={recordingsListRef}
                 onTouchStart={(e) => manageTouchMove(e)}
             >

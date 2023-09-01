@@ -159,7 +159,7 @@ export default function Recordings({ session }: { session: any }) {
     return (
         <>
             <Navbar activePage="recordings" />
-            <div ref={containerRef} className="p-1 h-full container mx-auto flex flex-col flex-grow overflow-hidden">
+            <div ref={containerRef} className="p-1 h-full container mx-auto max-w-screen-lg flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="relative h-full">
                     <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900">
