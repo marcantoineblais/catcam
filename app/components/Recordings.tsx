@@ -154,15 +154,22 @@ export default function Recordings({ session }: { session: any }) {
     
     return (
         <>
-            <Navbar activePage="recording" />
+            <Navbar activePage="recordings" />
             <div ref={containerRef} className="p-1 h-full container mx-auto flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="relative h-full">
-                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100">
+                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-gray-900">
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow-lg">
                             <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-500 cursor-default text-xl text-left duration-200">Recordings</button>
                             <div className="w-8 flex justify-center items-center border-gray-300 border-double">
-                                <img ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} src="Unfold.svg" alt="upward arrow" className="h-full object-contain duration-500 cursor-pointer"/>
+                                <div ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} className="h-full w-12 duration-500 cursor-pointer">
+                                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                        <rect fill="currentColor" x="26.01" y="198.84" width="252" height="39.88" rx="4.17" transform="translate(-89.02 105.31) rotate(-30)"/>
+                                        <rect fill="currentColor" x="221.99" y="198.84" width="252" height="39.88" rx="4.17" transform="translate(539.97 582.25) rotate(-150)"/>
+                                        <rect fill="currentColor" x="62.29" y="269.95" width="214.14" height="39.88" rx="4.17" transform="matrix(0.87, -0.5, 0.5, 0.87, -122.26, 123.52)"/>
+                                        <rect fill="currentColor" x="225.37" y="270.35" width="215.72" height="39.88" rx="4.17" transform="translate(476.68 708.31) rotate(-150)"/>
+                                    </svg>
+                                </div>
                             </div>
                             <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-500 hover:text-gray-500">Zoom</button>
                         </div>

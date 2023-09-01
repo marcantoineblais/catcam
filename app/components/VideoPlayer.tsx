@@ -371,9 +371,16 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return null
 
-        if (video.src || isLiveStream)
-            return <img src="Loading.svg" alt="loading icon" className="w-1/12 object-contain animate-spin"/>
-        else
+        if (video.src || isLiveStream) {
+            return (
+                <div className="w-1/12 animate-spin">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                        <path fill="currentColor" d="M167.07,81.76c4-1.71,8.07-3.28,12.27-4.64a143.16,143.16,0,0,1,73.21-16.37,189.21,189.21,0,0,1,95.89,25.94L386.9,116.4a190,190,0,0,1,48.86,83.84q3.39,25.26,6.79,50.51A143.16,143.16,0,0,1,426.18,324q-2.08,6.39-4.72,12.46,16.44,16.68,32.82,33.4a231.42,231.42,0,0,0,31.55-117c0-128.49-104.16-232.65-232.64-232.65A231.57,231.57,0,0,0,136.46,51.56Q151.79,66.63,167.07,81.76Z"/>
+                        <path fill="currentColor" d="M347,439.78,329.87,423c-1.36.49-2.73,1-4.12,1.42a143,143,0,0,1-73.2,16.36,189,189,0,0,1-95.9-25.94Q137.42,400,118.2,385.1a189.79,189.79,0,0,1-48.87-83.84l-6.78-50.51a143,143,0,0,1,16.36-73.2c.38-1.17.78-2.33,1.19-3.48q-15.82-15.93-31.58-31.9a231.46,231.46,0,0,0-28,110.66c0,128.48,104.15,232.64,232.64,232.64A231.56,231.56,0,0,0,364.72,457Z"/>
+                    </svg>
+                </div>
+            )
+        } else
             return <img src="logo.png" alt="cat picture" className="h-full w-full object-contain object-bottom"/>
     }
 
@@ -408,8 +415,17 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onMouseMove={() => showOverlay()}
                 >
                     <div className="absolute top-1/4 sm:top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2" onClick={() => playPauseVideo()}>
-                        <img ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain hidden" src="Play.svg" alt="play button" />
-                        <img ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 object-contain" src="Pause.svg" alt="pause button" />
+                        <div ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 hidden">
+                            <svg fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
+                            </svg>
+                        </div>
+                        <div ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0">
+                            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                <rect fill="currentColor" x="26.88" y="20.18" width="152" height="463.89" rx="4.12"/>
+                                <rect fill="currentColor" x="322.21" y="20.18" width="152" height="463.89" rx="4.12"/>
+                            </svg>
+                        </div>
                     </div>
 
                     <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-gray-950/75" onClick={(e) => e.stopPropagation()}>
@@ -422,12 +438,23 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                             <div ref={videoSeekingRef} className="h-2 w-full relative bg-gray-800 rounded cursor-pointer">
                                 <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-slate-100 rounded-full cursor-pointer translate-x-1/4"></div>
+                                    <div ref={trackingHeadRef} className="absolute h-4 w-4 -top-1 -right-1 bg-gray-100 rounded-full cursor-pointer translate-x-1/4"></div>
                                 </div>
                             </div>
                         </div>
                         <div className="text-gray-50 lg:pr-3">{videoEnd}</div>
-                        <img src="Fullscreen.svg" alt="fullscreen icon" className="h-full py-1.5 object-contain cursor-pointer" onClick={() => setFullScreen()} />
+                        <div className="h-5 w-5 flex items-center cursor-pointer" onClick={() => setFullScreen()}>
+                            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
+                                <rect fill="currentColor" x="-44.21" y="388.5" width="155.95" height="32.47" rx="4.01" transform="translate(-370.96 438.5) rotate(-90)"/>
+                                <rect fill="currentColor" x="-41.16" y="81.48" width="155.05" height="32.47" rx="4.01" transform="translate(-61.34 134.08) rotate(-90)"/>
+                                <rect fill="currentColor" x="20.13" y="20.18" width="155.95" height="32.47" rx="4.01"/>
+                                <rect fill="currentColor" x="322.56" y="19.73" width="155.05" height="32.47" rx="4.01"/>
+                                <rect fill="currentColor" x="383.4" y="81.48" width="155.95" height="32.47" rx="4.01" transform="translate(559.09 -363.67) rotate(90)"/>
+                                <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
+                                <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
+                            </svg>
+                        </div>
                     </div>
                     <div
                         className=" absolute top-0 bottom-8 left-0 w-1/5"
