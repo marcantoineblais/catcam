@@ -140,17 +140,17 @@ export default function Recordings({ session }: { session: any }) {
             return
         
         if (section === "recordings") {
-            recordingsBtn.classList.add("border-sky-700", "text-gray-300", "cursor-default", "dark:text-zinc-300")
-            recordingsBtn.classList.remove("border-gray-700", "hover:border-gray-300", "dark:border-zinc-700", "dark:hover:border-zinc-300")
-            zoomBtn.classList.remove("border-sky-700", "text-gray-300", "cursor-default", "dark:text-zinc-300")
-            zoomBtn.classList.add("border-gray-700", "hover:border-gray-300", "dark:border-zinc-700", "dark:hover:border-zinc-300")
+            recordingsBtn.classList.add("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
+            recordingsBtn.classList.remove("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
+            zoomBtn.classList.remove("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
+            zoomBtn.classList.add("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
             hscroll.classList.remove("-translate-x-1/2")
         } else if (section === "zoom") {
             foldRecordingsList()
-            zoomBtn.classList.add("border-sky-700", "text-gray-300", "cursor-default", "dark:text-zinc-300")
-            zoomBtn.classList.remove("border-gray-700", "hover:border-gray-300", "hover:text-gray-300", "dark:border-zinc-700", "dark:hover:border-zinc-300")
-            recordingsBtn.classList.remove("border-sky-700", "text-gray-300", "cursor-default", "dark:text-zinc-300")
-            recordingsBtn.classList.add("border-gray-700", "hover:border-gray-300", "dark:border-zinc-700", "dark:hover:border-zinc-300")
+            zoomBtn.classList.add("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
+            zoomBtn.classList.remove("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
+            recordingsBtn.classList.remove("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
+            recordingsBtn.classList.add("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
             hscroll.classList.add("-translate-x-1/2")
         }
         window.dispatchEvent(new Event('resize'))
@@ -164,7 +164,7 @@ export default function Recordings({ session }: { session: any }) {
                 <div className="relative h-full">
                     <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900">
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
-                            <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 cursor-default text-xl text-left duration-200">Recordings</button>
+                            <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">Recordings</button>
                             <div className="w-8 flex justify-center items-center">
                                 <div ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} className="h-full w-12 duration-500 cursor-pointer">
                                     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
@@ -175,7 +175,7 @@ export default function Recordings({ session }: { session: any }) {
                                     </svg>
                                 </div>
                             </div>
-                            <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 border-gray-700 border-b-4 text-xl text-right duration-200 hover:border-gray-300 hover:text-gray-300 dark:border-zinc-700 dark:hover:border-zinc-300 dark:hover:text-zinc-300">Zoom</button>
+                            <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 text-xl text-right border-gray-400 hover:text-gray-700 hover:border-gray-700 border-b-4 dark:border-zinc-800 dark:hover:border-zinc-300 dark:hover:text-zinc-300">Zoom</button>
                         </div>
                         <div className="w-full flex-grow overflow-hidden">
                             <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between overflow-hidden">

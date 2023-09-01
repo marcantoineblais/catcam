@@ -45,7 +45,7 @@ const Navbar = ({ activePage }: { activePage: string }) => {
             i = 1
 
         navBtn.children[i].classList.add("bg-sky-700", "border-sky-700", "cursor-default", "text-gray-100", "md:text-inherit", "dark:text-zinc-300")
-        navBtn.children[i].classList.remove("border-gray-400","hover:text-gray-700", "hover:border-gray-700","dark:border-zinc-800", "dark:bg-zinc-700", "dark:hover:border-zinc-200")
+        navBtn.children[i].classList.remove("border-gray-400","hover:text-gray-700", "hover:border-gray-700","dark:border-zinc-800", "dark:bg-zinc-700", "dark:hover:border-zinc-300")
     }, [activePage])
 
     // Switch to dark mode on click
@@ -92,8 +92,8 @@ const Navbar = ({ activePage }: { activePage: string }) => {
                         </svg>
                     </div>
                     <div ref={navBtnRef} className="w-screen flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 scale-x-0 duration-200 origin-right md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:scale-x-100">
-                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-400 hover:text-gray-700 hover:border-gray-700 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit dark:bg-zinc-700 dark:border-zinc-800 md:dark:bg-inherit dark:hover:border-zinc-200 dark:hover:text-zinc-300" onClick={() => router.push('/')}>Live</button>
-                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-400 hover:text-gray-700 hover:border-gray-700 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit dark:bg-zinc-700 dark:border-zinc-800 md:dark:bg-inherit dark:hover:border-zinc-200 dark:hover:text-zinc-300" onClick={() => router.push('/recordings')}>Recordings</button>
+                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-400 hover:text-gray-700 hover:border-gray-700 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit dark:bg-zinc-700 dark:border-zinc-800 md:dark:bg-inherit dark:hover:border-zinc-300 dark:hover:text-zinc-300" onClick={() => router.push('/')}>Live</button>
+                        <button className="w-full text-center py-5 border-4 duration-200 border-gray-400 hover:text-gray-700 hover:border-gray-700 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit dark:bg-zinc-700 dark:border-zinc-800 md:dark:bg-inherit dark:hover:border-zinc-300 dark:hover:text-zinc-300" onClick={() => router.push('/recordings')}>Recordings</button>
                         <button className="w-full text-center py-5 border-4 border-gray-400 text-orange-700 duration-200 hover:text-orange-500 hover:border-orange-500 md:w-32 md:py-1 md:border-0 md:border-b-4 md:bg-inherit dark:bg-zinc-700 dark:border-gray-800 md:dark:bg-inherit dark:hover:border-orange-500" onClick={() => logout()}>Logout</button>
                     </div>
                 </menu>
