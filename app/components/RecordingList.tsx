@@ -4,14 +4,15 @@ import React from "react"
 
 
 const RecordingList = (
-    { recordings, setVideoSource, containerRef, recordingsListRef, unfoldRecordingsList, foldRecordingsList }:
+    { recordings, setVideoSource, containerRef, recordingsListRef, manageTouchMove, foldRecordingsList }:
     {
         recordings: any[]|null,
         setVideoSource: Function,
         containerRef: React.MutableRefObject<HTMLDivElement|null>,
         recordingsListRef: React.MutableRefObject<HTMLDivElement|null>,
-        unfoldRecordingsList: Function,
-        foldRecordingsList: Function }
+        manageTouchMove: Function,
+        foldRecordingsList: Function 
+    }
 ) => {
 
     const [activeVideoIndex, setActiveVideoIndex] = React.useState<number|null>(null)
@@ -61,44 +62,6 @@ const RecordingList = (
         setLastPage(Math.ceil(recordings.length / 12))
     }, [recordings])
     
-    // Make sure that the good action triggers when manipulation the recordings list
-    // Cannot refresh page from menu if the menu is not scrolled up
-    // menu will open before scrolling
-    // menu will close only when scroll up (and disable refresh during this time)
-    const manageTouchMove = (e: React.TouchEvent) => {
-        const recordingsList = recordingsListRef.current
-
-        if (!recordingsList)
-            return
-
-        const start = e.touches[0].clientY
-        const recordingsListScroll = recordingsList.scrollTop
-        let disableRefresh = false
-        
-        const stopScroll = (e: TouchEvent) => {
-            const position = e.touches[0].clientY
-            
-            if (disableRefresh || !recordingsList.classList.contains("overflow-hidden"))
-                e.stopPropagation()
-            
-            if (start - position >= 0 ) {
-                if (unfoldRecordingsList())
-                    disableRefresh = true
-            } else if (recordingsListScroll <= 0 && start - position <= 0) {
-                if (foldRecordingsList())
-                    disableRefresh = true
-            }  
-        }
-               
-        const removeListeners = () => {
-            recordingsList.removeEventListener("touchmove", stopScroll)
-            recordingsList.removeEventListener("touchend", removeListeners)
-        }
-
-        recordingsList.addEventListener("touchmove", stopScroll)
-        recordingsList.addEventListener("touchend", removeListeners)
-    }
-
     // Change pages
     const nextPage = () => {
         const recordingsList = recordingsListRef.current
@@ -196,7 +159,7 @@ const RecordingList = (
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow overflow-hidden scroll-smooth duration-500"
+                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow scroll-smooth overflow-y-auto duration-500"
                 ref={recordingsListRef}
                 onTouchStart={(e) => manageTouchMove(e)}
             >

@@ -73,6 +73,54 @@ export default function Recordings({ session }: { session: any }) {
         getRecordings()
     }, [session])
 
+    // Make sure that the good action triggers when manipulation the recordings list
+    // Cannot refresh page from menu if the menu is not scrolled up
+    // menu will open before scrolling
+    // menu will close only when scroll up (and disable refresh during this time)
+    const manageTouchMove = (e: React.TouchEvent) => {
+        e.stopPropagation()
+        const recordingsList = recordingsListRef.current
+
+        if (!recordingsList)
+            return
+
+        const start = e.touches[0].clientY
+        const recordingsListScroll = recordingsList.scrollTop
+        const notRecordingsList = e.currentTarget !== recordingsList
+        let disableRefresh = recordingsListScroll > 0
+        let disableAction = false
+        
+        const stopScroll = (e: TouchEvent) => {
+            const position = e.touches[0].clientY
+
+            if (recordingsList.scrollTop > 0)
+                disableRefresh = true
+            
+            if (disableRefresh)
+                e.stopPropagation()
+            
+            if (!disableAction && start - position > 0 && notRecordingsList) {                
+                if (unfoldRecordingsList()) {
+                    disableRefresh = true
+                    disableAction = true
+                }
+            } else if (!disableAction && (recordingsListScroll <= 0 || notRecordingsList) && start - position <= 0) {
+                if (foldRecordingsList())  {
+                    disableRefresh = true
+                    disableAction = true
+                }
+            }  
+        }
+               
+        const removeListeners = () => {
+            window.removeEventListener("touchmove", stopScroll)
+            window.removeEventListener("touchend", removeListeners)
+        }
+
+        window.addEventListener("touchmove", stopScroll)
+        window.addEventListener("touchend", removeListeners)
+    }
+
     // Open and close the recordings folding menu
     function toggleRecordingsList() {
         const unfoldBtn = unfoldBtnRef.current
@@ -91,7 +139,7 @@ export default function Recordings({ session }: { session: any }) {
         const unfoldBtn = unfoldBtnRef.current
         const recordingsList = recordingsListRef.current
         const container = containerRef.current
-
+        
         if (!unfoldable || !unfoldBtn || !recordingsList || !container || unfoldable.style.top)
             return false
 
@@ -104,11 +152,6 @@ export default function Recordings({ session }: { session: any }) {
         unfoldable.style.top = `${-translation}px`
         unfoldable.style.minHeight = `${unfoldable.clientHeight + translation}px`
         unfoldBtn.classList.add("rotate-180")
-        
-        setTimeout(() => {
-            recordingsList.classList.add("overflow-y-auto")
-            recordingsList.classList.remove("overflow-hidden")
-        }, 500)
 
         return true
     }
@@ -116,46 +159,15 @@ export default function Recordings({ session }: { session: any }) {
     function foldRecordingsList(): boolean {
         const unfoldable = unfoldableRef.current
         const unfoldBtn = unfoldBtnRef.current
-        const recordingsList = recordingsListRef.current
-        const container = containerRef.current
 
-        if (!unfoldable || !unfoldBtn || !recordingsList || !container || !unfoldable.style.top)
+        if (!unfoldable || !unfoldBtn || !unfoldable.style.top)
             return false
-
-        let translation 
-        if (recordingsList.scrollHeight > container.clientHeight - 100)
-            translation = container.clientHeight - 100 - recordingsList.clientHeight
-        else
-            translation = recordingsList.scrollHeight - recordingsList.clientHeight
 
         unfoldable.style.top = ""
         unfoldable.style.minHeight = ""
         unfoldBtn.classList.remove("rotate-180")
-        recordingsList.scrollTop = 0
-        recordingsList.classList.remove("overflow-y-auto")
-        recordingsList.classList.add("overflow-hidden")
         
         return true
-    }
-
-    function makeRecordingsScrollable() {
-        const recordingsList = recordingsListRef.current
-
-        if (!recordingsList)
-            return
-
-        recordingsList.classList.add("overflow-y-auto")
-        recordingsList.classList.remove("overflow-hidden")
-    }
-
-    function makeRecordingsUnscrollable() {
-        const recordingsList = recordingsListRef.current
-
-        if (!recordingsList)
-            return
-
-        recordingsList.classList.add("overflow-hidden")
-        recordingsList.classList.remove("overflow-y-auto")
     }
 
     // Switch between recordings and zoom pad
@@ -174,14 +186,12 @@ export default function Recordings({ session }: { session: any }) {
             zoomBtn.classList.add("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
             hscroll.classList.remove("-translate-x-1/2")
         } else if (section === "zoom") {
-            foldRecordingsList()
             zoomBtn.classList.add("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
             zoomBtn.classList.remove("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
             recordingsBtn.classList.remove("border-sky-700", "text-gray-700", "cursor-default", "dark:text-zinc-300")
             recordingsBtn.classList.add("border-gray-400", "hover:border-gray-700", "dark:border-zinc-800", "dark:hover:border-zinc-300")
             hscroll.classList.add("-translate-x-1/2")
         }
-        window.dispatchEvent(new Event('resize'))
     }
     
     return (
@@ -192,9 +202,8 @@ export default function Recordings({ session }: { session: any }) {
                 <div className="relative h-full">
                     <div
                         ref={unfoldableRef}
+                        onTouchStart={(e) => manageTouchMove(e)}
                         className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900"
-                        onMouseEnter={() => makeRecordingsScrollable()}
-                        onMouseLeave={() => makeRecordingsUnscrollable()}
                     >
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
                             <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">Recordings</button>
@@ -218,7 +227,7 @@ export default function Recordings({ session }: { session: any }) {
                                         setVideoSource={setVideoSource}
                                         containerRef={containerRef}
                                         recordingsListRef={recordingsListRef}
-                                        unfoldRecordingsList={unfoldRecordingsList}
+                                        manageTouchMove={manageTouchMove}
                                         foldRecordingsList={foldRecordingsList}
                                     />
                                 </div>
