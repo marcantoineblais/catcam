@@ -78,10 +78,10 @@ export default function Recordings({ session }: { session: any }) {
     // menu will open before scrolling
     // menu will close only when scroll up (and disable refresh during this time)
     const manageTouchMove = (e: React.TouchEvent) => {
-        e.stopPropagation()
         const recordingsList = recordingsListRef.current
+        const unfoldable = unfoldableRef.current
 
-        if (!recordingsList)
+        if (!recordingsList || !unfoldable)
             return
 
         const start = e.touches[0].clientY
@@ -92,7 +92,7 @@ export default function Recordings({ session }: { session: any }) {
         
         const stopScroll = (e: TouchEvent) => {
             const position = e.touches[0].clientY
-
+            
             if (recordingsList.scrollTop > 0)
                 disableRefresh = true
             
@@ -113,12 +113,12 @@ export default function Recordings({ session }: { session: any }) {
         }
                
         const removeListeners = () => {
-            window.removeEventListener("touchmove", stopScroll)
-            window.removeEventListener("touchend", removeListeners)
+            unfoldable.removeEventListener("touchmove", stopScroll)
+            unfoldable.removeEventListener("touchend", removeListeners)
         }
 
-        window.addEventListener("touchmove", stopScroll)
-        window.addEventListener("touchend", removeListeners)
+        unfoldable.addEventListener("touchmove", stopScroll)
+        unfoldable.addEventListener("touchend", removeListeners)
     }
 
     // Open and close the recordings folding menu
@@ -162,7 +162,7 @@ export default function Recordings({ session }: { session: any }) {
 
         if (!unfoldable || !unfoldBtn || !unfoldable.style.top)
             return false
-
+        
         unfoldable.style.top = ""
         unfoldable.style.minHeight = ""
         unfoldBtn.classList.remove("rotate-180")
@@ -202,11 +202,17 @@ export default function Recordings({ session }: { session: any }) {
                 <div className="relative h-full">
                     <div
                         ref={unfoldableRef}
-                        onTouchStart={(e) => manageTouchMove(e)}
                         className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900"
                     >
-                        <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
-                            <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">Recordings</button>
+                        <div 
+                            onTouchStart={(e) => manageTouchMove(e)}
+                            className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10"
+                        >
+                            <button
+                                onClick={() => toggleSection("recordings")}
+                                ref={recordingsBtnRef}
+                                className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300"
+                            >Recordings</button>
                             <div className="w-8 flex justify-center items-center">
                                 <div ref={unfoldBtnRef} onClick={() => toggleRecordingsList()} className="h-full w-12 duration-500 cursor-pointer">
                                     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
@@ -217,7 +223,11 @@ export default function Recordings({ session }: { session: any }) {
                                     </svg>
                                 </div>
                             </div>
-                            <button onClick={() => toggleSection("zoom")} ref={zoomBtnRef} className="pr-3 basis-5/12 text-xl text-right border-gray-400 hover:text-gray-700 hover:border-gray-700 border-b-4 dark:border-zinc-800 dark:hover:border-zinc-300 dark:hover:text-zinc-300">Zoom</button>
+                            <button
+                                onClick={() => toggleSection("zoom")}
+                                ref={zoomBtnRef}
+                                className="pr-3 basis-5/12 text-xl text-right border-gray-400 hover:text-gray-700 hover:border-gray-700 border-b-4 dark:border-zinc-800 dark:hover:border-zinc-300 dark:hover:text-zinc-300"
+                            >Zoom</button>
                         </div>
                         <div className="w-full flex-grow overflow-hidden">
                             <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between overflow-hidden">
