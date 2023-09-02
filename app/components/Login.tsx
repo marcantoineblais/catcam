@@ -58,17 +58,17 @@ export default function Login({ location, setSession }: { location: any, setSess
 
                 <label className="flex pt-3">
                     <p className="basis-32 text-sm">Email</p>
-                    <input className="px-3 grow bg-gray-100 rounded text-sm" name="email"></input>
+                    <input className="px-3 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="email"></input>
                 </label>
 
                 <label className="flex pt-3">
                     <p className="basis-32 text-sm">Password</p>
-                    <input className="px-3 grow bg-gray-100 rounded text-sm" name="password" type="password"></input>
+                    <input className="px-3 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="password" type="password"></input>
                 </label>
                 
                 <label className="flex pt-3">
                     <p className="basis-32 text-sm">Remember me</p>
-                    <input className="bg-gray-100 rounded" id="remember-me" name="rememberMe" type="checkbox"></input>
+                    <input className="bg-gray-100 rounded" id="remember-me dark:text-zinc-950" name="rememberMe" type="checkbox"></input>
                 </label>
                 
                 <div className="pt-5 flex justify-center">
