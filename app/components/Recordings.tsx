@@ -104,6 +104,11 @@ export default function Recordings({ session }: { session: any }) {
         unfoldable.style.top = `${-translation}px`
         unfoldable.style.minHeight = `${unfoldable.clientHeight + translation}px`
         unfoldBtn.classList.add("rotate-180")
+        
+        setTimeout(() => {
+            recordingsList.classList.add("overflow-y-auto")
+            recordingsList.classList.remove("overflow-hidden")
+        }, 500)
 
         return true
     }
@@ -126,8 +131,31 @@ export default function Recordings({ session }: { session: any }) {
         unfoldable.style.top = ""
         unfoldable.style.minHeight = ""
         unfoldBtn.classList.remove("rotate-180")
-
+        recordingsList.scrollTop = 0
+        recordingsList.classList.remove("overflow-y-auto")
+        recordingsList.classList.add("overflow-hidden")
+        
         return true
+    }
+
+    function makeRecordingsScrollable() {
+        const recordingsList = recordingsListRef.current
+
+        if (!recordingsList)
+            return
+
+        recordingsList.classList.add("overflow-y-auto")
+        recordingsList.classList.remove("overflow-hidden")
+    }
+
+    function makeRecordingsUnscrollable() {
+        const recordingsList = recordingsListRef.current
+
+        if (!recordingsList)
+            return
+
+        recordingsList.classList.add("overflow-hidden")
+        recordingsList.classList.remove("overflow-y-auto")
     }
 
     // Switch between recordings and zoom pad
@@ -162,7 +190,12 @@ export default function Recordings({ session }: { session: any }) {
             <div ref={containerRef} className="p-1 h-full container mx-auto max-w-screen-lg flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
                 <div className="relative h-full">
-                    <div ref={unfoldableRef} className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900">
+                    <div
+                        ref={unfoldableRef}
+                        className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900"
+                        onMouseEnter={() => makeRecordingsScrollable()}
+                        onMouseLeave={() => makeRecordingsUnscrollable()}
+                    >
                         <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
                             <button onClick={() => toggleSection("recordings")} ref={recordingsBtnRef} className="pl-3 basis-5/12 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">Recordings</button>
                             <div className="w-8 flex justify-center items-center">

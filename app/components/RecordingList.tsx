@@ -72,44 +72,22 @@ const RecordingList = (
             return
 
         const start = e.touches[0].clientY
-        const scrollHeight = recordingsList.scrollHeight
         const recordingsListScroll = recordingsList.scrollTop
-        const height = recordingsList.clientHeight
-        let canRefresh = true
+        let disableRefresh = false
         
         const stopScroll = (e: TouchEvent) => {
             const position = e.touches[0].clientY
-
-            if (!canRefresh)
+            
+            if (disableRefresh || !recordingsList.classList.contains("overflow-hidden"))
                 e.stopPropagation()
             
-            if (start - position >= 0 && scrollHeight - recordingsListScroll >= height) {
-                if (unfoldRecordingsList()) {
-                    recordingsList.scrollTop = 0
-                    recordingsList.classList.add("overflow-y-hidden")
-                    recordingsList.classList.remove("overflow-y-auto")
-                    canRefresh = false
-                    setTimeout(() => {
-                        recordingsList.classList.add("overflow-y-auto")
-                        recordingsList.classList.remove("overflow-y-hidden")
-                    }, 500)
-                }
-            } else if (recordingsListScroll <= 0 && start - position <= 0) {     
-                if (foldRecordingsList()) {
-                    recordingsList.scrollTop = 0
-                    recordingsList.classList.add("overflow-y-hidden")
-                    recordingsList.classList.remove("overflow-y-auto")
-                    canRefresh = false
-                    setTimeout(() => {
-                        recordingsList.classList.add("overflow-y-auto")
-                        recordingsList.classList.remove("overflow-y-hidden")
-                    }, 500)
-                }
-            }
-
-            if (recordingsList.scrollTop > 0 || start - position > 0) {
-                canRefresh = false           
-            }
+            if (start - position >= 0 ) {
+                if (unfoldRecordingsList())
+                    disableRefresh = true
+            } else if (recordingsListScroll <= 0 && start - position <= 0) {
+                if (foldRecordingsList())
+                    disableRefresh = true
+            }  
         }
                
         const removeListeners = () => {
@@ -218,7 +196,7 @@ const RecordingList = (
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow overflow-y-auto scroll-smooth duration-500"
+                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow overflow-hidden scroll-smooth duration-500"
                 ref={recordingsListRef}
                 onTouchStart={(e) => manageTouchMove(e)}
             >
