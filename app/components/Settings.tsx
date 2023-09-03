@@ -32,7 +32,6 @@ export default function Settings() {
         const target: any = e.currentTarget
 
         localStorage.setItem(target.name, target.value)
-        router.refresh()
     }
 
     return (
