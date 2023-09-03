@@ -30,13 +30,9 @@ export default function Settings() {
 
     function saveSetting(e: React.ChangeEvent) {
         const target: any = e.currentTarget
-
+        
+        localStorage.removeItem(target.name)
         localStorage.setItem(target.name, target.value)
-        router.refresh()
-    }
-
-    function saveSettings() {
-        router.back()
     }
 
     return (
@@ -70,10 +66,6 @@ export default function Settings() {
                         <option value="/recordings">Recorginds</option>
                     </select>
                 </label>
-
-                <div className="pt-5 flex justify-center">
-                    <button onClick={() => saveSettings()} className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700" form="login" type="submit">Save</button>
-                </div>
             </form>
         </div>
     )
