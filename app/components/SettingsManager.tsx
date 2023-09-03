@@ -29,11 +29,10 @@ export default function SettingsManager({ session, setPageSize }: { session: any
         const landed = sessionStorage.getItem("landed")
         
         if (!landed && session && landing) {
-            router.push(landing)
             sessionStorage.setItem("landed", "true")
+            router.push(landing)
         }
-
-    }, [session, router])
+    })
     
     React.useEffect(() => {
         if (setPageSize) {

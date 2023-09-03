@@ -10,14 +10,13 @@ export default function LoginPage() {
 
     const [location, setLocation] = React.useState(null)
     const [session, setSession] = React.useState(null)
-
+    
     return (
         <main>
             <AuthManager location={location} setLocation={setLocation} session={session} setSession={null} />
-            <SettingsManager session={session} setPageSize={null}/>
+            <SettingsManager session={null} setPageSize={null}/>
             <PageRefresh />
             <Login location={location} setSession={setSession} />
-        </main>
-        
+        </main>       
     )
 }

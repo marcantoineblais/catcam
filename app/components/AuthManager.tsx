@@ -36,7 +36,7 @@ export default function AuthManager(
     React.useEffect(() => {    
         function logout() {
             localStorage.removeItem("JWT")
-            sessionStorage.removeItem("JWT")
+            sessionStorage.clear()
             if (setSession)
                 setSession(null)
             router.push("/login")
@@ -121,7 +121,7 @@ export default function AuthManager(
                 sessionStorage.setItem("JWT", encryptedSession)
             }
             
-            router.push("/")
+            router.push(localStorage.getItem("landing") || "/")
         }
 
         storeSession()
