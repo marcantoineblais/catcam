@@ -7,7 +7,7 @@ import VideoPlayer from "./VideoPlayer"
 import RecordingList from "./RecordingList"
 import ZoomPad from "./ZoomPad"
 
-export default function Recordings({ session }: { session: any }) {
+export default function Recordings({ session, pageSize }: { session: any, pageSize: number|null }) {
 
     const [videoSource, setVideoSource] = React.useState<string|null>(null)
     const [recordings, setRecordings] = React.useState<any[]|null>(null)
@@ -234,6 +234,7 @@ export default function Recordings({ session }: { session: any }) {
                                 <div className="h-full basis-1/2">
                                     <RecordingList
                                         recordings={recordings}
+                                        pageSize={pageSize || 12}
                                         setVideoSource={setVideoSource}
                                         containerRef={containerRef}
                                         recordingsListRef={recordingsListRef}

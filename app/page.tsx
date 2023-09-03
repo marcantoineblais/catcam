@@ -4,6 +4,7 @@ import React from "react";
 import LiveStream from "./components/LiveStream";
 import AuthManager from "./components/AuthManager";
 import PageRefresh from "./components/PageRefresh";
+import SettingsManager from "./components/SettingsManager";
 
 export default function HomePage() {
     
@@ -13,6 +14,7 @@ export default function HomePage() {
     return (
         <main className="flex flex-col">
             <AuthManager location={location} setLocation={setLocation} session={null} setSession={setSession} />
+            <SettingsManager session={session} setPageSize={null}/>
             <PageRefresh />
             { session ? <LiveStream session={session} /> : null }
         </main>

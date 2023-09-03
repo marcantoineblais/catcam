@@ -12,16 +12,6 @@ export default function AuthManager(
 ) {    
 
     const router = useRouter()
-    
-    // Check if dark mode was activated
-    React.useEffect(() => {
-        const dark = localStorage.getItem("dark")
-        
-        if (dark === "true")
-            document.body.classList.add("dark")
-        else
-            document.body.classList.remove("dark")
-    })
 
     // Prevent use in Iframe
     React.useEffect(() => {

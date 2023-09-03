@@ -4,9 +4,10 @@ import React from "react"
 
 
 const RecordingList = (
-    { recordings, setVideoSource, containerRef, recordingsListRef, manageTouchMove, foldRecordingsList }:
+    { recordings, pageSize, setVideoSource, containerRef, recordingsListRef, manageTouchMove, foldRecordingsList }:
     {
         recordings: any[]|null,
+        pageSize: number,
         setVideoSource: Function,
         containerRef: React.MutableRefObject<HTMLDivElement|null>,
         recordingsListRef: React.MutableRefObject<HTMLDivElement|null>,
@@ -59,8 +60,24 @@ const RecordingList = (
         if (!recordings)
             return
 
-        setLastPage(Math.ceil(recordings.length / 12))
-    }, [recordings])
+        setLastPage(Math.ceil(recordings.length / pageSize))
+    }, [recordings, pageSize])
+
+    React.useEffect(() => {
+        const nextPage = nextPageRef.current
+        const previousPage = previousPageRef.current
+
+        if (!nextPage || !previousPage)
+            return
+
+        nextPage.classList.remove("invisible")
+        previousPage.classList.remove("invisible")
+        
+        if (currentPage === 1)
+        previousPage.classList.add("invisible")
+        if (currentPage === lastPage)
+            nextPage.classList.add("invisible")
+    }, [currentPage, lastPage])
     
     // Change pages
     const nextPage = () => {
@@ -75,12 +92,6 @@ const RecordingList = (
             recordingsList.scrollTo(0, 0)
             setCurrentPage(currentPage + 1)
         }
-        
-        previousPage.classList.remove("invisible")
-        if (currentPage + 1 === lastPage)
-            nextPage.classList.add("invisible")
-        else
-            nextPage.classList.remove("invisible")
     }
 
     const previousPage = () => {
@@ -95,12 +106,6 @@ const RecordingList = (
             recordingsList.scrollTo(0, 0)
             setCurrentPage(currentPage - 1)
         }
-        
-        nextPage.classList.remove("invisible")
-        if (currentPage - 1 === 1)
-            previousPage.classList.add("invisible")
-        else
-            previousPage.classList.remove("invisible")
     }
 
     // create the cards to display the recordings list
@@ -116,8 +121,8 @@ const RecordingList = (
         const width = (availableWidth / rowSize)
         const height = (width / 16) * 9
         const nbOfrecordingsList = recordings.length
-        const startIndex = (currentPage - 1) * 12
-        const endIndex = startIndex + 12 > nbOfrecordingsList ? nbOfrecordingsList : startIndex + 12
+        const startIndex = (currentPage - 1) * pageSize
+        const endIndex = startIndex + pageSize > nbOfrecordingsList ? nbOfrecordingsList : startIndex + pageSize
         let key = 0
         
         function videoOnClick(video: any, index: number) {
@@ -143,16 +148,6 @@ const RecordingList = (
             )
         })
 
-        while (recordingsList.length < 12) {
-            recordingsList.push(
-                <div key={key++}>
-                    <div style={{ width: width + "px", height: height + "px" }}></div>
-                    <div style={{ width: width + "px" }}></div>
-                </div>
-            )
-        }
-
-        
         return recordingsList
     }
 

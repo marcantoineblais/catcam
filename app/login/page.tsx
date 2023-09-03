@@ -4,6 +4,7 @@ import React from "react"
 import AuthManager from "../components/AuthManager"
 import Login from "../components/Login"
 import PageRefresh from "../components/PageRefresh"
+import SettingsManager from "../components/SettingsManager"
 
 export default function LoginPage() {
 
@@ -13,6 +14,7 @@ export default function LoginPage() {
     return (
         <main>
             <AuthManager location={location} setLocation={setLocation} session={session} setSession={null} />
+            <SettingsManager session={session} setPageSize={null}/>
             <PageRefresh />
             <Login location={location} setSession={setSession} />
         </main>

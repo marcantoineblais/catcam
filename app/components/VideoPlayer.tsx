@@ -418,8 +418,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex max-h-1/2 justify-center text-gray-50 dark:text-zinc-200">
-            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow dark:shadow-zinc-50/10 text-gray-950 dark:text-zinc-200">
+        <div className="pt-3 flex max-h-1/2 justify-center">
+            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
@@ -442,7 +442,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     { loadingImage() }
                 </div>
                 <div
-                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-500"
+                    className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-500 text-gray-50 dark:text-zinc-200"
                     ref={overlayRef}
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
