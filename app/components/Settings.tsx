@@ -41,7 +41,7 @@ export default function Settings() {
                 <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
 
                 <label className="flex pt-3">
-                    <p className="basis-64 text-sm">Appearance</p>
+                    <p className="basis-48 text-sm">Appearance</p>
                     <select ref={appearanceRef} onChange={(e) => saveSetting(e)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="appearance">
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
@@ -50,7 +50,7 @@ export default function Settings() {
                 </label>
 
                 <label className="flex pt-3">
-                    <p className="basis-64 text-sm">Number of items per page</p>
+                    <p className="basis-48 text-sm">Number of items per page</p>
                     <select ref={nbItemsRef} onChange={(e) => saveSetting(e)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="pageSize">
                             <option value="12">12</option>
                             <option value="24">24</option>
@@ -60,7 +60,7 @@ export default function Settings() {
                 </label>
 
                 <label className="flex pt-3">
-                    <p className="basis-64 text-sm">Landing page</p>
+                    <p className="basis-48 text-sm">Landing page</p>
                     <select ref={landingRef} onChange={(e) => saveSetting(e)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="landing">
                         <option value="/">Livestream</option>
                         <option value="/recordings">Recorginds</option>
