@@ -44,7 +44,7 @@ export default function Settings() {
                     <select ref={appearanceRef} onChange={(e) => saveSetting(e)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="appearance">
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
-                        <option value="auto">Automatique</option>
+                        <option value="auto">Auto</option>
                     </select>
                 </label>
 
