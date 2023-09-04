@@ -52,21 +52,23 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     
         const resize = () => {
             if (document.fullscreenElement)
-                return
+                fullScreenResize()
+            else {
 
-            let width = container.clientWidth
-            let height = (width / 16) * 9
-            let maxHeight = 0.5
-            
-            if (document.body.classList.contains("paysage"))
-                maxHeight = 0.9
+                let width = container.clientWidth
+                let height = (width / 16) * 9
+                let maxHeight = 0.5
+                
+                if (document.body.classList.contains("paysage"))
+                    maxHeight = 0.9
 
-            if (height > container.clientHeight * maxHeight) {
-                height = container.clientHeight * maxHeight
-                width = (height / 9) * 16
-            } 
-            videoContainer.style.width = width + "px"
-            videoContainer.style.height = height + "px"
+                if (height > container.clientHeight * maxHeight) {
+                    height = container.clientHeight * maxHeight
+                    width = (height / 9) * 16
+                } 
+                videoContainer.style.width = width + "px"
+                videoContainer.style.height = height + "px"
+            }
         }
 
         const fullScreenResize = () => {
