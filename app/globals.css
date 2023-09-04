@@ -40,11 +40,15 @@ main {
     overflow: hidden;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
 
 .paysage .paysage-hidden {
     display: none;
 }
 
+video::-webkit-media-controls {
+    display: none !important;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
