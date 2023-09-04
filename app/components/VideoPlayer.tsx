@@ -478,14 +478,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                         <div className="lg:pr-3">{videoEnd}</div>
                         <div className="h-5 w-5 flex items-center cursor-pointer" onClick={() => setFullScreen()}>
                             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
-                                <rect fill="currentColor" x="-44.21" y="388.5" width="155.95" height="32.47" rx="4.01" transform="translate(-370.96 438.5) rotate(-90)"/>
-                                <rect fill="currentColor" x="-41.16" y="81.48" width="155.05" height="32.47" rx="4.01" transform="translate(-61.34 134.08) rotate(-90)"/>
-                                <rect fill="currentColor" x="20.13" y="20.18" width="155.95" height="32.47" rx="4.01"/>
-                                <rect fill="currentColor" x="322.56" y="19.73" width="155.05" height="32.47" rx="4.01"/>
-                                <rect fill="currentColor" x="383.4" y="81.48" width="155.95" height="32.47" rx="4.01" transform="translate(559.09 -363.67) rotate(90)"/>
-                                <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
-                                <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
+                                <rect fill="currentColor" x="17.53" y="450.24" width="155" height="32" rx="4" transform="translate(190.12 932.94) rotate(-180)"/>
+                                <rect fill="currentColor" x="-44.21" y="388.5" width="155" height="32" rx="4" transform="translate(-370.96 438.5) rotate(-90)"/>
+                                <rect fill="currentColor" x="-41.16" y="81.48" width="155" height="32" rx="4" transform="translate(-61.34 134.08) rotate(-90)"/>
+                                <rect fill="currentColor" x="20.13" y="20.18" width="155" height="32" rx="4"/>
+                                <rect fill="currentColor" x="322.56" y="19.73" width="155" height="32" rx="4"/>
+                                <rect fill="currentColor" x="383.4" y="81.48" width="155" height="32" rx="4" transform="translate(559.09 -363.67) rotate(90)"/>
+                                <rect fill="currentColor" x="383.85" y="388.05" width="155" height="32" rx="4" transform="translate(865.66 -57.1) rotate(90)"/>
+                                <rect fill="currentColor" x="321.66" y="449.34" width="155" height="32" rx="4" transform="translate(799.27 931.14) rotate(-180)"/>
                             </svg>
                         </div>
                     </div>
