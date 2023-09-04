@@ -1,13 +1,14 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import React from "react"
+import { useRouter } from "next/navigation"
 
 export default function Settings() {
 
     const appearanceRef = React.useRef<HTMLSelectElement|null>(null)
     const nbItemsRef = React.useRef<HTMLSelectElement|null>(null)
     const landingRef = React.useRef<HTMLSelectElement|null>(null)
+    const router = useRouter()
 
     React.useEffect(() => {
         const appearance = appearanceRef.current
@@ -32,6 +33,7 @@ export default function Settings() {
         
         localStorage.removeItem(target.name)
         localStorage.setItem(target.name, target.value)
+        router.refresh()
     }
 
     return (
