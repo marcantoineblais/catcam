@@ -447,21 +447,23 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div className="absolute top-1/4 sm:top-1/3 left-1/2 w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-gray-950/75 cursor-pointer -translate-x-1/2 dark:bg-zinc-950/75" onClick={() => playPauseVideo()}>
-                        <div ref={playBtnRef}  className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0 hidden">
-                            <svg fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
-                            </svg>
-                        </div>
-                        <div ref={pauseBtnRef} className="absolute p-4 lg:p-6 top-0 left-0 right-0 bottom-0">
-                            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                <rect fill="currentColor" x="26.88" y="20.18" width="152" height="463.89" rx="4.12"/>
-                                <rect fill="currentColor" x="322.21" y="20.18" width="152" height="463.89" rx="4.12"/>
-                            </svg>
+                    <div className="absolute top-0 bottom-12 left-0 right-0 flex justify-center items-center">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gray-950/75 cursor-pointer dark:bg-zinc-950/75" onClick={() => playPauseVideo()}>
+                            <div ref={playBtnRef}  className="p-3 sm:p-3.5 md:p-4 hidden">
+                                <svg fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                    <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
+                                </svg>
+                            </div>
+                            <div ref={pauseBtnRef} className="p-3 sm:p-3.5 md:p-4">
+                                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                    <rect fill="currentColor" x="26.88" y="20.18" width="152" height="463.89" rx="4.12"/>
+                                    <rect fill="currentColor" x="322.21" y="20.18" width="152" height="463.89" rx="4.12"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-gray-950/75" onClick={(e) => e.stopPropagation()}>
+                    <div className="px-3 lg:px-5 absolute h-8 bottom-0 w-full flex gap-3 items-center bg-gray-950/75 text-sm md:text-base" onClick={(e) => e.stopPropagation()}>
                         <div className="lg:pl-6">{videoTime}</div>
                         <div
                             className="flex items-center flex-grow"

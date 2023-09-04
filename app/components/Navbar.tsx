@@ -72,9 +72,9 @@ const Navbar = ({ activePage }: { activePage: string }) => {
         <div className="border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10">
             <div ref={containerRef} className="px-1 h-full container max-w-screen-lg flex justify-between items-center mx-auto">
                 <div className="bg-chats bg-bottom bg-contain bg-origin-content bg-clip-text text-transparent">
-                    <h1 className="text-5xl font-extrabold tracking-widest text-gray-950/50 dark:text-zinc-100/50">CATCAM</h1>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-widest text-gray-950/50 dark:text-zinc-100/50">CATCAM</h1>
                 </div>
-                <menu className="h-full relative flex justify-end items-end">
+                <menu className="h-full py-1 relative flex justify-end items-end">
                     <div ref={menuIconRef} className="h-full flex items-center duration-200 lg:hidden" onClick={(e: React.MouseEvent) => showMenu(e)}>
                         <svg className="w-9 h-9" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                             <rect fill="currentColor" x="212" y="-121.02" width="76" height="463.89" rx="4.12" transform="translate(360.92 -139.08) rotate(90)" />
