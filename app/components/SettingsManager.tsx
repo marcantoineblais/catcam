@@ -17,7 +17,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
         else if (appearance === "auto") {
             const time = new Date(Date.now()).getHours()
             
-            if (time >= 20 || time <= 8)
+            if (time >= 20 || time < 8)
                 document.body.classList.add("dark")
             else
                 document.body.classList.remove("dark")
