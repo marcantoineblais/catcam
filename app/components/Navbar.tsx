@@ -75,8 +75,8 @@ const Navbar = ({ activePage }: { activePage: string }) => {
                     <h1 className="text-5xl font-extrabold tracking-widest text-gray-950/50 dark:text-zinc-100/50">CATCAM</h1>
                 </div>
                 <menu className="h-full relative flex justify-end items-end">
-                    <div ref={menuIconRef} className="w-9 h-full flex items-center duration-200 lg:hidden" onClick={(e: React.MouseEvent) => showMenu(e)}>
-                        <svg className="text-gray-950 dark:text-zinc-200" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                    <div ref={menuIconRef} className="h-full flex items-center duration-200 lg:hidden" onClick={(e: React.MouseEvent) => showMenu(e)}>
+                        <svg className="w-9 h-9" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                             <rect fill="currentColor" x="212" y="-121.02" width="76" height="463.89" rx="4.12" transform="translate(360.92 -139.08) rotate(90)" />
                             <rect fill="currentColor" x="212" y="157.13" width="76" height="463.89" rx="4.12" transform="translate(639.08 139.08) rotate(90)" />
                             <rect fill="currentColor" x="212" y="18.05" width="76" height="463.89" rx="4.12" transform="translate(500 0) rotate(90)" />
