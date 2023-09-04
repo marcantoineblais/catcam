@@ -37,9 +37,9 @@ export default function Settings() {
     }
 
     return (
-        <div className="h-full px-1 pt-16 max-w-screen-md container mx-auto bg-[url('../public/logo.png')] bg-contain bg-no-repeat bg-bottom">
-            <form  className="w-full p-5 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
-                <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
+        <div className="h-full px-1 pt-5 max-w-screen-md container mx-auto bg-[url('../public/logo.png')] bg-contain bg-no-repeat bg-bottom">
+            <form  className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
+                <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Settings</h1>
 
                 <label className="flex pt-3">
                     <p className="basis-36 text-sm">Appearance</p>

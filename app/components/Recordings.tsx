@@ -199,14 +199,14 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
             <Navbar activePage="recordings" />
             <div ref={containerRef} className="p-1 h-full container mx-auto max-w-screen-lg flex flex-col flex-grow overflow-hidden">
                 <VideoPlayer videoSource={videoSource} videoRef={videoRef} containerRef={containerRef} isLiveStream={false} />
-                <div className="relative h-full">
+                <div className="relative h-full flex-grow">
                     <div
                         ref={unfoldableRef}
                         className="absolute top-0 bottom-0 left-0 right-0 min-h-0 flex flex-col overflow-hidden transition-height duration-500 bg-gray-100 dark:bg-zinc-900"
                     >
                         <div 
                             onTouchStart={(e) => manageTouchMove(e)}
-                            className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10"
+                            className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10 paysage-hidden"
                         >
                             <button
                                 onClick={() => toggleSection("recordings")}
@@ -229,7 +229,7 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
                                 className="pr-3 basis-5/12 text-xl text-right border-gray-400 hover:text-gray-700 hover:border-gray-700 border-b-4 dark:border-zinc-800 dark:hover:border-zinc-300 dark:hover:text-zinc-300"
                             >Zoom</button>
                         </div>
-                        <div className="w-full flex-grow overflow-hidden">
+                        <div className="w-full flex-grow overflow-hidden paysage-hidden">
                             <div ref={hscrollRef} className="w-[200%] h-full duration-500 flex justify-between overflow-hidden">
                                 <div className="h-full basis-1/2">
                                     <RecordingList

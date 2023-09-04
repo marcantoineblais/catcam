@@ -31,11 +31,12 @@ export default function SettingsManager({ session, setPageSize }: { session: any
             const height = window.innerHeight
             
             if (width > height && height < 380)
-                setUnsupportedSize(true)
+                document.body.classList.add("paysage")
             else
-                setUnsupportedSize(false)
+                document.body.classList.remove("paysage")
         }
 
+        portraitModeHandle()
         window.addEventListener("resize", portraitModeHandle)
         
         return () => {

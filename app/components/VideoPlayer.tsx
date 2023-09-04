@@ -51,9 +51,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const resize = () => {
         let width = container.clientWidth
         let height = (width / 16) * 9
+        let maxHeight = 0.5
         
-        if (height > container.clientHeight * 0.5) {
-            height = container.clientHeight * 0.5
+        if (document.body.classList.contains("paysage"))
+            maxHeight = 0.9
+
+        if (height > container.clientHeight * maxHeight) {
+            height = container.clientHeight * maxHeight
             width = (height / 9) * 16
         } 
         videoContainer.style.width = width + "px"
@@ -419,7 +423,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex max-h-1/2 justify-center">
+        <div className="pt-3 flex justify-center">
             <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"

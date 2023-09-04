@@ -16,5 +16,6 @@ const config: Config = {
     },
     plugins: [],
     darkMode: 'class',
+    rotated: 'class'
 }
 export default config

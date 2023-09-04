@@ -132,7 +132,7 @@ const ZoomPad = ({ videoRef, containerRef }: { videoRef: React.MutableRefObject<
     }
 
     return (
-        <div className="h-full flex-grow flex justify-center items-center">
+        <div className="h-full flex-grow flex justify-center items-center paysage-hidden">
             <div
                 ref={zoomPadRef}
                 className="flex justify-center items-center bg-gray-300 border-8 border-gray-50 rounded shadow dark:shadow-zinc-50/10 dark:bg-zinc-800 dark:border-zinc-700"
