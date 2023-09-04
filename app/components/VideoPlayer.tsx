@@ -1,6 +1,7 @@
+"use client"
+
 import React from "react"
 import Hls from "hls.js"
-import { useRouter } from "next/navigation"
 
 export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiveStream }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null>, isLiveStream: boolean }) {
 
@@ -9,6 +10,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const [duration, setDuration] = React.useState<number>(0)
     const [overlayTimeouts] = React.useState<any[]>([])
     const [dblClicksTimeouts] = React.useState<any[]>([])
+    const fullScreenRef = React.useRef<HTMLDivElement|null>(null)
     const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
     const overlayRef = React.useRef<HTMLDivElement|null>(null)
     const playBtnRef = React.useRef<HTMLImageElement|null>(null)
@@ -17,7 +19,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const progressBarRef = React.useRef<HTMLDivElement|null>(null)
     const bufferBarRef = React.useRef<HTMLDivElement|null>(null)
     const trackingHeadRef = React.useRef<HTMLDivElement|null>(null)
-    const router = useRouter()
 
     // Use HLS plugin only when required
     React.useEffect(() => {
@@ -43,34 +44,57 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
         const videoContainer = videoContainerRef.current
+        const fullScreen = fullScreenRef.current
         const container = containerRef.current
         
-        if (!container || !videoContainer)
-        return
+        if (!container || !videoContainer || !fullScreen)
+            return
     
-    const resize = () => {
-        let width = container.clientWidth
-        let height = (width / 16) * 9
-        let maxHeight = 0.5
-        
-        if (document.body.classList.contains("paysage"))
-            maxHeight = 0.9
+        const resize = () => {
+            if (document.fullscreenElement)
+                return
 
-        if (height > container.clientHeight * maxHeight) {
-            height = container.clientHeight * maxHeight
-            width = (height / 9) * 16
-        } 
-        videoContainer.style.width = width + "px"
-        videoContainer.style.height = height + "px"
-    }
+            let width = container.clientWidth
+            let height = (width / 16) * 9
+            let maxHeight = 0.5
+            
+            if (document.body.classList.contains("paysage"))
+                maxHeight = 0.9
+
+            if (height > container.clientHeight * maxHeight) {
+                height = container.clientHeight * maxHeight
+                width = (height / 9) * 16
+            } 
+            videoContainer.style.width = width + "px"
+            videoContainer.style.height = height + "px"
+        }
+
+        const fullScreenResize = () => {
+            if (document.fullscreenElement) {
+                let width = window.outerWidth
+                let height = window.outerHeight
+                
+                if (width < height)
+                    height = (width / 16) * 9
+                else 
+                    width = (height / 9) * 16
+
+                videoContainer.style.width = width + "px"
+                videoContainer.style.height = height + "px"
+            } else {
+                resize()
+            }
+        }
     
-    resize()
-    window.addEventListener('resize', resize)
-    
-    return () => {
-        window.removeEventListener('resize', resize)
-    }
-}, [videoContainerRef, containerRef])
+        resize()
+        window.addEventListener('resize', resize)
+        fullScreen.addEventListener("fullscreenchange", fullScreenResize)
+        
+        return () => {
+            window.removeEventListener('resize', resize)
+            fullScreen.removeEventListener("fullscreenchange", fullScreenResize)
+        }
+    }, [videoContainerRef, containerRef])
 
     // Reset overlay before playing new video
     React.useEffect(() => {
@@ -88,14 +112,17 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     // Fullscreen video
     function setFullScreen() {
-        const videoContainer = videoContainerRef.current
-        if (!videoContainer)
+        const fullScreen = fullScreenRef.current
+        const video = videoRef.current
+        
+        if (!fullScreen || !video)
             return
         
-        if (document.fullscreenElement)
+        if (document.fullscreenElement) {
             document.exitFullscreen()
-        else if (videoContainer.requestFullscreen)
-            videoContainer.requestFullscreen()
+        } else {
+            fullScreen.requestFullscreen()
+        }
     }
 
     // Toggle between play and pause
@@ -425,8 +452,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     }
 
     return (
-        <div className="pt-3 flex justify-center">
-            <div ref={videoContainerRef} className="w-full h-full relative rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+        <div ref={fullScreenRef} className="flex justify-center items-center">
+            <div ref={videoContainerRef} className="relative flex justify-center items-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
