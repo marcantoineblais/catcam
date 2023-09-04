@@ -36,37 +36,51 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             hls.attachMedia(video)
             
         } else 
-            video.src = videoSource
+        video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
-
-
+    
+    
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
         const videoContainer = videoContainerRef.current
         const container = containerRef.current
-
+        
         if (!container || !videoContainer)
+        return
+    
+    const resize = () => {
+        let width = container.clientWidth
+        let height = (width / 16) * 9
+        
+        if (height > container.clientHeight * 0.5) {
+            height = container.clientHeight * 0.5
+            width = (height / 9) * 16
+        } 
+        videoContainer.style.width = width + "px"
+        videoContainer.style.height = height + "px"
+    }
+    
+    resize()
+    window.addEventListener('resize', resize)
+    
+    return () => {
+        window.removeEventListener('resize', resize)
+    }
+}, [videoContainerRef, containerRef])
+
+    // Reset overlay before playing new video
+    React.useEffect(() => {
+        const overlay = overlayRef.current
+        const playBtn = playBtnRef.current
+        const pauseBtn = pauseBtnRef.current
+
+        if (!overlay || !playBtn || !pauseBtn)
             return
 
-        const resize = () => {
-            let width = container.clientWidth
-            let height = (width / 16) * 9
-
-            if (height > container.clientHeight * 0.5) {
-                height = container.clientHeight * 0.5
-                width = (height / 9) * 16
-            } 
-            videoContainer.style.width = width + "px"
-            videoContainer.style.height = height + "px"
-        }
-        
-        resize()
-        window.addEventListener('resize', resize)
-
-        return () => {
-            window.removeEventListener('resize', resize)
-        }
-    }, [videoContainerRef, containerRef])
+        overlay.classList.remove("!opacity-100", "!visible")
+        playBtn.classList.add("hidden")
+        pauseBtn.classList.remove("hidden")
+    }, [videoSource])
 
     // Fullscreen video
     function setFullScreen() {
@@ -118,19 +132,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
     }
 
-    // Reset overlay before playing new video
-    function beforePlaying() {
-        const overlay = overlayRef.current
-        const playBtn = playBtnRef.current
-        const pauseBtn = pauseBtnRef.current
-
-        if (!overlay || !playBtn || !pauseBtn)
-            return
-
-        overlay.classList.remove("!opacity-100", "!visible")
-        playBtn.classList.add("hidden")
-        pauseBtn.classList.remove("hidden")
-    }
 
     // Convert the duration number into a string (m:ss)
     function getTimeString(time: number) {
@@ -426,7 +427,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onLoadedData={() => beforePlaying()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
