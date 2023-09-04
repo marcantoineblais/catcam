@@ -88,12 +88,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     // Fullscreen video
     function setFullScreen() {
-        const video = videoRef.current
-        if (!video)
+        const videoContainer = videoContainerRef.current
+        if (!videoContainer)
             return
-
-        if (video.requestFullscreen)
-            video.requestFullscreen()
+        
+        if (document.fullscreenElement)
+            document.exitFullscreen()
+        else if (videoContainer.requestFullscreen)
+            videoContainer.requestFullscreen()
     }
 
     // Toggle between play and pause
