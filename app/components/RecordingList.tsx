@@ -161,15 +161,15 @@ const RecordingList = (
                 { renderRecordingsList() }
             </div>
             <div className="w-full py-31 flex justify-between items-center">
-                <div ref={previousPageRef} onClick={() => previousPage()} className="h-12 w-16 px-3 flex items-center rotate-180 cursor-pointer invisible">
-                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                <div ref={previousPageRef} onClick={() => previousPage()} className="px-3 py-1.5 flex items-center rotate-180 cursor-pointer invisible">
+                    <svg className="h-9 w-12" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                         <path fill="currentColor" d="M480.27,243.82,288.05,123.31a4.78,4.78,0,0,0-7.32,4v241a4.78,4.78,0,0,0,7.32,4.05L480.27,251.92A4.78,4.78,0,0,0,480.27,243.82Z"/>
                         <path fill="currentColor" d="M287.55,298.87H39.66a4.06,4.06,0,0,1-4.11-4v-94a4.06,4.06,0,0,1,4.11-4H287.55Z"/>
                     </svg>
                 </div>
                 <p>Page {currentPage} of { lastPage }</p>
-                <div ref={nextPageRef} onClick={() => nextPage()} className="h-12 w-16 px-3 flex items-center cursor-pointer">
-                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                <div ref={nextPageRef} onClick={() => nextPage()} className="px-3 py-1.5 flex items-center cursor-pointer">
+                    <svg className="h-9 w-12" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                         <path fill="currentColor" d="M480.27,243.82,288.05,123.31a4.78,4.78,0,0,0-7.32,4v241a4.78,4.78,0,0,0,7.32,4.05L480.27,251.92A4.78,4.78,0,0,0,480.27,243.82Z"/>
                         <path fill="currentColor" d="M287.55,298.87H39.66a4.06,4.06,0,0,1-4.11-4v-94a4.06,4.06,0,0,1,4.11-4H287.55Z"/>
                     </svg>
