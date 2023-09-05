@@ -482,53 +482,56 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onClick={(e) => toggleOverlay(e)}
                     onMouseMove={() => showOverlay()}
                 >
-                    <div onClick={(e) => e.stopPropagation()} className="px-3 absolute h-12 bottom-0 w-full flex gap-3 justify-between items-center bg-gray-950/75 text-xl">
-                        <div onClick={() => playPauseVideo()} className="w-6 h-6 cursor-pointer">
-                            <div ref={playBtnRef} className="hidden">
-                                <svg fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                    <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
-                                </svg>
-                            </div>
-                            <div ref={pauseBtnRef}>
-                                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                    <rect fill="currentColor" x="26.88" y="20.18" width="152" height="463.89" rx="4.12"/>
-                                    <rect fill="currentColor" x="322.21" y="20.18" width="152" height="463.89" rx="4.12"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="pl-2">{videoTime}</div>
+                    <div onClick={(e) => e.stopPropagation()} className="px-5 pt-3 pb-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center bg-gray-950/75">
                         <div
-                            className="flex items-center flex-grow"
+                            className="w-full flex justify-center"
                             onMouseDown={(e) => videoSeekingOnMouseDown(e)}
                             onTouchStart={(e) => videoSeekingOnTouchStart(e)}
                         >
-                            <div ref={videoSeekingRef} className="h-2 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800">
+                            <div ref={videoSeekingRef} className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800">
                                 <div ref={bufferBarRef} className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"></div>
                                 <div ref={progressBarRef} className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                                    <div ref={trackingHeadRef} className="absolute h-6 w-6 -top-2 -right-2 bg-gray-100 rounded-full cursor-pointer translate-x-1/4 dark:bg-zinc-200"></div>
+                                    <div ref={trackingHeadRef} className="absolute h-5 w-5 -top-2 -right-[0.28rem] bg-gray-100 rounded-full cursor-pointer translate-x-1/4 dark:bg-zinc-200"></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="pr-2">{videoEnd}</div>
-                        <div className="h-full flex items-center cursor-pointer" onClick={() => setFullScreen()}>
-                            <svg className="w-6 h-6" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                                <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
-                                <rect fill="currentColor" x="-44.21" y="388.5" width="155.95" height="32.47" rx="4.01" transform="translate(-370.96 438.5) rotate(-90)"/>
-                                <rect fill="currentColor" x="-41.16" y="81.48" width="155.05" height="32.47" rx="4.01" transform="translate(-61.34 134.08) rotate(-90)"/>
-                                <rect fill="currentColor" x="20.13" y="20.18" width="155.95" height="32.47" rx="4.01"/>
-                                <rect fill="currentColor" x="322.56" y="19.73" width="155.05" height="32.47" rx="4.01"/>
-                                <rect fill="currentColor" x="383.4" y="81.48" width="155.95" height="32.47" rx="4.01" transform="translate(559.09 -363.67) rotate(90)"/>
-                                <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
-                                <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
-                            </svg>
+                        <div className="w-full pt-3 flex justify-between items-center flex-grow">
+                            <div className="flex items-center gap-5">
+                                <div onClick={() => playPauseVideo()} className="cursor-pointer">
+                                    <div ref={playBtnRef} className="hidden">
+                                        <svg className="w-5 h-5" fill="currentColor" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                            <path d="M471.25,246.56,28.64,18.49A3.87,3.87,0,0,0,23,21.93V478.07a3.87,3.87,0,0,0,5.64,3.44L471.25,253.44A3.87,3.87,0,0,0,471.25,246.56Z"/>
+                                        </svg>
+                                    </div>
+                                    <div ref={pauseBtnRef}>
+                                        <svg className="w-5 h-5" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                            <rect fill="currentColor" x="26.88" y="20.18" width="152" height="463.89" rx="4.12"/>
+                                            <rect fill="currentColor" x="322.21" y="20.18" width="152" height="463.89" rx="4.12"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="flex-grow">{videoTime} / {videoEnd}</div>
+                            </div>
+                            <div className="h-full flex items-center cursor-pointer" onClick={() => setFullScreen()}>
+                                <svg className="w-6 h-6" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                                    <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
+                                    <rect fill="currentColor" x="-44.21" y="388.5" width="155.95" height="32.47" rx="4.01" transform="translate(-370.96 438.5) rotate(-90)"/>
+                                    <rect fill="currentColor" x="-41.16" y="81.48" width="155.05" height="32.47" rx="4.01" transform="translate(-61.34 134.08) rotate(-90)"/>
+                                    <rect fill="currentColor" x="20.13" y="20.18" width="155.95" height="32.47" rx="4.01"/>
+                                    <rect fill="currentColor" x="322.56" y="19.73" width="155.05" height="32.47" rx="4.01"/>
+                                    <rect fill="currentColor" x="383.4" y="81.48" width="155.95" height="32.47" rx="4.01" transform="translate(559.09 -363.67) rotate(90)"/>
+                                    <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
+                                    <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                     <div
-                        className=" absolute top-0 bottom-8 left-0 w-1/5"
+                        className=" absolute top-0 bottom-16 left-0 w-1/5"
                         onClick={(e) => seekOnDblClick(e, -10)}
                     ></div>
                         <div
-                            className="absolute top-0 bottom-8 right-0 w-1/5"
+                            className="absolute top-0 bottom-16 right-0 w-1/5"
                             onClick={(e) => seekOnDblClick(e, 10)}
                     ></div>
                 </div>
