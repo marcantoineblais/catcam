@@ -71,7 +71,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 maxHeight = 0.5
                 
                 if (document.body.classList.contains("paysage"))
-                    maxHeight = 0.9
+                    maxHeight = 0.8
 
                 if (height > container.clientHeight * maxHeight) {
                     height = container.clientHeight * maxHeight
