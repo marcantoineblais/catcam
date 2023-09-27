@@ -191,7 +191,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         const time = video.duration || video.buffered.end(0) || video.seekable.end(0)
 
         setDuration(time)
-        setVideoEnd(getTimeString(time))
+        // setVideoEnd(getTimeString(time))
+        setVideoEnd(time.toString())
     }
 
     // Adjust the progress bar size when time passes
