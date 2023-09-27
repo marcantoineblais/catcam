@@ -68,8 +68,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 height = container.clientHeight
                 maxHeight = 0.5
                 
-                if (document.body.classList.contains("paysage"))
-                    maxHeight = 0.9
+                // if (document.body.classList.contains("paysage"))
+                //     maxHeight = 0.9
 
                 if (width < height)
                     height = (width / 16) * 9
@@ -88,7 +88,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     
         resize()
         window.addEventListener("resize", resize)
-        window.addEventListener("orientationchange", resize)
         fscreen.addEventListener("fullscreenchange", resize)
         
         return () => {
