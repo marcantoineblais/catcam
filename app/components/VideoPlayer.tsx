@@ -244,7 +244,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         
         buffer.style.width = `${position * 100}%`
         setDuration(videoDuration)
-        setVideoEnd(getTimeString(videoDuration))
+        // setVideoEnd(getTimeString(videoDuration))
+        setVideoEnd(videoDuration.toString())
     }
 
     // Open overlay when closed and vice-versa
