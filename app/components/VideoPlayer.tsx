@@ -312,6 +312,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
                 video.currentTime = progressFraction * videoDuration
+                video.load()
             }
         }
 
@@ -351,6 +352,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
                 video.currentTime = progressFraction * videoDuration
+                video.load()
             }
             
             showOverlay()
@@ -376,7 +378,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
     
-        e.stopPropagation()
         const removeTimeouts = () => {
             let n: number = 0
             dblClicksTimeouts.forEach(t => {
@@ -423,6 +424,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             }, 300))
         } else if (dblClicksTimeouts.length === 1)
             seek()
+
+        e.stopPropagation()
     }
 
     // show overlay when video ends
