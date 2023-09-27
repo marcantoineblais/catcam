@@ -35,8 +35,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         //     hls.loadSource(videoSource)
         //     hls.attachMedia(video)
             
-        // } else 
-        video.src = videoSource
+        // } else
+            video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
     
     
@@ -190,6 +190,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!isNaN(time)) {
             setDuration(time)
             setVideoEnd(getTimeString(time))
+        } else {
+            setDuration(duration + 2)
+            setVideoEnd(getTimeString(duration + 2))
         }
     }
 
@@ -460,10 +463,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
-                    // onTimeUpdate={() => updateProgressBar()}
-                    // onProgress={() => updateBufferBar()}
+                    onTimeUpdate={() => updateProgressBar()}
+                    onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onDurationChange={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
