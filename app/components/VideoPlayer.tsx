@@ -54,7 +54,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             let height
             let maxHeight
 
-            if (fscreen.fullscreenElement !== null) {
+            if (fscreen.fullscreenEnabled && fscreen.fullscreenElement !== null) {
                 
                 width = window.outerWidth
                 height = window.outerHeight
@@ -68,18 +68,18 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 height = container.clientHeight
                 maxHeight = height * 0.5
                 
-                // if (document.body.classList.contains("paysage"))
-                //     maxHeight = container.clientHeight * 0.9
+                if (document.body.classList.contains("paysage"))
+                    maxHeight = container.clientHeight * 0.9
 
-                // if (width < height)
-                //     height = (width / 16) * 9
-                // else 
+                if (width < height)
+                    height = (width / 16) * 9
+                else 
                     width = (height / 9) * 16
 
-                // if (height > maxHeight) {
-                //     height = maxHeight
-                //     width = (height / 9) * 16
-                // } 
+                if (height > maxHeight) {
+                    height = maxHeight
+                    width = (height / 9) * 16
+                } 
             }
 
             videoContainer.style.width = width + "px"
