@@ -33,9 +33,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         // if (isLiveStream && Hls.isSupported()) {
         //     const hls = new Hls()
         //     hls.loadSource(videoSource)
-        //     hls.attachMedia(video)
-            
-        // } else
+        //     hls.attachMedia(video)      
+        // } else 
             video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
     
@@ -185,15 +184,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        const time = video.duration
+        const time = video.duration || video.buffered.end(0)
 
-        if (!Number.isNaN(time) && Number.isFinite(time) ) {
-            setDuration(time)
-            setVideoEnd(getTimeString(time))
-        } else {
-            setDuration(duration + 2)
-            setVideoEnd(getTimeString(duration + 2))
-        }
+        setDuration(time)
+        setVideoEnd(getTimeString(time))
     }
 
     // Adjust the progress bar size when time passes
@@ -231,8 +225,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!buffers.length)
             return
 
-        const end = buffers.end(buffers.length - 1)
-        let position = end / duration
+            
+        console.log(video.buffered.end(0));
+        const end = buffers.end(0)
+        const videoDuration = video.duration || end
+
+        let position = end / videoDuration
 
         if (position > 1)
             position = 1
@@ -240,7 +238,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             position = 0
         
         buffer.style.width = `${position * 100}%`
-        updateDuration()
+        setDuration(videoDuration)
+        setVideoEnd(getTimeString(videoDuration))
     }
 
     // Open overlay when closed and vice-versa
@@ -310,7 +309,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
-                video.currentTime = progressFraction * duration
+                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
             }
         }
 
@@ -351,7 +350,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * duration
+                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
             }
         }
 
