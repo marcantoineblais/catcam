@@ -31,12 +31,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         progress.style.left = ""
         progress.style.right = ""
         
-        if (isLiveStream && Hls.isSupported()) {
-            const hls = new Hls()
-            hls.loadSource(videoSource)
-            hls.attachMedia(video)
+        // if (isLiveStream && Hls.isSupported()) {
+        //     const hls = new Hls()
+        //     hls.loadSource(videoSource)
+        //     hls.attachMedia(video)
             
-        } else 
+        // } else 
         video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
     
