@@ -457,7 +457,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
-            <div ref={videoContainerRef} className="relative flex justify-center items-stretch content-stretch rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+            <div ref={videoContainerRef} className="p-0 relative flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
