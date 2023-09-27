@@ -191,8 +191,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             setDuration(time)
             setVideoEnd(getTimeString(time))
         } else {
-            setDuration(duration + 2)
-            setVideoEnd(getTimeString(duration + 2))
+            setDuration(duration + 2 || 2)
+            setVideoEnd(getTimeString(duration + 2 || 2))
         }
     }
 
