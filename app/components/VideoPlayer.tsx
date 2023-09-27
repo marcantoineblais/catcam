@@ -66,18 +66,18 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             } else {
                 width = container.clientWidth
                 height = container.clientHeight
-                maxHeight = 0.5
+                maxHeight = container.clientHeight * 0.5
                 
                 // if (document.body.classList.contains("paysage"))
-                //     maxHeight = 0.9
+                //     maxHeight = container.clientHeight * 0.9
 
                 if (width < height)
                     height = (width / 16) * 9
                 else 
                     width = (height / 9) * 16
 
-                if (height > container.clientHeight * maxHeight) {
-                    height = container.clientHeight * maxHeight
+                if (height > maxHeight) {
+                    height = maxHeight
                     width = (height / 9) * 16
                 } 
             }
@@ -461,10 +461,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
-            { containerRef.current?.clientHeight}
             <div ref={videoContainerRef} className="relative flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
-                    className="w-full h-full object-cover scale-100 bg-loading bg-no-repeat bg-center"
+                    className="object-cover scale-100 bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
