@@ -4,8 +4,14 @@ import React from "react"
 import Hls from "hls.js"
 import fscreen from "fscreen"
 
-export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiveStream }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null>, isLiveStream: boolean }) {
-
+export default function VideoPlayer({
+    videoSource, videoRef, containerRef, isLiveStream
+}: { 
+    videoSource: string|null,
+    videoRef: React.MutableRefObject<HTMLVideoElement|null>,
+    containerRef: React.MutableRefObject<HTMLDivElement|null>,
+    isLiveStream: boolean
+}) {
     const [videoTime, setVideoTime] = React.useState<string>("")
     const [videoEnd, setVideoEnd] = React.useState<string>("")
     const [duration, setDuration] = React.useState<number>(0)

@@ -3,18 +3,17 @@
 import React from "react"
 
 
-const RecordingList = (
-    { recordings, pageSize, setVideoSource, containerRef, recordingsListRef, manageTouchMove, foldRecordingsList }:
-    {
-        recordings: any[]|null,
-        pageSize: number,
-        setVideoSource: Function,
-        containerRef: React.MutableRefObject<HTMLDivElement|null>,
-        recordingsListRef: React.MutableRefObject<HTMLDivElement|null>,
-        manageTouchMove: Function,
-        foldRecordingsList: Function 
-    }
-) => {
+const RecordingList = ({
+    recordings, pageSize, setVideoSource, containerRef, recordingsListRef, manageTouchMove, foldRecordingsList
+}: {
+    recordings: any[]|null,
+    pageSize: number,
+    setVideoSource: Function,
+    containerRef: React.MutableRefObject<HTMLDivElement|null>,
+    recordingsListRef: React.MutableRefObject<HTMLDivElement|null>,
+    manageTouchMove: Function,
+    foldRecordingsList: Function 
+}) => {
 
     const [activeVideoIndex, setActiveVideoIndex] = React.useState<number|null>(null)
     const [currentPage, setCurrentPage] = React.useState<number>(1)
