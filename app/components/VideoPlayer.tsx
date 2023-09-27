@@ -187,7 +187,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
         const time = video.duration
 
-        if (!isNaN(time)) {
+        if (time) {
             setDuration(time)
             setVideoEnd(getTimeString(time))
         } else {
