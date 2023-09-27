@@ -2,6 +2,7 @@
 
 import React from "react"
 import Hls from "hls.js"
+import fscreen from "fscreen"
 
 export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiveStream }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null>, isLiveStream: boolean }) {
 
@@ -49,7 +50,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
     
         const resize = () => {
-            if (document.fullscreenElement)
+            if (fullScreen.fullscreenElement !== null)
                 fullScreenResize()
             else {
 
@@ -88,11 +89,11 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     
         resize()
         window.addEventListener('resize', resize)
-        fullScreen.addEventListener("fullscreenchange", fullScreenResize)
+        fscreen.addEventListener("fullscreenchange", fullScreenResize)
         
         return () => {
             window.removeEventListener('resize', resize)
-            fullScreen.removeEventListener("fullscreenchange", fullScreenResize)
+            fscreen.removeEventListener("fullscreenchange", fullScreenResize)
         }
     }, [videoContainerRef, containerRef])
 
@@ -118,10 +119,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!fullScreen || !video)
             return
         
-        if (document.fullscreenElement) {
-            document.exitFullscreen()
+        if (fullScreen.fullscreenElement !== null) {
+            fscreen.exitFullscreen()
         } else {
-            fullScreen.requestFullscreen()
+            fscreen.requestFullscreen(fullScreen)
         }
     }
 
@@ -312,7 +313,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
                 video.currentTime = progressFraction * videoDuration
-                video.load()
             }
         }
 
@@ -352,7 +352,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
                 video.currentTime = progressFraction * videoDuration
-                video.load()
             }
             
             showOverlay()
