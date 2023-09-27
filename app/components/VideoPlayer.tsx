@@ -514,6 +514,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                                 </div>
                                 <div className="flex-grow">{videoTime} / {videoEnd}</div>
                             </div>
+                            { fscreen.fullscreenEnabled ? (
                             <div className="h-full flex items-center cursor-pointer" onClick={() => setFullScreen()}>
                                 <svg className="w-6 h-6" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                                     <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
@@ -525,7 +526,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                                     <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
                                     <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
                                 </svg>
-                            </div>
+                            </div> ) : null }
                         </div>
                     </div>
                     <div
