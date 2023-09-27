@@ -50,7 +50,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
     
         const resize = () => {
-            if (fullScreen.fullscreenElement !== null)
+            if (fscreen.fullscreenElement !== null)
                 fullScreenResize()
             else {
 
@@ -71,20 +71,16 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
 
         const fullScreenResize = () => {
-            if (document.fullscreenElement) {
-                let width = window.outerWidth
-                let height = window.outerHeight
-                
-                if (width < height)
-                    height = (width / 16) * 9
-                else 
-                    width = (height / 9) * 16
+            let width = window.outerWidth
+            let height = window.outerHeight
+            
+            if (width < height)
+                height = (width / 16) * 9
+            else 
+                width = (height / 9) * 16
 
-                videoContainer.style.width = width + "px"
-                videoContainer.style.height = height + "px"
-            } else {
-                resize()
-            }
+            videoContainer.style.width = width + "px"
+            videoContainer.style.height = height + "px"
         }
     
         resize()
