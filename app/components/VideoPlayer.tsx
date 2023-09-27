@@ -54,8 +54,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             let height
             let maxHeight
 
-            if (fscreen.fullscreenEnabled && fscreen.fullscreenElement !== null) {
-                
+            if (fscreen.fullscreenEnabled && fscreen.fullscreenElement !== null) {      
                 width = window.outerWidth
                 height = window.outerHeight
                 
