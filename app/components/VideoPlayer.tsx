@@ -225,7 +225,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
             
-        const end = buffers.end(0)
+        const end = buffers.end(0) || video.currentTime
         const videoDuration = video.duration || video.currentTime
 
         let position = end / videoDuration
