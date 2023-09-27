@@ -216,7 +216,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             progress.style.width = `${position * 100}%`
 
         setVideoTime(getTimeString(time))
-        updateDuration()
     }
 
     // Adjust the buffer bar sizes when data is loaded
@@ -233,8 +232,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
         const end = buffers.end(buffers.length - 1)
-        const videoDuration = duration
-        let position = end / videoDuration
+        let position = end / duration
 
         if (position > 1)
             position = 1
@@ -242,6 +240,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             position = 0
         
         buffer.style.width = `${position * 100}%`
+        updateDuration()
     }
 
     // Open overlay when closed and vice-versa
