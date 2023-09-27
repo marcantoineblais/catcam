@@ -31,11 +31,11 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
         progress.style.width = ""
         
-        // if (isLiveStream && Hls.isSupported()) {
-        //     const hls = new Hls()
-        //     hls.loadSource(videoSource)
-        //     hls.attachMedia(video)      
-        // } else 
+        if (isLiveStream && Hls.isSupported()) {
+            const hls = new Hls()
+            hls.loadSource(videoSource)
+            hls.attachMedia(video)      
+        } else 
             video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
     
@@ -50,12 +50,25 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
     
         const resize = () => {
-            if (fscreen.fullscreenElement !== null)
-                fullScreenResize()
-            else {
-                let width = container.clientWidth
-                let height = (width / 16) * 9
-                let maxHeight = 0.5
+            let width
+            let height
+            let maxHeight
+
+            if (fscreen.fullscreenElement !== null) {
+                width = window.outerWidth
+                height = window.outerHeight
+                
+                if (width < height)
+                    height = (width / 16) * 9
+                else 
+                    width = (height / 9) * 16
+
+                videoContainer.style.width = width + "px"
+                videoContainer.style.height = height + "px"
+            } else {
+                width = container.clientWidth
+                height = (width / 16) * 9
+                maxHeight = 0.5
                 
                 if (document.body.classList.contains("paysage"))
                     maxHeight = 0.9
@@ -68,27 +81,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 videoContainer.style.height = height + "px"
             }
         }
-
-        const fullScreenResize = () => {
-            let width = window.outerWidth
-            let height = window.outerHeight
-            
-            if (width < height)
-                height = (width / 16) * 9
-            else 
-                width = (height / 9) * 16
-
-            videoContainer.style.width = width + "px"
-            videoContainer.style.height = height + "px"
-        }
     
         resize()
         window.addEventListener('resize', resize)
-        fscreen.addEventListener("fullscreenchange", fullScreenResize)
+        fscreen.addEventListener("fullscreenchange", resize)
         
         return () => {
             window.removeEventListener('resize', resize)
-            fscreen.removeEventListener("fullscreenchange", fullScreenResize)
+            fscreen.removeEventListener("fullscreenchange", resize)
         }
     }, [videoContainerRef, containerRef])
 
@@ -175,11 +175,11 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     // Update video length when new metadata is loaded
     function updateDuration() {
         const video = videoRef.current
+        const buffers = video?.buffered
         
-        if (!video)
+        if (!video || !buffers || !buffers.length)
             return
 
-        const buffers = video.buffered
         const time = isLiveStream ? buffers.end(0) : video.duration
 
         setDuration(time)
