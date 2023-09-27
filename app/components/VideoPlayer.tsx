@@ -453,11 +453,11 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
+            <p> Current: { videoRef.current?.currentTime }</p>
+            <p>Buffer: { videoRef.current?.buffered.length ? videoRef.current?.buffered.end(0) : null }</p>
+            <p>Seekable: { videoRef.current?.seekable.length ? videoRef.current?.seekable.end(0) : null }</p>
             <div ref={videoContainerRef} className="relative flex justify-center items-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
-                <p>{ videoRef.current?.currentTime }</p>
-                <p>{ videoRef.current?.buffered.length ? videoRef.current?.buffered.end(0) : null }</p>
-                <p>{ videoRef.current?.seekable.length ? videoRef.current?.seekable.end(0) : null }</p>
-                {/* <video
+                <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
@@ -473,7 +473,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     poster=""
                 >
                     Your browser does not support HTML5 video.
-                </video> */}
+                </video>
                 <div className="absolute -z-10 top-0 bottom-0 left-0 right-0 flex justify-center items-center">
                     { loadingImage() }
                 </div>
