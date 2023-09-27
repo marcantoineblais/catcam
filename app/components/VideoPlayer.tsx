@@ -87,7 +87,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
     
         resize()
-        window.addEventListener('resize', resize)
+        window.addEventListener("resize", resize)
+        window.addEventListener("orientationchange", resize)
         fscreen.addEventListener("fullscreenchange", resize)
         
         return () => {
