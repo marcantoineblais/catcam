@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import LiveStream from "./components/LiveStream";
+import LiveStream from "./LiveStream";
 import AuthManager from "./components/AuthManager";
 import PageRefresh from "./components/PageRefresh";
 import SettingsManager from "./components/SettingsManager";

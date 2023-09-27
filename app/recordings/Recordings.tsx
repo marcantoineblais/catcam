@@ -1,11 +1,11 @@
 "use client"
 
 import React from "react"
-import Navbar from "./Navbar"
+import Navbar from "../components/Navbar"
 import requestJSON from "../util/requestJSON"
-import VideoPlayer from "./VideoPlayer"
-import RecordingList from "./RecordingList"
-import ZoomPad from "./ZoomPad"
+import VideoPlayer from "../components/VideoPlayer"
+import RecordingList from "../components/RecordingList"
+import ZoomPad from "../components/ZoomPad"
 
 export default function Recordings({ session, pageSize }: { session: any, pageSize: number|null }) {
 

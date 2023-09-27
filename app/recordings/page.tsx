@@ -2,7 +2,7 @@
 
 import React from "react"
 import AuthManager from "../components/AuthManager"
-import Recordings from "../components/Recordings"
+import Recordings from "./Recordings"
 import PageRefresh from "../components/PageRefresh"
 import SettingsManager from "../components/SettingsManager"
 

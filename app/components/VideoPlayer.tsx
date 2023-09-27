@@ -53,7 +53,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             if (fscreen.fullscreenElement !== null)
                 fullScreenResize()
             else {
-
                 let width = container.clientWidth
                 let height = (width / 16) * 9
                 let maxHeight = 0.5
@@ -115,7 +114,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!fullScreen || !video)
             return
         
-        if (fullScreen.fullscreenElement !== null) {
+        if (fscreen.fullscreenElement !== null) {
             fscreen.exitFullscreen()
         } else {
             fscreen.requestFullscreen(fullScreen)
