@@ -121,7 +121,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (document.fullscreenElement) {
             document.exitFullscreen()
         } else {
-            fullScreen.requestFullscreen()
+            
+            if (fullScreen.webkitEnterFullScreen)
+                fullScreen.webkitEnterFullScreen();
+            else if (fullScreen.mozRequestFullScreen)
+                fullScreen.mozRequestFullScreen();
+            else
+                fullScreen.requestFullscreen()
         }
     }
 
@@ -142,8 +148,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             try {
                 video.play()
             } catch (ex) {
-                console.log("Playback issue just occured, reload if video is broken.")
-                
+                console.log("Playback issue just occured, reload if video is broken.")       
             }
             
             overlay.classList.remove("!opacity-100", "!visible")
@@ -184,7 +189,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        const time = video.duration || video.buffered.end(0)
+        const time = video.duration || video.buffered.end(0) || video.seekable.end(0)
 
         setDuration(time)
         setVideoEnd(getTimeString(time))
@@ -226,8 +231,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
             
-        console.log(video.buffered.end(0));
-        const end = buffers.end(0)
+        console.log(video.seekable.end(0));
+        const end = buffers.end(0) || video.seekable.end(0)
         const videoDuration = video.duration || end
 
         let position = end / videoDuration
