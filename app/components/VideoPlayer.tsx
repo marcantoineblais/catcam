@@ -463,8 +463,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
-                    // onTimeUpdate={() => updateProgressBar()}
-                    // onProgress={() => updateBufferBar()}
+                    onTimeUpdate={() => updateProgressBar()}
+                    onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
