@@ -243,7 +243,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     // Open overlay when closed and vice-versa
     function toggleOverlay(e: React.MouseEvent|null) {
-        e?.stopPropagation()
         const overlay = overlayRef.current
         
         if (!overlay)
@@ -253,6 +252,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             showOverlay()
         else
             hideOverlay()
+
+        e?.stopPropagation()
     }
 
     function hideOverlay() {
@@ -304,11 +305,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
         const seek = (e: MouseEvent|React.MouseEvent) => {
             const position = e.clientX
+            const videoDuration = isLiveStream ? video.buffered.end(0) : video.duration
+            
             showOverlay()
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
-                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
+                video.currentTime = progressFraction * videoDuration
             }
         }
 
@@ -326,8 +329,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     
     // Make the progress bar touchable to seek in video
     function videoSeekingOnTouchStart(e: React.TouchEvent) {
-        e.stopPropagation()
-
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
         const progressBar = progressBarRef.current
@@ -343,14 +344,17 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             playPauseVideo()
 
         const seek = (e: TouchEvent|React.TouchEvent) => {
-            e.stopPropagation()
             const position = e.touches[0].clientX
-            showOverlay()
+            const videoDuration = isLiveStream ? video.buffered.end(0) : video.duration
+            
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
+                video.currentTime = progressFraction * videoDuration
             }
+            
+            showOverlay()
+            e.stopPropagation()
         }
 
         const clear = () => {
@@ -363,6 +367,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         window.addEventListener("touchend", clear)
         window.addEventListener("touchmove", seek)
         seek(e)
+        e.stopPropagation()
     }
 
     // seek forward or backward when double clicking sides of the video
@@ -382,9 +387,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
 
         const seek = () => {
+            const time = video.currentTime
+            
             removeTimeouts()
             showOverlay()
-            const time = video.currentTime
 
             if (value > 0 && value + time <= duration)
                 video.currentTime = time + value
