@@ -76,7 +76,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 else 
                     width = (height / 9) * 16
 
-                if (height > container.clientHeight * maxHeight || container.getBoundingClientRect().bottom > window.innerHeight) {
+                if (height > container.clientHeight * maxHeight) {
                     height = container.clientHeight * maxHeight
                     width = (height / 9) * 16
                 } 
@@ -461,6 +461,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
+            { containerRef.current?.clientHeight}
             <div ref={videoContainerRef} className="relative flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-cover scale-100 bg-loading bg-no-repeat bg-center"
