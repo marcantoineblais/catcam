@@ -76,12 +76,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 else 
                     width = (height / 9) * 16
 
-                if (height > container.clientHeight * maxHeight) {
+                if (height > container.clientHeight * maxHeight || container.getBoundingClientRect().bottom > window.innerHeight) {
                     height = container.clientHeight * maxHeight
                     width = (height / 9) * 16
                 } 
             }
-            
+
             videoContainer.style.width = width + "px"
             videoContainer.style.height = height + "px"
         }
