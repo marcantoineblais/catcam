@@ -232,8 +232,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
         const end = buffers.end(buffers.length - 1)
-        const videoDuration = video.duration || end
-
+        const videoDuration = duration
         let position = end / videoDuration
 
         if (position > 1)
@@ -242,8 +241,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             position = 0
         
         buffer.style.width = `${position * 100}%`
-        setDuration(videoDuration)
-        setVideoEnd(getTimeString(videoDuration))
     }
 
     // Open overlay when closed and vice-versa
@@ -466,6 +463,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
+                    onDurationChange={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
