@@ -464,6 +464,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
                     onDurationChange={() => updateDuration()}
+                    onLoadedData={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
