@@ -28,8 +28,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video || !videoSource || !progress)
             return
 
-        progress.style.left = ""
-        progress.style.right = ""
+        progress.style.width = ""
         
         // if (isLiveStream && Hls.isSupported()) {
         //     const hls = new Hls()
@@ -186,11 +185,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        // const time = video.duration || video.buffered.end(video.buffered.length - 1)
-        const time = video.buffered.end(video.buffered.length - 1)
+        const time = video.duration
 
-        setDuration(time)
-        setVideoEnd(getTimeString(time))
+        if (!isNaN(time)) {
+            setDuration(time)
+            setVideoEnd(getTimeString(time))
+        }
     }
 
     // Adjust the progress bar size when time passes
@@ -463,6 +463,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     // onTimeUpdate={() => updateProgressBar()}
                     // onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
+                    onDurationChange={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
