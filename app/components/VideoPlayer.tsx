@@ -469,11 +469,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
-                    onClick={() => showOverlay()}
-                    onMouseMove={() => showOverlay()}
+                    // onClick={() => showOverlay()}
+                    // onMouseMove={() => showOverlay()}
                     autoPlay
                     muted
                     playsInline
+                    controls
                     controlsList="noremoteplayback nufullscreen nodownload"
                     poster=""
                 >
@@ -485,8 +486,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                 <div
                     className="absolute top-0 left-0 right-0 bottom-0 opacity-0 invisible duration-500 text-gray-50 dark:text-zinc-200"
                     ref={overlayRef}
-                    onClick={(e) => toggleOverlay(e)}
-                    onMouseMove={() => showOverlay()}
+                    // onClick={(e) => toggleOverlay(e)}
+                    // onMouseMove={() => showOverlay()}
                 >
                     <div onClick={(e) => e.stopPropagation()} className="px-5 pt-3 pb-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center bg-gray-950/75">
                         <div
