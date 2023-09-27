@@ -3,7 +3,7 @@
 import React from "react";
 import AuthManager from "../components/AuthManager";
 import PageRefresh from "../components/PageRefresh";
-import Settings from "../components/Settings";
+import Settings from "./Settings";
 import Navbar from "../components/Navbar";
 import SettingsManager from "../components/SettingsManager";
 

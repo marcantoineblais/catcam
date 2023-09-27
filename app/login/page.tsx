@@ -2,7 +2,7 @@
 
 import React from "react"
 import AuthManager from "../components/AuthManager"
-import Login from "../components/Login"
+import Login from "./Login"
 import PageRefresh from "../components/PageRefresh"
 import SettingsManager from "../components/SettingsManager"
 
