@@ -183,7 +183,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        const time = video.duration || video.currentTime
+        const buffers = video.buffered
+        const time = isLiveStream ? buffers.end(0) : video.duration
 
         setDuration(time)
         setVideoEnd(getTimeString(time))
@@ -225,8 +226,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
 
             
-        const end = buffers.end(0) || video.currentTime
-        const videoDuration = video.duration || video.currentTime
+        const end = buffers.end(0)
+        const videoDuration = isLiveStream ? buffers.end(0) : video.duration
 
         let position = end / videoDuration
 
@@ -453,9 +454,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
-            <p> Current: { videoRef.current?.currentTime }</p>
-            <p>Buffer: { videoRef.current?.buffered.length ? videoRef.current?.buffered.end(0) : null }</p>
-            <p>Seekable: { videoRef.current?.seekable.length ? videoRef.current?.seekable.end(0) : null }</p>
             <div ref={videoContainerRef} className="relative flex justify-center items-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
                     className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
