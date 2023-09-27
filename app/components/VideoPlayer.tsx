@@ -216,6 +216,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             progress.style.width = `${position * 100}%`
 
         setVideoTime(getTimeString(time))
+        updateDuration()
     }
 
     // Adjust the buffer bar sizes when data is loaded
@@ -463,8 +464,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
                     onLoadedMetadata={() => updateDuration()}
-                    onDurationChange={() => updateDuration()}
-                    onLoadedData={() => updateDuration()}
                     onEnded={() => onVideoEnd()}
                     onClick={() => showOverlay()}
                     onMouseMove={() => showOverlay()}
