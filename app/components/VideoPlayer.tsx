@@ -66,20 +66,20 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             } else {
                 width = container.clientWidth
                 height = container.clientHeight
-                maxHeight = container.clientHeight * 0.5
+                maxHeight = height * 0.5
                 
                 // if (document.body.classList.contains("paysage"))
                 //     maxHeight = container.clientHeight * 0.9
 
-                if (width < height)
-                    height = (width / 16) * 9
-                else 
+                // if (width < height)
+                //     height = (width / 16) * 9
+                // else 
                     width = (height / 9) * 16
 
-                if (height > maxHeight) {
-                    height = maxHeight
-                    width = (height / 9) * 16
-                } 
+                // if (height > maxHeight) {
+                //     height = maxHeight
+                //     width = (height / 9) * 16
+                // } 
             }
 
             videoContainer.style.width = width + "px"
