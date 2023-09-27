@@ -468,7 +468,7 @@ export default function VideoPlayer({
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
             <div ref={videoContainerRef} className="relative flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
-                    className="object-cover scale-100 bg-loading bg-no-repeat bg-center"
+                    className="object-fill scale-100 bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
