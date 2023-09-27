@@ -2,6 +2,7 @@
 
 import React from "react"
 import Hls from "hls.js"
+import fscreen from "fscreen"
 
 export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiveStream }: { videoSource: string|null, videoRef: React.MutableRefObject<HTMLVideoElement|null>, containerRef: React.MutableRefObject<HTMLDivElement|null>, isLiveStream: boolean }) {
 
@@ -10,7 +11,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const [duration, setDuration] = React.useState<number>(0)
     const [overlayTimeouts] = React.useState<any[]>([])
     const [dblClicksTimeouts] = React.useState<any[]>([])
-    const fullScreenRef = React.useRef<HTMLDivElement|null>(null)
+    const fullScreenRef = React.useRef<any>(null)
     const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
     const overlayRef = React.useRef<HTMLDivElement|null>(null)
     const playBtnRef = React.useRef<HTMLImageElement|null>(null)
@@ -28,16 +29,14 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video || !videoSource || !progress)
             return
 
-        progress.style.left = ""
-        progress.style.right = ""
+        progress.style.width = ""
         
         if (isLiveStream && Hls.isSupported()) {
             const hls = new Hls()
             hls.loadSource(videoSource)
-            hls.attachMedia(video)
-            
+            hls.attachMedia(video)      
         } else 
-        video.src = videoSource
+            video.src = videoSource
     }, [videoSource, videoRef, isLiveStream])
     
     
@@ -51,50 +50,48 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             return
     
         const resize = () => {
-            if (document.fullscreenElement)
-                fullScreenResize()
-            else {
+            let width
+            let height
+            let maxHeight
 
-                let width = container.clientWidth
-                let height = (width / 16) * 9
-                let maxHeight = 0.5
-                
-                if (document.body.classList.contains("paysage"))
-                    maxHeight = 0.9
-
-                if (height > container.clientHeight * maxHeight) {
-                    height = container.clientHeight * maxHeight
-                    width = (height / 9) * 16
-                } 
-                videoContainer.style.width = width + "px"
-                videoContainer.style.height = height + "px"
-            }
-        }
-
-        const fullScreenResize = () => {
-            if (document.fullscreenElement) {
-                let width = window.outerWidth
-                let height = window.outerHeight
+            if (fscreen.fullscreenEnabled && fscreen.fullscreenElement !== null) {      
+                width = window.outerWidth
+                height = window.outerHeight
                 
                 if (width < height)
                     height = (width / 16) * 9
                 else 
                     width = (height / 9) * 16
-
-                videoContainer.style.width = width + "px"
-                videoContainer.style.height = height + "px"
             } else {
-                resize()
+                width = container.clientWidth
+                height = container.clientHeight
+                maxHeight = height * 0.5
+                
+                if (document.body.classList.contains("paysage"))
+                    maxHeight = container.clientHeight * 0.9
+
+                if (width < height)
+                    height = (width / 16) * 9
+                else 
+                    width = (height / 9) * 16
+
+                if (height > maxHeight) {
+                    height = maxHeight
+                    width = (height / 9) * 16
+                } 
             }
+
+            videoContainer.style.width = width + "px"
+            videoContainer.style.height = height + "px"
         }
     
         resize()
-        window.addEventListener('resize', resize)
-        fullScreen.addEventListener("fullscreenchange", fullScreenResize)
+        window.addEventListener("resize", resize)
+        fscreen.addEventListener("fullscreenchange", resize)
         
         return () => {
             window.removeEventListener('resize', resize)
-            fullScreen.removeEventListener("fullscreenchange", fullScreenResize)
+            fscreen.removeEventListener("fullscreenchange", resize)
         }
     }, [videoContainerRef, containerRef])
 
@@ -120,10 +117,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!fullScreen || !video)
             return
         
-        if (document.fullscreenElement) {
-            document.exitFullscreen()
+        if (fscreen.fullscreenElement !== null) {
+            fscreen.exitFullscreen()
         } else {
-            fullScreen.requestFullscreen()
+            fscreen.requestFullscreen(fullScreen)
         }
     }
 
@@ -144,8 +141,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             try {
                 video.play()
             } catch (ex) {
-                console.log("Playback issue just occured, reload if video is broken.")
-                
+                console.log("Playback issue just occured, reload if video is broken.")       
             }
             
             overlay.classList.remove("!opacity-100", "!visible")
@@ -182,11 +178,12 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     // Update video length when new metadata is loaded
     function updateDuration() {
         const video = videoRef.current
+        const buffers = video?.buffered
         
-        if (!video)
+        if (!video || !buffers || !buffers.length)
             return
 
-        const time = video.duration || video.buffered.end(video.buffered.length - 1)
+        const time = isLiveStream ? buffers.end(0) : video.duration
 
         setDuration(time)
         setVideoEnd(getTimeString(time))
@@ -227,8 +224,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!buffers.length)
             return
 
-        const end = buffers.end(buffers.length - 1)
-        const videoDuration = video.duration || end
+            
+        const end = buffers.end(0)
+        const videoDuration = isLiveStream ? buffers.end(0) : video.duration
 
         let position = end / videoDuration
 
@@ -244,7 +242,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     // Open overlay when closed and vice-versa
     function toggleOverlay(e: React.MouseEvent|null) {
-        e?.stopPropagation()
         const overlay = overlayRef.current
         
         if (!overlay)
@@ -254,6 +251,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             showOverlay()
         else
             hideOverlay()
+
+        e?.stopPropagation()
     }
 
     function hideOverlay() {
@@ -305,11 +304,13 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
         const seek = (e: MouseEvent|React.MouseEvent) => {
             const position = e.clientX
+            const videoDuration = isLiveStream ? video.buffered.end(0) : video.duration
+            
             showOverlay()
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - (end - position) / (end - start)
                 progressBar.style.width = `${progressFraction * 100}%`
-                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
+                video.currentTime = progressFraction * videoDuration
             }
         }
 
@@ -327,8 +328,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     
     // Make the progress bar touchable to seek in video
     function videoSeekingOnTouchStart(e: React.TouchEvent) {
-        e.stopPropagation()
-
         const video = videoRef.current
         const seekBar = videoSeekingRef.current
         const progressBar = progressBarRef.current
@@ -344,14 +343,17 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             playPauseVideo()
 
         const seek = (e: TouchEvent|React.TouchEvent) => {
-            e.stopPropagation()
             const position = e.touches[0].clientX
-            showOverlay()
+            const videoDuration = isLiveStream ? video.buffered.end(0) : video.duration
+            
             if (position >= start && position <= end && progressBar) {
                 const progressFraction = 1 - ((end - position) / (end - start))
                 progressBar.style.width = progressFraction * 100 + "%"
-                video.currentTime = progressFraction * video.duration || progressFraction * video.buffered.end(video.buffered.length - 1)
+                video.currentTime = progressFraction * videoDuration
             }
+            
+            showOverlay()
+            e.stopPropagation()
         }
 
         const clear = () => {
@@ -364,6 +366,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         window.addEventListener("touchend", clear)
         window.addEventListener("touchmove", seek)
         seek(e)
+        e.stopPropagation()
     }
 
     // seek forward or backward when double clicking sides of the video
@@ -372,7 +375,6 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
     
-        e.stopPropagation()
         const removeTimeouts = () => {
             let n: number = 0
             dblClicksTimeouts.forEach(t => {
@@ -383,9 +385,10 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         }
 
         const seek = () => {
+            const time = video.currentTime
+            
             removeTimeouts()
             showOverlay()
-            const time = video.currentTime
 
             if (value > 0 && value + time <= duration)
                 video.currentTime = time + value
@@ -418,6 +421,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
             }, 300))
         } else if (dblClicksTimeouts.length === 1)
             seek()
+
+        e.stopPropagation()
     }
 
     // show overlay when video ends
@@ -455,9 +460,9 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
 
     return (
         <div ref={fullScreenRef} className="py-1.5 flex justify-center items-center">
-            <div ref={videoContainerRef} className="relative flex justify-center items-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+            <div ref={videoContainerRef} className="relative flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 <video
-                    className="w-full h-full object-fill scale-100 rounded bg-loading bg-no-repeat bg-center"
+                    className="object-cover scale-100 bg-loading bg-no-repeat bg-center"
                     ref={videoRef}
                     onTimeUpdate={() => updateProgressBar()}
                     onProgress={() => updateBufferBar()}
@@ -512,6 +517,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                                 </div>
                                 <div className="flex-grow">{videoTime} / {videoEnd}</div>
                             </div>
+                            { fscreen.fullscreenEnabled ? (
                             <div className="h-full flex items-center cursor-pointer" onClick={() => setFullScreen()}>
                                 <svg className="w-6 h-6" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
                                     <rect fill="currentColor" x="17.53" y="450.24" width="155.05" height="32.47" rx="4.01" transform="translate(190.12 932.94) rotate(-180)"/>
@@ -523,7 +529,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
                                     <rect fill="currentColor" x="383.85" y="388.05" width="155.05" height="32.47" rx="4.01" transform="translate(865.66 -57.1) rotate(90)"/>
                                     <rect fill="currentColor" x="321.66" y="449.34" width="155.95" height="32.47" rx="4.01" transform="translate(799.27 931.14) rotate(-180)"/>
                                 </svg>
-                            </div>
+                            </div> ) : null }
                         </div>
                     </div>
                     <div

@@ -1,10 +1,10 @@
 "use client"
 
 import React from "react";
-import Navbar from "./Navbar";
-import VideoPlayer from "./VideoPlayer";
-import requestJSON from "../util/requestJSON"
-import ZoomPad from "./ZoomPad";
+import Navbar from "./components/Navbar";
+import VideoPlayer from "./components/VideoPlayer";
+import requestJSON from "./util/requestJSON"
+import ZoomPad from "./components/ZoomPad";
 
 export default function LiveStream({ session }: { session: any}) {
 
