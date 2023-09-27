@@ -10,7 +10,7 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
     const [duration, setDuration] = React.useState<number>(0)
     const [overlayTimeouts] = React.useState<any[]>([])
     const [dblClicksTimeouts] = React.useState<any[]>([])
-    const fullScreenRef = React.useRef<HTMLDivElement|null>(null)
+    const fullScreenRef = React.useRef<any>(null)
     const videoContainerRef = React.useRef<HTMLDivElement|null>(null)
     const overlayRef = React.useRef<HTMLDivElement|null>(null)
     const playBtnRef = React.useRef<HTMLImageElement|null>(null)
