@@ -118,17 +118,16 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!fullScreen || !video)
             return
         
-        if (document.fullscreenElement) {
-            document.exitFullscreen()
-        } else {
-            
+        // if (document.fullscreenElement) {
+        //     document.exitFullscreen()
+        // } else {     
             if (fullScreen.webkitEnterFullScreen)
                 fullScreen.webkitEnterFullScreen();
             else if (fullScreen.mozRequestFullScreen)
                 fullScreen.mozRequestFullScreen();
             else
                 fullScreen.requestFullscreen()
-        }
+        // }
     }
 
     // Toggle between play and pause
