@@ -186,7 +186,8 @@ export default function VideoPlayer({ videoSource, videoRef, containerRef, isLiv
         if (!video)
             return
 
-        const time = video.duration || video.buffered.end(video.buffered.length - 1)
+        // const time = video.duration || video.buffered.end(video.buffered.length - 1)
+        const time = video.buffered.end(video.buffered.length - 1)
 
         setDuration(time)
         setVideoEnd(getTimeString(time))
