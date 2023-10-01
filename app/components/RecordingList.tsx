@@ -153,7 +153,7 @@ const RecordingList = ({
     return (
         <div className="h-full w-full flex flex-col items-center">
             <div
-                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow overflow-y-auto duration-500"
+                className="w-full h-full flex justify-start content-start gap-2 flex-wrap flex-grow scroll-smooth overflow-y-auto duration-500"
                 ref={recordingsListRef}
                 onTouchStart={(e) => manageTouchMove(e)}
             >
