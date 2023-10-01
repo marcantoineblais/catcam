@@ -31,7 +31,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
             const width = window.innerWidth
             const height = window.innerHeight
             
-            if (width > height && height < 360)
+            if (width > height && height < 420)
                 document.body.classList.add("paysage")
             else
                 document.body.classList.remove("paysage")
