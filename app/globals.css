@@ -16,6 +16,7 @@
 * {
     user-select: none;
     box-sizing: border-box;
+    overscroll-behavior: none;
 }
 
 html {
