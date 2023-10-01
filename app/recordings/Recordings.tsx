@@ -114,11 +114,15 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
             // Remove elastic scrolling in IOS
             console.log(recordingsList.scrollTop);
             
-            
-            if (recordingsList.scrollTop < 0)
+            if (recordingsList.scrollTop < 0) {
                 recordingsList.scrollTop = 0
-            if (recordingsList.scrollTop + recordingsList.clientHeight > recordingsList.scrollHeight)
+                e.preventDefault()
+            }
+            
+            if (recordingsList.scrollTop + recordingsList.clientHeight > recordingsList.scrollHeight) {
                 recordingsList.scrollTop = recordingsList.scrollHeight - recordingsList.clientHeight
+                e.preventDefault()
+            }
         }
                
         const removeListeners = () => {
