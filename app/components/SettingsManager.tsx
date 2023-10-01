@@ -62,5 +62,15 @@ export default function SettingsManager({ session, setPageSize }: { session: any
     }, [setPageSize])
 
 
+    // Remove overscrolling in IOS
+    React.useEffect(() => {
+        document.addEventListener("touchmove", (e) => e.preventDefault(), false)
+
+        return (
+            document.removeEventListener("touchmove", (e) => e.preventDefault(), false)
+        )
+    }, [])
+
+
     return null
 }

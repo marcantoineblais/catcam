@@ -110,17 +110,6 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
                     disableAction = true
                 }
             }
-            
-            // Remove elastic scrolling in IOS
-            if (recordingsList.scrollTop < 0 && position > start) {
-                recordingsList.scrollTop = 0
-                recordingsList.classList.add('overflow-hidden')
-            } else if (recordingsList.scrollTop + recordingsList.clientHeight > recordingsList.scrollHeight && position < start) {
-                recordingsList.scrollTop = recordingsList.scrollHeight - recordingsList.clientHeight
-                recordingsList.classList.add('overflow-hidden')
-            } else {
-                recordingsList.classList.remove('overflow-hidden')
-            }
         }
                
         const removeListeners = () => {
