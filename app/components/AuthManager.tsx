@@ -83,7 +83,7 @@ export default function AuthManager(
             ) {
                 logout()
                 return
-            } else if (Date.now() - jwt.date > (1000 * 3600 * 24 * 7)) { // If token has more than 7 days
+            } else if (!jwt.date || Date.now() - jwt.date > (1000 * 3600 * 24 * 7)) { // If token has more than 7 days
                 logout()
                 return
             } else {
