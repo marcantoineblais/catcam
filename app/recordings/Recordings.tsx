@@ -109,7 +109,13 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
                     disableRefresh = true
                     disableAction = true
                 }
-            }  
+            }
+            
+            // Remove elastic scrolling in IOS
+            if (recordingsList.scrollTop < 0)
+                recordingsList.scrollTop = 0
+            if (recordingsList.scrollTop + recordingsList.clientHeight > recordingsList.scrollHeight)
+                recordingsList.scrollTop = recordingsList.scrollHeight - recordingsList.clientHeight
         }
                
         const removeListeners = () => {
