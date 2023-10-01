@@ -72,21 +72,7 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
 
         getRecordings()
     }, [session])
-
-
-    // Remove overscrolling in IOS
-    React.useEffect(() => {
-        const recordingsList = recordingsListRef.current
-
-        if (!recordingsList)
-            return
-
-        recordingsList.addEventListener("touchmove", (e) => e.preventDefault(), false)
-
-        return (
-            recordingsList.removeEventListener("touchmove", (e) => e.preventDefault(), false)
-        )
-    }, [])
+    
 
     // Make sure that the good action triggers when manipulation the recordings list
     // Cannot refresh page from menu if the menu is not scrolled up
