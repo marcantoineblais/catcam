@@ -55,24 +55,19 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
         async function getRecordings() {
             const key = session.auth_token
             const groupKey = session.ke
+            // const monitors = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             const monitors = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             let videoFeed = monitors[0].mid
-            while (!videoFeed) {
-                videoFeed = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
-            }
             const thumbnailUrl = [baseURL, key, "timelapse", groupKey, videoFeed].join('/')
             const snapshots = await requestJSON(thumbnailUrl)
             let videos = await requestJSON([baseURL, key, "videos", groupKey, videoFeed].join('/'))
-            while (!videos.ok) {
-                videos = await requestJSON([baseURL, key, "videos", groupKey, videoFeed].join('/'))
-            }
             
             setRecordings(createVideosObject(videos.videos, snapshots, thumbnailUrl))
         }
 
         getRecordings()
     }, [session])
-    
+
 
     // Make sure that the good action triggers when manipulation the recordings list
     // Cannot refresh page from menu if the menu is not scrolled up

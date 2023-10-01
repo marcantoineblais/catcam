@@ -74,7 +74,7 @@ export default function AuthManager(
                 logout()
                 return
             }
-            
+
             if (
                 jwt.location && jwt.location.ip !== location.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 0.5 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 0.5 ||
@@ -83,8 +83,12 @@ export default function AuthManager(
             ) {
                 logout()
                 return
-            } else
+            } else if (Date.now() - jwt.date > (1000 * 3600 * 24 * 7)) { // If token has more than 7 days
+                logout()
+                return
+            } else {
                 setSession(jwt)          
+            }
         }
 
         getSession()
@@ -107,7 +111,8 @@ export default function AuthManager(
                 auth_token: jwt.$user.auth_token,
                 ke: jwt.$user.ke,
                 uid: jwt.$user.uid,    
-                location: sessionLocation
+                location: sessionLocation,
+                date: Date.now()
             })
 
             const encryptedSession = await encryptData(sessionJSON)
