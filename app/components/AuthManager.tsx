@@ -77,8 +77,8 @@ export default function AuthManager(
 
             if (
                 jwt.location && jwt.location.ip !== location.ip && (
-                    parseInt(location.latitude) < parseInt(jwt.location.latitude) - 0.5 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 0.5 ||
-                    parseInt(location.longitude) < parseInt(jwt.location.longitude) - 0.5 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 0.5 
+                    parseInt(location.latitude) < parseInt(jwt.location.latitude) - 2 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 2 ||
+                    parseInt(location.longitude) < parseInt(jwt.location.longitude) - 2 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 2 
                 )
             ) {
                 logout()
