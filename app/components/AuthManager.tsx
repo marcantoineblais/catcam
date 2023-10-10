@@ -74,9 +74,9 @@ export default function AuthManager(
                 logout()
                 return
             }
-
+            
             if (
-                jwt.location && jwt.location.ip !== location.ip && (
+                jwt.location.ip && jwt.location.ip !== location.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 0.5 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 0.5 ||
                     parseInt(location.longitude) < parseInt(jwt.location.longitude) - 0.5 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 0.5 
                 )
@@ -97,7 +97,7 @@ export default function AuthManager(
     // When login is successful, encrypt and store jwt in local or session storage
     React.useEffect(() => {
         async function storeSession() {
-            if (!session || !location)
+            if (!session || !location || !setSession || !session.session)
                 return
 
             const jwt = session.session
@@ -114,7 +114,7 @@ export default function AuthManager(
                 location: sessionLocation,
                 date: Date.now()
             })
-
+            
             const encryptedSession = await encryptData(sessionJSON)
             if (Object.entries(sessionLocation).some(([_k, v]) => !v))
                 session.rememberMe = false
@@ -124,8 +124,8 @@ export default function AuthManager(
             } else {
                 sessionStorage.setItem("JWT", encryptedSession)
             }
-            
-            router.push(localStorage.getItem("landing") || "/")
+
+            setSession(sessionJSON)
         }
 
         storeSession()

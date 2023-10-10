@@ -22,7 +22,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
                 document.body.classList.remove("dark")
         } else 
             document.body.classList.remove("dark")
-    }, [])
+    })
 
 
     // Handle portrait mode
@@ -60,6 +60,20 @@ export default function SettingsManager({ session, setPageSize }: { session: any
             }
         }
     }, [setPageSize])
+
+    // Redirect to recordings on first connection
+    React.useEffect(() => {
+        if (!session)
+            return
+
+        let landed = sessionStorage.getItem("landed")
+        
+        if (!landed) {            
+            sessionStorage.setItem("landed", "1")
+            router.push(localStorage.getItem("landing") || "/")
+        }
+
+    }, [session])
 
     return null
 }

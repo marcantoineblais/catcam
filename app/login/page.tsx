@@ -13,8 +13,8 @@ export default function LoginPage() {
     
     return (
         <main>
-            <AuthManager location={location} setLocation={setLocation} session={session} setSession={null} />
-            <SettingsManager session={null} setPageSize={null}/>
+            <AuthManager location={location} setLocation={setLocation} session={session} setSession={setSession} />
+            <SettingsManager session={session} setPageSize={null}/>
             <PageRefresh />
             <Login location={location} setSession={setSession} />
         </main>       
