@@ -24,7 +24,7 @@ export default function AuthManager(
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
             const data = await requestJSON(url + process.env.geolocationAPIKey)
             
-            setLocation(data)
+            setLocation(data || {})
         }
 
         getLocation()
