@@ -52,8 +52,8 @@ const Navbar = ({ activePage }: { activePage: string }) => {
 
     // logout and clean storage
     function logout() {
-        localStorage.clear()
-        sessionStorage.removeItem("JWT")
+        localStorage.removeItem("JWT")
+        sessionStorage.clear()
         router.push("/login")
     }
 
