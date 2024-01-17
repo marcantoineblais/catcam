@@ -42,11 +42,8 @@ export default function AuthManager(
         }
 
         async function getSession() {
-            if (!setSession)
+            if (!setSession || !location)
                 return
-
-            if (!location)
-                localStorage.removeItem("JWT")
             
             let jwt
             let decryptedData
@@ -79,7 +76,7 @@ export default function AuthManager(
             }
             
             if (
-                jwt.location && location && jwt.location.ip !== location.ip && (
+                jwt.location?.ip !== location?.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 10 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 10 ||
                     parseInt(location.longitude) < parseInt(jwt.location.longitude) - 10 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 10 
                 )
