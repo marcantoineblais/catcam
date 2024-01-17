@@ -22,9 +22,12 @@ export default function AuthManager(
     React.useEffect(() => {
         async function getLocation() {
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
-            const data = await requestJSON(url + process.env.geolocationAPIKey)
-            
-            setLocation(data)
+            try {
+                const data = await requestJSON(url + process.env.geolocationAPIKey)
+                setLocation(data)
+            } catch (ex) {
+                console.error("Could not find location.")
+            }
         }
 
         getLocation()
