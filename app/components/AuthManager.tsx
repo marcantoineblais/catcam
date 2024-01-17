@@ -105,10 +105,10 @@ export default function AuthManager(
 
             const jwt = session.session
             const sessionLocation = {
-                ip: location ? location.ip : null,
-                latitude: location.latitude,
-                longitude: location.longitude,
-                time_zone: location.time_zone
+                ip: location?.ip,
+                latitude: location?.latitude,
+                longitude: location?.longitude,
+                time_zone: location?.time_zone
             }
             const sessionJSON = JSON.stringify({
                 auth_token: jwt.$user.auth_token,
