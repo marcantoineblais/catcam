@@ -12,7 +12,7 @@ async function requestJSON(url) {
             }
         })
     } catch(ex) {
-        console.log("Error fetching data.")
+        console.error("Error fetching data.")
         return null  
     }
 

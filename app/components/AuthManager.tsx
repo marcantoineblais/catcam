@@ -22,12 +22,9 @@ export default function AuthManager(
     React.useEffect(() => {
         async function getLocation() {
             const url = "https://api.ipgeolocation.io/ipgeo?apiKey="
-            try {
-                const data = await requestJSON(url + process.env.geolocationAPIKey)
-                setLocation(data)
-            } catch (ex) {
-                console.error("Could not find location.")
-            }
+            const data = await requestJSON(url + process.env.geolocationAPIKey)
+            
+            setLocation(data)
         }
 
         getLocation()
@@ -45,8 +42,11 @@ export default function AuthManager(
         }
 
         async function getSession() {
-            if (!setSession || !location)
+            if (!setSession)
                 return
+
+            if (!location)
+                localStorage.removeItem("JWT")
             
             let jwt
             let decryptedData
@@ -79,7 +79,7 @@ export default function AuthManager(
             }
             
             if (
-                jwt.location && jwt.location.ip !== location.ip && (
+                jwt.location && location && jwt.location.ip !== location.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 10 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 10 ||
                     parseInt(location.longitude) < parseInt(jwt.location.longitude) - 10 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 10 
                 )
@@ -100,12 +100,12 @@ export default function AuthManager(
     // When login is successful, encrypt and store jwt in local or session storage
     React.useEffect(() => {
         async function storeSession() {
-            if (!session || !location || !setSession || !session.session)
+            if (!session || !setSession || !session.session)
                 return
 
             const jwt = session.session
             const sessionLocation = {
-                ip: location.ip,
+                ip: location ? location.ip : null,
                 latitude: location.latitude,
                 longitude: location.longitude,
                 time_zone: location.time_zone
