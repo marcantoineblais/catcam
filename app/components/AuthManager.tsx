@@ -76,7 +76,7 @@ export default function AuthManager(
             }
             
             if (
-                jwt.location?.ip !== location?.ip && (
+                jwt.location.ip !== location.ip && (
                     parseInt(location.latitude) < parseInt(jwt.location.latitude) - 10 || parseInt(location.latitude) > parseInt(jwt.location.latitude) + 10 ||
                     parseInt(location.longitude) < parseInt(jwt.location.longitude) - 10 || parseInt(location.longitude) > parseInt(jwt.location.longitude) + 10 
                 )
@@ -97,15 +97,15 @@ export default function AuthManager(
     // When login is successful, encrypt and store jwt in local or session storage
     React.useEffect(() => {
         async function storeSession() {
-            if (!session || !setSession || !session.session)
+            if (!session || !location || !setSession || !session.session)
                 return
 
             const jwt = session.session
             const sessionLocation = {
-                ip: location?.ip,
-                latitude: location?.latitude,
-                longitude: location?.longitude,
-                time_zone: location?.time_zone
+                ip: location.ip,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                time_zone: location.time_zone
             }
             const sessionJSON = JSON.stringify({
                 auth_token: jwt.$user.auth_token,
