@@ -14,7 +14,7 @@ export default function LiveStream({ session }: { session: any}) {
 
     // API call to get the livefeed url using jwt
     React.useEffect(() => {
-        if (!session || Object.entries(session).some(([_k, v]) => !v))
+        if (!session)
             return
         
         async function getLiveStream() {
