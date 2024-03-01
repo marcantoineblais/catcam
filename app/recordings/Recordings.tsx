@@ -27,7 +27,7 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
         if (!session)
             return
 
-        const baseURL = 'https://catcam.source.marchome.xyz'
+        const baseURL = process.env.serverUrl
         
         function createVideosObject(videos: any[], snapshots: any[], thumbnailUrl: string): any[] {
             return videos.map((v: any) => {
@@ -55,7 +55,6 @@ export default function Recordings({ session, pageSize }: { session: any, pageSi
         async function getRecordings() {
             const key = session.auth_token
             const groupKey = session.ke
-            // const monitors = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             const monitors = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             let videoFeed = monitors[0].mid
             const thumbnailUrl = [baseURL, key, "timelapse", groupKey, videoFeed].join('/')

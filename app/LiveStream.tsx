@@ -18,7 +18,7 @@ export default function LiveStream({ session }: { session: any}) {
             return
         
         async function getLiveStream() {
-            const baseURL = 'https://catcam.source.marchome.xyz'
+            const baseURL = process.env.serverUrl
             const ext = 's.m3u8'
             const key = session.auth_token
             const groupKey = session.ke

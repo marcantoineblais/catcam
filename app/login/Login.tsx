@@ -15,7 +15,7 @@ export default function Login({ location, setSession }: { location: any, setSess
             return
 
         const rememberMe: boolean = form.rememberMe.checked
-        const baseurl: string = 'https://catcam.source.marchome.xyz/?json=true'
+        const baseurl: string = process.env.serverUrl + "/?json=true"
         const email: string = form.email.value
         const password: string = form.password.value
         const machineID: string|null = location?.ip || form.email.value
