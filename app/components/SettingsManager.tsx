@@ -73,7 +73,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
             router.push(localStorage.getItem("landing") || "/")
         }
 
-    }, [session])
+    }, [session, router])
 
     return null
 }
