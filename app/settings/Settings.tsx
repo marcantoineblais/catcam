@@ -2,6 +2,7 @@
 
 import React from "react"
 import { useRouter } from "next/navigation"
+import Logo from "../components/Logo"
 
 export default function Settings() {
 
@@ -37,7 +38,7 @@ export default function Settings() {
     }
 
     return (
-        <div className="h-full px-1 pt-5 max-w-screen-md container mx-auto bg-[url('../public/logo.png')] bg-contain bg-no-repeat bg-bottom">
+        <div className="h-full px-1 pt-5 max-w-screen-md container mx-auto flex flex-col justify-between items-center">
             <form  className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
                 <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Settings</h1>
 
@@ -68,6 +69,8 @@ export default function Settings() {
                     </select>
                 </label>
             </form>
+
+            <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150"/>
         </div>
     )
 }

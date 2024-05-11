@@ -9,8 +9,6 @@ const config: Config = {
     theme: {
         extend: {
             backgroundImage: {
-                'menu-icon': 'url(./img/menu-icon.png")',
-                'chats': "url('./img/chats.png')",
             },
         },
     },

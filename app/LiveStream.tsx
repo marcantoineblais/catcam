@@ -1,10 +1,11 @@
 "use client"
 
-import React from "react";
-import Navbar from "./components/Navbar";
-import VideoPlayer from "./components/VideoPlayer";
+import React from "react"
+import Navbar from "./components/Navbar"
+import VideoPlayer from "./components/VideoPlayer"
+import ZoomPad from "./components/ZoomPad"
 import requestJSON from "./util/requestJSON"
-import ZoomPad from "./components/ZoomPad";
+import { log } from "console"
 
 export default function LiveStream({ session }: { session: any}) {
 
@@ -21,7 +22,7 @@ export default function LiveStream({ session }: { session: any}) {
             const baseURL = process.env.serverUrl
             const ext = 's.m3u8'
             const key = session.auth_token
-            const groupKey = session.ke
+            const groupKey = session.ke            
             const monitors = await requestJSON([baseURL, key, "monitor", groupKey].join("/"))
             let videoFeed = monitors[0].mid
             while (!videoFeed) {

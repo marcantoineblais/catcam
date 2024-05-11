@@ -3,6 +3,7 @@
 import React from "react"
 import Hls from "hls.js"
 import fscreen from "fscreen"
+import Logo from "./Logo"
 
 export default function VideoPlayer({
     videoSource, videoRef, containerRef, isLiveStream
@@ -462,7 +463,7 @@ export default function VideoPlayer({
                 </div>
             )
         } else
-            return <img src="logo.png" alt="cat picture" className="h-full w-full object-contain object-bottom "/>
+            return <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150"/>
     }
 
     return (

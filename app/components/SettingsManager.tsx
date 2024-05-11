@@ -65,7 +65,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
     React.useEffect(() => {
         if (!session)
             return
-
+        
         let landed = sessionStorage.getItem("landed")
         
         if (!landed) {            
