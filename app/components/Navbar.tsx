@@ -74,7 +74,7 @@ const Navbar = ({ activePage }: { activePage: string }) => {
             <div ref={containerRef} className="px-1 h-12 container max-w-screen-lg flex justify-between items-center mx-auto">
                 <div className="h-full flex items-center text-gray-950 dark:text-zinc-100">
                     <Logo />
-                    <h1 className="-m-3 pb-2 text-xl tracking-wider italic">Catcam</h1>
+                    <h1 className="-m-3 pt-3.5 text-xl italic self-start underline">Catcam</h1>
                 </div>
                 <menu className="h-full py-1 relative flex justify-end items-end lg:py-0">
                     <div ref={menuIconRef} className="py-1 h-full flex items-center duration-200 lg:hidden" onClick={(e: React.MouseEvent) => showMenu(e)}>

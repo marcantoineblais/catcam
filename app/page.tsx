@@ -12,10 +12,10 @@ export default function HomePage() {
 
     return (
         <main className="flex flex-col">
-            <AuthManager session={null} setSession={setSession} />
+            <AuthManager session={session} setSession={setSession} />
             <SettingsManager session={session} setPageSize={null}/>
             <PageRefresh />
-            { session ? <LiveStream session={session} /> : null }
+            { session ? <LiveStream session={session} setSession={setSession} /> : null }
         </main>
     )
 }

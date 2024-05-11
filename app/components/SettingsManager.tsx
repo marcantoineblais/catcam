@@ -63,7 +63,7 @@ export default function SettingsManager({ session, setPageSize }: { session: any
 
     // Redirect to recordings on first connection
     React.useEffect(() => {
-        if (!session)
+        if (!session || !Object.keys(session).length)
             return
         
         let landed = sessionStorage.getItem("landed")

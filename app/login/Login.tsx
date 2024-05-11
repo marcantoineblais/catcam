@@ -43,9 +43,9 @@ export default function Login({ setSession }: { setSession: Function }) {
         })
         const data = await response.json()
         
-        if (data.ok)
-            setSession({ session: data, rememberMe: rememberMe }) 
-        else {
+        if (data.ok) {
+            setSession({ data: data, rememberMe: rememberMe }) 
+        } else {
             setAlertPopup(true)
             form.password.value = ""
         }

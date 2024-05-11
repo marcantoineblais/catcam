@@ -13,10 +13,10 @@ export default function RecordingPage() {
     
     return (
         <main className="flex flex-col">
-            <AuthManager session={null} setSession={setSession} />
+            <AuthManager session={session} setSession={setSession} />
             <SettingsManager session={session} setPageSize={setPageSize}/>
             <PageRefresh />
-            { session ? <Recordings session={session} pageSize={pageSize} /> : null }
+            { session ? <Recordings session={session} pageSize={pageSize} setSession={setSession} /> : null }
         </main>
     )
 }

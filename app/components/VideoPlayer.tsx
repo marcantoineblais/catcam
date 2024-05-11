@@ -450,10 +450,8 @@ export default function VideoPlayer({
     // Load logo when no video is selected, load loading svg when src is selected and video is loading
     function loadingImage() {
         const video = videoRef.current
-        if (!video)
-            return null
 
-        if (video.src || isLiveStream) {
+        if (video?.src || isLiveStream) {
             return (
                 <div className="w-1/12 animate-spin text-gray-950 dark:text-zinc-200">
                     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">

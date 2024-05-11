@@ -9,6 +9,14 @@ export default function AuthManager(
 ) {    
 
     const router = useRouter()
+    const logout = React.useCallback(() => {
+        localStorage.removeItem("JWT")
+        sessionStorage.clear()
+        if (setSession)
+            setSession(null)
+        
+        router.push("/login")
+    }, [router, setSession])
 
     // Prevent use in Iframe
     React.useEffect(() => {
@@ -18,18 +26,9 @@ export default function AuthManager(
     
 
     // Check if jwt can be found in local or session storage
-    // If cannot be decrypted or some keys are missing, then wipe the storage and redirect to login
     React.useEffect(() => {    
-        function logout() {
-            localStorage.removeItem("JWT")
-            sessionStorage.clear()
-            if (setSession)
-                setSession(null)
-            router.push("/login")
-        }
-
         async function getSession() {
-            if (!setSession || !location)
+            if (session || !setSession)
                 return
             
             let jwt: any = JSON.parse(localStorage.getItem("JWT") || "{}")
@@ -45,15 +44,22 @@ export default function AuthManager(
         }
 
         getSession()
-    }, [router, setSession])
+    }, [setSession, logout])
 
-    // When login is successful, encrypt and store jwt in local or session storage
+    // When login is successful, store jwt in local or session storage
     React.useEffect(() => {
         async function storeSession() {
-            if (!session || !location || !setSession || !session.session)
+            if (!session || !setSession)
                 return
+            
+            if (!session.data) {
+                if (!session.auth_token)
+                    logout()
 
-            const sessionJson = session.session
+                return
+            }
+
+            const sessionJson = session.data
             const jwt = {
                 auth_token: sessionJson.$user.auth_token,
                 ke: sessionJson.$user.ke,
@@ -69,7 +75,7 @@ export default function AuthManager(
         }
 
         storeSession()
-    }, [router, session, setSession])
+    }, [session, setSession, logout])
 
     return null
 }
