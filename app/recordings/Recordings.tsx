@@ -94,6 +94,11 @@ export default function Recordings({ session, pageSize, setSession }: { session:
         let disableAction = false
         
         const stopScroll = (e: TouchEvent) => {
+            if (e.touches.length > 1) {
+                removeListeners()
+                return
+            }
+
             const position = e.touches[0].clientY
             
             if (recordingsList.scrollTop > 0)
