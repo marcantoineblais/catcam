@@ -2,7 +2,7 @@
 
 import React from "react"
 
-export default function Popup({ title, text, action }: { title: string, text: string | string[], action: Function }) {
+export default function Popup({ title, text, close }: { title: string, text: string | string[], close: Function }) {
 
     const containerRef = React.useRef<HTMLDivElement | null>(null)
     const popupRef = React.useRef<HTMLDivElement | null>(null)
@@ -37,11 +37,11 @@ export default function Popup({ title, text, action }: { title: string, text: st
         popup.classList.add("duration-500", "max-h-0")
         container.classList.add("delay-500", "opacity-0")
 
-        setTimeout(action, 1000)
+        setTimeout(close, 1000)
     }
 
     return (
-        <div ref={containerRef} className="fixed inset-0 flex justify-center items-start px-3 py-[10%] bg-black/50 duration-200 opacity-0">
+        <div ref={containerRef} className="z-50 fixed inset-0 flex justify-center items-start px-3 py-[10%] bg-black/50 duration-200 opacity-0">
             <div ref={popupRef} className="flex flex-col bg-white dark:bg-neutral-700 rounded overflow-hidden max-h-0 delay-200 duration-[1500ms]">
                 <div className="py-1 px-3 bg-sky-700 text-lg font-bold text-white">
                     <h3>{title}</h3>
