@@ -22,11 +22,9 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
         if (!form)
             return;
 
-        const today = new Date(Date.now());
         const options = { 
             path: "/", 
             maxAge: (3600 * 24 * 365),
-            httpOnly: true,
             secure: true
         }
 
