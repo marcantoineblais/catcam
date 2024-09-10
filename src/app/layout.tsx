@@ -1,34 +1,21 @@
-import React from "react"
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import React from "react";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import { cookies } from "next/headers";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     title: 'Catcam',
     description: 'Catcam live stream app',
-}
+};
 
 async function darkMode() {
-    const mode = cookies().get("mode")?.value;
-
-    if (mode === "dark") {
-        return "dark";
-    } else if (mode === "auto") {
-        const time = new Date(Date.now()).getHours();
-
-        if (time >= 19 || time < 7)
-            return "dark";
-        else
-            return "";
-    } else {
-        return "";
-    }
+    return cookies().get("mode")?.value || "";
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode; }) {
 
     const darkClass = await darkMode();
 
@@ -36,5 +23,5 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <html lang="en">
             <body className={`${inter.className} ${darkClass}`}>{children}</body>
         </html>
-    )
+    );
 }

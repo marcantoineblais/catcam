@@ -47,7 +47,6 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                     <select value={mode} onChange={saveSetting} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="mode">
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
-                        <option value="auto">Auto</option>
                     </select>
                 </label>
 
