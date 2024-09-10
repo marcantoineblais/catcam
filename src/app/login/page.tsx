@@ -18,9 +18,11 @@ export default function Login() {
             uid: data.$user.uid
         };
 
+        const today = new Date(Date.now());
+
         setCookie("session", JSON.stringify(jwt), {
             path: "/",
-            maxAge: rememberMe ? (3600 * 24 * 30) : undefined
+            expires: rememberMe ? new Date(today.setMonth(today.getMonth() + 1)) : undefined
         });
     }
 

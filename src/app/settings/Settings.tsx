@@ -22,7 +22,8 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
         if (!form)
             return;
 
-        const options = { path: "/", maxAge: (3600 * 24 * 365) }
+        const today = new Date(Date.now());
+        const options = { path: "/", expires: new Date(today.setFullYear(today.getFullYear() + 1)) }
 
         setMode(form.mode.value);
         setNbItems(form.nbItems.value);
