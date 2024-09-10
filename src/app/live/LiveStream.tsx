@@ -42,20 +42,20 @@ export default function LiveStream({ monitors, defaultMonitor }: { monitors?: Mo
     }, [selectedMonitor])
 
     return (
-        <>
+        <div className="flex flex-col h-full">
             <Navbar />
-            <main ref={containerRef} className="p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col flex-grow">
+            
+            <main ref={containerRef} className="grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
                 
                 <div className="pt-3 flex flex-col gap-3">
-                    <h2 
-                        className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300"
-                    >
+                    <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
                         Cameras
                     </h2>
+                    
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                 </div>
             </main>
-        </>
+        </div>
     );
 }

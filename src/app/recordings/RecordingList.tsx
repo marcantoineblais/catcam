@@ -43,8 +43,8 @@ export default function RecordingList(
     }
 
     return (
-        <div className="h-full w-full flex flex-col items-center overflow-hidden">
-            <div ref={containerRef} className="w-full grow flex justify-start content-start flex-wrap scroll-smooth overflow-y-scroll shadow">
+        <div className="w-full h-full flex flex-col items-center overflow-hidden">
+            <div ref={containerRef} className="w-full h-full flex justify-start content-start flex-wrap scroll-smooth overflow-y-scroll shadow">
                 { renderVideoCards() }
             </div>
 

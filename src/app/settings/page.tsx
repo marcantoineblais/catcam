@@ -9,9 +9,6 @@ export default async function SettingsPage() {
     const currentSettings = getSettings();
 
     return (
-        <main className="flex flex-col">
-            <Navbar />
-            <Settings currentSettings={currentSettings} monitors={monitors} />
-        </main>
-    );
+        <Settings currentSettings={currentSettings} monitors={monitors} />
+    )
 }

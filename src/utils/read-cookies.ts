@@ -32,9 +32,6 @@ export function getSettings() {
 export function getSession() {
     const sessionJson = cookies().get("session")?.value;
 
-    if (!sessionJson) {
-        redirect("/login");
-    }
-
-    return JSON.parse(sessionJson);
+    if (sessionJson)
+        return JSON.parse(sessionJson);
 }

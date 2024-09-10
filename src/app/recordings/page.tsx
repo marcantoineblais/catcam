@@ -9,8 +9,6 @@ export default async function RecordingPage() {
     const nbItems = getNbItems();
 
     return (
-        <main className="flex flex-col">
-            <Recordings nbItems={nbItems} monitors={monitors} defaultMonitor={defaultMonitor} />
-        </main>
+        <Recordings nbItems={nbItems} monitors={monitors} defaultMonitor={defaultMonitor} />
     );
 }

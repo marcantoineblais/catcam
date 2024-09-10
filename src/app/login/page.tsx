@@ -3,7 +3,6 @@
 import React, { FormEvent } from "react";
 import Logo from "../../components/Logo";
 import renderPopup from "@/src/utils/renderPopup";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -20,16 +19,10 @@ export default function Login() {
         const body = { jwt, rememberMe };
 
         try {
-            const response = await fetch("/login/connect", {
+            fetch("/login/connect", {
                 method: "POST",
                 body: JSON.stringify(body)
             });
-
-            if (response.ok)
-                router.push("/");
-            else
-                renderPopup(["There was an error while saving your credentials.", "Please retry later."]);
-
         } catch (ex) {
             renderPopup(["There was an error while saving your credentials.", "Please retry later."]);
         }

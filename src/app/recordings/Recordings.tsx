@@ -55,8 +55,9 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                 const data = await response.json();
                 setVideos(data.videos);
                 setLastPage(data.lastPage || 1);
-                if (data.videos.length === 0)
-                    renderPopup(["There is no videos for that camera.", "Please try again later."], "Warning")
+
+                if (data.videos.length === 0 && page === 1)
+                    renderPopup(["There are no videos for that camera.", "Please try again later."], "Info");
             } else {
                 setLastPage(1);
                 renderPopup(["There was an issue while loading the videos.", "Please try again later."], "Error");
@@ -101,14 +102,14 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
     }, [isDrawerOpen])
 
     return (
-        <>
+        <div className="h-full flex flex-col justify-start overflow-hidden">
             <Navbar />
-            <main ref={containerRef} className="p-1 h-full container mx-auto max-w-screen-lg flex flex-col">
+            <main ref={containerRef} className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
                 <div ref={videoRef} className="max-h-full duration-1000">
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} />
                 </div>
                 
-                <div className="z-10 h-full flex flex-col overflow-hidden bg-gray-100 dark:bg-zinc-900">
+                <div className="max-h-full h-full z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000">
                     <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
                         <CarouselButton label="Recordings" active={carouselPage === 0} onClick={() => setCarouselPage(0)} />
 
@@ -122,25 +123,27 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                         <CarouselButton label="Cameras" active={carouselPage === 1} onClick={() => setCarouselPage(1)} rightAlign />
                     </div>
 
-                    <div className="w-full h-full overflow-hidden">
-                        <div ref={carouselRef} className="relative w-[200%] h-full duration-500 flex justify-start">
-                            <div className="relative px-1.5 basis-1/2 h-full">
+                    <div className="w-full overflow-hidden">
+                        <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
+                            <div className="relative h-full px-1.5 basis-1/2 overflow-hidden">
                                 {
-                                    (!videos || videos.length === 0) &&
-                                    <div className="absolute inset-0 flex justify-center items-center">
-                                        <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
-                                    </div>
+                                    (!videos || videos.length === 0) ? (
+                                        <div className="h-full flex justify-center items-center">
+                                            <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
+                                        </div>
+                                    ) : (
+                                        <RecordingList
+                                            videos={videos}
+                                            selectedVideo={selectedVideo}
+                                            setSelectedVideo={setSelectedVideo}
+                                            page={page}
+                                            lastPage={lastPage}
+                                            setPage={setPage}
+                                        />
+                                    )
                                 }
-                                
-                                <RecordingList
-                                    videos={videos}
-                                    selectedVideo={selectedVideo}
-                                    setSelectedVideo={setSelectedVideo}
-                                    page={page}
-                                    lastPage={lastPage}
-                                    setPage={setPage}
-                                />
                             </div>
+
                             <div className="px-1.5 flex basis-1/2 h-full">
                                 <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                             </div>
@@ -148,6 +151,6 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                     </div>
                 </div>
             </main>
-        </>
+        </div>
     );
 }
