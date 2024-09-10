@@ -20,7 +20,7 @@ export default function Login() {
 
         setCookie("session", JSON.stringify(jwt), {
             path: "/",
-            maxAge: rememberMe ? 3600 * 24 * 30 : undefined
+            maxAge: rememberMe ? (3600 * 24 * 30) : undefined
         });
     }
 
