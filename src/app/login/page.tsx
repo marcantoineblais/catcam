@@ -11,18 +11,28 @@ export default function Login() {
     const router = useRouter();
 
 
-    function saveSession(data: any, rememberMe: boolean) {
+    async function saveSession(data: any, rememberMe: boolean) {
         const jwt = {
             auth_token: data.$user.auth_token,
             ke: data.$user.ke,
             uid: data.$user.uid
         };
+        const body = { jwt, rememberMe };
 
-        setCookie("session", JSON.stringify(jwt), {
-            path: "/",
-            maxAge: rememberMe ? (3600 * 24 * 30) : undefined,
-            secure: true
-        });
+        try {
+            const response = await fetch("/login/connect", {
+                method: "POST",
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok)
+                router.push("/");
+            else
+                renderPopup(["There was an error while saving your credentials.", "Please retry later."]);
+
+        } catch (ex) {
+            renderPopup(["There was an error while saving your credentials.", "Please retry later."]);
+        }
     }
 
     async function submitForm(e: FormEvent) {
