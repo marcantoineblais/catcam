@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function getMonitors() {
-    const session = await getSession();
+    const session = getSession();
     const apiURL = process.env.API_URL;
     const key = session.auth_token;
     const groupKey = session.ke;
@@ -12,15 +12,15 @@ export async function getMonitors() {
         return await data.json()
 }
 
-export async function getDefaultMonitor() {
+export function getDefaultMonitor() {
     return cookies().get("camera")?.value || "";
 }
 
-export async function getNbItems() {
+export function getNbItems() {
     return cookies().get("nbItems")?.value || "12";
 }
 
-export async function getSettings() {
+export function getSettings() {
     const mode = cookies().get("mode")?.value || "light";
     const home = cookies().get("home")?.value || "live";
     const nbItems = cookies().get("nbItems")?.value || "12";
@@ -29,7 +29,7 @@ export async function getSettings() {
     return { mode, home, nbItems, camera };
 }
 
-export async function getSession() {
+export function getSession() {
     const sessionJson = cookies().get("session")?.value;
 
     if (!sessionJson) {

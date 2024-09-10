@@ -5,8 +5,8 @@ import { getDefaultMonitor, getMonitors, getNbItems } from "@/src/utils/read-coo
 export default async function RecordingPage() {
 
     const monitors = await getMonitors();
-    const defaultMonitor = await getDefaultMonitor();
-    const nbItems = await getNbItems();
+    const defaultMonitor = getDefaultMonitor();
+    const nbItems = getNbItems();
 
     return (
         <main className="flex flex-col">

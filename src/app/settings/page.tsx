@@ -5,8 +5,8 @@ import { getMonitors, getSettings } from "@/src/utils/read-cookies";
 
 export default async function SettingsPage() {
 
-    const currentSettings = await getSettings();
     const monitors = await getMonitors();
+    const currentSettings = getSettings();
 
     return (
         <main className="flex flex-col">

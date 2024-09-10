@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "../../components/Logo";
 import { setCookie } from "cookies-next";
 import { Monitor } from "@/src/models/monitor";
+import renderPopup from "@/src/utils/renderPopup";
 
 export default function Settings({ currentSettings, monitors }: { currentSettings: any, monitors: Monitor[]; }) {
 
@@ -16,28 +17,26 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
     const router = useRouter();
 
 
-    function saveSetting() {
-        const form = formRef.current;
+    async function saveSetting(e: React.ChangeEvent<HTMLSelectElement>, setValue: Function) {
+        const value = e.currentTarget.value
+        const name = e.currentTarget.name
+        const body = { name, value }
 
-        if (!form)
-            return;
+        try {
+            const response = await fetch("/settings/save", {
+                method: "POST",
+                body: JSON.stringify(body)
+            })
 
-        const options = { 
-            path: "/", 
-            maxAge: (3600 * 24 * 365),
-            secure: true
+            if (response.ok) {
+                setValue(value);
+                router.refresh();
+            } else {
+                renderPopup(["Could not update your settings.", "Please try again later."])
+            }
+        } catch(ex) {
+            renderPopup(["Could not update your settings.", "Please try again later."])
         }
-
-        setMode(form.mode.value);
-        setNbItems(form.nbItems.value);
-        setHome(form.home.value);
-        setCamera(form.camera.value);
-
-        setCookie("mode", form.mode.value, options);
-        setCookie("nbItems", form.nbItems.value, options);
-        setCookie("home", form.home.value, options);
-        setCookie("camera", form.camera.value, options);
-        router.refresh();
     }
 
     return (
@@ -47,7 +46,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
 
                 <label className="flex pt-3">
                     <p className="basis-36 text-sm">Appearance</p>
-                    <select value={mode} onChange={saveSetting} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="mode">
+                    <select value={mode} onChange={(e) => saveSetting(e, setMode)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="mode">
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
                     </select>
@@ -55,7 +54,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
 
                 <label className="flex pt-3">
                     <p className="basis-36 text-sm">Recordings per page</p>
-                    <select value={nbItems} onChange={saveSetting} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="nbItems">
+                    <select value={nbItems} onChange={(e) => saveSetting(e, setNbItems)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="nbItems">
                         <option value="12">12</option>
                         <option value="24">24</option>
                         <option value="48">48</option>
@@ -65,7 +64,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
 
                 <label className="flex pt-3">
                     <p className="basis-36 text-sm">Landing page</p>
-                    <select value={home} onChange={saveSetting} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="home">
+                    <select value={home} onChange={(e) => saveSetting(e, setHome)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="home">
                         <option value="live">Livestream</option>
                         <option value="recordings">Recordings</option>
                     </select>
@@ -73,7 +72,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
 
                 <label className="flex pt-3">
                     <p className="basis-36 text-sm">Default camera</p>
-                    <select value={camera} onChange={saveSetting} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="camera">
+                    <select value={camera} onChange={(e) => saveSetting(e, setCamera)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="camera">
                         {monitors.map((monitor, i) => <option key={i} value={monitor.mid}>{`${monitor.name} (${monitor.mid})`}</option>)}
                     </select>
                 </label>
