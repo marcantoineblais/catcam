@@ -56,19 +56,19 @@ const Navbar = () => {
                     <h1 className="-m-3 pt-3.5 text-xl italic self-start underline">Catcam</h1>
                 </div>
                 
-                <menu className="h-full py-1 relative flex justify-end items-end lg:py-0">
-                    <div className="py-1 h-full flex items-center duration-200 lg:hidden" onClick={toggleMenu}>
+                <menu className="h-full py-1 relative flex justify-end items-end md:py-0">
+                    <div className="py-1 h-full flex items-center duration-200 md:hidden" onClick={toggleMenu}>
                         <FontAwesomeIcon data-active={isMenuOpen ? true : undefined} className="w-8 h-8 duration-500 data-[active]:rotate-90" icon={faBars} />
                     </div>
                     <div 
                         className="w-full flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 dark:bg-zinc-900 translate-x-full duration-500 origin-right 
-                                   lg:w-full lg:bg-inherit lg:static lg:p-0 lg:flex-row lg:translate-x-0
+                                   md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:translate-x-0
                                    data-[active]:translate-x-0"
                         data-active={isMenuOpen ? true : undefined}
                     >
-                        <NavbarButton label="Live" url={"/live"} active={currentPage === "/live"} />
-                        <NavbarButton label="Recordings" url={"/recordings"} active={currentPage === "/recordings"} />
-                        <NavbarButton label="Settings" url={"/settings"} active={currentPage === "/settings"} />
+                        <NavbarButton label="Live" url="/live" active={currentPage === "/live"} />
+                        <NavbarButton label="Recordings" url="/recordings" active={currentPage === "/recordings"} />
+                        <NavbarButton label="Settings" url="/settings" active={currentPage === "/settings"} />
                         <NavbarButton label="Logout" warning={true} action={logout} />
                     </div>
                 </menu>

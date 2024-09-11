@@ -63,7 +63,6 @@ export default function Login() {
         const data = await response.json();
         if (data.ok) {
             saveSession(data, rememberMe);
-            router.push("/");
         } else {
             renderPopup(["Invalid password or username.", "Please try again."]);
             form.password.value = "";

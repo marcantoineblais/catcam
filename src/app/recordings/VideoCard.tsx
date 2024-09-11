@@ -31,7 +31,7 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
     }
 
     return (
-        <div className="p-1.5 basis-1/2 lg:basis-1/3">
+        <div className="p-1.5 basis-1/2 md:basis-1/3">
             <div
                 data-active={video.href === selectedVideo?.href ? true : undefined}
                 onClick={onClick}
