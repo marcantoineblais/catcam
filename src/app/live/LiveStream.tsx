@@ -48,9 +48,9 @@ export default function LiveStream({ monitors, defaultMonitor }: { monitors?: Mo
             <main ref={containerRef} className="grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
                 
-                <div className="pt-3 flex flex-col gap-3">
+                <div className="pt-3 flex flex-col">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
-                        Cameras
+                        { selectedMonitor?.name || "" }
                     </h2>
                     
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />

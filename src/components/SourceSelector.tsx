@@ -12,7 +12,7 @@ export default function SourceSelector(
                 
                 return (
                     <button
-                        className="w-full md:w-48 h-12 bg-gradient-to-t from-gray-900 to-sky-700 text-white rounded shadow shadow-gray-900/50 dark:shadow-zinc-50/50 duration-200 hover:brightness-125 disabled:cursor-default disabled:brightness-75"
+                        className="w-full md:w-48 h-12 bg-gradient-to-t from-gray-900 to-sky-700 text-white rounded shadow shadow-gray-900/50 dark:shadow-zinc-50/50 duration-200 hover:brightness-125 disabled:cursor-default disabled:brightness-100 disabled:saturate-0"
                         onClick={() => setSelectedMonitor(monitor)} 
                         key={i}
                         disabled={isActive}
