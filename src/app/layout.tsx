@@ -12,7 +12,16 @@ export const metadata: Metadata = {
 };
 
 async function darkMode() {
-    return cookies().get("mode")?.value || "";
+    const mode = cookies().get("mode")?.value || "";
+
+    if (mode === "auto") {
+        const time = new Date(Date.now());
+
+        if (time.getUTCHours() > 19 || time.getUTCHours() < 7)
+            return "dark"
+    }
+
+    return mode;
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode; }) {

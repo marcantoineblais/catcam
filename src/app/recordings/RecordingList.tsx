@@ -44,8 +44,14 @@ export default function RecordingList(
 
     return (
         <div className="w-full h-full flex flex-col items-center overflow-hidden">
-            <div ref={containerRef} className="w-full h-full flex justify-start content-start flex-wrap scroll-smooth overflow-y-scroll shadow">
-                { renderVideoCards() }
+            <div ref={containerRef} className="w-full h-full flex justify-start content-start flex-wrap scroll-smooth overflow-y-scroll shadow dark:shadow-zinc-50/10">
+                { 
+                    videos?.length === 0 ? (
+                        <div className="w-full h-full flex justify-center items-center">No videos available</div>
+                    ) : (
+                        renderVideoCards() 
+                    )
+                }
             </div>
 
             <div className="w-full p-3 flex justify-between items-center">

@@ -44,7 +44,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
         <div className="flex flex-col h-full overflow-hidden">
             <Navbar />
             
-            <main className="grow p-1 container mx-auto max-w-screen-lg overflow-hidden">
+            <main className="h-full p-1 container mx-auto max-w-screen-lg overflow-hidden">
                 <form ref={formRef} className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
                     <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Settings</h1>
 
@@ -53,6 +53,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                         <select value={mode} onChange={(e) => saveSetting(e, setMode)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="mode">
                             <option value="light">Light</option>
                             <option value="dark">Dark</option>
+                            <option value="auto">Auto</option>
                         </select>
                     </label>
 

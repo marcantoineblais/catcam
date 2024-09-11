@@ -47,7 +47,7 @@ export default function Popup({ title, text, close }: { title: string, text: str
                     <h3>{title}</h3>
                 </div>
                 <div className="p-5">
-                    { typeof(text) === "string" ? <p>text</p> : text.map((line, i) => <p key={i}>{line}</p>) }
+                    { typeof(text) === "string" ? <p>{text}</p> : text.map((line, i) => <p key={i}>{line}</p>) }
                 </div>
                 <div className="py-1 px-3 flex justify-end items-center border-t">
                     <button onClick={() => closePopup()} className="p-1 border rounded text-sm duration-200 hover:bg-black/10 dark:hover:bg-white/10">Close</button>

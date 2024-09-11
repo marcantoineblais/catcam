@@ -55,9 +55,6 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                 const data = await response.json();
                 setVideos(data.videos);
                 setLastPage(data.lastPage || 1);
-
-                if (data.videos.length === 0 && page === 1)
-                    renderPopup(["There are no videos for that camera.", "Please try again later."], "Info");
             } else {
                 setLastPage(1);
                 renderPopup(["There was an issue while loading the videos.", "Please try again later."], "Error");
@@ -111,7 +108,7 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                 
                 <div className="max-h-full h-full z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000">
                     <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
-                        <CarouselButton label="Recordings" active={carouselPage === 0} onClick={() => setCarouselPage(0)} />
+                        <CarouselButton label={selectedMonitor?.name || ""} active={carouselPage === 0} onClick={() => setCarouselPage(0)} />
 
                         <FontAwesomeIcon 
                             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
@@ -123,11 +120,11 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                         <CarouselButton label="Cameras" active={carouselPage === 1} onClick={() => setCarouselPage(1)} rightAlign />
                     </div>
 
-                    <div className="w-full overflow-hidden">
+                    <div className="w-full h-full overflow-hidden">
                         <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
                             <div className="relative h-full px-1.5 basis-1/2 overflow-hidden">
                                 {
-                                    (!videos || videos.length === 0) ? (
+                                    (!videos) ? (
                                         <div className="h-full flex justify-center items-center">
                                             <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
                                         </div>
