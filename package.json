@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "stop": "kill $(lsof -t -i :3000)"
+    "stop": "fuser -k 3000/tcp"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
