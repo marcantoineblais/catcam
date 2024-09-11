@@ -58,7 +58,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                     </label>
 
                     <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Recordings per page</p>
+                        <p className="basis-36 text-sm">Videos per page</p>
                         <select value={nbItems} onChange={(e) => saveSetting(e, setNbItems)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="nbItems">
                             <option value="12">12</option>
                             <option value="24">24</option>
@@ -68,7 +68,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                     </label>
 
                     <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Landing page</p>
+                        <p className="basis-36 text-sm">Home page</p>
                         <select value={home} onChange={(e) => saveSetting(e, setHome)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="home">
                             <option value="live">Livestream</option>
                             <option value="recordings">Recordings</option>
@@ -78,7 +78,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                     <label className="flex pt-3">
                         <p className="basis-36 text-sm">Default camera</p>
                         <select value={camera} onChange={(e) => saveSetting(e, setCamera)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="camera">
-                            {monitors.map((monitor, i) => <option key={i} value={monitor.mid}>{`${monitor.name} (${monitor.mid})`}</option>)}
+                            {monitors.map((monitor, i) => <option key={i} value={monitor.mid}>{monitor.name}</option>)}
                         </select>
                     </label>
                 </form>
