@@ -1,14 +1,13 @@
 import React from "react";
 import Settings from "./Settings";
-import Navbar from "../../components/navbar/Navbar";
-import { getMonitors, getSettings } from "@/src/utils/read-cookies";
+import { fetchMonitors, readSettings,  } from "@/src/utils/fetch";
 
 export default async function SettingsPage() {
 
-    const monitors = await getMonitors();
-    const currentSettings = getSettings();
+    const monitors = await fetchMonitors();
+    const settings = readSettings();
 
     return (
-        <Settings currentSettings={currentSettings} monitors={monitors} />
+        <Settings currentSettings={settings} monitors={monitors} />
     )
 }

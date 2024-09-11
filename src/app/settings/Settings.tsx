@@ -9,7 +9,7 @@ import renderPopup from "@/src/utils/renderPopup";
 import Navbar from "@/src/components/navbar/Navbar";
 
 export default function Settings({ currentSettings, monitors }: { currentSettings: any, monitors: Monitor[]; }) {
-
+    
     const [mode, setMode] = React.useState<string>(currentSettings.mode);
     const [nbItems, setNbItems] = React.useState<string>(currentSettings.nbItems);
     const [home, setHome] = React.useState<string>(currentSettings.home);

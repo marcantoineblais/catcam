@@ -1,13 +1,13 @@
 import React from "react";
 import LiveStream from "./LiveStream";
-import { getDefaultMonitor, getMonitors } from "@/src/utils/read-cookies";
+import { fetchMonitors, readSettings } from "@/src/utils/fetch";
 
 export default async function HomePage() {
 
-    const monitors = await getMonitors();
-    const defaultMonitor = await getDefaultMonitor();
-
+    const monitors = await fetchMonitors();
+    const settings = readSettings();
+    
     return (
-        <LiveStream monitors={monitors} defaultMonitor={defaultMonitor} />
+        <LiveStream monitors={monitors} defaultMonitor={settings.camera} />
     );
 }

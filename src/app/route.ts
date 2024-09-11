@@ -1,11 +1,7 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 
-export function GET() {
-    const defaultPage = cookies().get("home")?.value || "live"
-
-    if (cookies().has("session"))
-        redirect("/" + defaultPage)
-    else 
-        redirect("/login")
+export function GET(request: NextRequest) {
+    const defaultPage = request.cookies.get("home")?.value || "live"
+    redirect("/" + defaultPage)
 }

@@ -6,9 +6,8 @@ import renderPopup from "@/src/utils/renderPopup";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-    const formRef = React.useRef<HTMLFormElement | null>(null);
+    const formRef = React.useRef<HTMLFormElement>(null);
     const router = useRouter();
-
 
     async function saveSession(data: any, rememberMe: boolean) {
         const jwt = {
@@ -19,10 +18,17 @@ export default function Login() {
         const body = { jwt, rememberMe };
 
         try {
-            fetch("/login/connect", {
+            const response = await fetch("/login/connect", {
                 method: "POST",
                 body: JSON.stringify(body)
             });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.ok)
+                    router.push("/");
+            }
         } catch (ex) {
             renderPopup(["There was an error while saving your credentials.", "Please retry later."]);
         }

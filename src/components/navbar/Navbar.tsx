@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import renderPopup from "@/src/utils/renderPopup";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false)
     const currentPage = usePathname();
+    const router = useRouter();
 
     // Close the menu when clicking anywhere on screen
     React.useEffect(() => {
@@ -27,6 +29,23 @@ const Navbar = () => {
     function toggleMenu(e: React.MouseEvent) {
         e.stopPropagation();
         setIsMenuOpen(!isMenuOpen)
+    }
+
+    async function logout() {
+        try {
+            const response = await fetch("/logout");
+            const data = await response.json();
+
+            if (data.ok) {
+                router.push("/login")
+            } else {
+                renderPopup(["An error occured.", "Please retry later."]);
+            }
+
+        } catch (ex) {
+            renderPopup(["An error occured.", "Please retry later."]);
+        }
+
     }
 
     return (
@@ -50,7 +69,7 @@ const Navbar = () => {
                         <NavbarButton label="Live" url={"/live"} active={currentPage === "/live"} />
                         <NavbarButton label="Recordings" url={"/recordings"} active={currentPage === "/recordings"} />
                         <NavbarButton label="Settings" url={"/settings"} active={currentPage === "/settings"} />
-                        <NavbarButton label="Logout" url={"/logout"} warning={true} />
+                        <NavbarButton label="Logout" warning={true} action={logout} />
                     </div>
                 </menu>
             </div>

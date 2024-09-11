@@ -1,14 +1,13 @@
 import React from "react";
 import Recordings from "./Recordings";
-import { getDefaultMonitor, getMonitors, getNbItems } from "@/src/utils/read-cookies";
+import { fetchMonitors, readSettings } from "@/src/utils/fetch";
 
 export default async function RecordingPage() {
 
-    const monitors = await getMonitors();
-    const defaultMonitor = getDefaultMonitor();
-    const nbItems = getNbItems();
+    const monitors = await fetchMonitors();
+    const settings = readSettings();
 
     return (
-        <Recordings nbItems={nbItems} monitors={monitors} defaultMonitor={defaultMonitor} />
+        <Recordings nbItems={settings.nbItems} monitors={monitors} defaultMonitor={settings.camera} />
     );
 }

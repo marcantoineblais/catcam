@@ -1,12 +1,15 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
 export function GET() {
-    cookies().set({
+    const response = NextResponse.json({ ok: true });
+    response.cookies.set({
         name: "session",
         value: "",
-        maxAge: 0
+        maxAge: -1,
+        secure: true,
+        httpOnly: true,
+        path: "/"
     });
-
-    redirect("/login");
+    
+    return response;
 }
