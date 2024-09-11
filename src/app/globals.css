@@ -28,9 +28,9 @@ html {
 body {
     color: var(--foreground-rgb);
     background: var(--background-rgb);
-    height: 100dvh;
-    max-height: 100dvh;
-    min-height: 100dvh;
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
 }
 
 video::-webkit-media-controls {
