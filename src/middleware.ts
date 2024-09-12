@@ -3,7 +3,7 @@ import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
     if (!request.cookies.has("session")) {
-        return NextResponse.redirect(new URL("/login", request.headers.get("host") as string));
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     try {
@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     
         return response;
     } catch (_) {
-        const response = NextResponse.redirect(new URL("/login", request.headers.get("host") as string));
+        const response = NextResponse.redirect(new URL("/login", request.url));
         response.cookies.set("session", "", {
             path: "/",
             httpOnly: true,
@@ -33,5 +33,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/((?!public|login|manifest.json|.*\\.css$|.*\\.js$|_next/static|not-found|500).*)'
+    matcher: '/((?!public|login|logout|manifest.json|.*\\.css$|.*\\.js$|_next/static|not-found|500).*)'
 };
