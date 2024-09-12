@@ -12,7 +12,7 @@ export default function FourOFour() {
     React.useEffect(() => {4
         renderPopup(["Well well well...", "Looks like someone strayed too far.", "Let's get you back home."], "Error 404");
         router.push("/");
-    }, [])
+    }, [router])
 
     return <Logo />
 }

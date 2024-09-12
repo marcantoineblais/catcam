@@ -6,13 +6,24 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const token = request.cookies.get("session")?.value as string   
-    const secretKey = process.env.SECRET_KEY as string;
-    const { payload: session } = await jose.jwtVerify(JSON.parse(token), new TextEncoder().encode(secretKey));
-    const response = NextResponse.next()
-    response.headers.set("session", JSON.stringify(session)); 
+    try {
+        const token = request.cookies.get("session")?.value as string   
+        const secretKey = process.env.SECRET_KEY as string;
+        const { payload: session } = await jose.jwtVerify(JSON.parse(token), new TextEncoder().encode(secretKey));
+        const response = NextResponse.next()
+        response.headers.set("session", JSON.stringify(session)); 
+    
+        return response;
+    } catch (_) {
+        const response = NextResponse.redirect(new URL("/login", request.url));
+        response.cookies.set("session", "", {
+            path: "/",
+            httpOnly: true,
+            maxAge: -1
+        })
 
-    return response;
+        return response;
+    }
 }
 
 export const config = {
