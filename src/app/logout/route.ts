@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function GET(request: NextRequest) {
-    console.log(request);
-    
-    const response = NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.headers.get("host") as string));
     
     response.cookies.set({
         name: "session",

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 
 export default function NavbarButton(
@@ -7,7 +8,7 @@ export default function NavbarButton(
     { label: string, active?: boolean, warning?: boolean, url: string }) {
 
     return (
-        <a 
+        <Link 
             href={url} 
             className="w-full text-center py-4 border-2 md:w-32 md:py-1.5 md:border-0 md:border-b-4 text-gray-700 border-gray-700 duration-200 hover:brightness-200 dark:hover:brightness-50
                 dark:text-zinc-300 dark:border-zinc-300 md:bg-none dark
@@ -18,6 +19,6 @@ export default function NavbarButton(
             data-warning={warning ? true : undefined}
         >
             {label}
-        </a>
+        </Link>
     );
 }

@@ -3,7 +3,7 @@ import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
     if (!request.cookies.has("session")) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        return NextResponse.redirect(new URL("/login", request.headers.get("host") as string));
     }
 
     try {
@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     
         return response;
     } catch (_) {
-        const response = NextResponse.redirect(new URL("/login", request.url));
+        const response = NextResponse.redirect(new URL("/login", request.headers.get("host") as string));
         response.cookies.set("session", "", {
             path: "/",
             httpOnly: true,
