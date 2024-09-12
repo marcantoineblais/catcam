@@ -9,5 +9,6 @@ export default function renderPopup(text: string | string[], title: string = "Er
         root.unmount()
         document.body.removeChild(container)
     }
+    
     root.render(<Popup title={title} text={text} close={closePopup} />)
 }

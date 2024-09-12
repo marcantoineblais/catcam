@@ -31,23 +31,6 @@ const Navbar = () => {
         setIsMenuOpen(!isMenuOpen)
     }
 
-    async function logout() {
-        try {
-            const response = await fetch("/logout");
-            const data = await response.json();
-
-            if (data.ok) {
-                router.push("/login")
-            } else {
-                renderPopup(["An error occured.", "Please retry later."]);
-            }
-
-        } catch (ex) {
-            renderPopup(["An error occured.", "Please retry later."]);
-        }
-
-    }
-
     return (
         <div className="pt-1 border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10">
             <div className="px-3 h-12 container max-w-screen-lg flex justify-between items-center mx-auto">
@@ -69,7 +52,7 @@ const Navbar = () => {
                         <NavbarButton label="Live" url="/live" active={currentPage === "/live"} />
                         <NavbarButton label="Recordings" url="/recordings" active={currentPage === "/recordings"} />
                         <NavbarButton label="Settings" url="/settings" active={currentPage === "/settings"} />
-                        <NavbarButton label="Logout" warning={true} action={logout} />
+                        <NavbarButton label="Logout" warning={true} url="/logout" />
                     </div>
                 </menu>
             </div>

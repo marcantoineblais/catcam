@@ -21,11 +21,17 @@ export async function middleware(request: NextRequest) {
             httpOnly: true,
             maxAge: -1
         })
+        
+        response.cookies.set("rememberMe", "", {
+            path: "/",
+            httpOnly: true,
+            maxAge: -1
+        })
 
         return response;
     }
 }
 
 export const config = {
-    matcher: '/((?!public|login|logout|manifest.json|.*\\.css$|.*\\.js$|_next/static|404|500).*)'
+    matcher: '/((?!public|login|logout|manifest.json|.*\\.css$|.*\\.js$|_next/static|not-found|500).*)'
 };

@@ -9,10 +9,10 @@ export default function FourOFour() {
 
     const router = useRouter();
 
-    React.useEffect(() => {4
+    React.useEffect(() => {
         renderPopup(["Well well well...", "Looks like someone strayed too far.", "Let's get you back home."], "Error 404");
         router.push("/");
-    }, [router])
+    }, [])
 
     return <Logo />
 }

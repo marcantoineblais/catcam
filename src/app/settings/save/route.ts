@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
         name: name,
         value: value,
         maxAge: 3600 * 24 * 30 * 365,
-        httpOnly: true,
         path: "/"
     })
 

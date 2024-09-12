@@ -1,29 +1,71 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 
+async function postRequest(body: any) {
+    const apiUrl: string = process.env.API_URL + "/?json=true";
+    const creds = {
+        machineID: body.machineID,
+        mail: body.mail,
+        pass: body.pass
+    };
+    
+    const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(creds)
+    });
+    
+    if (response.ok)
+        return response.json()
+}
+
 export async function POST(request: NextRequest) {
-    const body = await request.json();
-    const session = body.session;
-    const rememberMe = body.rememberMe;
-    const secretKey = process.env.SECRET_KEY as string;
+    let body;
+    
+    try {
+        body = await request.json();
+    } catch (_) {
+        return NextResponse.error();
+    }
+
+    if (!body)
+        return NextResponse.error();
 
     try {
+        const secretKey = process.env.SECRET_KEY as string;
+        const data = await postRequest(body);
+        const session = {
+            auth_token: data.$user.auth_token,
+            ke: data.$user.ke,
+            uid: data.$user.uid
+        }
+        
+
         const token = await new jose.SignJWT(session)
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime(rememberMe ? "30d" : "10m")
+            .setExpirationTime("30d")
             .sign(new TextEncoder().encode(secretKey));
 
-        const response = NextResponse.json({ ok: true })
+        const response = NextResponse.json({ ok: true });
         response.cookies.set({
             name: "session",
             value: JSON.stringify(token),
-            maxAge: 3600 * 24 * 30,
+            maxAge: body.rememberMe ? 3600 * 24 * 30 : undefined,
             httpOnly: true,
             path: "/"
-        })
-    
-        return response;
-    } catch (_) {}
+        });
 
-    return NextResponse.json({ ok: false, message: "Problem while encoding session token." })
+        response.cookies.set({
+            name: "rememberMe",
+            value: body.rememberMe,
+            maxAge: 3600 * 24 * 30,
+            path: "/"
+        });
+
+        return response;
+    } catch (_) {
+        return NextResponse.error();
+    }
 }
