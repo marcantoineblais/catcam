@@ -26,8 +26,6 @@ export default function Login() {
             pass: password,
             rememberMe: rememberMe
         };
-
-        console.log(new URL("/login/connect", window.location.origin));
         
         const response = await fetch(new URL("/login/connect", window.location.origin), {
             method: "POST",
