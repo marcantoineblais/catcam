@@ -9,6 +9,13 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
     title: 'Catcam',
     description: 'Catcam live stream app',
+    icons: [{
+        rel: "icon",
+        url: "/favicon.ico",
+        type: "image/x-icon",
+        sizes: "any"
+    }],
+    applicationName: "Catcam"
 };
 
 async function darkMode() {

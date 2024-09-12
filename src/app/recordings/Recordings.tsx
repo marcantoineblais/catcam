@@ -63,6 +63,7 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
 
         fetchData();
         setCarouselPage(0);
+        
     }, [page, selectedMonitor, monitors, nbItems]);
 
     React.useEffect(() => {

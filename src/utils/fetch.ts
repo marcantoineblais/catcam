@@ -1,11 +1,11 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function fetchMonitors() {
-    const jwt = cookies().get("session")?.value;
+    const jwt = headers().get("session") as string;
 
     try {
-        const session = JSON.parse(jwt || "");
+        const session = JSON.parse(jwt);
         const apiUrl = process.env.API_URL;
         const key = session.auth_token;
         const groupKey = session.ke;

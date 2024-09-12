@@ -10,12 +10,12 @@ export default function Login() {
     const router = useRouter();
 
     async function saveSession(data: any, rememberMe: boolean) {
-        const jwt = {
+        const session = {
             auth_token: data.$user.auth_token,
             ke: data.$user.ke,
             uid: data.$user.uid
         };
-        const body = { jwt, rememberMe };
+        const body = { session, rememberMe };        
 
         try {
             const response = await fetch("/login/connect", {
@@ -26,8 +26,11 @@ export default function Login() {
             if (response.ok) {
                 const data = await response.json();
 
-                if (data.ok)
+                if (data.ok) {
                     router.push("/");
+                } else {
+                    renderPopup(data.message);
+                }
             }
         } catch (ex) {
             renderPopup(["There was an error while saving your credentials.", "Please retry later."]);

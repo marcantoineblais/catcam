@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const apiUrl = process.env.API_URL;
-    const jwt = request.cookies.get("session")?.value || "";
+    const jwt = request.headers.get("session") as string;
 
     try {
         const session = JSON.parse(jwt);
