@@ -34,9 +34,6 @@ export default function Login() {
             },
             body: JSON.stringify(body)
         });
-
-        console.log(response);
-        
         
         if (response.ok) {           
             router.push("/");

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     response.cookies.set({
         name: name,
         value: value,
-        maxAge: 3600 * 24 * 30 * 365,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
         path: "/"
     })
 
