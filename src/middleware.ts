@@ -3,8 +3,6 @@ import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
     if (!request.cookies.has("session")) {
-        console.log("middleware: ", new URL("/login", request.url));
-        
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
@@ -35,5 +33,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/((?!public|login|logout|manifest.json|.*\\.css$|.*\\.js$|_next/static|not-found|500).*)'
+    matcher: '/((?!public|login|manifest.json|.*\\.css$|.*\\.js$|_next/static|not-found|500).*)'
 };

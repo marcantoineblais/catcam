@@ -50,7 +50,7 @@ const Navbar = () => {
                         <NavbarButton label="Live" url="/live" active={currentPage === "/live"} />
                         <NavbarButton label="Recordings" url="/recordings" active={currentPage === "/recordings"} />
                         <NavbarButton label="Settings" url="/settings" active={currentPage === "/settings"} />
-                        <NavbarButton label="Logout" warning={true} url={new URL("/logout", window.location.origin).toString()} />
+                        <NavbarButton label="Logout" warning={true} url={new URL("/logout").toString()} />
                     </div>
                 </menu>
             </div>
