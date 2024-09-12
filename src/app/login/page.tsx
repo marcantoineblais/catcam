@@ -27,13 +27,16 @@ export default function Login() {
             rememberMe: rememberMe
         };
 
-        const response = await fetch("/login/connect", {
+        const response = await fetch(new URL("/login/connect", window.location.origin), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(body)
         });
+
+        console.log(response);
+        
         
         if (response.ok) {           
             router.push("/");
