@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         response.cookies.set({
             name: "session",
             value: JSON.stringify(token),
-            maxAge: body.rememberMe ? 3600 * 24 * 30 : undefined,
+            maxAge: body.rememberMe ? 3600 * 24 * 30 : 3600 * 10,
             httpOnly: true,
             path: "/"
         });

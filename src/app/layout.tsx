@@ -38,8 +38,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
     return (
         <html lang="en">
+            <ServiceManager />
+            
             <body className={`${inter.className} ${darkClass}`}>
-                <ServiceManager />
                 {children}
             </body>
         </html>
