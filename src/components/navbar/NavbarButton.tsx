@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 export default function NavbarButton(
-    { label, active, warning, url }:
-    { label: string, active?: boolean, warning?: boolean, url: string }) {
+    { label, active, warning, url = "", action }:
+    { label: string, active?: boolean, warning?: boolean, url?: string, action?: MouseEventHandler }) {
 
     return (
         <Link 
@@ -17,6 +17,7 @@ export default function NavbarButton(
                 data-[warning]:border-amber-900 data-[warning]:text-amber-900 data-[warning]:dark:border-orange-400 data-[warning]:dark:text-amber-400"
             data-active={active ? true : undefined}
             data-warning={warning ? true : undefined}
+            onClick={action}
         >
             {label}
         </Link>

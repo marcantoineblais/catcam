@@ -14,6 +14,16 @@ export default function ServiceManager() {
             navigator.serviceWorker.controller?.postMessage({ type: "resetIdle" });
         };
 
+        const logout = async () => {
+            const response = await fetch("/logout")
+    
+            if (response.ok) {
+                router.push("/login");
+            } else {
+                renderPopup(["Could not disconnect you at the moment.", "Please retry later."]);
+            }
+        }
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js', { scope: '/' }).then((registration) => {
 
@@ -25,8 +35,11 @@ export default function ServiceManager() {
                 navigator.serviceWorker.addEventListener('message', (e) => {
                     navigator.serviceWorker.controller?.postMessage({ type: "resetIdle" });
 
-                    if (e.data === "/logout")
+                    if (e.data === "/logout") {
                         renderPopup("You have been disconnect due to inactivity.", "Information");
+                        logout();
+                        return;
+                    }
 
                     router.push(e.data);
                 });

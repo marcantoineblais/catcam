@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export function GET(request: NextRequest) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
+export function GET() {
+    const response = NextResponse.json({ ok: true })
     
     response.cookies.set({
         name: "session",

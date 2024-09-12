@@ -6,10 +6,12 @@ import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import renderPopup from "@/src/utils/renderPopup";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false)
     const currentPage = usePathname();
+    const router = useRouter();
 
     // Close the menu when clicking anywhere on screen
     React.useEffect(() => {
@@ -27,6 +29,16 @@ const Navbar = () => {
     function toggleMenu(e: React.MouseEvent) {
         e.stopPropagation();
         setIsMenuOpen(!isMenuOpen)
+    }
+
+    async function logout() {
+        const response = await fetch("/logout")
+
+        if (response.ok) {
+            router.push("/login");
+        } else {
+            renderPopup(["Could not disconnect you at the moment.", "Please retry later."]);
+        }
     }
 
     return (
@@ -50,7 +62,7 @@ const Navbar = () => {
                         <NavbarButton label="Live" url="/live" active={currentPage === "/live"} />
                         <NavbarButton label="Recordings" url="/recordings" active={currentPage === "/recordings"} />
                         <NavbarButton label="Settings" url="/settings" active={currentPage === "/settings"} />
-                        <NavbarButton label="Logout" warning={true} url={"/logout"} />
+                        <NavbarButton label="Logout" warning={true} action={logout} />
                     </div>
                 </menu>
             </div>
