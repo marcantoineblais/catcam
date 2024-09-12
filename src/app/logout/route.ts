@@ -6,7 +6,6 @@ export function GET(request: NextRequest) {
         name: "session",
         value: "",
         maxAge: -1,
-        secure: true,
         httpOnly: true,
         path: "/"
     });

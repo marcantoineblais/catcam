@@ -10,7 +10,6 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false)
     const currentPage = usePathname();
-    const router = useRouter();
 
     // Close the menu when clicking anywhere on screen
     React.useEffect(() => {
