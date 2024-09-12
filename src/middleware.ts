@@ -3,6 +3,8 @@ import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
     if (!request.cookies.has("session")) {
+        console.log("middleware: ", new URL("/login", request.url));
+        
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
