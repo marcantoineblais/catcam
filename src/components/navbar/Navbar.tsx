@@ -6,7 +6,6 @@ import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import renderPopup from "@/src/utils/renderPopup";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false)

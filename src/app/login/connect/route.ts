@@ -8,7 +8,7 @@ async function postRequest(body: any) {
         mail: body.mail,
         pass: body.pass
     };
-    
+
     const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -16,14 +16,14 @@ async function postRequest(body: any) {
         },
         body: JSON.stringify(creds)
     });
-    
+
     if (response.ok)
-        return response.json()
+        return response.json();
 }
 
 export async function POST(request: NextRequest) {
     let body;
-    
+
     try {
         body = await request.json();
     } catch (_) {
@@ -40,12 +40,12 @@ export async function POST(request: NextRequest) {
             auth_token: data.$user.auth_token,
             ke: data.$user.ke,
             uid: data.$user.uid
-        }
-        
+        };
+
 
         const token = await new jose.SignJWT(session)
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime("30d")
+            .setExpirationTime(body.rememberMe ? "30d" : "10m")
             .sign(new TextEncoder().encode(secretKey));
 
         const response = NextResponse.json({ ok: true });

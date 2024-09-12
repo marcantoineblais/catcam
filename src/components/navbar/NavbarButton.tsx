@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 export default function NavbarButton(
     { label, active, warning, url }:
