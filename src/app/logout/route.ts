@@ -10,6 +10,14 @@ export function GET() {
         httpOnly: true,
         path: "/"
     });
+
+    response.cookies.set({
+        name: "rememberMe",
+        value: "",
+        maxAge: -1,
+        httpOnly: true,
+        path: "/"
+    });
     
     return response;
 }

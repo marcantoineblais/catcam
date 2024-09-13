@@ -45,14 +45,14 @@ export async function POST(request: NextRequest) {
 
         const token = await new jose.SignJWT(session)
             .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime(body.rememberMe ? "30d" : "10m")
+            .setExpirationTime(body.rememberMe ? "30d" : "5m")
             .sign(new TextEncoder().encode(secretKey));
 
         const response = NextResponse.json({ ok: true });
         response.cookies.set({
             name: "session",
             value: JSON.stringify(token),
-            maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 10, // 1 month || 10min
+            maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
             httpOnly: true,
             path: "/"
         });
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         response.cookies.set({
             name: "rememberMe",
             value: body.rememberMe,
-            maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 10, // 1 month || 10min
+            maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
             path: "/"
         });
 

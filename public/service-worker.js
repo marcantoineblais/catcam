@@ -1,6 +1,6 @@
 let idleTime = 0;
 let rememberMe;
-const maxIdleTime = 1000 * 60 * 10;
+const maxIdleTime = 1000 * 60 * 5;
 let timer;
 
 const checkIdle = () => {
