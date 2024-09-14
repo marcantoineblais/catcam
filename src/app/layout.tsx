@@ -25,7 +25,7 @@ async function darkMode() {
     if (mode === "auto") {
         const time = new Date(Date.now());
 
-        if (time.getHours() > 19 || time.getHours() < 7)
+        if (time.getHours() > 19 - 5 || time.getHours() < 7 - 5)
             return "dark"
     }
 
