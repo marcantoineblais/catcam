@@ -2,7 +2,7 @@
 
 import React from "react";
 import Navbar from "../../components/navbar/Navbar";
-import VideoPlayer from "../../components/VideoPlayer";
+import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
