@@ -64,6 +64,13 @@ export async function POST(request: NextRequest) {
             path: "/"
         });
 
+        response.cookies.set({
+            name: "timezone",
+            value: body.timezone,
+            maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
+            path: "/"
+        })
+
         return response;
     } catch (_) {
         return NextResponse.error();

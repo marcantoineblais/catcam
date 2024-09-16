@@ -24,8 +24,11 @@ export default function Login() {
             machineID: machineID,
             mail: email,
             pass: password,
-            rememberMe: rememberMe
+            rememberMe: rememberMe,
+            timezone: new Date().getTimezoneOffset()
         };
+        
+        console.log(body);
         
         const response = await fetch(new URL("/login/connect", window.location.origin), {
             method: "POST",

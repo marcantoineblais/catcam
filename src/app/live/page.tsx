@@ -6,8 +6,8 @@ export default async function HomePage() {
 
     const monitors = await fetchMonitors();
     const settings = readSettings();
-    
+
     return (
-        <LiveStream monitors={monitors} defaultMonitor={settings.camera} />
+        <LiveStream monitors={monitors} defaultMonitor={settings.camera} defaultQuality={settings.quality} />
     );
 }

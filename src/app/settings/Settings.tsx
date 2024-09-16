@@ -7,6 +7,7 @@ import { setCookie } from "cookies-next";
 import { Monitor } from "@/src/models/monitor";
 import renderPopup from "@/src/utils/renderPopup";
 import Navbar from "@/src/components/navbar/Navbar";
+import FormSelect from "./FormSelect";
 
 export default function Settings({ currentSettings, monitors }: { currentSettings: any, monitors: Monitor[]; }) {
     
@@ -14,6 +15,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
     const [nbItems, setNbItems] = React.useState<string>(currentSettings.nbItems);
     const [home, setHome] = React.useState<string>(currentSettings.home);
     const [camera, setCamera] = React.useState<string>(currentSettings.camera);
+    const [quality, setQuality] = React.useState<string>(currentSettings.camera);
     const formRef = React.useRef<HTMLFormElement>(null);
     const router = useRouter();
 
@@ -47,40 +49,55 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
             <main className="h-full p-1 container mx-auto max-w-screen-lg overflow-hidden">
                 <form ref={formRef} className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
                     <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Settings</h1>
+                    
+                    <FormSelect 
+                        label="Appearance" 
+                        name="mode" 
+                        value={mode} 
+                        onChange={(e) => saveSetting(e, setMode)} 
+                        options={[
+                            { value: "light", label: "Light" }, 
+                            { value: "dark", label: "Dark" }, 
+                            { value: "auto", label: "Auto" }
+                        ]} 
+                    />
 
-                    <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Appearance</p>
-                        <select value={mode} onChange={(e) => saveSetting(e, setMode)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="mode">
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="auto">Auto</option>
-                        </select>
-                    </label>
+                    <FormSelect 
+                        label="Videos per page" 
+                        name="nbItems" 
+                        value={nbItems} 
+                        onChange={(e) => saveSetting(e, setNbItems)} 
+                        options={[
+                            { value: "12", label: "12" }, 
+                            { value: "24", label: "24" }, 
+                            { value: "48", label: "48" }, 
+                            { value: "96", label: "96" }
+                        ]} 
+                    />
 
-                    <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Videos per page</p>
-                        <select value={nbItems} onChange={(e) => saveSetting(e, setNbItems)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="nbItems">
-                            <option value="12">12</option>
-                            <option value="24">24</option>
-                            <option value="48">48</option>
-                            <option value="96">96</option>
-                        </select>
-                    </label>
+                    <FormSelect 
+                        label="Home page" 
+                        name="home" 
+                        value={home} 
+                        onChange={(e) => saveSetting(e, setHome)} 
+                        options={[{ value: "live", label: "Livestream" }, { value: "recordings", label: "Recordings" }]} 
+                    />
 
-                    <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Home page</p>
-                        <select value={home} onChange={(e) => saveSetting(e, setHome)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="home">
-                            <option value="live">Livestream</option>
-                            <option value="recordings">Recordings</option>
-                        </select>
-                    </label>
+                    <FormSelect 
+                        label="Default camera" 
+                        name="camera" 
+                        value={camera} 
+                        onChange={(e) => saveSetting(e, setCamera)} 
+                        options={monitors.map((monitor) => { return { label: monitor.name, value: monitor.mid }})} 
+                    />
 
-                    <label className="flex pt-3">
-                        <p className="basis-36 text-sm">Default camera</p>
-                        <select value={camera} onChange={(e) => saveSetting(e, setCamera)} className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950" name="camera">
-                            {monitors.map((monitor, i) => <option key={i} value={monitor.mid}>{monitor.name}</option>)}
-                        </select>
-                    </label>
+                    <FormSelect 
+                        label="Default quality" 
+                        name="quality" 
+                        value={quality} 
+                        onChange={(e) => saveSetting(e, setQuality)} 
+                        options={[{ label: "High", value: "HQ"}, { label: "Low", value: "SQ"}]} 
+                    />
                 </form>
             </main>
 

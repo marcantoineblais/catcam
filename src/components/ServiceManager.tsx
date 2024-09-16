@@ -33,8 +33,8 @@ export default function ServiceManager() {
 
                 navigator.serviceWorker.addEventListener('message', (e) => {
                     if (e.data === "/logout") {
-                        logout();
                         renderPopup("You have been disconnect due to inactivity.", "Information");
+                        logout();
                         return;
                     }
 
