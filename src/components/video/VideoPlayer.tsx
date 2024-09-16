@@ -12,9 +12,11 @@ export default function VideoPlayer(
     { videoSource, isLiveStream, containerRef }:
     { videoSource?: string, isLiveStream?: boolean, containerRef: React.MutableRefObject<HTMLDivElement | null>; }) {
 
+
+    const [currentTime, setCurrentTime] = React.useState<number>(0);
     const [duration, setDuration] = React.useState<number>(0);
-    const [overlayTimeouts] = React.useState<any[]>([]);
-    const [dblClicksTimeouts] = React.useState<any[]>([]);
+    const [playing, setPlaying] = React.useState<boolean>(false);
+    const [loaded, setLoaded] = React.useState<boolean>(false);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const fullScreenRef = React.useRef<any>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
@@ -106,6 +108,10 @@ export default function VideoPlayer(
             fscreen.requestFullscreen(video);
     }
 
+    function updateDuration(e: React.SyntheticEvent<HTMLVideoElement>) {
+        
+    }
+
     return (
         <div ref={fullScreenRef} className="hidden py-1.5 justify-center items-center overflow-hidden">
             <div ref={videoContainerRef} className="relative min-h-full flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
@@ -126,11 +132,20 @@ export default function VideoPlayer(
                     playsInline
                     controlsList="noremoteplayback nufullscreen nodownload"
                     poster=""
+                    onCanPlay={() => setLoaded(true)}
+                    onProgress={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                    
                 >
                     Your browser does not support HTML5 video.
                 </video>
 
-                <VideoPlayerOverlay />
+                <VideoPlayerOverlay 
+                    isLive
+                    isPlaying={playing}
+                    isLoaded={loaded}
+                    currentTime={currentTime}
+                    duration={duration}
+                />
             </div>
         </div>
     );

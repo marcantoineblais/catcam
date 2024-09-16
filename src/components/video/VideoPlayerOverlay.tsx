@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function VideoPlayerOverlay(
-    { currentTime, endTime, isLive, isPlaying }:
-    { currentTime?: number, endTime?: number, isLive?: boolean, isPlaying?: boolean }) {
+    { currentTime, duration, isLive, isPlaying, isLoaded }:
+    { currentTime?: number, duration?: number, isLive?: boolean, isPlaying?: boolean, isLoaded?: boolean }) {
 
     function normaliseTime(time: number) {
         return time < 10 ? "0" + time : time
@@ -23,29 +23,49 @@ export default function VideoPlayerOverlay(
         if (isLive)
             return "LIVE"
 
-        if (!currentTime || !endTime)
+        if (!currentTime || !duration)
             return ""
 
-        return `${displayTime(currentTime)} / ${displayTime(endTime)}`
+        return `${displayTime(currentTime)} / ${displayTime(duration)}`
     }
     
     return (
-        <div className="absolute inset-0 duration-500 text-gray-50 dark:text-zinc-200">
-            <div onClick={(e) => e.stopPropagation()} className="px-5 pt-3 pb-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center bg-gray-950/75">
-                <div className="w-full flex justify-center">
-                    <div className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800">
-                        <div className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"></div>
-                        <div className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
-                            <div className="absolute h-5 w-5 -top-2 -right-[0.28rem] bg-gray-100 rounded-full cursor-pointer translate-x-1/4 dark:bg-zinc-200"></div>
+        <div 
+            className="absolute invisible opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[loaded]:visible data-[loaded]:opacity-100"
+            data-loaded={isLoaded ? true : undefined}
+        >
+            <div onClick={(e) => e.stopPropagation()} className="px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center bg-gray-950/75">
+                {
+                    !isLive && (
+                        <div className="w-full flex justify-center">
+                            <div className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800">
+                                <div className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"></div>
+                                <div className="absolute top-0 bottom-0 left-0 bg-sky-700 rounded cursor-pointer">
+                                    <div className="absolute h-5 w-5 -top-2 -right-[0.28rem] bg-gray-100 rounded-full cursor-pointer translate-x-1/4 dark:bg-zinc-200"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="w-full pt-3 flex justify-between items-center flex-grow">
+                    )
+                }
+                <div className="w-full py-1 flex justify-between items-center flex-grow">
                     <div className="flex items-center gap-5">
-                        <div className="cursor-pointer">
-                            <FontAwesomeIcon className="hidden w-6 h-6" icon={faPlay} />
-                            <FontAwesomeIcon className="w-6 h-6" icon={faPause} />
-                        </div>
+                        {
+                            !isLive && (
+                                <div className="cursor-pointer">
+                                    <FontAwesomeIcon 
+                                        className="w-6 h-6 hidden data-[active]:block"
+                                        icon={faPlay}
+                                        data-active={!isPlaying ? true : undefined} 
+                                    />
+
+                                    <FontAwesomeIcon 
+                                        className="w-6 h-6 hidden data-[active]:block" 
+                                        icon={faPause}
+                                        data-active={isPlaying ? true : undefined}
+                                    />
+                                </div>
+                            )
+                        }
                         <div className="flex-grow">{renderTime()}</div>
                     </div>
                     <FontAwesomeIcon icon={faExpand} className="w-6 h-6 flex items-center cursor-pointer" />
