@@ -7,10 +7,11 @@ import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
 
-export default function LiveStream({ monitors, defaultMonitor }: { monitors?: Monitor[], defaultMonitor: string; }) {
+export default function LiveStream({ monitors, defaultMonitor, defaultQuality }: { monitors?: Monitor[], defaultMonitor: string, defaultQuality: string; }) {
 
     const [selectedMonitor, setSelectedMonitor] = React.useState<Monitor>();
     const [videoSource, setVideoSource] = React.useState<string>();
+    const [isHQ, setIsHQ] = React.useState<boolean>(defaultQuality === "HQ");
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
@@ -32,29 +33,36 @@ export default function LiveStream({ monitors, defaultMonitor }: { monitors?: Mo
     }, [monitors, defaultMonitor]);
 
     React.useEffect(() => {
-        const apiUrl = process.env.API_URL
-        const path = selectedMonitor?.streams[0]
+        const apiUrl = process.env.API_URL;
+        const path = selectedMonitor?.streams[selectedMonitor.streams.length > 1 && !isHQ ? 1 : 0];           
 
         if (!apiUrl || !path)
-            return
+            return;
 
-        setVideoSource(apiUrl + path)
-    }, [selectedMonitor])
+        setVideoSource(apiUrl + path);
+        
+    }, [selectedMonitor, isHQ]);
 
     return (
         <div className="flex flex-col h-full">
             <Navbar />
-            
-            <main ref={containerRef} className="grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
+
+            <main ref={containerRef} className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
-                
+
                 <div className="pt-3 flex flex-col">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
-                        { selectedMonitor?.name || "" }
+                        {selectedMonitor?.name || ""}
                     </h2>
-                    
+
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                 </div>
+
+                { selectedMonitor && selectedMonitor.streams.length > 1 &&
+                    <div onClick={() => setIsHQ(!isHQ)} className="absolute top-3.5 right-2 flex justify-center items-center w-12 h-8 border rounded-md bg-white/25 dark:bg-black/25 cursor-pointer">
+                        {isHQ ? "HQ": "SQ"}
+                    </div>
+                }
             </main>
         </div>
     );

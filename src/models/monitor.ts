@@ -8,4 +8,5 @@ export interface Monitor {
     name: string
     path: string
     streams: string[]
+    onvif?: string
 }

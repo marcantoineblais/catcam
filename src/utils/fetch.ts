@@ -27,6 +27,7 @@ export function readSettings() {
     const nbItems = cookie.get("nbItems")?.value || "12";
     const camera = cookie.get("camera")?.value || "";
     const home = cookie.get("home")?.value || " live";
+    const quality = cookie.get("quality")?.value || "HQ"
 
-    return { mode, nbItems, camera, home };
+    return { mode, nbItems, camera, home, quality };
 }
