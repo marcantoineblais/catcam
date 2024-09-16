@@ -21,14 +21,15 @@ export const metadata: Metadata = {
 
 async function darkMode() {
     const mode = cookies().get("mode")?.value || "";
-
+    
     if (mode === "auto") {
         const time = new Date(Date.now());
-        const offset = -5;
-        time.setHours(time.getHours() + offset);
+        const timezoneOffset = parseInt(cookies().get("timezone")?.value  || "0");
+        time.setMinutes(time.getUTCMinutes() - timezoneOffset);        
 
-        if (time.getHours() > 19 || time.getHours() < 7 - 5)
+        if (time.getUTCHours() > 19 || time.getUTCHours() < 7) {
             return "dark"
+        }
     }
 
     return mode;
