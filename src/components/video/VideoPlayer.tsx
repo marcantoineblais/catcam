@@ -31,18 +31,24 @@ export default function VideoPlayer(
         if (!container || !videoContainer || !video)
             return;
 
-        const resize = () => {
+        const windowedResize = () => {
+            const maxHeight = window.innerHeight / 2;
             let width = container.clientWidth;
             let height = container.clientHeight;
-
+    
             if (width > height)
-                width = height / 9 * 16;
-            else
                 height = width / 16 * 9;
+            else
+                width = height / 9 * 16;
 
+            if (height > maxHeight) {
+                height = maxHeight
+                width = height / 9 * 16;
+            }
+    
             videoContainer.style.width = width + "px";
             videoContainer.style.height = height + "px";
-        };
+        }
 
         const fullscreenResize = () => {
             let width = window.outerWidth;
@@ -56,21 +62,28 @@ export default function VideoPlayer(
             if (fscreen.fullscreenElement) {
                 video.style.width = width + "px";
                 video.style.height = height + "px";
-                console.log(width + "px");
             } else {
                 video.style.width = "";
                 video.style.height = "";
             }
         }
 
+        const resize = () => {
+            if (fscreen.fullscreenElement) {
+                fullscreenResize();
+            } else {
+                windowedResize();
+            }
+        };
+
         resize();
         setReady(true);
         window.addEventListener("resize", resize);
-        fscreen.addEventListener("fullscreenchange", fullscreenResize);
+        fscreen.addEventListener("fullscreenchange", resize);
 
         return () => {
             window.removeEventListener('resize', resize);
-            fscreen.removeEventListener("fullscreenchange", fullscreenResize);
+            fscreen.removeEventListener("fullscreenchange", resize);
         };
     }, [containerRef]);
 
@@ -114,7 +127,7 @@ export default function VideoPlayer(
             className="invisible py-1.5 justify-center items-center overflow-hidden data-[ready]:visible"
             data-ready={ready ? true : undefined}
         >
-            <div ref={videoContainerRef} className="relative w-full min-h-full flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+            <div ref={videoContainerRef} className="relative w-full min-h-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 {!videoSource && !isLiveStream && <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />}
                 {
                     videoSource && videoRef.current && buffering && (
