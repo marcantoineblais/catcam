@@ -26,10 +26,7 @@ export default function Login() {
             pass: password,
             rememberMe: rememberMe,
             timezone: new Date().getTimezoneOffset()
-        };
-        
-        console.log(body);
-        
+        };        
         const response = await fetch(new URL("/login/connect", window.location.origin), {
             method: "POST",
             headers: {

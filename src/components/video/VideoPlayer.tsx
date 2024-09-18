@@ -5,18 +5,19 @@ import Hls from "hls.js";
 import fscreen from "fscreen";
 import Logo from "../Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExpand, faPause, faPlay, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer(
     { videoSource, isLiveStream, containerRef }:
     { videoSource?: string, isLiveStream?: boolean, containerRef: React.MutableRefObject<HTMLDivElement | null>; }) {
 
-
     const [currentTime, setCurrentTime] = React.useState<number>(0);
+    const [buffer, setBuffer] = React.useState<number>(0);
     const [duration, setDuration] = React.useState<number>(0);
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [loaded, setLoaded] = React.useState<boolean>(false);
+    const [ready, setReady] = React.useState<boolean>(false);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const fullScreenRef = React.useRef<any>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
@@ -24,39 +25,21 @@ export default function VideoPlayer(
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
         const videoContainer = videoContainerRef.current;
-        const fullScreen = fullScreenRef.current;
         const container = containerRef.current;
 
-        if (!container || !videoContainer || !fullScreen)
+        if (!container || !videoContainer)
             return;
 
         const resize = () => {
-            let width;
-            let height;
-            let maxHeight;
+            let width = container.clientWidth;
+            let height = container.clientHeight;
+            let maxHeight = window.innerHeight / 2;
 
-            if (fscreen.fullscreenEnabled && fscreen.fullscreenElement !== null) {
-                width = window.outerWidth;
-                height = window.outerHeight;
+            height = (width / 16) * 9;
 
-                if (width < height)
-                    height = (width / 16) * 9;
-                else
-                    width = (height / 9) * 16;
-            } else {
-                width = container.clientWidth;
-                height = container.clientHeight;
-                maxHeight = height * 0.5;
-
-                if (width < height)
-                    height = (width / 16) * 9;
-                else
-                    width = (height / 9) * 16;
-
-                if (height > maxHeight) {
-                    height = maxHeight;
-                    width = (height / 9) * 16;
-                }
+            if (height > maxHeight) {
+                height = maxHeight;
+                width = (height / 9) * 16;
             }
 
             videoContainer.style.width = width + "px";
@@ -64,15 +47,11 @@ export default function VideoPlayer(
         };
 
         resize();
+        setReady(true);
         window.addEventListener("resize", resize);
-        fscreen.addEventListener("fullscreenchange", resize);
-
-        fullScreen.classList.remove("hidden")
-        fullScreen.classList.add("flex")
 
         return () => {
             window.removeEventListener('resize', resize);
-            fscreen.removeEventListener("fullscreenchange", resize);
         };
     }, [videoContainerRef, containerRef]);
     
@@ -108,12 +87,8 @@ export default function VideoPlayer(
             fscreen.requestFullscreen(video);
     }
 
-    function updateDuration(e: React.SyntheticEvent<HTMLVideoElement>) {
-        
-    }
-
     return (
-        <div ref={fullScreenRef} className="hidden py-1.5 justify-center items-center overflow-hidden">
+        <div ref={fullScreenRef} data-ready={ready ? true : undefined} className="invisible py-1.5 justify-center items-center overflow-hidden data-[ready]:visible">
             <div ref={videoContainerRef} className="relative min-h-full flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 {!videoSource && !isLiveStream && <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />}                
                 {
@@ -133,18 +108,24 @@ export default function VideoPlayer(
                     controlsList="noremoteplayback nufullscreen nodownload"
                     poster=""
                     onCanPlay={() => setLoaded(true)}
-                    onProgress={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                    
+                    onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                    onDurationChange={(e) =>setDuration(e.currentTarget.duration)}
+                    onLoadedData={(e) => setBuffer(e.currentTarget.buffered.end(0))}
+                    onPlay={() => setPlaying(true)}
+                    onPause={() => setPlaying(false)}
+                    onEnded={() => setPlaying(false)}
                 >
                     Your browser does not support HTML5 video.
                 </video>
 
                 <VideoPlayerOverlay 
-                    isLive
+                    isLive={isLiveStream ? true : undefined}
                     isPlaying={playing}
                     isLoaded={loaded}
                     currentTime={currentTime}
                     duration={duration}
+                    buffer={buffer}
+                    videoRef={videoRef}
                 />
             </div>
         </div>

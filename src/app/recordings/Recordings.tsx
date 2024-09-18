@@ -23,7 +23,6 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
     const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const carouselRef = React.useRef<HTMLDivElement>(null);
-    const videoRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
         if (!monitors)
@@ -86,24 +85,11 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
         carousel.style.left = -position + "px"
     }, [carouselPage])
 
-    React.useEffect(() => {
-        const video = videoRef.current
-
-        if (!video)
-            return
-
-        if (isDrawerOpen) {
-            video.style.maxHeight = "0px";
-        } else {
-            video.style.maxHeight = "";
-        }
-    }, [isDrawerOpen])
-
     return (
         <div className="h-full flex flex-col justify-start overflow-hidden">
             <Navbar />
-            <main ref={containerRef} className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
-                <div ref={videoRef} className="max-h-full duration-1000">
+            <main className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
+                <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0">
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} />
                 </div>
                 
