@@ -129,17 +129,9 @@ export default function VideoPlayerOverlay(
                                 <>
                                     <div className="cursor-pointer">
                                         <FontAwesomeIcon
-                                            onClick={play}
-                                            className="w-6 h-6 hidden data-[active]:block"
-                                            icon={faPlay}
-                                            data-active={!isPlaying ? true : undefined}
-                                        />
-
-                                        <FontAwesomeIcon
-                                            onClick={pause}
-                                            className="w-6 h-6 hidden data-[active]:block"
-                                            icon={faPause}
-                                            data-active={isPlaying ? true : undefined}
+                                            onClick={isPlaying ? pause : play}
+                                            className="w-6 h-6"
+                                            icon={isPlaying ? faPause : faPlay}
                                         />
                                     </div>
                                     <div className="flex-grow">{renderTime()}</div>
