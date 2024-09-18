@@ -15,7 +15,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
     const [nbItems, setNbItems] = React.useState<string>(currentSettings.nbItems);
     const [home, setHome] = React.useState<string>(currentSettings.home);
     const [camera, setCamera] = React.useState<string>(currentSettings.camera);
-    const [quality, setQuality] = React.useState<string>(currentSettings.camera);
+    const [quality, setQuality] = React.useState<string>(currentSettings.quality);
     const formRef = React.useRef<HTMLFormElement>(null);
     const router = useRouter();
 

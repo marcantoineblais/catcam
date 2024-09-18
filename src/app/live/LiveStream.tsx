@@ -6,6 +6,7 @@ import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
+import QualityButton from "./QualityButton";
 
 export default function LiveStream({ monitors, defaultMonitor, defaultQuality }: { monitors?: Monitor[], defaultMonitor: string, defaultQuality: string; }) {
 
@@ -50,6 +51,10 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
             <main ref={containerRef} className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
 
+                { selectedMonitor && selectedMonitor.streams.length > 1 &&
+                    <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
+                }
+
                 <div className="pt-3 flex flex-col">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
                         {selectedMonitor?.name || ""}
@@ -57,12 +62,6 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
 
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                 </div>
-
-                { selectedMonitor && selectedMonitor.streams.length > 1 &&
-                    <div onClick={() => setIsHQ(!isHQ)} className="absolute top-3.5 right-2 flex justify-center items-center w-12 h-8 border rounded-md bg-white/25 dark:bg-black/25 cursor-pointer">
-                        {isHQ ? "HQ": "SQ"}
-                    </div>
-                }
             </main>
         </div>
     );

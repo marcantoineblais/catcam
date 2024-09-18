@@ -32,7 +32,7 @@ export default function VideoPlayer(
             return;
 
         const windowedResize = () => {
-            const maxHeight = container.clientHeight / 2;
+            const maxHeight = window.innerHeight * 0.5;
             let width = container.clientWidth;
             let height = container.clientHeight;
     

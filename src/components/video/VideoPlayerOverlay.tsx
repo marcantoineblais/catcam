@@ -2,6 +2,7 @@
 
 import { faExpand, faPause, faPlay, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import fscreen from "fscreen";
 import React from "react";
 
 export default function VideoPlayerOverlay(
@@ -33,11 +34,16 @@ export default function VideoPlayerOverlay(
     const [isCurrentlyPlaying, setIsCurrentlyPlaying] = React.useState<boolean>(false);
     const [displayedTime, setDisplayedTime] = React.useState<number | null>(null);
     const [timeoutTime, setTimeoutTime] = React.useState<number>(0);
+    const [isFullscreenCompatible, setIsFullscreenCompatible] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (videoSource && !isLive)
             setTimeoutTime(2)
     }, [videoSource, isLive])
+
+    React.useEffect(() => {
+        setIsFullscreenCompatible(fscreen.fullscreenEnabled);
+    }, [])
 
     React.useEffect(() => {
         if (!timeoutTime || !isPlaying || updatedTime !== null)
@@ -306,12 +312,15 @@ export default function VideoPlayerOverlay(
                             )
                         }
                     </div>
-                    <FontAwesomeIcon 
-                        className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
-                        icon={faExpand}
-                        onClick={setFullscreen}
-                        data-disabled={!setFullscreen ? true : undefined}
-                    />
+                    {
+                        isFullscreenCompatible && (
+                            <FontAwesomeIcon 
+                                className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
+                                icon={faExpand}
+                                onClick={setFullscreen}
+                            />
+                        )
+                    }
                 </div>
             </div>
             { 
