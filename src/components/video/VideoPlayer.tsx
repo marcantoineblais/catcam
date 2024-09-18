@@ -32,7 +32,7 @@ export default function VideoPlayer(
             return;
 
         const windowedResize = () => {
-            const maxHeight = window.innerHeight / 2;
+            const maxHeight = container.clientHeight / 2;
             let width = container.clientWidth;
             let height = container.clientHeight;
     
@@ -48,6 +48,8 @@ export default function VideoPlayer(
     
             videoContainer.style.width = width + "px";
             videoContainer.style.height = height + "px";
+            video.style.width = "";
+            video.style.height = "";
         }
 
         const fullscreenResize = () => {
@@ -59,13 +61,8 @@ export default function VideoPlayer(
             else
                 height = width / 16 * 9;
 
-            if (fscreen.fullscreenElement) {
-                video.style.width = width + "px";
-                video.style.height = height + "px";
-            } else {
-                video.style.width = "";
-                video.style.height = "";
-            }
+            video.style.width = width + "px";
+            video.style.height = height + "px";
         }
 
         const resize = () => {
@@ -124,7 +121,7 @@ export default function VideoPlayer(
 
     return (
         <div
-            className="invisible py-1.5 justify-center items-center overflow-hidden data-[ready]:visible"
+            className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible"
             data-ready={ready ? true : undefined}
         >
             <div ref={videoContainerRef} className="relative w-full min-h-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
