@@ -12,6 +12,8 @@ export default function VideoPlayerOverlay(
         isLive,
         isPlaying,
         isLoaded,
+        setCurrentTime,
+        videoSource,
         videoRef
     }: {
         currentTime?: number,
@@ -20,18 +22,39 @@ export default function VideoPlayerOverlay(
         isLive?: boolean,
         isPlaying?: boolean,
         isLoaded?: boolean,
+        setCurrentTime?: Function,
+        videoSource?: string,
         videoRef: React.RefObject<HTMLVideoElement>;
     }) {
 
     const [updatedTime, setUpdatedTime] = React.useState<number | null>(null);
     const [isCurrentlyPlaying, setIsCurrentlyPlaying] = React.useState<boolean>(false);
     const [displayedTime, setDisplayedTime] = React.useState<number | null>(null);
+    const [timeoutTime, setTimeoutTime] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        if (videoSource)
+            setTimeoutTime(2)
+    }, [videoSource])
+
+    React.useEffect(() => {
+        if (!timeoutTime || !isPlaying || updatedTime !== null)
+            return;
+
+        const timeout = setTimeout(() => {
+            setTimeoutTime(timeoutTime - 1)
+        }, 1000)
+
+        return () => {
+            clearTimeout(timeout);
+        }
+    }, [timeoutTime, updatedTime, isPlaying])
 
     React.useEffect(() => {
         if (updatedTime !== null) {
             setDisplayedTime(updatedTime);
         } else {
-            setDisplayedTime(currentTime || null);
+            setDisplayedTime(currentTime === undefined ? null : currentTime);
         }
     }, [currentTime, updatedTime]);
 
@@ -62,8 +85,10 @@ export default function VideoPlayerOverlay(
             return 0;
 
         const width = target.clientWidth;
-        const positionOffset = target.getBoundingClientRect().left;
-        let updatedTime = (clientX - positionOffset) / width * duration;
+        const padding = parseInt(window.getComputedStyle(target).paddingLeft);
+        const positionOffset = target.getBoundingClientRect().left + padding;
+        const positionRelToEnd = (clientX - positionOffset) / (width - (2 * padding))
+        let updatedTime = positionRelToEnd * duration;
 
         if (updatedTime < 0)
             updatedTime = 0;
@@ -74,7 +99,7 @@ export default function VideoPlayerOverlay(
         return updatedTime;
     }
 
-    function onMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    function mouseStartSeeking(e: React.MouseEvent<HTMLDivElement>) {
         if (isPlaying) {
             pause();
         }
@@ -84,7 +109,7 @@ export default function VideoPlayerOverlay(
         setUpdatedTime(updatedTime);
     }
 
-    function onTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    function touchStartSeeking(e: React.TouchEvent<HTMLDivElement>) {
         if (e.touches.length > 1)
             return;
         
@@ -97,15 +122,16 @@ export default function VideoPlayerOverlay(
         setUpdatedTime(updatedTime);
     }
 
-    function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    function mouseSeek(e: React.MouseEvent<HTMLDivElement>) {
         if (updatedTime === null)
             return;
 
         const time = updateCurrentTime(e.currentTarget, e.clientX);
         setUpdatedTime(time);
+        setTimeoutTime(2);
     }
 
-    function onTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    function touchSeek(e: React.TouchEvent<HTMLDivElement>) {
         if (e.touches.length > 1)
             return;
 
@@ -116,16 +142,56 @@ export default function VideoPlayerOverlay(
         setUpdatedTime(time);
     }
 
-    function onMouseUp() {
+    function endSeeking() {
         const video = videoRef.current;
 
         if (!video || updatedTime === null)
             return;
 
+        if (setCurrentTime)
+            setCurrentTime(updatedTime);
+
         setUpdatedTime(null);
         video.currentTime = updatedTime;
+        
         if (isCurrentlyPlaying)
             play();
+    }
+
+    function fastSeeking(step: number) {
+        if (currentTime === undefined || duration === undefined)
+            return;
+
+        const video = videoRef.current
+        if (!video)
+            return;
+
+        let updatedTime = currentTime + step
+        if (updatedTime < 0)
+            updatedTime = 0;
+        else if (updatedTime > duration)
+            updatedTime = duration;
+
+        video.currentTime = updatedTime;
+    }
+
+    function touchFastSeeking(e: React.TouchEvent<HTMLDivElement>, step: number) {
+        const target = e.currentTarget;
+        const removeListener = () => {
+            target.removeEventListener("touchstart", seek);
+        }
+        const timer = setTimeout(removeListener, 200);
+        const seek = () => {
+            fastSeeking(step);
+            removeListener();
+            clearTimeout(timer);
+        }
+        target.addEventListener("touchstart", seek);
+    }
+    
+    function showOverlay(e: React.TouchEvent | React.MouseEvent) {
+        e.stopPropagation();
+        setTimeoutTime(2);
     }
 
     function normaliseTime(value: number) {
@@ -185,22 +251,29 @@ export default function VideoPlayerOverlay(
 
     return (
         <div
-            className="absolute invisible opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[loaded]:visible data-[loaded]:opacity-100"
-            data-loaded={isLoaded ? true : undefined}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseUp}
+            className="absolute hidden opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100"
+            data-ready={isLoaded ? true : undefined}
+            data-visible={timeoutTime > 0 ? true : undefined}
+            onClick={showOverlay}
+            onMouseUp={endSeeking}
+            onMouseLeave={endSeeking}
+            onMouseMove={showOverlay}
+            onTouchMove={showOverlay}
         >
-            <div onClick={(e) => e.stopPropagation()} className="max-w-full px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center bg-gray-950/75">
+            <div 
+                className="max-w-full invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-[visible]:visible"
+                onMouseMove={mouseSeek}
+                data-visible={timeoutTime > 0 ? true : undefined}
+            >
                 {
                     !isLive && (
                         <div className="py-3 w-full flex justify-center">
                             <div
                                 className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
-                                onMouseDown={onMouseDown}
-                                onMouseMove={onMouseMove}
-                                onTouchStart={onTouchStart}
-                                onTouchMove={onTouchMove}
-                                onTouchEnd={onMouseUp}
+                                onMouseDown={mouseStartSeeking}
+                                onTouchStart={touchStartSeeking}
+                                onTouchMove={touchSeek}
+                                onTouchEnd={endSeeking}
                             >
                                 {renderBufferBar()}
                                 {renderDurationBar()}
@@ -235,8 +308,16 @@ export default function VideoPlayerOverlay(
                 </div>
             </div>
 
-            <div className="absolute top-0 bottom-16 left-0 w-1/5"></div>
-            <div className="absolute top-0 bottom-16 right-0 w-1/5"></div>
+            <div 
+                className="absolute top-0 bottom-16 left-0 w-1/5"
+                onDoubleClick={() => fastSeeking(-10)}
+                onTouchStart={(e) => touchFastSeeking(e, -10)}
+            ></div>
+            <div 
+                className="absolute top-0 bottom-16 right-0 w-1/5"
+                onDoubleClick={() => fastSeeking(10)}
+                onTouchStart={(e) => touchFastSeeking(e, 10)}
+            ></div>
         </div>
     );
 }
