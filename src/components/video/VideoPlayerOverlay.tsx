@@ -14,7 +14,8 @@ export default function VideoPlayerOverlay(
         isLoaded,
         setCurrentTime,
         videoSource,
-        videoRef
+        videoRef,
+        setFullscreen
     }: {
         currentTime?: number,
         buffer?: number,
@@ -24,7 +25,8 @@ export default function VideoPlayerOverlay(
         isLoaded?: boolean,
         setCurrentTime?: Function,
         videoSource?: string,
-        videoRef: React.RefObject<HTMLVideoElement>;
+        videoRef: React.RefObject<HTMLVideoElement>,
+        setFullscreen?: React.MouseEventHandler;
     }) {
 
     const [updatedTime, setUpdatedTime] = React.useState<number | null>(null);
@@ -33,9 +35,9 @@ export default function VideoPlayerOverlay(
     const [timeoutTime, setTimeoutTime] = React.useState<number>(0);
 
     React.useEffect(() => {
-        if (videoSource)
+        if (videoSource && !isLive)
             setTimeoutTime(2)
-    }, [videoSource])
+    }, [videoSource, isLive])
 
     React.useEffect(() => {
         if (!timeoutTime || !isPlaying || updatedTime !== null)
@@ -304,20 +306,30 @@ export default function VideoPlayerOverlay(
                             )
                         }
                     </div>
-                    <FontAwesomeIcon icon={faExpand} className="w-6 h-6 flex items-center cursor-pointer" />
+                    <FontAwesomeIcon 
+                        className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
+                        icon={faExpand}
+                        onClick={setFullscreen}
+                        data-disabled={!setFullscreen ? true : undefined}
+                    />
                 </div>
             </div>
-
-            <div 
-                className="absolute top-0 bottom-16 left-0 w-1/5"
-                onDoubleClick={() => fastSeeking(-10)}
-                onTouchStart={(e) => touchFastSeeking(e, -10)}
-            ></div>
-            <div 
-                className="absolute top-0 bottom-16 right-0 w-1/5"
-                onDoubleClick={() => fastSeeking(10)}
-                onTouchStart={(e) => touchFastSeeking(e, 10)}
-            ></div>
+            { 
+                !isLive && (
+                    <>
+                        <div 
+                            className="absolute top-0 bottom-16 left-0 w-1/5"
+                            onDoubleClick={() => fastSeeking(-10)}
+                            onTouchStart={(e) => touchFastSeeking(e, -10)}
+                        ></div>
+                        <div 
+                            className="absolute top-0 bottom-16 right-0 w-1/5"
+                            onDoubleClick={() => fastSeeking(10)}
+                            onTouchStart={(e) => touchFastSeeking(e, 10)}
+                        ></div>
+                    </>
+                )
+            }
         </div>
     );
 }

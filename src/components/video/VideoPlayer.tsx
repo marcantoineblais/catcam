@@ -10,7 +10,7 @@ import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer(
     { videoSource, isLiveStream, containerRef }:
-        { videoSource?: string, isLiveStream?: boolean, containerRef: React.MutableRefObject<HTMLDivElement | null>; }) {
+        { videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }) {
 
     const [currentTime, setCurrentTime] = React.useState<number>(0);
     const [buffer, setBuffer] = React.useState<number>(0);
@@ -20,41 +20,59 @@ export default function VideoPlayer(
     const [ready, setReady] = React.useState<boolean>(false);
     const [buffering, setBuffering] = React.useState<boolean>(true);
     const videoRef = React.useRef<HTMLVideoElement>(null);
-    const fullScreenRef = React.useRef<any>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
 
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
-        const videoContainer = videoContainerRef.current;
         const container = containerRef.current;
+        const videoContainer = videoContainerRef.current;
+        const video = videoRef.current;
 
-        if (!container || !videoContainer)
+        if (!container || !videoContainer || !video)
             return;
 
         const resize = () => {
             let width = container.clientWidth;
             let height = container.clientHeight;
-            let maxHeight = window.innerHeight / 2;
 
-            height = (width / 16) * 9;
-
-            if (height > maxHeight) {
-                height = maxHeight;
-                width = (height / 9) * 16;
-            }
+            if (width > height)
+                width = height / 9 * 16;
+            else
+                height = width / 16 * 9;
 
             videoContainer.style.width = width + "px";
             videoContainer.style.height = height + "px";
         };
 
+        const fullscreenResize = () => {
+            let width = window.outerWidth;
+            let height = window.outerHeight;
+
+            if (width > height)
+                width = height / 9 * 16;
+            else
+                height = width / 16 * 9;
+
+            if (fscreen.fullscreenElement) {
+                video.style.width = width + "px";
+                video.style.height = height + "px";
+                console.log(width + "px");
+            } else {
+                video.style.width = "";
+                video.style.height = "";
+            }
+        }
+
         resize();
         setReady(true);
         window.addEventListener("resize", resize);
+        fscreen.addEventListener("fullscreenchange", fullscreenResize);
 
         return () => {
             window.removeEventListener('resize', resize);
+            fscreen.removeEventListener("fullscreenchange", fullscreenResize);
         };
-    }, [videoContainerRef, containerRef]);
+    }, [containerRef]);
 
 
     // Use HLS plugin only when required
@@ -74,18 +92,15 @@ export default function VideoPlayer(
 
     // Fullscreen video
     function setFullScreen() {
-        const fullScreen = fullScreenRef.current;
-        const video = videoRef.current;
+        const container = videoContainerRef.current;
 
-        if (!fullScreen || !video)
+        if (!container)
             return;
 
         if (fscreen.fullscreenElement !== null)
             fscreen.exitFullscreen();
-        else if (fscreen.fullscreenEnabled)
-            fscreen.requestFullscreen(fullScreen);
         else
-            fscreen.requestFullscreen(video);
+            fscreen.requestFullscreen(container);
     }
 
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
@@ -95,8 +110,11 @@ export default function VideoPlayer(
     }
 
     return (
-        <div ref={fullScreenRef} data-ready={ready ? true : undefined} className="invisible py-1.5 justify-center items-center overflow-hidden data-[ready]:visible">
-            <div ref={videoContainerRef} className="relative min-h-full flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+        <div
+            className="invisible py-1.5 justify-center items-center overflow-hidden data-[ready]:visible"
+            data-ready={ready ? true : undefined}
+        >
+            <div ref={videoContainerRef} className="relative w-full min-h-full flex justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 {!videoSource && !isLiveStream && <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />}
                 {
                     videoSource && videoRef.current && buffering && (
@@ -139,6 +157,7 @@ export default function VideoPlayer(
                     setCurrentTime={setCurrentTime}
                     videoSource={videoSource}
                     videoRef={videoRef}
+                    setFullscreen={fscreen.fullscreenEnabled ? setFullScreen : undefined}
                 />
             </div>
         </div>
