@@ -19,50 +19,43 @@ export default function VideoPlayer(
     const [loaded, setLoaded] = React.useState<boolean>(false);
     const [ready, setReady] = React.useState<boolean>(false);
     const [buffering, setBuffering] = React.useState<boolean>(true);
-    const [fullscreenEnabled, setFullscreenEnabled] = React.useState<boolean>(false);
+    const [fullscreen, setFullscreen] = React.useState<boolean>(false);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        setFullscreenEnabled(document.fullscreenEnabled);
-    }, [])
+        const toggleFullscreen = () => {
+            if (screen.orientation.type.startsWith("landscape") && !fullscreen)
+                setFullscreen(true);
 
-    // Toggle fullscreen when flipping the device
-    React.useEffect(() => {
-        const container = videoContainerRef.current;
-        
-        if (!videoSource || !fullscreenEnabled || !container)
-            return;
-
-        const onOrientationChange = () => {
-            const isLandscape = screen.orientation.type.startsWith("landscape");
-
-            if (!document.fullscreenElement && isLandscape) {
-                container.requestFullscreen().catch(() => console.warn("Please enable fullscreen manually"));
-                
-            } else if (document.fullscreenElement && !isLandscape) {
-                document.exitFullscreen().catch(() => console.warn("Please disable fullscreen manually"));
-            }
+            if (screen.orientation.type.startsWith("portrait") && fullscreen)
+                setFullscreen(false);
         }
-        
-        window.addEventListener("orientationchange", onOrientationChange);
 
+        screen.orientation.addEventListener("change", toggleFullscreen);
+        
         return () => {
-            window.removeEventListener("orientationchange", onOrientationChange);
+            screen.orientation.removeEventListener("change", toggleFullscreen);
         }
-    }, [videoSource, fullscreenEnabled])
+    }, [fullscreen])
 
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
         const container = containerRef.current;
         const videoContainer = videoContainerRef.current;
-        const video = videoRef.current;
 
-        if (!container || !videoContainer || !video)
+        if (!container || !videoContainer)
             return;
 
-        const windowedResize = () => {
-            const windowFraction = screen.orientation.type.startsWith("landscape") ? 1 : 0.5
+        const resize = () => {
+            let windowFraction: number;
+            if (fullscreen)
+                windowFraction = 1;
+            else if (screen.orientation.type.startsWith("landscape"))
+                windowFraction = 0.9;
+            else
+                windowFraction = 0.5
+
             const maxHeight =  window.innerHeight * windowFraction;
             let width = container.clientWidth;
             let height = container.clientHeight;
@@ -79,41 +72,16 @@ export default function VideoPlayer(
     
             videoContainer.style.width = width + "px";
             videoContainer.style.height = height + "px";
-            video.style.width = "";
-            video.style.height = "";
         }
-
-        const fullscreenResize = () => {
-            let width = window.outerWidth;
-            let height = window.outerHeight;
-
-            if (width > height)
-                width = height / 9 * 16;
-            else
-                height = width / 16 * 9;
-
-            video.style.width = width + "px";
-            video.style.height = height + "px";
-        }
-
-        const resize = () => {
-            if (document.fullscreenElement) {
-                fullscreenResize();
-            } else {
-                windowedResize();
-            }
-        };
 
         resize();
         setReady(true);
         window.addEventListener("resize", resize);
-        window.addEventListener("fullscreenchange", resize);
 
         return () => {
             window.removeEventListener('resize', resize);
-            window.removeEventListener("fullscreenchange", resize);
         };
-    }, [containerRef]);
+    }, [containerRef, fullscreen]);
 
 
     // Use HLS plugin only when required
@@ -131,32 +99,23 @@ export default function VideoPlayer(
             video.src = videoSource;
     }, [videoSource, videoRef, isLiveStream]);
 
-    // Fullscreen video
-    function setFullScreen() {
-        const container = videoContainerRef.current;
-
-        if (!container)
-            return;
-
-        if (document.fullscreenElement !== null)
-            document.exitFullscreen().catch(() => console.warn("Error quitting fullscreen, please use device manual gesture."));
-        else {
-            container.requestFullscreen().catch(() => console.warn("Fullscreen is not available at the moment."));;
-        }
-    }
-
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
         const length = e.currentTarget.buffered.length;
         const lastBuffer = e.currentTarget.buffered.end(length - 1);
         setBuffer(lastBuffer);
     }
 
+    function toggleFullscreen() {
+        setFullscreen(!fullscreen);
+    }
+
     return (
         <div
-            className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible landscape:fixed landscape:inset-0"
+            className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible data-[fullscreen]:fixed data-[fullscreen]:inset-0 data-[fullscreen]:z-50 data-[fullscreen]:p-0 data-[fullscreen]:bg-black"
             data-ready={ready ? true : undefined}
+            data-fullscreen={fullscreen ? true : undefined}
         >
-            <div ref={videoContainerRef} className="relative w-full min-h-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+            <div ref={videoContainerRef} className="relative w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 {!videoSource && !isLiveStream && <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />}
                 {
                     videoSource && videoRef.current && buffering && (
@@ -199,7 +158,8 @@ export default function VideoPlayer(
                     setCurrentTime={setCurrentTime}
                     videoSource={videoSource}
                     videoRef={videoRef}
-                    setFullscreen={fullscreenEnabled ? setFullScreen : undefined}
+                    fullscreen={fullscreen}
+                    toggleFullscreen={toggleFullscreen}
                 />
             </div>
         </div>

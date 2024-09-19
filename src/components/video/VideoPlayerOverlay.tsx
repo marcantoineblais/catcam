@@ -2,7 +2,7 @@
 
 import { faExpand, faPause, faPlay, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 export default function VideoPlayerOverlay(
     {
@@ -15,7 +15,8 @@ export default function VideoPlayerOverlay(
         setCurrentTime,
         videoSource,
         videoRef,
-        setFullscreen
+        fullscreen,
+        toggleFullscreen
     }: {
         currentTime?: number,
         buffer?: number,
@@ -25,8 +26,9 @@ export default function VideoPlayerOverlay(
         isLoaded?: boolean,
         setCurrentTime?: Function,
         videoSource?: string,
-        videoRef: React.RefObject<HTMLVideoElement>,
-        setFullscreen?: React.MouseEventHandler;
+        videoRef: React.RefObject<HTMLVideoElement>
+        fullscreen: boolean,
+        toggleFullscreen: MouseEventHandler;
     }) {
 
     const [updatedTime, setUpdatedTime] = React.useState<number | null>(null);
@@ -258,9 +260,10 @@ export default function VideoPlayerOverlay(
 
     return (
         <div
-            className="absolute hidden opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 landscape:fixed"
+            className="absolute hidden opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
             data-ready={isLoaded ? true : undefined}
             data-visible={timeoutTime > 0 ? true : undefined}
+            data-fullscreen={fullscreen ? true : undefined}
             onClick={showOverlay}
             onMouseUp={endSeeking}
             onMouseLeave={endSeeking}
@@ -314,9 +317,9 @@ export default function VideoPlayerOverlay(
                         }
                     </div>
                     {
-                        setFullscreen && (
+                        (
                             <button 
-                                onClick={setFullscreen}
+                                onClick={toggleFullscreen}
                             >
                                 <FontAwesomeIcon
                                     className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
