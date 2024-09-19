@@ -10,7 +10,8 @@ import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer(
     { videoSource, isLiveStream, containerRef }:
-        { videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }) {
+    { videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }
+) {
 
     const [currentTime, setCurrentTime] = React.useState<number>(0);
     const [buffer, setBuffer] = React.useState<number>(0);
@@ -21,6 +22,32 @@ export default function VideoPlayer(
     const [buffering, setBuffering] = React.useState<boolean>(true);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
+
+    // Toggle fullscreen when flipping the device
+    React.useEffect(() => {
+        const onOrientationChange = () => {
+            if (
+                fscreen.fullscreenEnabled && 
+                !fscreen.fullscreenElement && 
+                screen.orientation.type.startsWith("landscape")
+            ) {
+                const container = videoContainerRef.current;
+
+                if (container) {
+                    try {
+                        fscreen.requestFullscreen(container);
+                        screen.orientation.unlock();
+                    } catch (_) {};
+                }
+            }
+        }
+        
+        window.addEventListener("orientationchange", onOrientationChange);
+
+        return () => {
+            window.removeEventListener("orientationchange", onOrientationChange);
+        }
+    }, [])
 
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {

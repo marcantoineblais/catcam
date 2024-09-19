@@ -46,6 +46,11 @@ export default function VideoPlayerOverlay(
     }, [])
 
     React.useEffect(() => {
+        if (!isPlaying)
+            setTimeoutTime(2);
+    }, [isPlaying]) 
+
+    React.useEffect(() => {
         if (!timeoutTime || !isPlaying || updatedTime !== null)
             return;
 
