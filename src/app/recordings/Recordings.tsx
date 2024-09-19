@@ -90,7 +90,7 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
         <div className="h-full flex flex-col justify-start overflow-hidden">
             <Navbar />
             <main className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
-                <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0">
+                <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0 data-[close]:landscape:max-h-full data-[close]:lg:landscape:max-h-0 data-[close]:landscape:duration-0 data-[close]:landscape:lg:duration-1000">
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} />
                 </div>
                 
