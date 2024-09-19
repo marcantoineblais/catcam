@@ -52,7 +52,7 @@ export default function VideoPlayer(
             if (fullscreen)
                 windowFraction = 1;
             else if (screen.orientation.type.startsWith("landscape"))
-                windowFraction = 0.9;
+                windowFraction = 0.8;
             else
                 windowFraction = 0.5
 

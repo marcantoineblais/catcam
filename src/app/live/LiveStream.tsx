@@ -7,6 +7,7 @@ import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
 import QualityButton from "./QualityButton";
+import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function LiveStream({ monitors, defaultMonitor, defaultQuality }: { monitors?: Monitor[], defaultMonitor: string, defaultQuality: string; }) {
 
@@ -53,7 +54,7 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
                 </div>
 
-                <div className="min-h-9 h-12 pt-1 flex justify-end">
+                <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
                     { 
                         selectedMonitor && selectedMonitor.streams.length > 1 && (
                             <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
@@ -61,13 +62,15 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
                     }
                 </div>
 
-                <div className="flex flex-col landscape:hidden">
+                <div className="flex flex-col landscape:hidden lg:landscape:flex">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
                         {selectedMonitor?.name || ""}
                     </h2>
 
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                 </div>
+
+                <OrientationWarning />
             </main>
         </div>
     );

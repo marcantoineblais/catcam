@@ -89,7 +89,7 @@ export default function Login() {
                 </form>
             </main>
 
-            <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden" />
+            <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />
         </div>
     );
 }

@@ -40,3 +40,9 @@ video::-webkit-media-controls {
 ::-webkit-scrollbar {
     display: none;
 }
+
+@media screen and (orientation: landscape) {
+    body, main, .container {
+        overflow: auto;
+    }
+}

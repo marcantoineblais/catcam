@@ -48,7 +48,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
             
             <main className="h-full p-1 container mx-auto max-w-screen-lg overflow-hidden">
                 <form ref={formRef} className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
-                    <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Settings</h1>
+                    <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
                     
                     <FormSelect 
                         label="Appearance" 
@@ -101,7 +101,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                 </form>
             </main>
 
-            <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden" />
+            <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />
         </div>
     );
 }
