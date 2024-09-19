@@ -219,7 +219,13 @@ export default function VideoPlayerOverlay(
         if (displayedTime === null || duration === undefined)
             return "";
 
-        return `${displayTime(displayedTime)} / ${displayTime(duration)}`;
+        return (
+            <div className="flex items-center gap-1">
+                <span className="w-12 text-center">{displayTime(displayedTime)}</span>
+                <span>/</span>
+                <span className="w-12 text-center">{displayTime(duration)}</span>
+            </div>
+        );
     }
 
     function renderDurationBar() {
@@ -335,13 +341,13 @@ export default function VideoPlayerOverlay(
                     <>
                         <div 
                             className="absolute top-0 bottom-16 left-0 w-1/5"
-                            onDoubleClick={() => fastSeeking(-10)}
-                            onTouchStart={(e) => touchFastSeeking(e, -10)}
+                            onDoubleClick={() => fastSeeking(-5)}
+                            onTouchStart={(e) => touchFastSeeking(e, -5)}
                         ></div>
                         <div 
                             className="absolute top-0 bottom-16 right-0 w-1/5"
-                            onDoubleClick={() => fastSeeking(10)}
-                            onTouchStart={(e) => touchFastSeeking(e, 10)}
+                            onDoubleClick={() => fastSeeking(5)}
+                            onTouchStart={(e) => touchFastSeeking(e, 5)}
                         ></div>
                     </>
                 )
