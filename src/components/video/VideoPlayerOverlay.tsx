@@ -50,8 +50,8 @@ export default function VideoPlayerOverlay(
             return;
 
         const timeout = setTimeout(() => {
-            setTimeoutTime(timeoutTime - 1)
-        }, 1000)
+            setTimeoutTime(0)
+        }, timeoutTime)
 
         return () => {
             clearTimeout(timeout);
