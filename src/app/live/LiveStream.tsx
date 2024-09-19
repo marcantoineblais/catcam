@@ -48,8 +48,10 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
         <div className="flex flex-col h-full">
             <Navbar />
 
-            <main ref={containerRef} className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
-                <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
+            <main className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
+                <div ref={containerRef} className="w-full max-h-full">
+                    <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
+                </div>
 
                 { selectedMonitor && selectedMonitor.streams.length > 1 &&
                     <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
