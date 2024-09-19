@@ -24,6 +24,9 @@ export default function VideoPlayer(
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
+        if (!videoSource)
+            return;
+
         const toggleFullscreen = () => {
             if (screen.orientation.type.startsWith("landscape") && !fullscreen)
                 setFullscreen(true);
@@ -37,7 +40,7 @@ export default function VideoPlayer(
         return () => {
             screen.orientation.removeEventListener("change", toggleFullscreen);
         }
-    }, [fullscreen])
+    }, [fullscreen, videoSource])
 
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {

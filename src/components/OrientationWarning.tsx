@@ -29,7 +29,7 @@ export default function OrientationWarning() {
     }, [isMobile])
 
     return (
-        <div className="hidden h-full landscape:flex landscape:lg:hidden justify-center items-end">
+        <div className="hidden landscape:flex landscape:lg:hidden justify-center animate-pulse">
             <div className="py-1.5 flex items-center gap-1.5">
                 { 
                     isMobile ? (

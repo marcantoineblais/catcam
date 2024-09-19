@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import renderPopup from "@/src/utils/renderPopup";
 import CarouselButton from "./CarouselButton";
+import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function Recordings({ monitors, defaultMonitor, nbItems }: { monitors?: Monitor[], defaultMonitor: string, nbItems: string; }) {
 
@@ -134,6 +135,7 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                         </div>
                     </div>
                 </div>
+                <OrientationWarning />
             </main>
         </div>
     );

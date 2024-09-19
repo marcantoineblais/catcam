@@ -8,6 +8,7 @@ import { Monitor } from "@/src/models/monitor";
 import renderPopup from "@/src/utils/renderPopup";
 import Navbar from "@/src/components/navbar/Navbar";
 import FormSelect from "./FormSelect";
+import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function Settings({ currentSettings, monitors }: { currentSettings: any, monitors: Monitor[]; }) {
     
@@ -99,6 +100,8 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                         options={[{ label: "High", value: "HQ"}, { label: "Low", value: "SQ"}]} 
                     />
                 </form>
+
+                <OrientationWarning />
             </main>
 
             <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />

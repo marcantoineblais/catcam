@@ -4,6 +4,7 @@ import React, { FormEvent } from "react";
 import Logo from "../../components/Logo";
 import renderPopup from "@/src/utils/renderPopup";
 import { useRouter } from "next/navigation";
+import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function Login() {
     const [email, setEmail] = React.useState<string>("");
@@ -87,6 +88,8 @@ export default function Login() {
                         <button type="submit" className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700">Submit</button>
                     </div>
                 </form>
+                
+                <OrientationWarning />
             </main>
 
             <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />
