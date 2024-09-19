@@ -57,7 +57,7 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
                     <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
                 }
 
-                <div className="pt-3 flex flex-col">
+                <div className="pt-3 flex flex-col landscape:hidden">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
                         {selectedMonitor?.name || ""}
                     </h2>

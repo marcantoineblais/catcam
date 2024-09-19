@@ -42,7 +42,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="pt-1 border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10">
+        <div className="pt-1 border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10 landscape:hidden">
             <div className="px-3 h-12 container max-w-screen-lg flex justify-between items-center mx-auto">
                 <div className="h-full flex items-center text-gray-950 dark:text-zinc-100">
                     <Logo />

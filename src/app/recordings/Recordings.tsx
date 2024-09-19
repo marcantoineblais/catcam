@@ -93,7 +93,7 @@ export default function Recordings({ monitors, defaultMonitor, nbItems }: { moni
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} />
                 </div>
                 
-                <div className="max-h-full h-full z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000">
+                <div className="max-h-full h-full z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000 landscape:hidden">
                     <div className="w-full mt-3 mb-1 flex justify-between items-center shadow dark:shadow-zinc-50/10">
                         <CarouselButton label={selectedMonitor?.name || ""} active={carouselPage === 0} onClick={() => setCarouselPage(0)} />
 

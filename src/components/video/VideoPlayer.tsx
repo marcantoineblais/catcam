@@ -2,7 +2,6 @@
 
 import React from "react";
 import Hls from "hls.js";
-import fscreen from "fscreen";
 import Logo from "../Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -20,25 +19,29 @@ export default function VideoPlayer(
     const [loaded, setLoaded] = React.useState<boolean>(false);
     const [ready, setReady] = React.useState<boolean>(false);
     const [buffering, setBuffering] = React.useState<boolean>(true);
+    const [fullscreenEnabled, setFullscreenEnabled] = React.useState<boolean>(false);
     const videoRef = React.useRef<HTMLVideoElement>(null);
     const videoContainerRef = React.useRef<HTMLDivElement>(null);
 
+    React.useEffect(() => {
+        setFullscreenEnabled(document.fullscreenEnabled);
+    }, [])
+
     // Toggle fullscreen when flipping the device
     React.useEffect(() => {
-        const onOrientationChange = () => {
-            if (
-                fscreen.fullscreenEnabled && 
-                !fscreen.fullscreenElement && 
-                screen.orientation.type.startsWith("landscape")
-            ) {
-                const container = videoContainerRef.current;
+        const container = videoContainerRef.current;
+        
+        if (!videoSource || !fullscreenEnabled || !container)
+            return;
 
-                if (container) {
-                    try {
-                        fscreen.requestFullscreen(container);
-                        screen.orientation.unlock();
-                    } catch (_) {};
-                }
+        const onOrientationChange = () => {
+            const isLandscape = screen.orientation.type.startsWith("landscape");
+
+            if (!document.fullscreenElement && isLandscape) {
+                container.requestFullscreen().catch(() => console.warn("Please enable fullscreen manually"));
+                
+            } else if (document.fullscreenElement && !isLandscape) {
+                document.exitFullscreen().catch(() => console.warn("Please disable fullscreen manually"));
             }
         }
         
@@ -47,7 +50,7 @@ export default function VideoPlayer(
         return () => {
             window.removeEventListener("orientationchange", onOrientationChange);
         }
-    }, [])
+    }, [videoSource, fullscreenEnabled])
 
     // Resize streaming or recording video element when resizing window (16:9 ratio)
     React.useEffect(() => {
@@ -59,7 +62,8 @@ export default function VideoPlayer(
             return;
 
         const windowedResize = () => {
-            const maxHeight = window.innerHeight * 0.5;
+            const windowFraction = screen.orientation.type.startsWith("landscape") ? 1 : 0.5
+            const maxHeight =  window.innerHeight * windowFraction;
             let width = container.clientWidth;
             let height = container.clientHeight;
     
@@ -93,7 +97,7 @@ export default function VideoPlayer(
         }
 
         const resize = () => {
-            if (fscreen.fullscreenElement) {
+            if (document.fullscreenElement) {
                 fullscreenResize();
             } else {
                 windowedResize();
@@ -103,11 +107,11 @@ export default function VideoPlayer(
         resize();
         setReady(true);
         window.addEventListener("resize", resize);
-        fscreen.addEventListener("fullscreenchange", resize);
+        window.addEventListener("fullscreenchange", resize);
 
         return () => {
             window.removeEventListener('resize', resize);
-            fscreen.removeEventListener("fullscreenchange", resize);
+            window.removeEventListener("fullscreenchange", resize);
         };
     }, [containerRef]);
 
@@ -134,10 +138,11 @@ export default function VideoPlayer(
         if (!container)
             return;
 
-        if (fscreen.fullscreenElement !== null)
-            fscreen.exitFullscreen();
-        else
-            fscreen.requestFullscreen(container);
+        if (document.fullscreenElement !== null)
+            document.exitFullscreen().catch(() => console.warn("Error quitting fullscreen, please use device manual gesture."));
+        else {
+            container.requestFullscreen().catch(() => console.warn("Fullscreen is not available at the moment."));;
+        }
     }
 
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
@@ -148,7 +153,7 @@ export default function VideoPlayer(
 
     return (
         <div
-            className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible"
+            className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible landscape:fixed landscape:inset-0"
             data-ready={ready ? true : undefined}
         >
             <div ref={videoContainerRef} className="relative w-full min-h-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
@@ -194,7 +199,7 @@ export default function VideoPlayer(
                     setCurrentTime={setCurrentTime}
                     videoSource={videoSource}
                     videoRef={videoRef}
-                    setFullscreen={fscreen.fullscreenEnabled ? setFullScreen : undefined}
+                    setFullscreen={fullscreenEnabled ? setFullScreen : undefined}
                 />
             </div>
         </div>
