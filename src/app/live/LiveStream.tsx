@@ -53,11 +53,15 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
                     <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
                 </div>
 
-                { selectedMonitor && selectedMonitor.streams.length > 1 &&
-                    <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
-                }
+                <div className="min-h-9 h-12 pt-1 flex justify-end">
+                    { 
+                        selectedMonitor && selectedMonitor.streams.length > 1 && (
+                            <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
+                        )
+                    }
+                </div>
 
-                <div className="pt-3 flex flex-col landscape:hidden">
+                <div className="flex flex-col landscape:hidden">
                     <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
                         {selectedMonitor?.name || ""}
                     </h2>

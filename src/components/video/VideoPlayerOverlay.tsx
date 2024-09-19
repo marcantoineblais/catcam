@@ -38,12 +38,12 @@ export default function VideoPlayerOverlay(
 
     React.useEffect(() => {
         if (videoSource && !isLive)
-            setTimeoutTime(2)
+            setTimeoutTime(1000)
     }, [videoSource, isLive])
 
     React.useEffect(() => {
         if (!isPlaying)
-            setTimeoutTime(2);
+            setTimeoutTime(1000);
     }, [isPlaying]) 
 
     React.useEffect(() => {
@@ -51,8 +51,8 @@ export default function VideoPlayerOverlay(
             return;
 
         const timeout = setTimeout(() => {
-            setTimeoutTime(timeoutTime - 1)
-        }, 1000)
+            setTimeoutTime(0)
+        }, timeoutTime)
 
         return () => {
             clearTimeout(timeout);
@@ -200,7 +200,7 @@ export default function VideoPlayerOverlay(
     
     function showOverlay(e: React.TouchEvent | React.MouseEvent) {
         e.stopPropagation();
-        setTimeoutTime(2);
+        setTimeoutTime(3000);
     }
 
     function normaliseTime(value: number) {

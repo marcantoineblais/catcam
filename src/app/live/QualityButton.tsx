@@ -2,19 +2,25 @@
 
 export default function QualityButton({ isHQ, setIsHQ }: { isHQ: boolean, setIsHQ: Function }) {
     return (
-        <div className="relative w-full flex justify-end pe-7 md:pe-3 landscape:hidden">
-            <div onClick={() => setIsHQ(!isHQ)} className="py-1.5 w-16 flex gap-1 overflow-x-hidden cursor-pointer rounded-full">
-                <div data-sq={!isHQ ? true : undefined} className="min-w-[8rem] h-full flex items-center text-sm font-bold text-white duration-1000 data-[sq]:-translate-x-16">
-                    <div className="py-0.5 ps-2 basis-1/2 h-full text-left bg-sky-700 rounded-l-full">HQ</div>
-                    <div className="py-0.5 pe-2 basis-1/2 h-full text-right bg-gray-500 rounded-r-full dark:bg-zinc-500">SQ</div>
+        <button className="h-10 w-20 flex justify-center items-center border-2 dark:shadow-white/10 rounded-full" onClick={() => setIsHQ(!isHQ)}>
+            <div className="w-full h-full flex gap-1 overflow-x-hidden cursor-pointer rounded-full">
+                <div 
+                    className="w-full h-full flex text-sm font-bold text-white bg-gray-500 dark:bg-zinc-500 duration-500 delay-500 data-[hq]:bg-sky-700 data-[hq]:dark:bg-sky-700"
+                    data-hq={isHQ ? true : undefined}
+                >
+                    <div 
+                        className="px-0 w-0 max-w-0 h-full flex justify-start items-center rounded-l-full duration-1000 overflow-hidden data-[hq]:w-10 data-[hq]:max-w-[2.5rem] data-[hq]:px-1.5"
+                        data-hq={isHQ ? true : undefined}
+                    >HQ</div>
+
+                    <div className="z-10 w-9 h-9 rounded-full bg-white cursor-pointer shadow-inner shadow-black/10 dark:bg-zinc-700 dark:shadow-white/10 origin-center scale-105"></div>
+
+                    <div 
+                        className="px-1.5 w-10 max-w-[2.5rem] h-full flex justify-end items-center rounded-r-full overflow-hidden duration-1000 data-[hq]:w-0 data-[hq]:max-w-0 data-[hq]:px-0"
+                        data-hq={isHQ ? true : undefined}
+                    >SQ</div>
                 </div>
             </div>
-
-            <div 
-                className="absolute top-0.5 right-3 md:-right-1 data-[sq]:-translate-x-16 w-8 h-8 rounded-full bg-white cursor-pointer shadow-inner shadow-black/10 duration-1000 dark:bg-zinc-700 dark:shadow-white/10"
-                data-sq={!isHQ ? true : undefined}
-                onClick={() => setIsHQ(!isHQ)}
-            ></div>
-        </div>
+        </button>
     )
 }
