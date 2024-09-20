@@ -111,9 +111,12 @@ export default function VideoPlayer(
     }, [videoSource, videoRef, isLiveStream]);
 
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
-        const length = e.currentTarget.buffered.length || 1;
-        const lastBuffer = e.currentTarget.buffered.end(length - 1);
-        setBuffer(lastBuffer);
+        const length = e.currentTarget.buffered.length;
+
+        if (length) {
+            const lastBuffer = e.currentTarget.buffered.end(length - 1);
+            setBuffer(lastBuffer);
+        }
     }
 
     function toggleFullscreen() {
