@@ -113,9 +113,11 @@ export default function VideoPlayer(
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
         const length = e.currentTarget.buffered.length;
 
-        if (length) {
+        if (length > 0) {
             const lastBuffer = e.currentTarget.buffered.end(length - 1);
             setBuffer(lastBuffer);
+        } else {
+            setBuffer(0);
         }
     }
 
