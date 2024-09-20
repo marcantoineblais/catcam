@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     try {
         const session = JSON.parse(jwt);
         const url = new URL(request.url);
-        const id = url.searchParams.get("id");
+        const id = url.searchParams.get("id") || "";
         const groupKey = url.searchParams.get("groupKey");
         const page = parseInt(url.searchParams.get("page") || "1");
         const nbItems = parseInt(url.searchParams.get("nbItems") || "12");
@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
                 const endTime = new Date(video.end);
                 let thumbnail = thumbnailsData.find((thumbnail: any) => {
                     const time = new Date(thumbnail.time);
-                    return time >= startTime && time <= endTime;
+                    return thumbnail.mid === video.mid && time >= startTime && time <= endTime;
                 });
 
                 if (!thumbnail)
                     thumbnail = thumbnailsData[thumbnailsData.length - 1]
 
-                const url = `${apiUrl}/${session.auth_token}/timelapse/${groupKey}/${id}/${thumbnail.filename.replace(/T.*/, "")}/${thumbnail.filename}`;
+                const url = `${apiUrl}/${session.auth_token}/timelapse/${groupKey}/${thumbnail.mid}/${thumbnail.filename.replace(/T.*/, "")}/${thumbnail.filename}`;
                 return { ...video, thumbnail: url };
             });
 

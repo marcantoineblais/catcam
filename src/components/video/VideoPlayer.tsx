@@ -59,18 +59,26 @@ export default function VideoPlayer(
             else
                 windowFraction = 0.5
 
-            const maxHeight =  window.innerHeight * windowFraction;
-            let width = container.clientWidth;
-            let height = container.clientHeight;
-    
-            if (width > height)
+            const maxHeight = window.innerHeight * windowFraction;
+            const maxWidth = fullscreen ? window.innerWidth : container.clientWidth;
+            let width = fullscreen ? window.innerWidth : container.clientWidth;
+            let height = fullscreen ? window.innerHeight : container.clientHeight;
+            
+            if (width > height) {
                 height = width / 16 * 9;
-            else
+
+                if (height > maxHeight) {
+                    height = maxHeight
+                    width = height / 9 * 16;
+                }
+            }
+            else {
                 width = height / 9 * 16;
 
-            if (height > maxHeight) {
-                height = maxHeight
-                width = height / 9 * 16;
+                if (width > maxWidth) {
+                    width = maxWidth;
+                    height = width / 16 * 9;
+                }
             }
     
             videoContainer.style.width = width + "px";
@@ -120,12 +128,11 @@ export default function VideoPlayer(
         >
             <div ref={videoContainerRef} className="relative w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
                 {!videoSource && !isLiveStream && <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />}
-                {
-                    videoSource && videoRef.current && buffering && (
-                        <div className="absolute inset-0 flex justify-center items-center">
-                            <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
-                        </div>
-                    )
+                
+                {videoSource && videoRef.current && buffering &&
+                    <div className="absolute inset-0 flex justify-center items-center">
+                        <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
+                    </div>
                 }
 
                 <video

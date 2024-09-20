@@ -132,23 +132,28 @@ export default function VideoPlayerOverlay(
     }
 
     function mouseSeek(e: React.MouseEvent<HTMLDivElement>) {
-        if (updatedTime === null)
+        const video = videoRef.current;
+
+        if (updatedTime === null || !video)
             return;
 
         const time = updateCurrentTime(e.currentTarget, e.clientX);
         setUpdatedTime(time);
-        setTimeoutTime(2);
+        video.currentTime = time;
     }
 
     function touchSeek(e: React.TouchEvent<HTMLDivElement>) {
         if (e.touches.length > 1)
             return;
 
-        if (updatedTime === null)
+        const video = videoRef.current;
+
+        if (updatedTime === null || !video)
             return;
 
         const time = updateCurrentTime(e.currentTarget, e.touches[0].clientX);
         setUpdatedTime(time);
+        video.currentTime = time;
     }
 
     function endSeeking() {
@@ -281,76 +286,66 @@ export default function VideoPlayerOverlay(
                 onMouseMove={mouseSeek}
                 data-visible={timeoutTime > 0 ? true : undefined}
             >
-                {
-                    !isLive && (
-                        <div className="py-3 w-full flex justify-center">
-                            <div
-                                className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
-                                onMouseDown={mouseStartSeeking}
-                                onTouchStart={touchStartSeeking}
-                                onTouchMove={touchSeek}
-                                onTouchEnd={endSeeking}
-                            >
-                                {renderBufferBar()}
-                                {renderDurationBar()}
-                                {renderTrackingHead()}
-                            </div>
+                {!isLive &&
+                    <div className="py-3 w-full flex justify-center">
+                        <div
+                            className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
+                            onMouseDown={mouseStartSeeking}
+                            onTouchStart={touchStartSeeking}
+                            onTouchMove={touchSeek}
+                            onTouchEnd={endSeeking}
+                        >
+                            {renderBufferBar()}
+                            {renderDurationBar()}
+                            {renderTrackingHead()}
                         </div>
-                    )
+                    </div> 
                 }
                 <div className="w-full py-1 flex justify-between items-center flex-grow">
                     <div className="flex items-center gap-5">
-                        {
-                            isLive ? (
-                                <div className="relative flex-grow animate-pulse">
-                                    <FontAwesomeIcon icon={faVideo} className="pe-1" />
-                                    <span>LIVE</span>
-                                </div>
-                            ) : (
-                                <>
-                                    <button 
-                                        className="cursor-pointer"
-                                        onClick={isPlaying ? pause : play}
-                                    >
-                                        <FontAwesomeIcon
-                                            className="w-6 h-6"
-                                            icon={isPlaying ? faPause : faPlay}
-                                        />
-                                    </button>
-                                    <div className="flex-grow">{renderTime()}</div>
-                                </>
-                            )
-                        }
+                        {isLive ? (
+                            <div className="relative flex-grow animate-pulse">
+                                <FontAwesomeIcon icon={faVideo} className="pe-1" />
+                                <span>LIVE</span>
+                            </div>
+                        ) : (
+                            <>
+                                <button 
+                                    className="cursor-pointer"
+                                    onClick={isPlaying ? pause : play}
+                                >
+                                    <FontAwesomeIcon
+                                        className="w-6 h-6"
+                                        icon={isPlaying ? faPause : faPlay}
+                                    />
+                                </button>
+                                <div className="flex-grow">{renderTime()}</div>
+                            </>
+                        )}
                     </div>
-                    {
-                        (
-                            <button 
-                                onClick={toggleFullscreen}
-                            >
-                                <FontAwesomeIcon
-                                    className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
-                                    icon={faExpand}
-                                />
-                            </button>
-                        )
-                    }
+                    
+                    <button onClick={toggleFullscreen}>
+                        <FontAwesomeIcon
+                            className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
+                            icon={faExpand}
+                        />
+                    </button>
                 </div>
             </div>
-            { 
-                !isLive && (
-                    <>
-                        <div 
-                            className="absolute top-0 bottom-16 left-0 w-1/5"
-                            onDoubleClick={() => fastSeeking(-5)}
-                            onTouchStart={(e) => touchFastSeeking(e, -5)}
-                        ></div>
-                        <div 
-                            className="absolute top-0 bottom-16 right-0 w-1/5"
-                            onDoubleClick={() => fastSeeking(5)}
-                            onTouchStart={(e) => touchFastSeeking(e, 5)}
-                        ></div>
-                    </>
-                )
+
+            { !isLive &&
+                <>
+                    <div 
+                        className="absolute top-0 bottom-16 left-0 w-1/5"
+                        onDoubleClick={() => fastSeeking(-5)}
+                        onTouchStart={(e) => touchFastSeeking(e, -5)}
+                    ></div>
+                    <div 
+                        className="absolute top-0 bottom-16 right-0 w-1/5"
+                        onDoubleClick={() => fastSeeking(5)}
+                        onTouchStart={(e) => touchFastSeeking(e, 5)}
+                    ></div>
+                </>
             }
         </div>
     );
