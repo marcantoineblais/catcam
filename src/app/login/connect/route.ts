@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 
 async function postRequest(body: any) {
-    const apiUrl: string = process.env.API_URL + "/?json=true";
+    const apiUrl: string = process.env.SERVER_URL + "/?json=true";
     const creds = {
         machineID: body.machineID,
         mail: body.mail,

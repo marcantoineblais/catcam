@@ -4,7 +4,7 @@ import normaliseTime from "@/src/utils/normaliseTime";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    const apiUrl = process.env.API_URL;
+    const apiUrl = process.env.SERVER_URL;
     const jwt = request.headers.get("session") as string;
 
     try {

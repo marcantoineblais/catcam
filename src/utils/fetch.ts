@@ -6,7 +6,7 @@ export async function fetchMonitors() {
 
     try {
         const session = JSON.parse(jwt);
-        const apiUrl = process.env.API_URL;
+        const apiUrl = process.env.SERVER_URL;
         const key = session.auth_token;
         const groupKey = session.ke;
         const response = await fetch(`${apiUrl}/${key}/monitor/${groupKey}`);

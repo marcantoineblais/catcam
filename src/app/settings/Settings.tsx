@@ -1,9 +1,8 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import Logo from "../../components/Logo";
-import { setCookie } from "cookies-next";
 import { Monitor } from "@/src/models/monitor";
 import renderPopup from "@/src/utils/renderPopup";
 import Navbar from "@/src/components/navbar/Navbar";
