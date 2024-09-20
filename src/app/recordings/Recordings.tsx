@@ -54,6 +54,8 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
             if (response.ok) {
                 const data = await response.json();
                 setVideos(data.videos);
+                console.log(data.videos);
+                
                 setLastPage(data.lastPage || 1);
             } else {
                 setLastPage(1);

@@ -1,5 +1,6 @@
 "use client";
 
+import normaliseTime from "@/src/utils/normaliseTime";
 import { faExpand, faPause, faPlay, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { MouseEventHandler } from "react";
@@ -208,11 +209,6 @@ export default function VideoPlayerOverlay(
         setTimeoutTime(3000);
     }
 
-    function normaliseTime(value: number) {
-        const valueStr = value.toFixed();
-        return valueStr.length < 2 ? "0" + valueStr : valueStr;
-    }
-
     function displayTime(time: number) {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
@@ -323,7 +319,7 @@ export default function VideoPlayerOverlay(
                             </>
                         )}
                     </div>
-                    
+
                     <button onClick={toggleFullscreen}>
                         <FontAwesomeIcon
                             className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"

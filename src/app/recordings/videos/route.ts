@@ -1,5 +1,6 @@
 "use server";
 
+import normaliseTime from "@/src/utils/normaliseTime";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -14,26 +15,18 @@ export async function GET(request: NextRequest) {
         const page = parseInt(url.searchParams.get("page") || "1");
         const nbItems = parseInt(url.searchParams.get("nbItems") || "12");
         const videosResponse = await fetch(`${apiUrl}/${session.auth_token}/videos/${groupKey}/${id}`);
-        const thumbnailsResponse = await fetch(`${apiUrl}/${session.auth_token}/timelapse/${groupKey}/${id}`);
 
-        if (videosResponse.ok && thumbnailsResponse.ok) {
+        if (videosResponse.ok) {
             const videosData = await videosResponse.json();
-            const thumbnailsData = await thumbnailsResponse.json();
-            const lastPage = Math.ceil(videosData.videos.length / nbItems)
+            const lastPage = Math.ceil(videosData.videos.length / nbItems);
             const startIndex = (page - 1) * nbItems;
             const endIndex = startIndex + nbItems;
             const videos = videosData.videos.slice(startIndex, endIndex).map((video: any) => {
-                const startTime = new Date(video.time);
-                const endTime = new Date(video.end);
-                let thumbnail = thumbnailsData.find((thumbnail: any) => {
-                    const time = new Date(thumbnail.time);
-                    return thumbnail.mid === video.mid && time >= startTime && time <= endTime;
-                });
-
-                if (!thumbnail)
-                    thumbnail = thumbnailsData[thumbnailsData.length - 1]
-
-                const url = `${apiUrl}/${session.auth_token}/timelapse/${groupKey}/${thumbnail.mid}/${thumbnail.filename.replace(/T.*/, "")}/${thumbnail.filename}`;
+                const time = new Date(video.time);
+                time.setUTCSeconds(time.getUTCSeconds() + 6);
+                const date = `${time.getUTCFullYear()}-${normaliseTime(time.getUTCMonth() + 1)}-${normaliseTime(time.getUTCDate())}`
+                const dateTime = `${date}T${normaliseTime(time.getUTCHours())}-${normaliseTime(time.getUTCMinutes())}-${normaliseTime(time.getUTCSeconds())}`
+                const url = `/${session.auth_token}/timelapse/${groupKey}/${video.mid}/${date}/${dateTime}.jpg`;
                 return { ...video, thumbnail: url };
             });
 
