@@ -1,7 +1,7 @@
 "use client";
 
 import normaliseTime from "@/src/utils/normaliseTime";
-import { faExpand, faPause, faPlay, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faBackwardStep, faExpand, faForwardStep, faPause, faPlay, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { MouseEventHandler } from "react";
 
@@ -10,6 +10,7 @@ export default function VideoPlayerOverlay(
         currentTime,
         buffer,
         duration,
+        title,
         isLive,
         isPlaying,
         isLoaded,
@@ -22,6 +23,7 @@ export default function VideoPlayerOverlay(
         currentTime?: number,
         buffer?: number,
         duration?: number,
+        title?: string,
         isLive?: boolean,
         isPlaying?: boolean,
         isLoaded?: boolean,
@@ -52,8 +54,8 @@ export default function VideoPlayerOverlay(
             return;
 
         const timeout = setTimeout(() => {
-            setTimeoutTime(0)
-        }, timeoutTime)
+            setTimeoutTime(timeoutTime - 1000)
+        }, 1000)
 
         return () => {
             clearTimeout(timeout);
@@ -213,7 +215,9 @@ export default function VideoPlayerOverlay(
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
 
-        return `${normaliseTime(minutes)}:${normaliseTime(seconds)}`;
+        return (
+            <span>{minutes}:{normaliseTime(seconds)}</span>
+        );
     }
 
     function renderTime() {
@@ -221,11 +225,7 @@ export default function VideoPlayerOverlay(
             return "";
 
         return (
-            <div className="flex items-center gap-1">
-                <span className="w-12 text-center">{displayTime(displayedTime)}</span>
-                <span>/</span>
-                <span className="w-12 text-center">{displayTime(duration)}</span>
-            </div>
+            <span className="w-full font-mono text-center">{displayTime(displayedTime)} / {displayTime(duration)}</span>
         );
     }
 
@@ -278,7 +278,13 @@ export default function VideoPlayerOverlay(
             onTouchMove={showOverlay}
         >
             <div 
-                className="max-w-full invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-[visible]:visible"
+                className="invisible px-5 py-1.5 absolute top-0 left-0 duration-500 bg-gray-950/75 data-[visible]:visible"
+                data-visible={timeoutTime > 0 && title ? true : undefined}
+            >
+                <h3>{title}</h3>
+            </div>
+            <div 
+                className="invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-[visible]:visible"
                 onMouseMove={mouseSeek}
                 data-visible={timeoutTime > 0 ? true : undefined}
             >
@@ -298,25 +304,32 @@ export default function VideoPlayerOverlay(
                     </div> 
                 }
                 <div className="w-full py-1 flex justify-between items-center flex-grow">
-                    <div className="flex items-center gap-5">
+                    <div className="text-lg">
                         {isLive ? (
                             <div className="relative flex-grow animate-pulse">
                                 <FontAwesomeIcon icon={faVideo} className="pe-1" />
                                 <span>LIVE</span>
                             </div>
                         ) : (
-                            <>
-                                <button 
-                                    className="cursor-pointer"
-                                    onClick={isPlaying ? pause : play}
-                                >
-                                    <FontAwesomeIcon
-                                        className="w-6 h-6"
-                                        icon={isPlaying ? faPause : faPlay}
-                                    />
-                                </button>
-                                <div className="flex-grow">{renderTime()}</div>
-                            </>
+                            <div className="flex items-center gap-10">
+                                <div className="flex items-center gap-5">
+                                    <button className="cursor-pointer">
+                                        <FontAwesomeIcon icon={faBackwardStep} />
+                                    </button>
+
+                                    <button 
+                                        className="cursor-pointer"
+                                        onClick={isPlaying ? pause : play}
+                                    >
+                                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} className="w-4"/>
+                                    </button>
+
+                                    <button className="cursor-pointer">
+                                        <FontAwesomeIcon icon={faForwardStep} />
+                                    </button>
+                                </div>
+                                <div className="flex items-center">{renderTime()}</div>
+                            </div>
                         )}
                     </div>
 

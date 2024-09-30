@@ -8,8 +8,8 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer(
-    { videoSource, isLiveStream, containerRef }:
-    { videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }
+    { title, videoSource, isLiveStream, containerRef }:
+    { title?: string, videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }
 ) {
 
     const [currentTime, setCurrentTime] = React.useState<number>(0);
@@ -164,6 +164,7 @@ export default function VideoPlayer(
                 </video>
 
                 <VideoPlayerOverlay
+                    title={title}
                     isLive={isLiveStream ? true : undefined}
                     isPlaying={playing}
                     isLoaded={loaded}
