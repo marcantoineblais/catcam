@@ -30,7 +30,6 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
             return;
 
         const monitor = monitors[0];
-        monitors.sort((m1, m2) => m1.name > m2.name ? 1 : -1);
         setSelectedMonitor(monitor);
     }, [monitors]);
 
