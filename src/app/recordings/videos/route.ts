@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
             const endIndex = startIndex + nbItems;
             const videos = videosData.videos.slice(startIndex, endIndex).map((video: any) => {
                 const time = new Date(video.time);
-                time.setUTCSeconds(time.getUTCSeconds() + 6);
+                time.setUTCSeconds(time.getUTCSeconds() + 7);
                 const date = `${time.getUTCFullYear()}-${normaliseTime(time.getUTCMonth() + 1)}-${normaliseTime(time.getUTCDate())}`
                 const dateTime = `${date}T${normaliseTime(time.getUTCHours())}-${normaliseTime(time.getUTCMinutes())}-${normaliseTime(time.getUTCSeconds())}`
                 const url = `/${session.auth_token}/timelapse/${groupKey}/${video.mid}/${date}/${dateTime}.jpg`;
