@@ -23,6 +23,8 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
         }
         if (monitors.length === 0)
             renderPopup("There is not any available video monitors at the moment.", "Warning");
+        else 
+            monitors.sort((m1, m2) => m1.name > m2.name ? 1 : -1);
     }, [monitors]);
 
     React.useEffect(() => {
