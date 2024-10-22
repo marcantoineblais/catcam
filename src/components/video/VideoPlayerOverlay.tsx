@@ -225,7 +225,11 @@ export default function VideoPlayerOverlay(
             return "";
 
         return (
-            <span className="w-full font-mono text-center">{displayTime(displayedTime)} / {displayTime(duration)}</span>
+            <>
+                <span>{displayTime(displayedTime)}</span>
+                <span>/</span>
+                <span>{displayTime(duration)}</span>
+            </>
         );
     }
 
@@ -311,7 +315,7 @@ export default function VideoPlayerOverlay(
                                 <span>LIVE</span>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-7">
                                 <div className="flex items-center gap-3">
                                     <button className="cursor-pointer">
                                         <FontAwesomeIcon icon={faBackwardStep} />
@@ -328,7 +332,7 @@ export default function VideoPlayerOverlay(
                                         <FontAwesomeIcon icon={faForwardStep} />
                                     </button>
                                 </div>
-                                <div className="flex items-center">{renderTime()}</div>
+                                <div className="flex items-center font-mono text-center gap-1">{renderTime()}</div>
                             </div>
                         )}
                     </div>
