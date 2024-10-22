@@ -267,7 +267,7 @@ export default function VideoPlayerOverlay(
 
     return (
         <div
-            className="absolute hidden opacity-0 inset-0 duration-500 text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
+            className="absolute hidden opacity-0 inset-0 duration-500 text-sm md:text-base text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
             data-ready={isLoaded ? true : undefined}
             data-visible={timeoutTime > 0 ? true : undefined}
             data-fullscreen={fullscreen ? true : undefined}
@@ -289,7 +289,7 @@ export default function VideoPlayerOverlay(
                 data-visible={timeoutTime > 0 ? true : undefined}
             >
                 {!isLive &&
-                    <div className="py-3 w-full flex justify-center">
+                    <div className="py-1.5 w-full flex justify-center">
                         <div
                             className="h-1 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
                             onMouseDown={mouseStartSeeking}
@@ -304,15 +304,15 @@ export default function VideoPlayerOverlay(
                     </div> 
                 }
                 <div className="w-full py-1 flex justify-between items-center flex-grow">
-                    <div className="text-lg">
+                    <div>
                         {isLive ? (
                             <div className="relative flex-grow animate-pulse">
                                 <FontAwesomeIcon icon={faVideo} className="pe-1" />
                                 <span>LIVE</span>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-10">
-                                <div className="flex items-center gap-5">
+                            <div className="flex items-center gap-5">
+                                <div className="flex items-center gap-3">
                                     <button className="cursor-pointer">
                                         <FontAwesomeIcon icon={faBackwardStep} />
                                     </button>
@@ -321,7 +321,7 @@ export default function VideoPlayerOverlay(
                                         className="cursor-pointer"
                                         onClick={isPlaying ? pause : play}
                                     >
-                                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} className="w-4"/>
+                                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} className="w-3 md:w-4"/>
                                     </button>
 
                                     <button className="cursor-pointer">
@@ -335,7 +335,7 @@ export default function VideoPlayerOverlay(
 
                     <button onClick={toggleFullscreen}>
                         <FontAwesomeIcon
-                            className="w-6 h-6 flex items-center cursor-pointer data-[disabled]:hidden"
+                            className="flex items-center cursor-pointer data-[disabled]:hidden"
                             icon={faExpand}
                         />
                     </button>
