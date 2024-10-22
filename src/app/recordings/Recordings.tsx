@@ -17,6 +17,7 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
     const [videoSource, setVideoSource] = React.useState<string>();
     const [selectedVideo, setSelectedVideo] = React.useState<any>();
     const [selectedMonitor, setSelectedMonitor] = React.useState<Monitor>();
+    const [playlist, setPlaylist] = React.useState<any[]>();
     const [videos, setVideos] = React.useState<any[]>();
     const [page, setPage] = React.useState<number>(1);
     const [lastPage, setLastPage] = React.useState<number>(1);
@@ -49,12 +50,12 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
                 nbItems: nbItems
             });
 
-            const response = await fetch("/recordings/videos?" + params);
+            const response = await fetch("/api/videos?" + params);
 
             if (response.ok) {
                 const data = await response.json();
                 setVideos(data.videos);                
-                setLastPage(data.lastPage || 1);
+                setLastPage(data.lastPage || 1);                
             } else {
                 setLastPage(1);
                 renderPopup(["There was an issue while loading the videos.", "Please try again later."], "Error");
@@ -63,15 +64,13 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
 
         fetchData();
         setCarouselPage(0);
-
     }, [page, selectedMonitor, monitors, nbItems]);
 
     React.useEffect(() => {
         if (!selectedVideo)
             return;
 
-        const apiUrl = process.env.API_URL;
-        setVideoSource(apiUrl + selectedVideo.href);
+        setVideoSource("api" + selectedVideo.href);
         setIsDrawerOpen(false);
     }, [selectedVideo]);
 
@@ -91,7 +90,7 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
             <Navbar />
             <main className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
                 <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0 data-[close]:landscape:max-h-full data-[close]:lg:landscape:max-h-0 data-[close]:landscape:duration-0 data-[close]:landscape:lg:duration-1000">
-                    <VideoPlayer videoSource={videoSource} containerRef={containerRef} />
+                    <VideoPlayer title={selectedVideo?.filename} videoSource={videoSource} containerRef={containerRef} />
                 </div>
 
                 <div className="max-h-full h-full z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000 landscape:hidden lg:landscape:flex">

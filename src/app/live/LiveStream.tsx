@@ -23,6 +23,8 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
         }
         if (monitors.length === 0)
             renderPopup("There is not any available video monitors at the moment.", "Warning");
+        else
+            monitors.sort((m1, m2) => m1.name > m2.name ? 1 : -1);
     }, [monitors]);
 
     React.useEffect(() => {
@@ -35,13 +37,12 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
     }, [monitors, defaultMonitor]);
 
     React.useEffect(() => {
-        const apiUrl = process.env.API_URL;
         const path = selectedMonitor?.streams[selectedMonitor.streams.length > 1 && !isHQ ? 1 : 0];           
 
-        if (!apiUrl || !path)
+        if (!path)
             return;
 
-        setVideoSource(apiUrl + path);
+        setVideoSource("api" + path);
         
     }, [selectedMonitor, isHQ]);
 
@@ -51,7 +52,7 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
 
             <main className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <div ref={containerRef} className="w-full max-h-full">
-                    <VideoPlayer videoSource={videoSource} containerRef={containerRef} isLiveStream />
+                    <VideoPlayer title={selectedMonitor?.name} videoSource={videoSource} containerRef={containerRef} isLiveStream />
                 </div>
 
                 <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
