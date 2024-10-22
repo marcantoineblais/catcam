@@ -11,7 +11,6 @@ export default function VideoPlayer(
     { title, videoSource, isLiveStream, containerRef }:
     { title?: string, videoSource?: string, isLiveStream?: boolean, containerRef: React.RefObject<HTMLDivElement>; }
 ) {
-
     const [currentTime, setCurrentTime] = React.useState<number>(0);
     const [buffer, setBuffer] = React.useState<number>(0);
     const [duration, setDuration] = React.useState<number>(0);
@@ -102,12 +101,20 @@ export default function VideoPlayer(
         if (!video || !videoSource)
             return;
 
+        let hls: Hls;
+
         if (isLiveStream && Hls.isSupported()) {
-            const hls = new Hls();
+            hls = new Hls();
             hls.loadSource(videoSource);
             hls.attachMedia(video);
         } else
             video.src = videoSource;
+
+        return () => {
+            if (hls) {
+                hls.destroy();
+            }
+        }
     }, [videoSource, videoRef, isLiveStream]);
 
     function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {

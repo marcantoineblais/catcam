@@ -50,7 +50,7 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
                 nbItems: nbItems
             });
 
-            const response = await fetch("/recordings/videos?" + params);
+            const response = await fetch("/api/videos?" + params);
 
             if (response.ok) {
                 const data = await response.json();
@@ -70,8 +70,7 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
         if (!selectedVideo)
             return;
 
-        const apiUrl = process.env.API_URL;
-        setVideoSource(apiUrl + selectedVideo.href);
+        setVideoSource("api" + selectedVideo.href);
         setIsDrawerOpen(false);
     }, [selectedVideo]);
 

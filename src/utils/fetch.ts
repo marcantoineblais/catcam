@@ -1,5 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Monitor } from "../models/monitor";
 
 export async function fetchMonitors() {
     const jwt = headers().get("session") as string;
@@ -12,7 +13,9 @@ export async function fetchMonitors() {
         const response = await fetch(`${apiUrl}/${key}/monitor/${groupKey}`);
 
         if (response.ok) {
-            return await response.json();
+            const monitors = await response.json()
+            monitors.sort((m1: Monitor, m2: Monitor) => m1.name > m2.name ? 1 : -1);
+            return monitors;
         } else {
             redirect("/login");
         }

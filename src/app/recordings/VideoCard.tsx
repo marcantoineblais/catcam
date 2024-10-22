@@ -37,7 +37,7 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
                 onClick={onClick}
                 className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
             >
-                <img ref={imgRef} src={process.env.API_URL + video.thumbnail} alt="Movement capture preview" className="object-fill"  />
+                <img ref={imgRef} src={"api" + video.thumbnail} alt="Movement capture preview" className="object-fill"  />
                 <div className="w-full py-1.5 px-3 flex justify-between text-sm md:text-base">
                     <span>{doubleDigits(date.getDate())}-{doubleDigits(date.getMonth())}-{date.getFullYear()}</span>
                     <span>{doubleDigits(date.getHours())}:{doubleDigits(date.getMinutes())}:{doubleDigits(date.getSeconds())}</span>

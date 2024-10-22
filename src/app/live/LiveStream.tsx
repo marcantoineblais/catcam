@@ -37,13 +37,12 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
     }, [monitors, defaultMonitor]);
 
     React.useEffect(() => {
-        const apiUrl = process.env.API_URL;
         const path = selectedMonitor?.streams[selectedMonitor.streams.length > 1 && !isHQ ? 1 : 0];           
 
-        if (!apiUrl || !path)
+        if (!path)
             return;
 
-        setVideoSource(apiUrl + path);
+        setVideoSource("api" + path);
         
     }, [selectedMonitor, isHQ]);
 
