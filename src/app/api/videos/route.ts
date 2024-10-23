@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
         const serverUrl = new URL(`/${session.auth_token}/videos/${groupKey}${id ? "/" + id : ""}`, apiUrl);
         
         serverUrl.search = params.toString();
-        const videosResponse = await fetch(serverUrl);
-        console.log(serverUrl);
-        
+        const videosResponse = await fetch(serverUrl);        
 
         if (videosResponse.ok) {
             const videosData = await videosResponse.json();

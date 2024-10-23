@@ -1,28 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingList from "./RecordingList";
 import { Monitor } from "@/src/models/monitor";
 import SourceSelector from "@/src/components/SourceSelector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import renderPopup from "@/src/utils/renderPopup";
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import CarouselButton from "./CarouselButton";
-import normaliseTime from "@/src/utils/normaliseTime";
+import debounce from "@/src/utils/debounce";
 
-export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
+export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
 
-    const [selectedTime, setSelectedTime] = React.useState<Date>(new Date(Date.now()));
     const [videoSource, setVideoSource] = React.useState<string>();
     const [selectedVideo, setSelectedVideo] = React.useState<any>();
     const [selectedMonitor, setSelectedMonitor] = React.useState<Monitor>();
+    const [selectedTime, setSelectedTime] = React.useState<Date>(new Date(Date.now()));
+    const [displayedTime, setDisplayedTime] = React.useState<number[]>([]);
+    const [recordingsList, setRecordingsList] = React.useState<ReactNode[]>();
     const [playlist, setPlaylist] = React.useState<any[]>();
-    const [videos, setVideos] = React.useState<any[]>();
     const [carouselPage, setCarouselPage] = React.useState<number>(0);
     const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const carouselRef = React.useRef<HTMLDivElement>(null);
+    const scrollEventReady = React.useRef<boolean>(true);
 
     React.useEffect(() => {
         if (!monitors)
@@ -33,44 +34,32 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
     }, [monitors]);
 
     React.useEffect(() => {
-        const fetchData = async () => {
-            if (!selectedMonitor)
-                return;
+        const displayedTime = [];
 
-            const startTime = new Date(selectedTime);
-            const endTime = new Date(selectedTime);
-            endTime.setUTCHours(endTime.getUTCHours() + 1);
+        for (let i = 0; i < 6; i++) {
+            const time = new Date(selectedTime);
+            time.setUTCHours(time.getUTCHours() - i);
+            displayedTime.push(time.valueOf());
+        }
 
-            const startYear = startTime.getUTCFullYear();
-            const startMonth = normaliseTime(startTime.getUTCMonth() + 1);
-            const startDate = normaliseTime(startTime.getUTCDate());
-            const startHours = normaliseTime(startTime.getUTCHours());
-            const endYear = endTime.getUTCFullYear();
-            const endMonth = normaliseTime(endTime.getUTCMonth() + 1);
-            const endDate = normaliseTime(endTime.getUTCDate());
-            const endHours = normaliseTime(endTime.getUTCHours());
-            const startTimeStr = `${startYear}-${startMonth}-${startDate}T${startHours}:00:00`
-            const endTimeStr = `${endYear}-${endMonth}-${endDate}T${endHours}:00:00`
+        setDisplayedTime(displayedTime);
+    }, [selectedTime]);
 
-            const params = new URLSearchParams({
-                id: selectedMonitor.mid,
-                groupKey: selectedMonitor.ke,
-                start: startTimeStr,
-                end: endTimeStr
-            });
-            const response = await fetch("/api/videos?" + params);
+    React.useEffect(() => {
+        const nodes: ReactNode[] = displayedTime.map((time, i) => {
+            return (
+                <RecordingList
+                    key={i}
+                    selectedMonitor={selectedMonitor}
+                    selectedVideo={selectedVideo}
+                    setSelectedVideo={setSelectedVideo}
+                    dateTime={time}
+                />
+            );
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                setVideos(data.videos);              
-            } else {
-                renderPopup(["There was an issue while loading the videos.", "Please try again later."], "Error");
-            }
-        };
-
-        fetchData();
-        setCarouselPage(0);
-    }, [selectedMonitor, monitors]);
+        setRecordingsList(nodes);
+    }, [displayedTime, selectedMonitor, selectedVideo]);
 
     React.useEffect(() => {
         if (!selectedVideo)
@@ -91,9 +80,35 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
         carousel.style.left = -position + "px";
     }, [carouselPage]);
 
+    function onScrollHandler(e: React.SyntheticEvent<HTMLDivElement>) {
+        debounce(() => {
+            const div = e.currentTarget;
+            const scrollHeight = div.scrollHeight;
+            const height = div.clientHeight;
+            const scrollPosition = div.scrollTop;
+            const scrollTreshold = scrollHeight - (2 * height);
+            
+            if (scrollPosition < scrollTreshold) {
+                setTimeout(() => scrollEventReady.current = true, 200);
+                return;
+            }
+            
+            const updatedTime = [];
+            const offset = displayedTime.length;
+            for (let i = 0; i < 6; i++) {
+                const time = new Date(selectedTime);
+                time.setHours(time.getHours() - i - offset);
+                updatedTime.push(time.valueOf());
+            }
+
+            setDisplayedTime([...displayedTime, ...updatedTime]);
+        }, scrollEventReady, 200);
+    }
+
+
     return (
-        <div className="h-full flex flex-col justify-start overflow-hidden">
-            <main className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
+        <div className="h-full overflow-hidden">
+            <main className="h-full p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
                 <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0 data-[close]:landscape:max-h-full data-[close]:lg:landscape:max-h-0 data-[close]:landscape:duration-0 data-[close]:landscape:lg:duration-1000">
                     <VideoPlayer title={selectedVideo?.filename} videoSource={videoSource} containerRef={containerRef} />
                 </div>
@@ -114,20 +129,8 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
 
                     <div className="w-full h-full overflow-hidden">
                         <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
-                            <div className="relative h-full px-1.5 basis-1/2 overflow-hidden">
-                                {
-                                    !videos ? (
-                                        <div className="h-full flex justify-center items-center">
-                                            <FontAwesomeIcon icon={faSpinner} className="w-12 h-12 md:w-18 md:h-18 animate-spin" />
-                                        </div>
-                                    ) : (
-                                        <RecordingList
-                                            videos={videos}
-                                            selectedVideo={selectedVideo}
-                                            setSelectedVideo={setSelectedVideo}
-                                        />
-                                    )
-                                }
+                            <div onScroll={onScrollHandler} className="relative h-full px-1.5 basis-1/2 overflow-y-auto">
+                                {recordingsList}
                             </div>
 
                             <div className="px-1.5 flex basis-1/2 h-full">

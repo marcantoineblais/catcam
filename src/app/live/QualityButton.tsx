@@ -3,7 +3,7 @@
 export default function QualityButton({ isHQ, setIsHQ }: { isHQ: boolean, setIsHQ: Function }) {
     return (
         <button className="h-10 w-20 flex justify-center items-center border-2 border-gray-300 dark:border-zinc-700 rounded-full" onClick={() => setIsHQ(!isHQ)}>
-            <div className="w-full h-full flex gap-1 overflow-x-hidden cursor-pointer rounded-full">
+            <div className="w-full h-full flex gap-1 overflow-x-hidden cursor-pointer rounded-full overflow-hidden">
                 <div 
                     className="w-full h-full flex text-sm font-bold text-white bg-gray-500 dark:bg-zinc-500 duration-500 delay-500 ease-in-out data-[hq]:bg-sky-700 data-[hq]:dark:bg-sky-700"
                     data-hq={isHQ ? true : undefined}
