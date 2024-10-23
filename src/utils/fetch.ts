@@ -27,10 +27,9 @@ export async function fetchMonitors() {
 export function readSettings() {
     const cookie = cookies();
     const mode = cookie.get("mode")?.value || "light";
-    const nbItems = cookie.get("nbItems")?.value || "12";
     const camera = cookie.get("camera")?.value || "";
     const home = cookie.get("home")?.value || " live";
     const quality = cookie.get("quality")?.value || "HQ"
 
-    return { mode, nbItems, camera, home, quality };
+    return { mode, camera, home, quality };
 }

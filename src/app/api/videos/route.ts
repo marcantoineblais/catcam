@@ -10,18 +10,23 @@ export async function GET(request: NextRequest) {
     try {
         const session = JSON.parse(jwt);
         const url = new URL(request.url);
-        const id = url.searchParams.get("id") || "";
+        const id = url.searchParams.get("id");
         const groupKey = url.searchParams.get("groupKey");
-        const page = parseInt(url.searchParams.get("page") || "1");
-        const nbItems = parseInt(url.searchParams.get("nbItems") || "12");
-        const videosResponse = await fetch(`${apiUrl}/${session.auth_token}/videos/${groupKey}/${id}`);
+        const params = new URLSearchParams({
+            start: url.searchParams.get("start") || "",
+            end: url.searchParams.get("end") || ""
+        });
+
+        const serverUrl = new URL(`/${session.auth_token}/videos/${groupKey}${id ? "/" + id : ""}`, apiUrl);
+        
+        serverUrl.search = params.toString();
+        const videosResponse = await fetch(serverUrl);
+        console.log(serverUrl);
+        
 
         if (videosResponse.ok) {
             const videosData = await videosResponse.json();
-            const lastPage = Math.ceil(videosData.videos.length / nbItems);
-            const startIndex = (page - 1) * nbItems;
-            const endIndex = startIndex + nbItems;
-            const videos = videosData.videos.slice(startIndex, endIndex).map((video: any) => {
+            const videos = videosData.videos.map((video: any) => {
                 const time = new Date(video.time);
                 time.setUTCSeconds(time.getUTCSeconds() + 7);
                 const date = `${time.getUTCFullYear()}-${normaliseTime(time.getUTCMonth() + 1)}-${normaliseTime(time.getUTCDate())}`
@@ -30,7 +35,7 @@ export async function GET(request: NextRequest) {
                 return { ...video, thumbnail: url };
             });
 
-            return NextResponse.json({ ok: true, videos: videos, lastPage: lastPage });
+            return NextResponse.json({ ok: true, videos: videos });
         } 
             
         NextResponse.error();   

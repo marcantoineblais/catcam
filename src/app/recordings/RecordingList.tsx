@@ -2,44 +2,47 @@
 
 import React from "react"
 import VideoCard from "./VideoCard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleLeft, faCircleRight } from "@fortawesome/free-solid-svg-icons";
+import normaliseTime from "@/src/utils/normaliseTime";
 
 export default function RecordingList(
-    { videos, selectedVideo, setSelectedVideo, page, lastPage = 1, setPage }:
-    { videos?: any[], selectedVideo: any, setSelectedVideo: Function, page: number, lastPage?: number, setPage: Function }
+    { videos, selectedVideo, setSelectedVideo }:
+    { videos?: any[], selectedVideo: any, setSelectedVideo: Function }
 ) {
 
-    const containerRef = React.useRef<HTMLDivElement>(null)
-    
-    function previousPage() {
-        if (page > 1) {
-            setPage(page - 1)
-            scrollUp()
-        }
-    }
-    
-    function nextPage() {
-        if (page < lastPage) {
-            setPage(page + 1)
-            scrollUp()
-        }
-    }
+    const [selectedTime, setSelectedTime] = React.useState<Date>();    
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
-    function scrollUp() {
-        const container = containerRef.current
-
-        if (!container)
-            return
-
-        container.scrollTo({ top: 0 })
-    }
+    React.useEffect(() => {
+        const today = new Date(Date.now());
+        today.setUTCMinutes(0, 0, 0);
+        setSelectedTime(today);
+    }, [])
 
     function renderVideoCards() {
         if (!videos)
             return;
             
         return videos.map((video, i) => <VideoCard key={i} video={video} selectedVideo={selectedVideo} onClick={() => setSelectedVideo(video)} />)
+    }
+
+    function renderDateTime() {
+        if (!selectedTime)
+            return null;
+
+        const startHours = selectedTime.getHours();
+        const endHours = (startHours + 1) % 24;
+        const date = normaliseTime(selectedTime.getDate());
+        const month = normaliseTime(selectedTime.getMonth() + 1);
+        const year = selectedTime.getFullYear();
+        const dateStr = `${date}-${month}-${year}`
+        const rangeStr = `${startHours}:00 - ${endHours}:00`
+
+        return (
+            <>
+                <span>{dateStr}</span>
+                <span className="font-bold text-lg">{rangeStr}</span>
+            </>
+        )
     }
 
     return (
@@ -54,22 +57,8 @@ export default function RecordingList(
                 }
             </div>
 
-            <div className="w-full p-3 flex justify-between items-center">
-                <FontAwesomeIcon 
-                    data-disabled={page === 1 ? true : undefined} 
-                    className="w-8 h-8 md:w-12 md:h-12 hover:brightness-150 cursor-pointer data-[disabled]:invisible data-[disabled]:cursor-default" 
-                    icon={faCircleLeft} 
-                    onClick={previousPage}
-                />
-                <div className="font-bold md:text-xl">
-                    Page {page} of {lastPage}
-                </div>
-                <FontAwesomeIcon 
-                    data-disabled={page === lastPage ? true : undefined} 
-                    className="w-8 h-8 md:w-12 md:h-12 hover:brightness-150 cursor-pointer data-[disabled]:invisible data-[disabled]:cursor-default" 
-                    icon={faCircleRight} 
-                    onClick={nextPage}
-                />
+            <div className="flex flex-col items-center">
+                {renderDateTime()}
             </div>
         </div>
     )

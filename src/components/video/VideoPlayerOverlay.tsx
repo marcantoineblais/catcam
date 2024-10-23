@@ -271,7 +271,7 @@ export default function VideoPlayerOverlay(
 
     return (
         <div
-            className="absolute hidden opacity-0 inset-0 duration-500 text-sm md:text-base text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
+            className="absolute hidden opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
             data-ready={isLoaded ? true : undefined}
             data-visible={timeoutTime > 0 ? true : undefined}
             data-fullscreen={fullscreen ? true : undefined}
@@ -325,7 +325,7 @@ export default function VideoPlayerOverlay(
                                         className="cursor-pointer"
                                         onClick={isPlaying ? pause : play}
                                     >
-                                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} className="w-3 md:w-4"/>
+                                        <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} className="w-3 md:w-3.5"/>
                                     </button>
 
                                     <button className="cursor-pointer">

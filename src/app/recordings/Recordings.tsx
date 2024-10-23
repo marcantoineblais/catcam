@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Navbar from "../../components/navbar/Navbar";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingList from "./RecordingList";
 import { Monitor } from "@/src/models/monitor";
@@ -10,17 +9,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import renderPopup from "@/src/utils/renderPopup";
 import CarouselButton from "./CarouselButton";
-import OrientationWarning from "@/src/components/OrientationWarning";
+import normaliseTime from "@/src/utils/normaliseTime";
 
-export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[], nbItems: string; }) {
+export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
 
+    const [selectedTime, setSelectedTime] = React.useState<Date>(new Date(Date.now()));
     const [videoSource, setVideoSource] = React.useState<string>();
     const [selectedVideo, setSelectedVideo] = React.useState<any>();
     const [selectedMonitor, setSelectedMonitor] = React.useState<Monitor>();
     const [playlist, setPlaylist] = React.useState<any[]>();
     const [videos, setVideos] = React.useState<any[]>();
-    const [page, setPage] = React.useState<number>(1);
-    const [lastPage, setLastPage] = React.useState<number>(1);
     const [carouselPage, setCarouselPage] = React.useState<number>(0);
     const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -35,36 +33,44 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
     }, [monitors]);
 
     React.useEffect(() => {
-        setPage(1);
-    }, [selectedMonitor]);
-
-    React.useEffect(() => {
         const fetchData = async () => {
             if (!selectedMonitor)
                 return;
 
+            const startTime = new Date(selectedTime);
+            const endTime = new Date(selectedTime);
+            endTime.setUTCHours(endTime.getUTCHours() + 1);
+
+            const startYear = startTime.getUTCFullYear();
+            const startMonth = normaliseTime(startTime.getUTCMonth() + 1);
+            const startDate = normaliseTime(startTime.getUTCDate());
+            const startHours = normaliseTime(startTime.getUTCHours());
+            const endYear = endTime.getUTCFullYear();
+            const endMonth = normaliseTime(endTime.getUTCMonth() + 1);
+            const endDate = normaliseTime(endTime.getUTCDate());
+            const endHours = normaliseTime(endTime.getUTCHours());
+            const startTimeStr = `${startYear}-${startMonth}-${startDate}T${startHours}:00:00`
+            const endTimeStr = `${endYear}-${endMonth}-${endDate}T${endHours}:00:00`
+
             const params = new URLSearchParams({
                 id: selectedMonitor.mid,
                 groupKey: selectedMonitor.ke,
-                page: page.toString(),
-                nbItems: nbItems
+                start: startTimeStr,
+                end: endTimeStr
             });
-
             const response = await fetch("/api/videos?" + params);
 
             if (response.ok) {
                 const data = await response.json();
-                setVideos(data.videos);                
-                setLastPage(data.lastPage || 1);                
+                setVideos(data.videos);              
             } else {
-                setLastPage(1);
                 renderPopup(["There was an issue while loading the videos.", "Please try again later."], "Error");
             }
         };
 
         fetchData();
         setCarouselPage(0);
-    }, [page, selectedMonitor, monitors, nbItems]);
+    }, [selectedMonitor, monitors]);
 
     React.useEffect(() => {
         if (!selectedVideo)
@@ -87,7 +93,6 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
 
     return (
         <div className="h-full flex flex-col justify-start overflow-hidden">
-            <Navbar />
             <main className="grow p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
                 <div ref={containerRef} data-close={isDrawerOpen ? true : undefined} className="w-full max-h-full duration-1000 data-[close]:max-h-0 data-[close]:landscape:max-h-full data-[close]:lg:landscape:max-h-0 data-[close]:landscape:duration-0 data-[close]:landscape:lg:duration-1000">
                     <VideoPlayer title={selectedVideo?.filename} videoSource={videoSource} containerRef={containerRef} />
@@ -120,9 +125,6 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
                                             videos={videos}
                                             selectedVideo={selectedVideo}
                                             setSelectedVideo={setSelectedVideo}
-                                            page={page}
-                                            lastPage={lastPage}
-                                            setPage={setPage}
                                         />
                                     )
                                 }
@@ -134,7 +136,6 @@ export default function Recordings({ monitors, nbItems }: { monitors?: Monitor[]
                         </div>
                     </div>
                 </div>
-                <OrientationWarning />
             </main>
         </div>
     );

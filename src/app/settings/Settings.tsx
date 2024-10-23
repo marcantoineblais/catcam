@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import Logo from "../../components/Logo";
 import { Monitor } from "@/src/models/monitor";
 import renderPopup from "@/src/utils/renderPopup";
-import Navbar from "@/src/components/navbar/Navbar";
 import FormSelect from "./FormSelect";
-import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function Settings({ currentSettings, monitors }: { currentSettings: any, monitors: Monitor[]; }) {
     
@@ -44,9 +42,7 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
 
     return (     
         <div className="flex flex-col h-full overflow-hidden">
-            <Navbar />
-            
-            <main className="h-full p-1 container mx-auto max-w-screen-lg overflow-hidden">
+            <main className="h-full pt-3 p-1 container mx-auto max-w-screen-lg overflow-hidden">
                 <form ref={formRef} className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
                     <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
                     
@@ -59,19 +55,6 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                             { value: "light", label: "Light" }, 
                             { value: "dark", label: "Dark" }, 
                             { value: "auto", label: "Auto" }
-                        ]} 
-                    />
-
-                    <FormSelect 
-                        label="Videos per page" 
-                        name="nbItems" 
-                        value={nbItems} 
-                        onChange={(e) => saveSetting(e, setNbItems)} 
-                        options={[
-                            { value: "12", label: "12" }, 
-                            { value: "24", label: "24" }, 
-                            { value: "48", label: "48" }, 
-                            { value: "96", label: "96" }
                         ]} 
                     />
 
@@ -99,8 +82,6 @@ export default function Settings({ currentSettings, monitors }: { currentSetting
                         options={[{ label: "High", value: "HQ"}, { label: "Low", value: "SQ"}]} 
                     />
                 </form>
-
-                <OrientationWarning />
             </main>
 
             <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />

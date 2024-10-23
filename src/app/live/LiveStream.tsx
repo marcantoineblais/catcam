@@ -1,13 +1,11 @@
 "use client";
 
 import React, { ChangeEvent } from "react";
-import Navbar from "../../components/navbar/Navbar";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
 import QualityButton from "./QualityButton";
-import OrientationWarning from "@/src/components/OrientationWarning";
 
 export default function LiveStream({ monitors, defaultMonitor, defaultQuality }: { monitors?: Monitor[], defaultMonitor: string, defaultQuality: string; }) {
 
@@ -48,8 +46,6 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
 
     return (
         <div className="flex flex-col h-full">
-            <Navbar />
-
             <main className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
                 <div ref={containerRef} className="w-full max-h-full">
                     <VideoPlayer title={selectedMonitor?.name} videoSource={videoSource} containerRef={containerRef} isLiveStream />
@@ -70,8 +66,6 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
 
                     <SourceSelector monitors={monitors} selectedMonitor={selectedMonitor} setSelectedMonitor={setSelectedMonitor} />
                 </div>
-
-                <OrientationWarning />
             </main>
         </div>
     );

@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cookies } from "next/headers";
 import ServiceManager from "../components/ServiceManager";
+import Navbar from "../components/navbar/Navbar";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <ServiceManager />
             
             <body className={`${inter.className} ${darkClass}`}>
+                <Navbar />
                 {children}
             </body>
         </html>

@@ -1,10 +1,11 @@
 "use client";
 
+import normaliseTime from "@/src/utils/normaliseTime";
 import React from "react";
 import { MouseEventHandler } from "react";
 
 export default function VideoCard({ video, selectedVideo, onClick }: { video: any, selectedVideo?: any, onClick: MouseEventHandler; }) {
-    const date = new Date(Date.parse(video.time))
+    const dateTime = new Date(Date.parse(video.time))
     const imgRef = React.useRef<HTMLImageElement>(null);
 
     React.useEffect(() => {
@@ -26,8 +27,21 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
         };
     });
 
-    function doubleDigits(digit: number) {
-        return digit < 10 ? "0" + digit : digit
+    function renderDateTime() {
+        const hours = dateTime.getHours();
+        const minutes = normaliseTime(dateTime.getMinutes());
+        const date = normaliseTime(dateTime.getDate());
+        const month = normaliseTime(dateTime.getMonth() + 1);
+        const year = dateTime.getFullYear();
+        const dateStr = `${date}-${month}-${year}`
+        const timeStr = `${hours}:${minutes}`
+
+        return (
+            <>
+                <span>{dateStr}</span>
+                <span>{timeStr}</span>
+            </>
+        )
     }
 
     return (
@@ -38,9 +52,8 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
                 className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
             >
                 <img ref={imgRef} src={"api" + video.thumbnail} alt="Movement capture preview" className="object-fill"  />
-                <div className="w-full py-1.5 px-3 flex justify-between text-sm md:text-base">
-                    <span>{doubleDigits(date.getDate())}-{doubleDigits(date.getMonth())}-{date.getFullYear()}</span>
-                    <span>{doubleDigits(date.getHours())}:{doubleDigits(date.getMinutes())}:{doubleDigits(date.getSeconds())}</span>
+                <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base">
+                    {renderDateTime()}
                 </div>
             </div>
         </div>

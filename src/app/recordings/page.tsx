@@ -17,6 +17,6 @@ export default async function RecordingPage() {
     }
 
     return (
-        <Recordings nbItems={settings.nbItems} monitors={monitors} />
+        <Recordings monitors={monitors} />
     );
 }
