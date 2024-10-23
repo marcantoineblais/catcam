@@ -24,6 +24,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const carouselRef = React.useRef<HTMLDivElement>(null);
     const scrollEventReady = React.useRef<boolean>(true);
+    const recordingsRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
         if (!monitors)
@@ -43,7 +44,11 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         }
 
         setDisplayedTime(displayedTime);
-    }, [selectedTime]);
+        setCarouselPage(0);
+
+        if (recordingsRef.current)
+            recordingsRef.current.scrollTo({top: 0, behavior: "smooth"});
+    }, [selectedTime, selectedMonitor]);
 
     React.useEffect(() => {
         const nodes: ReactNode[] = displayedTime.map((time, i) => {
@@ -102,7 +107,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
             }
 
             setDisplayedTime([...displayedTime, ...updatedTime]);
-        }, scrollEventReady, 200);
+        }, scrollEventReady, 50);
     }
 
 
@@ -124,12 +129,12 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
                             data-active={isDrawerOpen ? true : undefined}
                         />
 
-                        <CarouselButton label="Cameras" active={carouselPage === 1} onClick={() => setCarouselPage(1)} rightAlign />
+                        <CarouselButton label="Filters" active={carouselPage === 1} onClick={() => setCarouselPage(1)} rightAlign />
                     </div>
 
                     <div className="w-full h-full overflow-hidden">
                         <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
-                            <div onScroll={onScrollHandler} className="relative h-full px-1.5 basis-1/2 overflow-y-auto">
+                            <div ref={recordingsRef} onScroll={onScrollHandler} className="relative h-full px-1.5 basis-1/2 overflow-y-auto">
                                 {recordingsList}
                             </div>
 
