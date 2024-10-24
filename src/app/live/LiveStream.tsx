@@ -40,7 +40,7 @@ export default function LiveStream({ monitors, defaultMonitor, defaultQuality }:
         if (!path)
             return;
 
-        setVideoSource("api" + path);
+        setVideoSource("/api" + path);
         
     }, [selectedMonitor, isHQ]);
 

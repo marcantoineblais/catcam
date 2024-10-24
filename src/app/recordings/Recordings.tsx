@@ -8,7 +8,6 @@ import SourceSelector from "@/src/components/SourceSelector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import CarouselButton from "./CarouselButton";
-import debounce from "@/src/utils/debounce";
 
 export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
 
@@ -119,28 +118,24 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
     }, [carouselPage]);
 
     function onScrollHandler(e: React.SyntheticEvent<HTMLDivElement>) {
-        debounce(() => {
-            const div = e.currentTarget;
-            const scrollHeight = div.scrollHeight;
-            const height = div.clientHeight;
-            const scrollPosition = div.scrollTop;
-            const scrollTreshold = scrollHeight - (2 * height);
-            
-            if (scrollPosition < scrollTreshold) {
-                setTimeout(() => scrollEventReady.current = true, 200);
-                return;
-            }
-            
-            const updatedTime = [];
-            const offset = displayedTime.length;
-            for (let i = 0; i < 6; i++) {
-                const time = new Date(selectedTime);
-                time.setHours(time.getHours() - i - offset);
-                updatedTime.push(time.valueOf());
-            }
+        const div = e.currentTarget;
+        const scrollHeight = div.scrollHeight;
+        const height = div.clientHeight;
+        const scrollPosition = div.scrollTop;
+        const scrollTreshold = scrollHeight - height;
+        
+        if (scrollPosition < scrollTreshold) 
+            return;
+        
+        const updatedTime = [];
+        const offset = displayedTime.length;
+        for (let i = 0; i < 6; i++) {
+            const time = new Date(selectedTime);
+            time.setHours(time.getHours() - i - offset);
+            updatedTime.push(time.valueOf());
+        }
 
-            setDisplayedTime([...displayedTime, ...updatedTime]);
-        }, scrollEventReady, 200);
+        setDisplayedTime([...displayedTime, ...updatedTime]);
     }
 
 
@@ -167,7 +162,11 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
 
                     <div className="w-full h-full overflow-hidden">
                         <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
-                            <div ref={recordingsRef} onScroll={onScrollHandler} className="relative h-full px-1.5 basis-1/2 overflow-y-auto">
+                            <div 
+                                ref={recordingsRef} 
+                                onScroll={onScrollHandler}
+                                className="relative h-full px-1.5 basis-1/2 overflow-y-auto"
+                            >
                                 {recordingsList}
                             </div>
 

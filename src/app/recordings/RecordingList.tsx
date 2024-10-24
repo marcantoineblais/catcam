@@ -1,10 +1,11 @@
 "use client"
 
-import React, { RefObject } from "react"
+import React, { Suspense } from "react"
 import VideoCard from "./VideoCard";
 import normaliseTime from "@/src/utils/normaliseTime";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
+import {Skeleton} from "@nextui-org/skeleton";
 
 export default function RecordingList(
     { selectedMonitor, selectedVideo, setSelectedVideo, dateTime, observer }:
@@ -59,12 +60,17 @@ export default function RecordingList(
 
     function renderVideoCards() {
         if (!videos)
-            return null;
+            return (
+                <>
+                    <VideoCard />
+                    <VideoCard />
+                    <VideoCard />
+                </>
+            );
 
         if (videos.length === 0)
             return <div className="w-full h-full flex justify-center items-center">No videos available</div>
         
-
         return videos.map((video, i) => {
             return (
                 <VideoCard 
@@ -98,6 +104,7 @@ export default function RecordingList(
     return (
         <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
             <h2 className="py-0.5 w-full flex justify-between items-center">{renderDateTime()}</h2>
+            
             <div className="w-full flex justify-start content-start flex-wrap shadow dark:shadow-zinc-50/10 overflow-hidden">
                 {renderVideoCards()}
             </div>
