@@ -103,7 +103,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         if (!selectedVideo)
             return;
 
-        setVideoSource("api" + selectedVideo.href);
+        setVideoSource("/api" + selectedVideo.href);
         setIsDrawerOpen(false);
     }, [selectedVideo]);
 
@@ -140,7 +140,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
             }
 
             setDisplayedTime([...displayedTime, ...updatedTime]);
-        }, scrollEventReady, 50);
+        }, scrollEventReady, 200);
     }
 
 
