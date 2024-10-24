@@ -97,7 +97,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         });
 
         setRecordingsList(nodes);
-    }, [displayedTime, selectedMonitor, selectedVideo]);
+    }, [displayedTime, selectedMonitor, selectedVideo, observer]);
 
     React.useEffect(() => {
         if (!selectedVideo)

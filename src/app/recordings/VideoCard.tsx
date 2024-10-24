@@ -39,7 +39,7 @@ export default function VideoCard(
             return;
 
         observer?.observe(imgRef.current);
-    }, [])
+    }, [observer])
 
     function renderDateTime() {
         const hours = dateTime.getHours();
