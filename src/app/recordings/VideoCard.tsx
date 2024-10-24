@@ -2,21 +2,27 @@
 
 import normaliseTime from "@/src/utils/normaliseTime";
 import Image from "next/image";
-import React from "react";
+import React, { RefObject } from "react";
 import { MouseEventHandler } from "react";
 
-export default function VideoCard({ video, selectedVideo, onClick }: { video: any, selectedVideo?: any, onClick: MouseEventHandler; }) {
+export default function VideoCard(
+    { video, selectedVideo, observer, onClick }:
+    { video: any, selectedVideo?: any, observer?: IntersectionObserver, onClick: MouseEventHandler;}
+) {
     const dateTime = new Date(Date.parse(video.time));
     const imgRef = React.useRef<HTMLImageElement>(null);
 
     React.useEffect(() => {
         const onResize = () => {
             const img = imgRef.current;
+            const container = imgRef.current?.parentElement;
 
-            if (!img)
+            if (!img || !container)
                 return;
 
-            const height = img.clientWidth / 16 * 9;
+            const width = container.clientWidth;
+            const height = width / 16 * 9;
+            img.style.width = width + "px";
             img.style.height = height + "px";
         };
 
@@ -26,7 +32,14 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
         return () => {
             window.removeEventListener("resize", onResize);
         };
-    });
+    }, []);
+
+    React.useEffect(() => {
+        if (!imgRef.current)
+            return;
+
+        observer?.observe(imgRef.current);
+    }, [])
 
     function renderDateTime() {
         const hours = dateTime.getHours();
@@ -53,7 +66,16 @@ export default function VideoCard({ video, selectedVideo, onClick }: { video: an
                 onClick={onClick}
                 className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
             >
-                <Image ref={imgRef} width={320} height={180} src={"/api" + video.thumbnail} alt="Movement capture preview" className="object-fill" />
+                <Image 
+                    ref={imgRef} 
+                    width={160} 
+                    height={90} 
+                    src={""} 
+                    alt="Movement capture preview" 
+                    className="object-fill duration-200" 
+                    data-url={"/api" + video.thumbnail}
+                />
+                
                 <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base">
                     {renderDateTime()}
                 </div>

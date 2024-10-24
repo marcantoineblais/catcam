@@ -1,14 +1,14 @@
 "use client"
 
-import React from "react"
+import React, { RefObject } from "react"
 import VideoCard from "./VideoCard";
 import normaliseTime from "@/src/utils/normaliseTime";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
 
 export default function RecordingList(
-    { selectedMonitor, selectedVideo, setSelectedVideo, dateTime }:
-    { selectedMonitor?: Monitor, selectedVideo: any, setSelectedVideo: Function, dateTime: number }
+    { selectedMonitor, selectedVideo, setSelectedVideo, dateTime, observer }:
+    { selectedMonitor?: Monitor, selectedVideo: any, setSelectedVideo: Function, dateTime: number, observer?: IntersectionObserver }
 ) {
     const [videos, setVideos] = React.useState<any[]>();
     const fetchReady = React.useRef<boolean>(true);
@@ -72,6 +72,7 @@ export default function RecordingList(
                     video={video} 
                     selectedVideo={selectedVideo} 
                     onClick={() => setSelectedVideo(video)}
+                    observer={observer}
                 />
             )
         });

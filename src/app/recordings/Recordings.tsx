@@ -21,6 +21,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
     const [playlist, setPlaylist] = React.useState<any[]>();
     const [carouselPage, setCarouselPage] = React.useState<number>(0);
     const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+    const [observer, setObserver] = React.useState<IntersectionObserver>();
     const containerRef = React.useRef<HTMLDivElement>(null);
     const carouselRef = React.useRef<HTMLDivElement>(null);
     const scrollEventReady = React.useRef<boolean>(true);
@@ -33,6 +34,37 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         const monitor = monitors[0];
         setSelectedMonitor(monitor);
     }, [monitors]);
+
+    React.useEffect(() => {
+        if (!recordingsRef.current)
+            return;
+
+        function intersectionHandler(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
+            entries.forEach((entry: IntersectionObserverEntry) => {
+                const img = entry.target as HTMLImageElement
+                const ratio = entry.intersectionRatio;
+                img.style.opacity = ratio.toString();
+
+                if (ratio >= 0.10) {
+                    img.src = img.dataset.url || ""
+                } else {
+                    img.src = "";
+                }
+            })
+        }
+
+        const threshold = [];
+        for (let i = 0; i <= 1; i += 0.05) {
+            threshold.push(i);
+        }
+
+        const observer = new IntersectionObserver(intersectionHandler, {
+            root: recordingsRef.current,
+            threshold: threshold
+        });
+
+        setObserver(observer);
+    }, [])
 
     React.useEffect(() => {
         const displayedTime = [];
@@ -59,6 +91,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
                     selectedVideo={selectedVideo}
                     setSelectedVideo={setSelectedVideo}
                     dateTime={time}
+                    observer={observer}
                 />
             );
         });
