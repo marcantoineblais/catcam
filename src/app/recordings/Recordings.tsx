@@ -122,7 +122,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         const scrollHeight = div.scrollHeight;
         const height = div.clientHeight;
         const scrollPosition = div.scrollTop;
-        const scrollTreshold = scrollHeight - height;
+        const scrollTreshold = scrollHeight - (1.1 * height);
         
         if (scrollPosition < scrollTreshold) 
             return;
