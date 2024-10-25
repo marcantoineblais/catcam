@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import React, { Suspense } from "react"
+import React, { Suspense } from "react";
 import VideoCard from "./VideoCard";
 import normaliseTime from "@/src/utils/normaliseTime";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
-import {Skeleton} from "@nextui-org/skeleton";
+import { Skeleton } from "@nextui-org/skeleton";
 
 export default function RecordingList(
     { selectedMonitor, selectedVideo, setSelectedVideo, dateTime, observer }:
-    { selectedMonitor?: Monitor, selectedVideo: any, setSelectedVideo: Function, dateTime: number, observer?: IntersectionObserver }
+        { selectedMonitor?: Monitor, selectedVideo: any, setSelectedVideo: Function, dateTime: number, observer?: IntersectionObserver; }
 ) {
     const [videos, setVideos] = React.useState<any[]>();
     const fetchReady = React.useRef<boolean>(true);
@@ -21,11 +21,11 @@ export default function RecordingList(
         async function fetchVideos() {
             if (!selectedMonitor)
                 return [];
-        
+
             const startTime = new Date(dateTime);
             const endTime = new Date(dateTime);
             endTime.setUTCHours(endTime.getUTCHours() + 1);
-        
+
             const startYear = startTime.getUTCFullYear();
             const startMonth = normaliseTime(startTime.getUTCMonth() + 1);
             const startDate = normaliseTime(startTime.getUTCDate());
@@ -34,9 +34,9 @@ export default function RecordingList(
             const endMonth = normaliseTime(endTime.getUTCMonth() + 1);
             const endDate = normaliseTime(endTime.getUTCDate());
             const endHours = normaliseTime(endTime.getUTCHours());
-            const startTimeStr = `${startYear}-${startMonth}-${startDate}T${startHours}:00:00`
-            const endTimeStr = `${endYear}-${endMonth}-${endDate}T${endHours}:00:00`
-        
+            const startTimeStr = `${startYear}-${startMonth}-${startDate}T${startHours}:00:00`;
+            const endTimeStr = `${endYear}-${endMonth}-${endDate}T${endHours}:00:00`;
+
             const params = new URLSearchParams({
                 id: selectedMonitor.mid,
                 groupKey: selectedMonitor.ke,
@@ -44,7 +44,7 @@ export default function RecordingList(
                 end: endTimeStr
             });
             const response = await fetch("/api/videos?" + params);
-        
+
             if (response.ok) {
                 const data = await response.json();
                 setVideos(data.videos);
@@ -56,31 +56,25 @@ export default function RecordingList(
 
         fetchReady.current = false;
         fetchVideos();
-    }, [selectedMonitor, dateTime])
+    }, [selectedMonitor, dateTime]);
 
     function renderVideoCards() {
         if (!videos)
-            return (
-                <>
-                    <VideoCard />
-                    <VideoCard />
-                    <VideoCard />
-                </>
-            );
+            return <VideoCard />;
 
         if (videos.length === 0)
-            return <div className="w-full h-full flex justify-center items-center">No videos available</div>
-        
+            return <div className="w-full h-full flex justify-center items-center">No videos available</div>;
+
         return videos.map((video, i) => {
             return (
-                <VideoCard 
-                    key={i} 
-                    video={video} 
-                    selectedVideo={selectedVideo} 
+                <VideoCard
+                    key={i}
+                    video={video}
+                    selectedVideo={selectedVideo}
                     onClick={() => setSelectedVideo(video)}
                     observer={observer}
                 />
-            )
+            );
         });
     }
 
@@ -90,24 +84,24 @@ export default function RecordingList(
         const date = normaliseTime(time.getDate());
         const month = normaliseTime(time.getMonth() + 1);
         const year = time.getFullYear();
-        const dateStr = `${date}-${month}-${year}`
-        const timeStr = `${hours}:00`
+        const dateStr = `${date}-${month}-${year}`;
+        const timeStr = `${hours}:00`;
 
         return (
             <>
                 <span className="font-bold text-xl">{timeStr}</span>
                 <span>{dateStr}</span>
             </>
-        )
+        );
     }
 
     return (
         <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
             <h2 className="py-0.5 w-full flex justify-between items-center">{renderDateTime()}</h2>
-            
+
             <div className="w-full flex justify-start content-start flex-wrap shadow dark:shadow-zinc-50/10 overflow-hidden">
                 {renderVideoCards()}
             </div>
         </div>
-    )
+    );
 }

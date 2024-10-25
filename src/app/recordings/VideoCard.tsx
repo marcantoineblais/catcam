@@ -12,17 +12,18 @@ export default function VideoCard(
 ) {
     const [dateTime, setDateTime] = React.useState<Date>();
     const [imageLoaded, setImageLoaded] = React.useState<boolean>(false);
+    const cardRef = React.useRef<HTMLDivElement>(null);
     const imgRef = React.useRef<HTMLImageElement>(null);
 
     React.useEffect(() => {
         const onResize = () => {
             const img = imgRef.current;
-            const container = imgRef.current?.parentElement;
+            const card = cardRef.current;
 
-            if (!img || !container)
+            if (!img || !card)
                 return;
 
-            const width = container.clientWidth;
+            const width = card.clientWidth;
             const height = width / 16 * 9;
             img.style.width = width + "px";
             img.style.height = height + "px";
@@ -44,10 +45,10 @@ export default function VideoCard(
     }, [video]);
 
     React.useEffect(() => {
-        if (!imgRef.current)
+        if (!cardRef.current)
             return;
 
-        observer?.observe(imgRef.current);
+        observer?.observe(cardRef.current);
     }, [observer]);
 
     function renderDateTime() {
@@ -67,24 +68,38 @@ export default function VideoCard(
 
         return (
             <>
-                <Skeleton isLoaded={dateStr !== ""}><span>{dateStr}</span></Skeleton>
-                <Skeleton isLoaded={timeStr !== ""}><span>{timeStr}</span></Skeleton>
+                <span>{dateStr}</span>
+                <span>{timeStr}</span>
             </>
         );
     }
 
     function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
-        setImageLoaded(e.currentTarget.complete);
+        if (imgRef.current?.src === "")
+            setImageLoaded(false);
+        else
+            setImageLoaded(e.currentTarget.complete);
+    }
+
+    function disableAnimation() {
+        const card = cardRef.current;
+        
+        if (!card)
+            return;
+
+        return card.dataset.disable === "true";
     }
 
     return (
         <div className="p-1.5 basis-1/2 md:basis-1/3">
             <div
-                data-active={video?.href === selectedVideo?.href ? true : undefined}
+                ref={cardRef}
                 onClick={onClick}
-                className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
+                data-active={video?.href === selectedVideo?.href ? true : undefined}
+                data-url={video ? "/api" + video.thumbnail : ""}
+                className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50 data-[disable=true]:invisible"
             >
-                <Skeleton isLoaded={imageLoaded}>
+                <Skeleton isLoaded={imageLoaded} disableAnimation={disableAnimation()}>
                     <img
                         ref={imgRef}
                         onLoad={onLoadHandle}
@@ -93,7 +108,6 @@ export default function VideoCard(
                         src={""}
                         alt="Movement capture preview"
                         className="object-fill duration-200"
-                        data-url={video ? "/api" + video.thumbnail : ""}
                     />
                 </Skeleton>
 

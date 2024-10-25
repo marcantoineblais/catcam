@@ -8,6 +8,7 @@ import SourceSelector from "@/src/components/SourceSelector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import CarouselButton from "./CarouselButton";
+import useDebounce from "@/src/hooks/useDebounce";
 
 export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
 
@@ -23,8 +24,8 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
     const [observer, setObserver] = React.useState<IntersectionObserver>();
     const containerRef = React.useRef<HTMLDivElement>(null);
     const carouselRef = React.useRef<HTMLDivElement>(null);
-    const scrollEventReady = React.useRef<boolean>(true);
     const recordingsRef = React.useRef<HTMLDivElement>(null);
+    const debounce = useDebounce();
 
     React.useEffect(() => {
         if (!monitors)
@@ -38,18 +39,22 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         if (!recordingsRef.current)
             return;
 
-        function intersectionHandler(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
+        function intersectionHandler(entries: IntersectionObserverEntry[]) {
             entries.forEach((entry: IntersectionObserverEntry) => {
-                const img = entry.target as HTMLImageElement
+                const card = entry.target as HTMLDivElement;
+                const img = card.getElementsByTagName("img")[0];
                 const ratio = entry.intersectionRatio;
-                img.style.opacity = ratio.toString();
+                card.style.opacity = ratio.toString();
 
-                if (ratio >= 0.10) {
-                    img.src = img.dataset.url || ""
+
+                if (ratio > 0) {
+                    card.dataset.disable = "false";
+                    img.src = card.dataset.url || "";
                 } else {
+                    card.dataset.disable = "true";
                     img.src = "";
                 }
-            })
+            });
         }
 
         const threshold = [];
@@ -63,7 +68,11 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         });
 
         setObserver(observer);
-    }, [])
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [selectedTime, selectedMonitor]);
 
     React.useEffect(() => {
         const displayedTime = [];
@@ -78,7 +87,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         setCarouselPage(0);
 
         if (recordingsRef.current)
-            recordingsRef.current.scrollTo({top: 0, behavior: "smooth"});
+            recordingsRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }, [selectedTime, selectedMonitor]);
 
     React.useEffect(() => {
@@ -117,25 +126,28 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         carousel.style.left = -position + "px";
     }, [carouselPage]);
 
-    function onScrollHandler(e: React.SyntheticEvent<HTMLDivElement>) {
-        const div = e.currentTarget;
+    function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
+        const div = e.target as HTMLDivElement;
         const scrollHeight = div.scrollHeight;
         const height = div.clientHeight;
         const scrollPosition = div.scrollTop;
         const scrollTreshold = scrollHeight - (1.1 * height);
         
-        if (scrollPosition < scrollTreshold) 
+        if (scrollPosition < scrollTreshold)
             return;
         
         const updatedTime = [];
         const offset = displayedTime.length;
-        for (let i = 0; i < 6; i++) {
-            const time = new Date(selectedTime);
-            time.setHours(time.getHours() - i - offset);
-            updatedTime.push(time.valueOf());
-        }
-
+        const time = new Date(selectedTime);
+        
+        time.setHours(time.getHours() - offset);
+        updatedTime.push(time.valueOf());
+        
         setDisplayedTime([...displayedTime, ...updatedTime]);
+    }
+
+    function onScrollHandler(e: React.SyntheticEvent<HTMLDivElement>) {
+        debounce(() => fetchDataOnScroll(e), 500);
     }
 
 
@@ -162,8 +174,8 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
 
                     <div className="w-full h-full overflow-hidden">
                         <div ref={carouselRef} className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden">
-                            <div 
-                                ref={recordingsRef} 
+                            <div
+                                ref={recordingsRef}
                                 onScroll={onScrollHandler}
                                 className="relative h-full px-1.5 basis-1/2 overflow-y-auto"
                             >
