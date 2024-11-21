@@ -44,8 +44,12 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
                 const card = entry.target as HTMLDivElement;
                 const img = card.getElementsByTagName("img")[0];
                 const ratio = entry.intersectionRatio;
-                card.style.opacity = ratio.toString();
 
+                if (ratio > 50) {
+                    card.style.opacity = "1";
+                } else {
+                    card.style.opacity = (ratio * 2).toString();
+                }
 
                 if (ratio > 0) {
                     card.dataset.disable = "false";
