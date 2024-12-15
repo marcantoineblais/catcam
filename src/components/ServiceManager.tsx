@@ -11,7 +11,8 @@ export default function ServiceManager() {
 
     React.useEffect(() => {
         const resetIdle = () => {
-            navigator.serviceWorker.controller?.postMessage({ type: "resetIdle" });
+            if (navigator.serviceWorker)
+                navigator.serviceWorker.controller?.postMessage({ type: "resetIdle" });
         };
 
         const logout = async () => {
