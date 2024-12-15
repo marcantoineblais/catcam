@@ -112,6 +112,8 @@ export default function VideoPlayerOverlay(
     }
 
     function mouseStartSeeking(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+        
         if (isPlaying) {
             pause();
         }
@@ -122,6 +124,8 @@ export default function VideoPlayerOverlay(
     }
 
     function touchStartSeeking(e: React.TouchEvent<HTMLDivElement>) {
+        e.stopPropagation();
+
         if (e.touches.length > 1)
             return;
         
@@ -135,6 +139,8 @@ export default function VideoPlayerOverlay(
     }
 
     function mouseSeek(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+
         const video = videoRef.current;
 
         if (updatedTime === null || !video)
@@ -146,6 +152,8 @@ export default function VideoPlayerOverlay(
     }
 
     function touchSeek(e: React.TouchEvent<HTMLDivElement>) {
+        e.stopPropagation();
+
         if (e.touches.length > 1)
             return;
 

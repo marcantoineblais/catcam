@@ -11,9 +11,7 @@ export default function Login() {
     const [rememberMe, setRememberMe] = React.useState<boolean>(false);
     const router = useRouter();
 
-    async function submitForm(e: FormEvent) {
-        e.preventDefault();
-
+    async function submitForm() {
         if (!email || !password) {
             renderPopup("All fields are required.", "Warning");
             return;
@@ -47,7 +45,7 @@ export default function Login() {
     return (
         <div className="h-full flex flex-col overflow-hidden">
             <main className="h-full px-1 pt-5 max-w-screen-md container mx-auto overflow-auto">
-                <form onSubmit={submitForm} className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10" autoComplete="on">
+                <form onSubmit={(e) => e.preventDefault()} className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10" autoComplete="on">
                     <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">Login</h1>
 
                     <label className="flex pt-3">
@@ -84,7 +82,7 @@ export default function Login() {
                     </label>
 
                     <div className="pt-5 flex justify-center">
-                        <button type="submit" className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700">Submit</button>
+                        <button onClick={submitForm} className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700">Submit</button>
                     </div>
                 </form>
             </main>
