@@ -1,11 +1,10 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import VideoCard from "./VideoCard";
 import normaliseTime from "@/src/utils/normaliseTime";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
-import { Skeleton } from "@nextui-org/skeleton";
 
 export default function RecordingList(
     { selectedMonitor, selectedVideo, setSelectedVideo, dateTime, observer }:

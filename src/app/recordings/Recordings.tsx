@@ -42,21 +42,12 @@ export default function Recordings({ monitors }: { monitors?: Monitor[]; }) {
         function intersectionHandler(entries: IntersectionObserverEntry[]) {
             entries.forEach((entry: IntersectionObserverEntry) => {
                 const card = entry.target as HTMLDivElement;
-                const img = card.getElementsByTagName("img")[0];
                 const ratio = entry.intersectionRatio;
 
                 if (ratio > 50) {
                     card.style.opacity = "1";
                 } else {
                     card.style.opacity = (ratio * 2).toString();
-                }
-
-                if (ratio > 0) {
-                    card.dataset.disable = "false";
-                    img.src = card.dataset.url || "";
-                } else {
-                    card.dataset.disable = "true";
-                    img.src = "";
                 }
             });
         }

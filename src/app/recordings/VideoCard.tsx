@@ -2,7 +2,6 @@
 
 import normaliseTime from "@/src/utils/normaliseTime";
 import { Skeleton } from "@nextui-org/skeleton";
-import Image from "next/image";
 import React from "react";
 import { MouseEventHandler } from "react";
 
@@ -75,10 +74,7 @@ export default function VideoCard(
     }
 
     function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
-        if (imgRef.current?.src === "")
-            setImageLoaded(false);
-        else
-            setImageLoaded(e.currentTarget.complete);
+        setImageLoaded(e.currentTarget.complete);
     }
 
     function disableAnimation() {
@@ -87,7 +83,15 @@ export default function VideoCard(
         if (!card)
             return;
 
-        return card.dataset.disable === "true";
+        return imageLoaded;
+    }
+
+    function imgSrc() {
+        if (!video) {
+            return "";
+        }
+
+        return "/api" + video.thumbnail;
     }
 
     return (
@@ -96,8 +100,7 @@ export default function VideoCard(
                 ref={cardRef}
                 onClick={onClick}
                 data-active={video?.href === selectedVideo?.href ? true : undefined}
-                data-url={video ? "/api" + video.thumbnail : ""}
-                className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50 data-[disable=true]:invisible"
+                className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
             >
                 <Skeleton isLoaded={imageLoaded} disableAnimation={disableAnimation()}>
                     <img
@@ -105,7 +108,7 @@ export default function VideoCard(
                         onLoad={onLoadHandle}
                         width={160}
                         height={90}
-                        src={""}
+                        src={imgSrc()}
                         alt="Movement capture preview"
                         className="object-fill duration-200"
                     />
