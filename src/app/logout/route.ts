@@ -1,23 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export function GET() {
-    const response = NextResponse.json({ ok: true })
-    
-    response.cookies.set({
-        name: "session",
-        value: "",
-        maxAge: -1,
-        httpOnly: true,
-        path: "/"
-    });
+  const response = NextResponse.json({ ok: true });
 
-    response.cookies.set({
-        name: "rememberMe",
-        value: "",
-        maxAge: -1,
-        httpOnly: true,
-        path: "/"
-    });
-    
-    return response;
+  response.cookies.set({
+    name: "session",
+    value: "",
+    maxAge: -1,
+    httpOnly: true,
+    path: "/",
+  });
+
+  response.cookies.set({
+    name: "rememberMe",
+    value: "",
+    maxAge: -1,
+    httpOnly: true,
+    path: "/",
+  });
+
+  return response;
 }

@@ -7,58 +7,59 @@
   --foreground-rgb: rgb(3, 7, 18);
 }
 
-
 .dark {
-    --foreground-rgb: rgb(228, 228, 231);
-    --background-rgb: rgb(24, 24, 27);
+  --foreground-rgb: rgb(228, 228, 231);
+  --background-rgb: rgb(24, 24, 27);
 }
 
 * {
-    user-select: none;
-    box-sizing: border-box;
+  user-select: none;
+  box-sizing: border-box;
 }
 
 html {
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
 }
 
 body {
-    color: var(--foreground-rgb);
-    background: var(--background-rgb);
-    height: 100vh;
-    max-height: 100vh;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  color: var(--foreground-rgb);
+  background: var(--background-rgb);
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 video::-webkit-media-controls {
-    display: none !important;
+  display: none !important;
 }
 
 ::-webkit-scrollbar {
-    width: 0.5rem;
+  width: 0.5rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(3, 105, 161);
-    border-radius: 0.25rem;
+  background-color: rgb(3, 105, 161);
+  border-radius: 0.25rem;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
 }
 
 .dark ::-webkit-scrollbar-track {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 @media screen and (orientation: landscape) {
-    body, main, .container {
-        overflow: auto;
-    }
+  body,
+  main,
+  .container {
+    overflow: auto;
+  }
 }

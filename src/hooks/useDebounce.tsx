@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
 import React from "react";
 
 export default function useDebounce() {
-    const timer = React.useRef<NodeJS.Timeout | number>();
+  const timer = React.useRef<NodeJS.Timeout | number>();
 
-    React.useEffect(() => {
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, []);
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
-    const handler = (func: Function, wait: number) => {
-        clearTimeout(timer.current);
-        timer.current = setTimeout(func, wait);
-    }
+  const handler = (func: Function, wait: number) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(func, wait);
+  };
 
-    return handler;
+  return handler;
 }
