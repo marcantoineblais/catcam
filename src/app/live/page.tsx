@@ -4,7 +4,7 @@ import { fetchMonitors, readSettings } from "@/src/utils/fetch";
 
 export default async function HomePage() {
   const monitors = await fetchMonitors();
-  const settings = readSettings();
+  const settings = await readSettings();
 
   return (
     <LiveStream

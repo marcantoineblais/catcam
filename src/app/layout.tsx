@@ -7,6 +7,7 @@ import ServiceManager from "../components/ServiceManager";
 import Navbar from "../components/navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
+const autoDarkModeTime = { start: 19, end: 7 };
 
 export const metadata: Metadata = {
   title: "Catcam",
@@ -23,14 +24,16 @@ export const metadata: Metadata = {
 };
 
 async function darkMode() {
-  const mode = cookies().get("mode")?.value || "";
+  const cookiesValue = await cookies();
+  const mode = cookiesValue.get("mode")?.value || "";
+  const {start, end} = autoDarkModeTime;
 
   if (mode === "auto") {
     const time = new Date(Date.now());
-    const timezoneOffset = parseInt(cookies().get("timezone")?.value || "0");
+    const timezoneOffset = parseInt(cookiesValue.get("timezone")?.value || "0");
     time.setMinutes(time.getUTCMinutes() - timezoneOffset);
 
-    if (time.getUTCHours() > 19 || time.getUTCHours() < 7) {
+    if (time.getUTCHours() > start || time.getUTCHours() < end) {
       return "dark";
     }
   }
@@ -43,13 +46,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const darkClass = await darkMode();
-
+ 
+  const dark = await darkMode();
+  
   return (
-    <html lang="en">
-      <ServiceManager />
+    <html lang="en" className={dark}>
+      {/* <ServiceManager /> */}
 
-      <body className={`${inter.className} ${darkClass}`}>
+      <body 
+        className={inter.className}
+      >
         <Navbar />
         {children}
       </body>

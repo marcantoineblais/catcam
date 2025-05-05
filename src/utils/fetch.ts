@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { Monitor } from "../models/monitor";
 
 export async function fetchMonitors() {
-  const jwt = headers().get("session") as string;
+  const headersValue = await headers();
+  const jwt = headersValue.get("session") as string;
 
   try {
     const session = JSON.parse(jwt);
@@ -24,12 +25,12 @@ export async function fetchMonitors() {
   }
 }
 
-export function readSettings() {
-  const cookie = cookies();
-  const mode = cookie.get("mode")?.value || "light";
-  const camera = cookie.get("camera")?.value || "";
-  const home = cookie.get("home")?.value || " live";
-  const quality = cookie.get("quality")?.value || "HQ";
+export async function readSettings() {
+  const cookiesValue = await cookies();
+  const mode = cookiesValue.get("mode")?.value || "light";
+  const camera = cookiesValue.get("camera")?.value || "";
+  const home = cookiesValue.get("home")?.value || " live";
+  const quality = cookiesValue.get("quality")?.value || "HQ";
 
   return { mode, camera, home, quality };
 }

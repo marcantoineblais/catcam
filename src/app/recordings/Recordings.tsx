@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import CarouselButton from "./CarouselButton";
 import useDebounce from "@/src/hooks/useDebounce";
+import { Video } from "@/src/models/video";
 
 export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
   const [videoSource, setVideoSource] = React.useState<string>();
@@ -18,7 +19,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
     new Date(Date.now())
   );
   const [displayedTime, setDisplayedTime] = React.useState<number[]>([]);
-  const [recordingsList, setRecordingsList] = React.useState<ReactNode[]>();
+  const [videoLists, setVideosList] = React.useState<Video[]>();
   const [playlist, setPlaylist] = React.useState<any[]>();
   const [carouselPage, setCarouselPage] = React.useState<number>(0);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
@@ -184,14 +185,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
               ref={carouselRef}
               className="relative w-[200%] h-full bg-inherit duration-500 flex justify-start overflow-hidden"
             >
-              <div
-                ref={recordingsRef}
-                onScroll={onScrollHandler}
-                className="relative h-full px-1.5 basis-1/2 overflow-y-auto"
-              >
-                {recordingsList}
-              </div>
-
+              <RecordingList />
               <div className="px-1.5 flex basis-1/2 h-full">
                 <SourceSelector
                   monitors={monitors}
