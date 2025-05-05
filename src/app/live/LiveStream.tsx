@@ -55,7 +55,7 @@ export default function LiveStream({
 
   return (
     <div className="flex flex-col h-full">
-      <main className="relative grow p-1 container mx-auto max-w-screen-lg overflow-hidden flex flex-col">
+      <main className="relative grow p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden flex flex-col">
         <div ref={containerRef} className="w-full max-h-full">
           <VideoPlayer
             title={selectedMonitor?.name}

@@ -133,7 +133,7 @@ export default function VideoPlayer({
 
   return (
     <div
-      className="invisible py-1.5 flex justify-center items-center overflow-hidden data-[ready]:visible data-[fullscreen]:fixed data-[fullscreen]:inset-0 data-[fullscreen]:z-50 data-[fullscreen]:p-0 data-[fullscreen]:bg-black"
+      className="invisible py-1.5 flex justify-center items-center overflow-hidden data-ready:visible data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
       data-ready={ready ? true : undefined}
       data-fullscreen={fullscreen ? true : undefined}
     >

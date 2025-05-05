@@ -44,7 +44,7 @@ export default function VideoCard({
         ref={cardRef}
         onClick={onClick}
         data-active={video?.href === selectedVideo?.href ? true : undefined}
-        className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-[active]:brightness-50"
+        className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-active:brightness-50"
       >
         <Skeleton isLoaded={imageLoaded} disableAnimation={disableAnimation()}>
           <Image

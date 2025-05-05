@@ -267,7 +267,7 @@ export default function VideoPlayerOverlay({
 
   return (
     <div
-      className="absolute hidden opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-[ready]:block data-[visible]:opacity-100 data-[fullscreen]:fixed"
+      className="absolute hidden opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-ready:block data-visible:opacity-100 data-fullscreen:fixed"
       data-ready={isLoaded ? true : undefined}
       data-visible={timeoutTime > 0 ? true : undefined}
       data-fullscreen={fullscreen ? true : undefined}
@@ -278,13 +278,13 @@ export default function VideoPlayerOverlay({
       onTouchMove={showOverlay}
     >
       <div
-        className="invisible px-5 py-1.5 absolute top-0 left-0 duration-500 bg-gray-950/75 data-[visible]:visible"
+        className="invisible px-5 py-1.5 absolute top-0 left-0 duration-500 bg-gray-950/75 data-visible:visible"
         data-visible={timeoutTime > 0 && title ? true : undefined}
       >
         <h3>{title}</h3>
       </div>
       <div
-        className="invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-[visible]:visible"
+        className="invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-visible:visible"
         onMouseMove={mouseSeek}
         data-visible={timeoutTime > 0 ? true : undefined}
       >
@@ -303,10 +303,10 @@ export default function VideoPlayerOverlay({
             </div>
           </div>
         )}
-        <div className="w-full py-1 flex justify-between items-center flex-grow">
+        <div className="w-full py-1 flex justify-between items-center grow">
           <div>
             {isLive ? (
-              <div className="relative flex-grow animate-pulse">
+              <div className="relative grow animate-pulse">
                 <FontAwesomeIcon icon={faVideo} className="pe-1" />
                 <span>LIVE</span>
               </div>
@@ -340,7 +340,7 @@ export default function VideoPlayerOverlay({
 
           <button onClick={toggleFullscreen}>
             <FontAwesomeIcon
-              className="flex items-center cursor-pointer data-[disabled]:hidden"
+              className="flex items-center cursor-pointer data-disabled:hidden"
               icon={faExpand}
             />
           </button>

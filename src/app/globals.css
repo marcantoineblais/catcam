@@ -61,3 +61,6 @@ video::-webkit-media-controls {
     overflow: auto;
   }
 }
+
+/* Tailwind custom classes */
+@custom-variant dark (&:where(.dark, .dark *));

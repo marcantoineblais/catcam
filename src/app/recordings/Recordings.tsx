@@ -144,11 +144,11 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
 
   return (
     <div className="h-full overflow-hidden">
-      <main className="h-full p-1 container mx-auto max-w-screen-lg flex flex-col overflow-hidden">
+      <main className="h-full p-1 container mx-auto max-w-(--breakpoint-lg) flex flex-col overflow-hidden">
         <div
           ref={containerRef}
           data-close={isDrawerOpen ? true : undefined}
-          className="w-full max-h-full duration-1000 data-[close]:max-h-0 data-[close]:landscape:max-h-full data-[close]:lg:landscape:max-h-0 data-[close]:landscape:duration-0 data-[close]:landscape:lg:duration-1000"
+          className="w-full max-h-full duration-1000 data-close:max-h-0 data-close:landscape:max-h-full data-close:lg:landscape:max-h-0 data-close:landscape:duration-0 data-close:landscape:lg:duration-1000"
         >
           <VideoPlayer
             title={selectedVideo?.filename}
@@ -168,7 +168,7 @@ export default function Recordings({ monitors }: { monitors?: Monitor[] }) {
             <FontAwesomeIcon
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
               icon={faAngleUp}
-              className="w-8 h-8 md:w-12 md:h-12 duration-500 cursor-pointer data-[active]:rotate-180"
+              className="w-8 h-8 md:w-12 md:h-12 duration-500 cursor-pointer data-active:rotate-180"
               data-active={isDrawerOpen ? true : undefined}
             />
 

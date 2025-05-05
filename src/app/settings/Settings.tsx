@@ -55,7 +55,7 @@ export default function Settings({
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <main className="h-full pt-3 p-1 container mx-auto max-w-screen-lg overflow-hidden">
+      <main className="h-full pt-3 p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden">
         <form
           ref={formRef}
           className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto"
