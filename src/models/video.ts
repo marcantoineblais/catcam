@@ -1,4 +1,5 @@
 export interface Video {
-  src: String;
-  thumbnail: String;
+  src: string;
+  thumbnail: string;
+  timestamp: Date;
 }

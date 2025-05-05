@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import { useEffect, useRef } from "react";
 
 export default function useDebounce() {
-  const timer = React.useRef<NodeJS.Timeout | number>();
+  const timer = useRef<NodeJS.Timeout | number>(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       clearTimeout(timer.current);
     };

@@ -1,6 +1,8 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Monitor } from "../models/monitor";
+import { Video } from "../models/video";
+import { getDateTime, getFullDate } from "./formatDate";
 
 export async function fetchMonitors() {
   const headersValue = await headers();
@@ -14,7 +16,16 @@ export async function fetchMonitors() {
     const response = await fetch(`${apiUrl}/${key}/monitor/${groupKey}`);
 
     if (response.ok) {
-      const monitors = await response.json();
+      const data = await response.json();
+      const monitors = data.map((monitor: any) => {
+        return {
+          name: monitor.name,
+          id: monitor.mid,
+          streams: monitor.streams,
+          groupKey: monitor.ke,
+        };
+      });
+
       monitors.sort((m1: Monitor, m2: Monitor) => (m1.name > m2.name ? 1 : -1));
       return monitors;
     } else {
@@ -23,6 +34,44 @@ export async function fetchMonitors() {
   } catch (ex) {
     redirect("/login");
   }
+}
+
+export async function fetchVideos(params = {}) {
+  const headersValue = await headers();
+  const jwt = headersValue.get("session") as string;
+
+  try {
+    const session = JSON.parse(jwt);
+    const apiUrl = process.env.SERVER_URL;
+    const key = session.auth_token;
+    const groupKey = session.ke;
+    const response = await fetch(`${apiUrl}/${key}/videos/${groupKey}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      const videos: Video[] = data.videos.map((video: any) => {
+        const videoTime = new Date(Date.parse(video.time));
+        const thumbTime = new Date(videoTime.getTime() + 5000);
+        const thumbPath = `${getFullDate(thumbTime)}/${getDateTime(
+          thumbTime
+        )}.png`;
+        const thumbUrl = `/${key}/timelapse/${groupKey}/${thumbPath}`;
+
+        return {
+          src: "api" + video.href,
+          thumbnail: "/api" + thumbUrl,
+          timestamp: videoTime,
+        };
+      });
+
+      videos.sort((v1, v2) => v1.timestamp.valueOf() - v2.timestamp.valueOf());
+      console.log(videos);
+      
+      return videos;
+    }
+  } catch (_) {}
+
+  return [];
 }
 
 export async function readSettings() {

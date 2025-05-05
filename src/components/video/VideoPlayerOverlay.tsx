@@ -1,6 +1,5 @@
 "use client";
 
-import normaliseTime from "@/src/utils/normaliseTime";
 import {
   faBackwardStep,
   faExpand,
@@ -35,7 +34,7 @@ export default function VideoPlayerOverlay({
   isLoaded?: boolean;
   setCurrentTime?: Function;
   videoSource?: string;
-  videoRef: React.RefObject<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   fullscreen: boolean;
   toggleFullscreen: MouseEventHandler;
 }) {
@@ -209,29 +208,6 @@ export default function VideoPlayerOverlay({
     setTimeoutTime(3000);
   }
 
-  function displayTime(time: number) {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    return (
-      <span>
-        {minutes}:{normaliseTime(seconds)}
-      </span>
-    );
-  }
-
-  function renderTime() {
-    if (displayedTime === null || duration === undefined) return "";
-
-    return (
-      <>
-        <span>{displayTime(displayedTime)}</span>
-        <span>/</span>
-        <span>{displayTime(duration)}</span>
-      </>
-    );
-  }
-
   function renderDurationBar() {
     if (displayedTime === null || duration === undefined) return null;
 
@@ -332,7 +308,8 @@ export default function VideoPlayerOverlay({
                   </button>
                 </div>
                 <div className="flex items-center font-mono text-center gap-1">
-                  {renderTime()}
+                  {/* ADD CURRENT TIME */}
+                  {/* ADD END TIME */}
                 </div>
               </div>
             )}

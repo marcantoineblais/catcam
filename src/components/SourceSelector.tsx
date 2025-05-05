@@ -29,7 +29,7 @@ export default function SourceSelector({
   }
 
   return (
-    <div className="py-3 w-full h-full flex flex-wrap content-start justify-start">
+    <div className="w-full h-full flex flex-wrap content-start justify-start">
       {renderButtons()}
     </div>
   );

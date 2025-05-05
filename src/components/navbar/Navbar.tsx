@@ -10,6 +10,7 @@ import renderPopup from "@/src/utils/renderPopup";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+  const noNavbarPaths = ["/login"];
   const currentPage = usePathname();
   const router = useRouter();
 
@@ -44,7 +45,7 @@ const Navbar = () => {
     }
   }
 
-  if (currentPage === "/login") return null;
+  if (noNavbarPaths.includes(currentPage)) return null;
 
   return (
     <div className="pt-1 border-b-2 border-gray-300 shadow dark:border-zinc-700 dark:shadow-zinc-50/10 landscape:hidden lg:landscape:block">
@@ -63,7 +64,7 @@ const Navbar = () => {
           >
             <FontAwesomeIcon
               data-active={isMenuOpen ? true : undefined}
-              className="w-8 h-8 duration-500 ease-in-out data-[active]:rotate-90"
+              className="text-2xl cursor-pointer duration-500 ease-in-out data-[active]:rotate-90"
               icon={faBars}
             />
           </div>

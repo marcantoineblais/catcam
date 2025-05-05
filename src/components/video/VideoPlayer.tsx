@@ -9,29 +9,24 @@ import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer({
   title,
-  videoSource,
+  src = "",
   isLiveStream,
-  containerRef,
 }: {
   title?: string;
-  videoSource?: string;
+  src?: string;
   isLiveStream?: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
 }) {
   const [currentTime, setCurrentTime] = React.useState<number>(0);
   const [buffer, setBuffer] = React.useState<number>(0);
   const [duration, setDuration] = React.useState<number>(0);
   const [playing, setPlaying] = React.useState<boolean>(false);
   const [loaded, setLoaded] = React.useState<boolean>(false);
-  const [ready, setReady] = React.useState<boolean>(false);
   const [buffering, setBuffering] = React.useState<boolean>(true);
   const [fullscreen, setFullscreen] = React.useState<boolean>(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const videoContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (!videoSource) return;
-
     const toggleFullscreen = () => {
       if (screen.orientation.type.startsWith("landscape") && !fullscreen)
         setFullscreen(true);
@@ -45,76 +40,29 @@ export default function VideoPlayer({
     return () => {
       screen.orientation.removeEventListener("change", toggleFullscreen);
     };
-  }, [fullscreen, videoSource]);
-
-  // Resize streaming or recording video element when resizing window (16:9 ratio)
-  React.useEffect(() => {
-    const container = containerRef.current;
-    const videoContainer = videoContainerRef.current;
-
-    if (!container || !videoContainer) return;
-
-    const resize = () => {
-      let windowFraction: number;
-      if (fullscreen) windowFraction = 1;
-      else if (screen.orientation.type.startsWith("landscape"))
-        windowFraction = 0.8;
-      else windowFraction = 0.5;
-
-      const maxHeight = window.innerHeight * windowFraction;
-      const maxWidth = fullscreen ? window.innerWidth : container.clientWidth;
-      let width = fullscreen ? window.innerWidth : container.clientWidth;
-      let height = fullscreen ? window.innerHeight : container.clientHeight;
-
-      if (width > height) {
-        height = (width / 16) * 9;
-
-        if (height > maxHeight) {
-          height = maxHeight;
-          width = (height / 9) * 16;
-        }
-      } else {
-        width = (height / 9) * 16;
-
-        if (width > maxWidth) {
-          width = maxWidth;
-          height = (width / 16) * 9;
-        }
-      }
-
-      videoContainer.style.width = width + "px";
-      videoContainer.style.height = height + "px";
-    };
-
-    resize();
-    setReady(true);
-    window.addEventListener("resize", resize);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-    };
-  }, [containerRef, fullscreen]);
+  }, [fullscreen]);
 
   // Use HLS plugin only when required
   React.useEffect(() => {
     const video = videoRef.current;
 
-    if (!video || !videoSource) return;
+    if (!video || !src) return;
 
     let hls: Hls;
-
     if (isLiveStream && Hls.isSupported()) {
       hls = new Hls();
-      hls.loadSource(videoSource);
+      hls.loadSource(src);
       hls.attachMedia(video);
-    } else video.src = videoSource;
+    } else {
+      video.src = src;
+    }
 
     return () => {
       if (hls) {
         hls.destroy();
       }
     };
-  }, [videoSource, videoRef, isLiveStream]);
+  }, [src, videoRef, isLiveStream]);
 
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
     const length = e.currentTarget.buffered.length;
@@ -133,29 +81,28 @@ export default function VideoPlayer({
 
   return (
     <div
-      className="invisible py-1.5 flex justify-center items-center overflow-hidden data-ready:visible data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
-      data-ready={ready ? true : undefined}
+      className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
       data-fullscreen={fullscreen ? true : undefined}
     >
       <div
         ref={videoContainerRef}
-        className="relative w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10"
+        className="relative aspect-[16/9] w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10"
       >
-        {!videoSource && !isLiveStream && (
+        {!src && !isLiveStream && (
           <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />
         )}
 
-        {videoSource && videoRef.current && buffering && (
+        {src && videoRef.current && buffering && (
           <div className="absolute inset-0 flex justify-center items-center">
             <FontAwesomeIcon
               icon={faSpinner}
-              className="w-12 h-12 md:w-18 md:h-18 animate-spin"
+              className="text-8xl animate-spin"
             />
           </div>
         )}
 
         <video
-          className="w-full h-full object-fill scale-100 bg-loading bg-no-repeat bg-center"
+          className="w-full object-fill scale-100 bg-loading bg-no-repeat bg-center"
           ref={videoRef}
           autoPlay
           muted
@@ -186,7 +133,7 @@ export default function VideoPlayer({
           duration={duration}
           buffer={buffer}
           setCurrentTime={setCurrentTime}
-          videoSource={videoSource}
+          videoSource={src}
           videoRef={videoRef}
           fullscreen={fullscreen}
           toggleFullscreen={toggleFullscreen}

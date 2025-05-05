@@ -1,19 +1,22 @@
 "use client";
 
-import normaliseTime from "@/src/utils/normaliseTime";
+import { getFormattedDate, getFormattedTime } from "@/src/utils/formatDate";
 import { Skeleton } from "@nextui-org/skeleton";
 import Image from "next/image";
 import React from "react";
 import { MouseEventHandler } from "react";
 
 export default function VideoCard({
-  video,
-  selectedVideo,
+  thumbnail = "",
+  timestamp = new Date(),
+  isSelected = false,
   observer,
   onClick,
 }: {
-  video?: any;
-  selectedVideo?: any;
+  src?: string;
+  thumbnail?: string,
+  timestamp?: Date;
+  isSelected?: boolean;
   observer?: IntersectionObserver;
   onClick?: MouseEventHandler;
 }) {
@@ -43,7 +46,7 @@ export default function VideoCard({
       <div
         ref={cardRef}
         onClick={onClick}
-        data-active={video?.href === selectedVideo?.href ? true : undefined}
+        data-active={isSelected ? true : undefined}
         className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 hover:brightness-125 duration-200 cursor-pointer data-active:brightness-50"
       >
         <Skeleton isLoaded={imageLoaded} disableAnimation={disableAnimation()}>
@@ -52,14 +55,15 @@ export default function VideoCard({
             onLoad={onLoadHandle}
             width={160}
             height={90}
-            src={"api/" + video.thumbnail}
+            src={thumbnail}
             alt="Movement capture preview"
-            className="ratio-[16/9] object-fill duration-200"
+            className="aspect-[16/9] object-fill duration-200"
           />
         </Skeleton>
 
         <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base">
-          {renderDateTime()}
+          <span>{getFormattedDate(timestamp)}</span>
+          <span>{getFormattedTime(timestamp)}</span>
         </div>
       </div>
     </div>

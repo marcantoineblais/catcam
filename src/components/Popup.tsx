@@ -48,6 +48,10 @@ export default function Popup({
     <div
       ref={containerRef}
       className="z-50 fixed inset-0 flex justify-center items-start px-3 py-[10%] bg-black/50 duration-200 opacity-0"
+      role="alert"
+      aria-live="assertive"
+      aria-labelledby="warning"
+      tabIndex={-1}
     >
       <div
         ref={popupRef}
