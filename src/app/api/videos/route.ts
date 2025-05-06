@@ -1,6 +1,5 @@
 "use server";
 
-import normaliseTime from "@/src/utils/normaliseTime";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -27,22 +26,22 @@ export async function GET(request: NextRequest) {
 
     if (videosResponse.ok) {
       const videosData = await videosResponse.json();
-      const videos = videosData.videos.map((video: any) => {
-        const time = new Date(video.time);
-        time.setUTCSeconds(time.getUTCSeconds() + 7);
-        const date = `${time.getUTCFullYear()}-${normaliseTime(
-          time.getUTCMonth() + 1
-        )}-${normaliseTime(time.getUTCDate())}`;
-        const dateTime = `${date}T${normaliseTime(
-          time.getUTCHours()
-        )}-${normaliseTime(time.getUTCMinutes())}-${normaliseTime(
-          time.getUTCSeconds()
-        )}`;
-        const url = `/${session.auth_token}/timelapse/${groupKey}/${video.mid}/${date}/${dateTime}.jpg`;
-        return { ...video, thumbnail: url };
-      });
+      // const videos = videosData.videos.map((video: any) => {
+      //   const time = new Date(video.time);
+      //   time.setUTCSeconds(time.getUTCSeconds() + 7);
+      //   const date = `${time.getUTCFullYear()}-${normaliseTime(
+      //     time.getUTCMonth() + 1
+      //   )}-${normaliseTime(time.getUTCDate())}`;
+      //   const dateTime = `${date}T${normaliseTime(
+      //     time.getUTCHours()
+      //   )}-${normaliseTime(time.getUTCMinutes())}-${normaliseTime(
+      //     time.getUTCSeconds()
+      //   )}`;
+      //   const url = `/${session.auth_token}/timelapse/${groupKey}/${video.mid}/${date}/${dateTime}.jpg`;
+      //   return { ...video, thumbnail: url };
+      // });
 
-      return NextResponse.json({ ok: true, videos: videos });
+      // return NextResponse.json({ ok: true, videos: videos });
     }
 
     NextResponse.error();

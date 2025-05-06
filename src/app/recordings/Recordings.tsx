@@ -25,7 +25,7 @@ export default function Recordings({
   const debounce = useDebounce();
 
   useEffect(() => {
-    const allMonitor = { name: "All" };
+    const allMonitor = { name: "All", id: "all" };
     setVideosList(videos);
     setMonitorsList([allMonitor, ...monitors]);
     setSelectedMonitor(allMonitor);
@@ -81,7 +81,7 @@ export default function Recordings({
           />
 
           <SourceSelector
-            monitors={monitors}
+            monitors={monitorsList}
             selectedMonitor={selectedMonitor}
             setSelectedMonitor={setSelectedMonitor}
           />

@@ -15,7 +15,7 @@ export default function RecordingList({
 }) {
   const [videoCards, setVideoCards] = useState<ReactNode[]>([]);
   const [observer, setObserver] = React.useState<IntersectionObserver>();
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);  
 
   useEffect(() => {
     setVideoCards(

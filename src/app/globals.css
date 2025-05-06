@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Hero UI */
+@plugin "./hero.ts";
+@source "../../node_modules/@heroui/theme/dist*.{js,ts,jsx,tsx}";
+
+/* Tailwind custom classes */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background-rgb: rgb(243, 244, 246);
   --foreground-rgb: rgb(3, 7, 18);
@@ -62,5 +69,3 @@ video::-webkit-media-controls {
   }
 }
 
-/* Tailwind custom classes */
-@custom-variant dark (&:where(.dark, .dark *));

@@ -1,6 +1,6 @@
 export interface Monitor {
   name: string;
+  id: string;
   ke?: string;
-  mid?: string;
   streams?: string[];
 }

@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Monitor } from "../models/monitor";
 import { Video } from "../models/video";
 import { getDateTime, getFullDate } from "./formatDate";
+import { TZDate } from "@date-fns/tz";
+import { addSeconds, parse } from "date-fns";
 
 export async function fetchMonitors() {
   const headersValue = await headers();
@@ -39,7 +41,7 @@ export async function fetchMonitors() {
 export async function fetchVideos(params = {}) {
   const headersValue = await headers();
   const jwt = headersValue.get("session") as string;
-
+  
   try {
     const session = JSON.parse(jwt);
     const apiUrl = process.env.SERVER_URL;
@@ -49,24 +51,22 @@ export async function fetchVideos(params = {}) {
 
     if (response.ok) {
       const data = await response.json();
-      const videos: Video[] = data.videos.map((video: any) => {
-        const videoTime = new Date(Date.parse(video.time));
-        const thumbTime = new Date(videoTime.getTime() + 5000);
+      const videos: Video[] = data.videos.map((video: any) => {        
+        const videoTime = new TZDate(video.time, "GMT-0000");        
+        const thumbTime = addSeconds(videoTime, 6);
         const thumbPath = `${getFullDate(thumbTime)}/${getDateTime(
           thumbTime
-        )}.png`;
-        const thumbUrl = `/${key}/timelapse/${groupKey}/${thumbPath}`;
+        )}.jpg`;
+        const thumbUrl = `/${key}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 
         return {
           src: "api" + video.href,
-          thumbnail: "/api" + thumbUrl,
+          thumbnail: "api" + thumbUrl,
           timestamp: videoTime,
         };
       });
 
-      videos.sort((v1, v2) => v1.timestamp.valueOf() - v2.timestamp.valueOf());
-      console.log(videos);
-      
+      videos.sort((v1, v2) => v2.timestamp.valueOf() - v1.timestamp.valueOf());
       return videos;
     }
   } catch (_) {}

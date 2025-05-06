@@ -5,16 +5,16 @@ import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
-import QualityButton from "./QualityButton";
+import QualityButton from "../../components/QualityButton";
 
 export default function LiveStream({
-  monitors,
-  defaultMonitor,
-  defaultQuality,
+  monitors = [],
+  defaultMonitor = "",
+  defaultQuality = "HQ",
 }: {
   monitors?: Monitor[];
-  defaultMonitor: string;
-  defaultQuality: string;
+  defaultMonitor?: string;
+  defaultQuality?: "HQ" | "SQ";
 }) {
   const [selectedMonitor, setSelectedMonitor] = React.useState<Monitor>();
   const [videoSource, setVideoSource] = React.useState<string>();
@@ -26,31 +26,30 @@ export default function LiveStream({
       renderPopup(["Could not load video monitors.", "Please retry later."]);
       return;
     }
-    if (monitors.length === 0)
+
+    if (monitors.length === 0) {
       renderPopup(
         "There is not any available video monitors at the moment.",
         "Warning"
       );
-    else monitors.sort((m1, m2) => (m1.name > m2.name ? 1 : -1));
+    }
   }, [monitors]);
 
   React.useEffect(() => {
     if (!monitors) return;
 
+    console.log(defaultMonitor)
     const monitor =
-      monitors.find((monitor) => monitor.mid === defaultMonitor) || monitors[0];
+      monitors.find((monitor) => monitor.id === defaultMonitor) || monitors[0];
     setSelectedMonitor(monitor);
   }, [monitors, defaultMonitor]);
 
   React.useEffect(() => {
-    const path =
-      selectedMonitor?.streams[
-        selectedMonitor.streams.length > 1 && !isHQ ? 1 : 0
-      ];
+    const streams = selectedMonitor?.streams;
+    if (!streams) return;
 
-    if (!path) return;
-
-    setVideoSource("/api" + path);
+    const index = streams.length > 1 && !isHQ ? 1 : 0;
+    setVideoSource("api" + streams[index]);
   }, [selectedMonitor, isHQ]);
 
   return (
@@ -59,16 +58,17 @@ export default function LiveStream({
         <div ref={containerRef} className="w-full max-h-full">
           <VideoPlayer
             title={selectedMonitor?.name}
-            videoSource={videoSource}
-            containerRef={containerRef}
+            src={videoSource}
             isLiveStream
           />
         </div>
 
         <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
-          {selectedMonitor && selectedMonitor.streams.length > 1 && (
-            <QualityButton isHQ={isHQ} setIsHQ={setIsHQ} />
-          )}
+          <QualityButton
+            isHQ={isHQ}
+            setIsHQ={setIsHQ}
+            isEnabled={(selectedMonitor?.streams?.length ?? 0) > 1}
+          />
         </div>
 
         <div className="flex flex-col landscape:hidden lg:landscape:flex">

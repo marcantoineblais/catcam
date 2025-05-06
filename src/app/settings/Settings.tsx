@@ -91,7 +91,7 @@ export default function Settings({
             value={camera}
             onChange={(e) => saveSetting(e, setCamera)}
             options={monitors.map((monitor) => {
-              return { label: monitor.name, value: monitor.mid };
+              return { label: monitor.name, value: monitor.id };
             })}
           />
 

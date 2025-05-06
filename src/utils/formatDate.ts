@@ -1,21 +1,22 @@
 import { format } from "date-fns";
+import { TZDate } from "@date-fns/tz"
 
-export function getTime(date: Date) {
+export function getTime(date: TZDate | Date) {
   return format(date, "HH:mm");
 }
 
-export function getFullDate(date: Date) {
-  return format(date, "yyyy-mm-dd");
+export function getFullDate(date: TZDate | Date) {
+  return format(date, "yyyy-MM-dd");
 }
 
-export function getDateTime(date: Date) {
-  return format(date, "yyyy-mm-dd'T'HH:mm:ss'Z'");
+export function getDateTime(date: TZDate | Date) {
+  return format(date, "yyyy-MM-dd'T'HH-mm-ss");
 }
 
-export function getFormattedDate(date: Date) {
-  return format(date, "mm-dd-yyyy");
+export function getFormattedDate(date: TZDate | Date) {
+  return format(date, "MM-dd-yyyy");
 }
 
-export function getFormattedTime(date: Date) {
+export function getFormattedTime(date: TZDate | Date) {
   return format(date, "HH:mm:ss");
 }
