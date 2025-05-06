@@ -14,14 +14,20 @@ export default function RecordingList({
   setSelectedVideo: Function;
 }) {
   const [videoCards, setVideoCards] = useState<ReactNode[]>([]);
+  const [visibilityArray, setVisibilityArray] = useState<boolean[]>([]);
   const [observer, setObserver] = React.useState<IntersectionObserver>();
-  const containerRef = React.useRef<HTMLDivElement>(null);  
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setVisibilityArray(videosList.map((_video) => false));
+  }, []);
 
   useEffect(() => {
     setVideoCards(
-      videosList.map((video) => {
+      videosList.map((video, i) => {
         const key = video.src as Key;
         const isSelected = selectedVideo === video;
+        const isVisible = visibilityArray[i];
 
         return (
           <VideoCard
@@ -29,19 +35,20 @@ export default function RecordingList({
             thumbnail={video.thumbnail}
             timestamp={video.timestamp}
             isSelected={isSelected}
+            isVisible={isVisible}
             onClick={() => setSelectedVideo(video)}
             observer={observer}
           />
         );
       })
     );
-  }, [videosList, selectedVideo, setSelectedVideo, observer]);
+  }, [videosList, selectedVideo, setSelectedVideo, visibilityArray, observer]);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     function intersectionHandler(entries: IntersectionObserverEntry[]) {
-      entries.forEach((entry: IntersectionObserverEntry) => {
+      entries.forEach((entry: IntersectionObserverEntry, i: number) => {
         const card = entry.target as HTMLDivElement;
         const ratio = entry.intersectionRatio;
 
@@ -49,8 +56,16 @@ export default function RecordingList({
           card.style.opacity = "1";
         } else {
           card.style.opacity = (ratio * 2).toString();
+        } 
+
+        if (ratio > 0) {
+          visibilityArray[i] = true;
+        } else {
+          visibilityArray[i] = false;
         }
       });
+
+      setVisibilityArray([...visibilityArray])
     }
 
     const threshold = [];

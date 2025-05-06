@@ -28,11 +28,11 @@ export default function VideoCard({
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card) return;
+    if (!card || !observer) return;
 
-    observer?.observe(card);
+    observer.observe(card);
     return () => {
-      observer?.unobserve(card);
+      observer.unobserve(card);
     }
   }, [observer]);
 
