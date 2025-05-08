@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Key, ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import VideoCard from "./VideoCard";
 import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loading";
@@ -23,7 +23,7 @@ export default function RecordingsList({
   onScroll?: Function;
 }) {
   const [videosCards, setVideosCards] = useState<ReactNode[]>([]);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVideosCards(
@@ -37,6 +37,7 @@ export default function RecordingsList({
             timestamp={video.timestamp}
             isSelected={isSelected}
             onClick={() => setSelectedVideo(video)}
+            containerRef={containerRef}
           />
         );
       })
@@ -46,9 +47,9 @@ export default function RecordingsList({
   return (
     <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
       <div
-        ref={containerRef}
         className="w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
         onScroll={(e) => onScroll(e)}
+        ref={containerRef}
       >
         {videosList.length > 0 ? (
           videosCards
@@ -60,9 +61,11 @@ export default function RecordingsList({
 
         {nothingToLoad && videosList.length > 0 && (
           <div className="w-full flex justify-center items-center gap-1 text-sky-700">
-            <FontAwesomeIcon icon={faCircleXmark} size="lg"/>
-            <h3 className="text-lg font-bold py-5">There is nothing more to show</h3>
-            <FontAwesomeIcon icon={faCircleXmark} size="lg"/>
+            <FontAwesomeIcon icon={faCircleXmark} size="lg" />
+            <h3 className="text-lg font-bold py-5">
+              There is nothing more to show
+            </h3>
+            <FontAwesomeIcon icon={faCircleXmark} size="lg" />
           </div>
         )}
 
@@ -73,7 +76,6 @@ export default function RecordingsList({
           />
         )}
       </div>
-
     </div>
   );
 }

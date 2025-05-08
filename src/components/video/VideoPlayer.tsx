@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import Logo from "../Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,23 +17,23 @@ export default function VideoPlayer({
   src?: string;
   isLiveStream?: boolean;
 }) {
-  const [currentTime, setCurrentTime] = React.useState<number>(0);
-  const [buffer, setBuffer] = React.useState<number>(0);
-  const [duration, setDuration] = React.useState<number>(0);
-  const [playing, setPlaying] = React.useState<boolean>(false);
-  const [loaded, setLoaded] = React.useState<boolean>(false);
-  const [buffering, setBuffering] = React.useState<boolean>(true);
-  const [fullscreen, setFullscreen] = React.useState<boolean>(false);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-  const videoContainerRef = React.useRef<HTMLDivElement>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [buffer, setBuffer] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isBuffering, setIsBuffering] = useState<boolean>(true);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const toggleFullscreen = () => {
-      if (screen.orientation.type.startsWith("landscape") && !fullscreen)
-        setFullscreen(true);
+      if (screen.orientation.type.startsWith("landscape") && !isFullscreen)
+        setIsFullscreen(true);
 
-      if (screen.orientation.type.startsWith("portrait") && fullscreen)
-        setFullscreen(false);
+      if (screen.orientation.type.startsWith("portrait") && isFullscreen)
+        setIsFullscreen(false);
     };
 
     screen.orientation.addEventListener("change", toggleFullscreen);
@@ -41,10 +41,10 @@ export default function VideoPlayer({
     return () => {
       screen.orientation.removeEventListener("change", toggleFullscreen);
     };
-  }, [fullscreen]);
+  }, [isFullscreen]);
 
   // Use HLS plugin only when required
-  React.useEffect(() => {
+  useEffect(() => {
     const video = videoRef.current;
 
     if (!video || !src) return;
@@ -65,6 +65,11 @@ export default function VideoPlayer({
     };
   }, [src, videoRef, isLiveStream]);
 
+  useEffect(() => {
+    setIsBuffering(true);
+    setIsLoaded(false);
+  }, [src])
+
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
     const length = e.currentTarget.buffered.length;
 
@@ -77,13 +82,13 @@ export default function VideoPlayer({
   }
 
   function toggleFullscreen() {
-    setFullscreen(!fullscreen);
+    setIsFullscreen(!!isFullscreen);
   }
 
   return (
     <div
       className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
-      data-fullscreen={fullscreen ? true : undefined}
+      data-fullscreen={isFullscreen ? true : undefined}
     >
       <div
         ref={videoContainerRef}
@@ -93,7 +98,7 @@ export default function VideoPlayer({
           <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />
         )}
 
-        {src && videoRef.current && buffering && (
+        {src && videoRef.current && isBuffering && (
           <div className="absolute inset-0 flex justify-center items-center">
             <Loading />
           </div>
@@ -108,16 +113,16 @@ export default function VideoPlayer({
           controlsList="noremoteplayback nufullscreen nodownload"
           poster=""
           onCanPlay={() => {
-            setLoaded(true);
-            setBuffering(false);
+            setIsLoaded(true);
+            setIsBuffering(false);
           }}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
           onDurationChange={(e) => setDuration(e.currentTarget.duration)}
           onProgress={setLastBuffer}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onEnded={() => setPlaying(false)}
-          onWaiting={() => setBuffering(true)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          onWaiting={() => setIsBuffering(true)}
         >
           Your browser does not support HTML5 video.
         </video>
@@ -125,15 +130,15 @@ export default function VideoPlayer({
         <VideoPlayerOverlay
           title={title}
           isLive={isLiveStream ? true : undefined}
-          isPlaying={playing}
-          isLoaded={loaded}
+          isPlaying={isPlaying}
+          isLoaded={isLoaded}
           currentTime={currentTime}
           duration={duration}
           buffer={buffer}
           setCurrentTime={setCurrentTime}
           videoSource={src}
           videoRef={videoRef}
-          fullscreen={fullscreen}
+          fullscreen={isFullscreen}
           toggleFullscreen={toggleFullscreen}
         />
       </div>

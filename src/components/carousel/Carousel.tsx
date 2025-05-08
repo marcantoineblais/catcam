@@ -14,7 +14,7 @@ export default function Carousel({
   toggleCarouselDrawer?: Function;
 }) {
   const [buttons, setButtons] = useState<ReactNode[]>([]);
-  const [nodes, setNodes] = useState<ReactNode[]>([]);
+  const [node, setNode] = useState<ReactNode>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -22,9 +22,7 @@ export default function Carousel({
     if (!sections) return;
 
     const labels = sections.map(({ label }) => label);
-    const nodes = sections.map(({ node }, i) =>
-      React.cloneElement(node, { key: i })
-    );
+    const node = sections[selectedIndex].node;
     const median = Math.floor(labels.length / 2);
     const hasCenter = labels.length % 2 === 1;
     const getAlignment = (i: number) => {
@@ -54,26 +52,14 @@ export default function Carousel({
     });
 
     setButtons(buttons);
-    setNodes(nodes);
+    setNode(node);
   }, [sections, selectedIndex]);
 
   useEffect(() => {
-    const carousel = carouselRef.current;
-
-    if (!carousel || !sections) return;
-
-    const pageWidth = carousel.clientWidth / sections.length;
-    const position = pageWidth * selectedIndex;
-    carousel.style.left = -position + "px";
   }, [selectedIndex]);
 
-  function calcWidth() {
-    if (!sections) return "100%";
-    return 100 * sections.length + "%";
-  }
-
   return (
-    <div className="z-10 flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000 landscape:hidden lg:landscape:flex">
+    <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000 landscape:hidden lg:landscape:flex">
       <div className="w-full flex flex-col items-center shadow dark:shadow-zinc-50/10">
         <FontAwesomeIcon
           onClick={() => toggleCarouselDrawer()}
@@ -89,10 +75,9 @@ export default function Carousel({
 
       <div
         className="pt-3 relative flex h-full duration-700 overflow-hidden"
-        style={{ width: calcWidth() }}
         ref={carouselRef}
       >
-        {nodes}
+        {node}
       </div>
     </div>
   );

@@ -52,6 +52,8 @@ export default function Recordings({
         videosList.filter((video) => video.mid === selectedMonitor.id)
       );
     }
+
+    setNothingToLoad(false);
   }, [videosList, selectedMonitor]);
 
   async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
@@ -78,10 +80,11 @@ export default function Recordings({
 
     if (response.ok) {
       const newVideos = await response.json();
-      setVideosList([...videosList, ...newVideos]);
-
+      
       if (newVideos.length === 0) {
         setNothingToLoad(true);
+      } else {
+        setVideosList([...videosList, ...newVideos]);
       }
     }
 
