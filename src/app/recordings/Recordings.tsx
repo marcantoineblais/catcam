@@ -5,7 +5,6 @@ import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingsList from "./RecordingsList";
 import { Monitor } from "@/src/models/monitor";
 import SourceSelector from "@/src/components/SourceSelector";
-import useDebounce from "@/src/hooks/useDebounce";
 import { Video } from "@/src/models/video";
 import Carousel from "@/src/components/carousel/Carousel";
 import { getDateTime } from "@/src/utils/formatDate";
@@ -24,8 +23,8 @@ export default function Recordings({
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>(monitors[0]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const debounce = useDebounce();
 
   useEffect(() => {
     const allMonitor = { name: "All", id: "all" };
@@ -33,6 +32,10 @@ export default function Recordings({
     setMonitorsList([allMonitor, ...monitors]);
     setSelectedMonitor(allMonitor);
     setIsLoading(false);
+
+    if (videos.length === 0) {
+      setNothingToLoad(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -41,22 +44,24 @@ export default function Recordings({
     setIsDrawerOpen(false);
   }, [selectedVideo]);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (selectedMonitor.id === "all") {
       setFilteredVideosList(videosList);
     } else {
-      setFilteredVideosList(videosList.filter((video) => video.mid === selectedMonitor.id));
+      setFilteredVideosList(
+        videosList.filter((video) => video.mid === selectedMonitor.id)
+      );
     }
-  }, [videosList, selectedMonitor])
+  }, [videosList, selectedMonitor]);
 
   async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
-    if (isLoading) return;
+    if (isLoading || nothingToLoad) return;
 
     const div = e.target as HTMLDivElement;
     const scrollHeight = div.scrollHeight;
     const height = div.clientHeight;
     const scrollPosition = div.scrollTop;
-    const scrollTreshold = scrollHeight - 1.1 * height;
+    const scrollTreshold = scrollHeight - (height * 5);
 
     if (scrollPosition < scrollTreshold) return;
 
@@ -74,16 +79,17 @@ export default function Recordings({
     if (response.ok) {
       const newVideos = await response.json();
       setVideosList([...videosList, ...newVideos]);
+
+      if (newVideos.length === 0) {
+        setNothingToLoad(true);
+      }
     }
+
     setIsLoading(false);
   }
 
   function toggleCarouselDrawer() {
     setIsDrawerOpen((isOpen) => !isOpen);
-  }
-
-  function onScrollHandler(e: React.SyntheticEvent<HTMLDivElement>) {
-    debounce(() => fetchDataOnScroll(e), 500);
   }
 
   return (
@@ -109,8 +115,9 @@ export default function Recordings({
                   videosList={filteredVideosList}
                   selectedVideo={selectedVideo}
                   setSelectedVideo={setSelectedVideo}
-                  onScroll={onScrollHandler}
+                  onScroll={fetchDataOnScroll}
                   isLoading={isLoading}
+                  nothingToLoad={nothingToLoad}
                 />
               ),
             },

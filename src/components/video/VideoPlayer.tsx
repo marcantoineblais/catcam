@@ -6,6 +6,7 @@ import Logo from "../Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
+import Loading from "../Loading";
 
 export default function VideoPlayer({
   title,
@@ -94,10 +95,7 @@ export default function VideoPlayer({
 
         {src && videoRef.current && buffering && (
           <div className="absolute inset-0 flex justify-center items-center">
-            <FontAwesomeIcon
-              icon={faSpinner}
-              className="text-8xl animate-spin"
-            />
+            <Loading />
           </div>
         )}
 

@@ -4,32 +4,35 @@ import React, { Key, ReactNode, useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
 import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loading";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function RecordingsList({
   videosList = [],
   selectedVideo,
   setSelectedVideo = () => {},
   isLoading = false,
+  nothingToLoad = false,
   onScroll = () => {},
 }: {
   videosList?: Video[];
   selectedVideo?: Video;
   setSelectedVideo?: Function;
   isLoading?: boolean;
+  nothingToLoad?: boolean;
   onScroll?: Function;
 }) {
-  const [videoCards, setVideoCards] = useState<ReactNode[]>([]);
+  const [videosCards, setVideosCards] = useState<ReactNode[]>([]);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setVideoCards(
-      videosList.map((video) => {
-        const key = video.src as Key;
+    setVideosCards(
+      videosList.map((video, i) => {
         const isSelected = selectedVideo === video;
 
         return (
           <VideoCard
-            key={key}
+            key={i}
             thumbnail={video.thumbnail}
             timestamp={video.timestamp}
             isSelected={isSelected}
@@ -47,16 +50,30 @@ export default function RecordingsList({
         className="w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
         onScroll={(e) => onScroll(e)}
       >
-        {videoCards.length > 0 ? (
-          videoCards
+        {videosList.length > 0 ? (
+          videosCards
         ) : (
           <div className="pb-3 w-full flex justify-center items-center">
             No videos available
           </div>
         )}
 
-        {isLoading && <Loading className="w-full flex justify-center items-center" size={"lg"} />}
+        {nothingToLoad && videosList.length > 0 && (
+          <div className="w-full flex justify-center items-center gap-1 text-sky-700">
+            <FontAwesomeIcon icon={faCircleXmark} size="lg"/>
+            <h3 className="text-lg font-bold py-5">There is nothing more to show</h3>
+            <FontAwesomeIcon icon={faCircleXmark} size="lg"/>
+          </div>
+        )}
+
+        {isLoading && (
+          <Loading
+            className="w-full py-3 flex justify-center items-center"
+            size={"lg"}
+          />
+        )}
       </div>
+
     </div>
   );
 }

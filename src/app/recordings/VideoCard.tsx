@@ -37,9 +37,10 @@ export default function VideoCard({
         data-active={isSelected ? true : undefined}
         className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default hover:border-4 hover:border-gray-500 hover:dark:border-neutral-500 data-active:border-4 data-active:border-sky-700 data-active:hover:border-sky-700"
       >
-        <Skeleton className="data-active:saturate-0"
-        isLoaded={imageLoaded}
-        data-active={isSelected ? true : undefined}
+        <Skeleton
+          isLoaded={imageLoaded}
+          className="data-active:saturate-0"
+          data-active={isSelected ? true : undefined}
         >
           <Image
             className="w-full aspect-16/9 duration-200"
@@ -54,8 +55,10 @@ export default function VideoCard({
           />
         </Skeleton>
 
-        <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base data-active:bg-gray-700 data-active:text-gray-300 data-active:dark:bg-neutral-300 data-active:dark:text-neutral-700"
-        data-active={isSelected ? true : undefined}>
+        <div
+          className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base data-active:bg-gray-700 data-active:text-gray-300 data-active:dark:bg-neutral-300 data-active:dark:text-neutral-700"
+          data-active={isSelected ? true : undefined}
+        >
           <span>{getFormattedDate(timestamp)}</span>
           <span>{getFormattedTime(timestamp)}</span>
         </div>
