@@ -2,9 +2,10 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Monitor } from "../models/monitor";
 import { Video } from "../models/video";
-import { getDateTime, getFullDate } from "./formatDate";
+import { getDateTimeUrl, getFullDate } from "./formatDate";
 import { TZDate } from "@date-fns/tz";
-import { addSeconds, parse } from "date-fns";
+import { addSeconds } from "date-fns";
+import { NextRequest } from "next/server";
 
 export async function fetchMonitors() {
   const headersValue = await headers();
@@ -38,23 +39,25 @@ export async function fetchMonitors() {
   }
 }
 
-export async function fetchVideos(params = {}) {
+export async function fetchVideos(searchParams: URLSearchParams | string = "") {
   const headersValue = await headers();
   const jwt = headersValue.get("session") as string;
-  
+
   try {
     const session = JSON.parse(jwt);
     const apiUrl = process.env.SERVER_URL;
     const key = session.auth_token;
     const groupKey = session.ke;
-    const response = await fetch(`${apiUrl}/${key}/videos/${groupKey}`);
+    const response = await fetch(
+      `${apiUrl}/${key}/videos/${groupKey}?${searchParams}`
+    );
 
     if (response.ok) {
       const data = await response.json();
-      const videos: Video[] = data.videos.map((video: any) => {        
-        const videoTime = new TZDate(video.time, "GMT-0000");        
+      const videos: Video[] = data.videos.map((video: any) => {
+        const videoTime = new TZDate(video.time, "GMT-0000");
         const thumbTime = addSeconds(videoTime, 6);
-        const thumbPath = `${getFullDate(thumbTime)}/${getDateTime(
+        const thumbPath = `${getFullDate(thumbTime)}/${getDateTimeUrl(
           thumbTime
         )}.jpg`;
         const thumbUrl = `/${key}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
@@ -63,6 +66,7 @@ export async function fetchVideos(params = {}) {
           src: "api" + video.href,
           thumbnail: "api" + thumbUrl,
           timestamp: videoTime,
+          mid: video.mid,
         };
       });
 

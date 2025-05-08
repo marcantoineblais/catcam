@@ -1,13 +1,14 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
-import RecordingList from "./RecordingList";
+import RecordingsList from "./RecordingsList";
 import { Monitor } from "@/src/models/monitor";
 import SourceSelector from "@/src/components/SourceSelector";
 import useDebounce from "@/src/hooks/useDebounce";
 import { Video } from "@/src/models/video";
 import Carousel from "@/src/components/carousel/Carousel";
+import { getDateTime } from "@/src/utils/formatDate";
 
 export default function Recordings({
   monitors = [],
@@ -16,11 +17,13 @@ export default function Recordings({
   monitors?: Monitor[];
   videos?: Video[];
 }) {
-  const [videoLists, setVideosList] = useState<Video[]>([]);
+  const [videosList, setVideosList] = useState<Video[]>([]);
+  const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
   const [monitorsList, setMonitorsList] = useState<Monitor[]>([]);
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor>(monitors[0]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const debounce = useDebounce();
 
@@ -29,15 +32,26 @@ export default function Recordings({
     setVideosList(videos);
     setMonitorsList([allMonitor, ...monitors]);
     setSelectedMonitor(allMonitor);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
     if (!selectedVideo) return;
-    
+
     setIsDrawerOpen(false);
   }, [selectedVideo]);
 
-  function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
+  useEffect(() => {    
+    if (selectedMonitor.id === "all") {
+      setFilteredVideosList(videosList);
+    } else {
+      setFilteredVideosList(videosList.filter((video) => video.mid === selectedMonitor.id));
+    }
+  }, [videosList, selectedMonitor])
+
+  async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
+    if (isLoading) return;
+
     const div = e.target as HTMLDivElement;
     const scrollHeight = div.scrollHeight;
     const height = div.clientHeight;
@@ -45,6 +59,23 @@ export default function Recordings({
     const scrollTreshold = scrollHeight - 1.1 * height;
 
     if (scrollPosition < scrollTreshold) return;
+
+    setIsLoading(true);
+    const lastVideoTime = videosList[videosList.length - 1].timestamp;
+
+    // This tells shinobi backend to get videos before start time (default behavior is after)
+    const searchParams = new URLSearchParams({
+      start: getDateTime(lastVideoTime),
+      startOperator: "<",
+    });
+
+    const response = await fetch(`/api/videos?${searchParams}`);
+
+    if (response.ok) {
+      const newVideos = await response.json();
+      setVideosList([...videosList, ...newVideos]);
+    }
+    setIsLoading(false);
   }
 
   function toggleCarouselDrawer() {
@@ -70,22 +101,33 @@ export default function Recordings({
         </div>
 
         <Carousel
-          buttonsLabel={[selectedMonitor?.name ?? "", "Filters"]}
+          sections={[
+            {
+              label: selectedMonitor.name,
+              node: (
+                <RecordingsList
+                  videosList={filteredVideosList}
+                  selectedVideo={selectedVideo}
+                  setSelectedVideo={setSelectedVideo}
+                  onScroll={onScrollHandler}
+                  isLoading={isLoading}
+                />
+              ),
+            },
+            {
+              label: "Filters",
+              node: (
+                <SourceSelector
+                  monitors={monitorsList}
+                  selectedMonitor={selectedMonitor}
+                  setSelectedMonitor={setSelectedMonitor}
+                />
+              ),
+            },
+          ]}
           isOpen={isDrawerOpen}
           toggleCarouselDrawer={toggleCarouselDrawer}
-        >
-          <RecordingList
-            videosList={videoLists}
-            selectedVideo={selectedVideo}
-            setSelectedVideo={setSelectedVideo}
-          />
-
-          <SourceSelector
-            monitors={monitorsList}
-            selectedMonitor={selectedMonitor}
-            setSelectedMonitor={setSelectedMonitor}
-          />
-        </Carousel>
+        />
       </main>
     </div>
   );

@@ -4,7 +4,7 @@ import { fetchMonitors, fetchVideos } from "@/src/utils/fetch";
 
 export default async function RecordingPage() {
   const monitors = await fetchMonitors();
-  const videos = await fetchVideos();
+  const videos = await fetchVideos(monitors);
 
   return <Recordings monitors={monitors} videos={videos} />;
 }
