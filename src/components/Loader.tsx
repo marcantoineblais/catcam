@@ -1,6 +1,6 @@
 import { Spinner } from "@heroui/react";
 
-export default function Loading({
+export default function Loader({
   size = "md",
   className = "",
 }: {

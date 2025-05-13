@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import ServiceManager from "../components/ServiceManager";
 import Navbar from "../components/navbar/Navbar";
+import { TZDate } from "@date-fns/tz";
 
 const inter = Inter({ subsets: ["latin"] });
 const autoDarkModeTime = { start: 19, end: 7 };
@@ -29,15 +30,14 @@ async function darkMode() {
   const { start, end } = autoDarkModeTime;
 
   if (mode === "auto") {
-    const time = new Date(Date.now());
-    const timezoneOffset = parseInt(cookiesValue.get("timezone")?.value || "0");
-    time.setMinutes(time.getUTCMinutes() - timezoneOffset);
+    const timezone = cookiesValue.get("timezone")?.value || "GMT_0000";
+    const time = new TZDate(new Date(), timezone);
 
-    if (time.getUTCHours() > start || time.getUTCHours() < end) {
+    if (time.getHours() >= start || time.getHours() < end) {
       return "dark";
     }
   }
-
+  
   return mode;
 }
 

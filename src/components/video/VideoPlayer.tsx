@@ -3,10 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import Logo from "../Logo";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
-import Loading from "../Loading";
+import Loader from "../Loader";
 
 export default function VideoPlayer({
   title,
@@ -68,7 +66,7 @@ export default function VideoPlayer({
   useEffect(() => {
     setIsBuffering(true);
     setIsLoaded(false);
-  }, [src]);
+  }, [src])
 
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
     const length = e.currentTarget.buffered.length;
@@ -100,7 +98,7 @@ export default function VideoPlayer({
 
         {src && videoRef.current && isBuffering && (
           <div className="absolute inset-0 flex justify-center items-center">
-            <Loading />
+            <Loader />
           </div>
         )}
 
@@ -138,7 +136,7 @@ export default function VideoPlayer({
           setCurrentTime={setCurrentTime}
           videoSource={src}
           videoRef={videoRef}
-          fullscreen={isFullscreen}
+          isFullscreen={isFullscreen}
           toggleFullscreen={toggleFullscreen}
         />
       </div>

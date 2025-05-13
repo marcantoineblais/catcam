@@ -23,7 +23,7 @@ export default function Login() {
       mail: email,
       pass: password,
       rememberMe: rememberMe,
-      timezone: new Date().getTimezoneOffset(),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
     const response = await fetch(
       new URL("/login/connect", window.location.origin),

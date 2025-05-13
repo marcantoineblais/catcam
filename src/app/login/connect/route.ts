@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 
+const MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 1 month
+const MIN_AGE = 1000 * 60 * 5; // 10 minutes
+
 async function postRequest(body: any) {
   const apiUrl: string = process.env.SERVER_URL + "/?json=true";
   const creds = {
@@ -49,7 +52,7 @@ export async function POST(request: NextRequest) {
     response.cookies.set({
       name: "session",
       value: JSON.stringify(token),
-      maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
+      maxAge: body.rememberMe ? MAX_AGE : MIN_AGE,
       httpOnly: true,
       path: "/",
     });
@@ -57,14 +60,14 @@ export async function POST(request: NextRequest) {
     response.cookies.set({
       name: "rememberMe",
       value: body.rememberMe,
-      maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
+      maxAge: body.rememberMe ? MAX_AGE : MIN_AGE,
       path: "/",
     });
 
     response.cookies.set({
       name: "timezone",
       value: body.timezone,
-      maxAge: body.rememberMe ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 5, // 1 month || 10min
+      maxAge: body.rememberMe ? MAX_AGE : MIN_AGE,
       path: "/",
     });
 

@@ -3,9 +3,10 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import VideoCard from "./VideoCard";
 import { Video } from "@/src/models/video";
-import Loading from "@/src/components/Loading";
+import Loading from "@/src/components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import DynamicList from "@/src/components/DynamicList";
 
 export default function RecordingsList({
   videosList = [],
@@ -44,12 +45,6 @@ export default function RecordingsList({
     );
   }, [videosList, selectedVideo, setSelectedVideo]);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    container.scroll({ top: 0 });
-  }, [videosList]);
-
   return (
     <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
       <div
@@ -58,7 +53,9 @@ export default function RecordingsList({
         ref={containerRef}
       >
         {videosList.length > 0 ? (
-          videosCards
+          <DynamicList maxItems={50}>
+            {videosCards}
+          </DynamicList>
         ) : (
           <div className="pb-3 w-full flex justify-center items-center">
             No videos available

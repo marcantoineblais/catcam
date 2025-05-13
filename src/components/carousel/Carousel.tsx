@@ -58,11 +58,12 @@ export default function Carousel({
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
+
     carousel.style.left = `${selectedIndex * -100}%`;
   }, [selectedIndex]);
 
   return (
-    <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden duration-1000 landscape:hidden lg:landscape:flex">
+    <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
       <div className="w-full flex flex-col items-center shadow dark:shadow-zinc-50/10">
         <FontAwesomeIcon
           onClick={() => toggleCarouselDrawer()}
@@ -77,7 +78,7 @@ export default function Carousel({
       </div>
 
       <div
-        className="pt-3 relative flex h-full duration-700 overflow-hidden"
+        className="pt-3 relative flex h-full overflow-hidden"
         ref={carouselRef}
         style={{ width: `${nodes.length * 100}%` }}
       >
