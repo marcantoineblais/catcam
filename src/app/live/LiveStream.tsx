@@ -30,7 +30,7 @@ export default function LiveStream({
     if (monitors.length === 0) {
       renderPopup(
         "There is not any available video monitors at the moment.",
-        "Warning"
+        "Warning",
       );
     }
   }, [monitors]);
@@ -38,7 +38,7 @@ export default function LiveStream({
   React.useEffect(() => {
     if (!monitors) return;
 
-    console.log(defaultMonitor)
+    console.log(defaultMonitor);
     const monitor =
       monitors.find((monitor) => monitor.id === defaultMonitor) || monitors[0];
     setSelectedMonitor(monitor);

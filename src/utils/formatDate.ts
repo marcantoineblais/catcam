@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { TZDate } from "@date-fns/tz"
+import { TZDate } from "@date-fns/tz";
 
 export function getTime(date: TZDate | Date) {
   return format(date, "HH:mm");

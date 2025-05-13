@@ -11,7 +11,6 @@ export default function QualityButton({
   setIsHQ?: Function;
   isEnabled?: boolean;
 }) {
-
   return (
     <button
       className="h-10 w-20 flex justify-center items-center border-2 border-gray-300 dark:border-zinc-700 rounded-full overflow-hidden cursor-pointer disabled:grayscale-50 disabled:cursor-default"

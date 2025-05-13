@@ -15,7 +15,7 @@ export default function FourOFour() {
         "How the turn table.",
         "Anyway, looks like you're lost, let's get you back home.",
       ],
-      "Error 404"
+      "Error 404",
     );
     router.push("/");
   }, [router]);

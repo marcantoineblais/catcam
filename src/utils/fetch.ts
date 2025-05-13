@@ -49,7 +49,7 @@ export async function fetchVideos(searchParams: URLSearchParams | string = "") {
     const key = session.auth_token;
     const groupKey = session.ke;
     const response = await fetch(
-      `${apiUrl}/${key}/videos/${groupKey}?${searchParams}`
+      `${apiUrl}/${key}/videos/${groupKey}?${searchParams}`,
     );
 
     if (response.ok) {
@@ -58,7 +58,7 @@ export async function fetchVideos(searchParams: URLSearchParams | string = "") {
         const videoTime = new TZDate(video.time, "GMT-0000");
         const thumbTime = addSeconds(videoTime, 6);
         const thumbPath = `${getFullDate(thumbTime)}/${getDateTimeUrl(
-          thumbTime
+          thumbTime,
         )}.jpg`;
         const thumbUrl = `/${key}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 

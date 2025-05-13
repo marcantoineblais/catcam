@@ -40,9 +40,15 @@ export default function RecordingsList({
             containerRef={containerRef}
           />
         );
-      })
+      }),
     );
   }, [videosList, selectedVideo, setSelectedVideo]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.scroll({ top: 0 });
+  }, [videosList]);
 
   return (
     <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">

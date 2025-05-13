@@ -68,7 +68,7 @@ export default function VideoPlayer({
   useEffect(() => {
     setIsBuffering(true);
     setIsLoaded(false);
-  }, [src])
+  }, [src]);
 
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
     const length = e.currentTarget.buffered.length;

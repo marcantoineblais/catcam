@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 async function darkMode() {
   const cookiesValue = await cookies();
   const mode = cookiesValue.get("mode")?.value || "";
-  const {start, end} = autoDarkModeTime;
+  const { start, end } = autoDarkModeTime;
 
   if (mode === "auto") {
     const time = new Date(Date.now());
@@ -46,16 +46,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
- 
   const dark = await darkMode();
-  
+
   return (
     <html lang="en" className={dark}>
       {/* <ServiceManager /> */}
 
-      <body 
-        className={inter.className}
-      >
+      <body className={inter.className}>
         <Navbar />
         {children}
       </body>

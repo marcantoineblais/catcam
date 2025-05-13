@@ -3,7 +3,7 @@ import Popup from "../components/Popup";
 
 export default function renderPopup(
   text: string | string[],
-  title: string = "Error"
+  title: string = "Error",
 ) {
   const container = document.createElement("div");
   document.body.appendChild(container);

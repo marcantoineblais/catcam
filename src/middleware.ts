@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     const secretKey = process.env.SECRET_KEY as string;
     const { payload: session } = await jose.jwtVerify(
       JSON.parse(token),
-      new TextEncoder().encode(secretKey)
+      new TextEncoder().encode(secretKey),
     );
     const response = NextResponse.next();
     response.headers.set("session", JSON.stringify(session));

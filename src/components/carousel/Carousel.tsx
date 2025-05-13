@@ -14,7 +14,7 @@ export default function Carousel({
   toggleCarouselDrawer?: Function;
 }) {
   const [buttons, setButtons] = useState<ReactNode[]>([]);
-  const [node, setNode] = useState<ReactNode>(null);
+  const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +22,7 @@ export default function Carousel({
     if (!sections) return;
 
     const labels = sections.map(({ label }) => label);
-    const node = sections[selectedIndex].node;
+    const nodes = sections.map(({ node }) => node);
     const median = Math.floor(labels.length / 2);
     const hasCenter = labels.length % 2 === 1;
     const getAlignment = (i: number) => {
@@ -52,10 +52,13 @@ export default function Carousel({
     });
 
     setButtons(buttons);
-    setNode(node);
+    setNodes(nodes);
   }, [sections, selectedIndex]);
 
   useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    carousel.style.left = `${selectedIndex * -100}%`;
   }, [selectedIndex]);
 
   return (
@@ -76,8 +79,9 @@ export default function Carousel({
       <div
         className="pt-3 relative flex h-full duration-700 overflow-hidden"
         ref={carouselRef}
+        style={{ width: `${nodes.length * 100}%` }}
       >
-        {node}
+        {nodes}
       </div>
     </div>
   );

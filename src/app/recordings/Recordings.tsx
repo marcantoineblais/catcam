@@ -49,7 +49,7 @@ export default function Recordings({
       setFilteredVideosList(videosList);
     } else {
       setFilteredVideosList(
-        videosList.filter((video) => video.mid === selectedMonitor.id)
+        videosList.filter((video) => video.mid === selectedMonitor.id),
       );
     }
 
@@ -63,7 +63,7 @@ export default function Recordings({
     const scrollHeight = div.scrollHeight;
     const height = div.clientHeight;
     const scrollPosition = div.scrollTop;
-    const scrollTreshold = scrollHeight - (height * 5);
+    const scrollTreshold = scrollHeight - height * 5;
 
     if (scrollPosition < scrollTreshold) return;
 
@@ -80,7 +80,7 @@ export default function Recordings({
 
     if (response.ok) {
       const newVideos = await response.json();
-      
+
       if (newVideos.length === 0) {
         setNothingToLoad(true);
       } else {
@@ -115,6 +115,7 @@ export default function Recordings({
               label: selectedMonitor.name,
               node: (
                 <RecordingsList
+                  key={0}
                   videosList={filteredVideosList}
                   selectedVideo={selectedVideo}
                   setSelectedVideo={setSelectedVideo}
@@ -128,6 +129,7 @@ export default function Recordings({
               label: "Filters",
               node: (
                 <SourceSelector
+                  key={1}
                   monitors={monitorsList}
                   selectedMonitor={selectedMonitor}
                   setSelectedMonitor={setSelectedMonitor}

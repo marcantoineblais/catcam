@@ -33,7 +33,7 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (response.ok) {

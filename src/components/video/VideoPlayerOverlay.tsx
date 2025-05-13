@@ -40,8 +40,7 @@ export default function VideoPlayerOverlay({
   toggleFullscreen: MouseEventHandler;
 }) {
   const [updatedTime, setUpdatedTime] = useState<number | null>(null);
-  const [isCurrentlyPlaying, setIsCurrentlyPlaying] =
-    useState<boolean>(false);
+  const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState<boolean>(false);
   const [isSeeking, setIsSeeking] = useState<boolean>(false);
   const [displayedTime, setDisplayedTime] = useState<number | null>(null);
   const [timeoutTime, setTimeoutTime] = useState<number>(0);
@@ -109,14 +108,16 @@ export default function VideoPlayerOverlay({
     const width = seekingBar.clientWidth;
     if (position < left) position = left;
     if (position > right) position = right;
-    
+
     const updatedTime = (position / width) * duration;
     return updatedTime;
   }
 
-  async function handleStartSeeking(e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) {
+  async function handleStartSeeking(
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) {
     e.stopPropagation();
-    
+
     if (isPlaying) {
       try {
         await pause();
@@ -132,28 +133,28 @@ export default function VideoPlayerOverlay({
     } else if ("pageX" in e) {
       pageX = e.pageX;
     }
-    
+
     const updatedTime = updateCurrentTime(pageX);
     setIsCurrentlyPlaying(isPlaying || false);
     setUpdatedTime(updatedTime);
     setIsSeeking(true);
 
-    window.addEventListener("mousemove", handleSeeking)
-    window.addEventListener("touchmove", handleSeeking)
+    window.addEventListener("mousemove", handleSeeking);
+    window.addEventListener("touchmove", handleSeeking);
     window.addEventListener("mouseup", () => {
       window.removeEventListener("mousemove", handleSeeking);
       handleEndSeeking();
-    })
+    });
     window.addEventListener("touchend", () => {
       window.removeEventListener("touchmove", handleSeeking);
       handleEndSeeking();
-    })
+    });
   }
 
   function handleSeeking(e: TouchEvent | MouseEvent) {
     const video = videoRef.current;
     if (!isSeeking || !video) return;
-    
+
     e.stopPropagation();
     let pageX = 0;
     if ("touches" in e && e.touches.length > 0) {

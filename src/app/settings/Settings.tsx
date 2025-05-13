@@ -24,7 +24,7 @@ export default function Settings({
 
   async function saveSetting(
     e: React.ChangeEvent<HTMLSelectElement>,
-    setValue: Function
+    setValue: Function,
   ) {
     const value = e.currentTarget.value;
     const name = e.currentTarget.name;

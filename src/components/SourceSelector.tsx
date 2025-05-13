@@ -10,7 +10,6 @@ export default function SourceSelector({
   selectedMonitor?: Monitor;
   setSelectedMonitor: Function;
 }) {
-
   const [buttons, setButtons] = useState<ReactNode[]>([]);
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function SourceSelector({
     });
 
     setButtons(buttons);
-  }, [monitors, selectedMonitor])
+  }, [monitors, selectedMonitor]);
 
   return (
     <div className="w-full h-full flex flex-wrap content-start justify-start">

@@ -39,7 +39,7 @@ export default function ServiceManager() {
             if (e.data === "/logout") {
               renderPopup(
                 "You have been disconnect due to inactivity.",
-                "Information"
+                "Information",
               );
               logout();
               return;
