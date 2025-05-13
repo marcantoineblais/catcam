@@ -36,7 +36,7 @@ export default function Recordings({
     if (videos.length === 0) {
       setNothingToLoad(true);
     }
-  }, []);
+  }, [monitors, videos]);
 
   useEffect(() => {
     if (!selectedVideo) return;

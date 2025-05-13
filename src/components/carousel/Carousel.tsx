@@ -68,8 +68,9 @@ export default function Carousel({
         <FontAwesomeIcon
           onClick={() => toggleCarouselDrawer()}
           icon={faAngleUp}
-          className="duration-500 text-3xl lg:text-5xl cursor-pointer data-active:rotate-180"
+          className="-mb-3 duration-500 cursor-pointer data-active:rotate-180"
           data-active={isOpen ? true : undefined}
+          size="2x"
         />
 
         <div className="w-full flex justify-between items-center gap-3">
@@ -78,7 +79,7 @@ export default function Carousel({
       </div>
 
       <div
-        className="pt-3 relative flex h-full overflow-hidden"
+        className="pt-3 relative flex h-full overflow-hidden duration-500"
         ref={carouselRef}
         style={{ width: `${nodes.length * 100}%` }}
       >

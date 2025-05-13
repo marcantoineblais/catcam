@@ -24,7 +24,6 @@ export default function RecordingsList({
   onScroll?: Function;
 }) {
   const [videosCards, setVideosCards] = useState<ReactNode[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVideosCards(
@@ -38,7 +37,6 @@ export default function RecordingsList({
             timestamp={video.timestamp}
             isSelected={isSelected}
             onClick={() => setSelectedVideo(video)}
-            containerRef={containerRef}
           />
         );
       }),
@@ -46,14 +44,13 @@ export default function RecordingsList({
   }, [videosList, selectedVideo, setSelectedVideo]);
 
   return (
-    <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
+    <div className="pt-1 pb-3 w-full flex flex-col items-center">
       <div
-        className="w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
+        className="w-full max-h-full flex-grow"
         onScroll={(e) => onScroll(e)}
-        ref={containerRef}
       >
-        {videosList.length > 0 ? (
-          <DynamicList maxItems={50}>
+        {videosCards.length > 0 ? (
+          <DynamicList>
             {videosCards}
           </DynamicList>
         ) : (
