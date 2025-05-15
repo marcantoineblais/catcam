@@ -30,7 +30,7 @@ export default function SourceSelector({
     });
 
     setButtons(buttons);
-  }, [monitors, selectedMonitor]);
+  }, [monitors, selectedMonitor, setSelectedMonitor]);
 
   return (
     <div className="w-full h-full flex flex-wrap content-start justify-start">
