@@ -6,7 +6,6 @@ import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import DynamicList from "@/src/components/DynamicList";
 
 export default function RecordingsList({
   videosList = [],
@@ -52,10 +51,8 @@ export default function RecordingsList({
         onScroll={(e) => onScroll(e)}
         ref={containerRef}
       >
-        {videosList.length > 0 ? (
-          <DynamicList maxItems={50}>
-            {videosCards}
-          </DynamicList>
+        {videosCards.length > 0 ? (
+            videosCards
         ) : (
           <div className="pb-3 w-full flex justify-center items-center">
             No videos available

@@ -45,21 +45,17 @@ export default function VideoCard({
   }
 
   return (
-    <div className="p-1.5 basis-1/2 md:basis-1/3">
-      <div
-        ref={cardRef}
-        onClick={isVisible ? onClick : undefined}
-        data-active={isSelected ? true : undefined}
-        className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default hover:border-4 hover:border-gray-500 hover:dark:border-neutral-500 data-active:border-4 data-active:border-sky-700 data-active:hover:border-sky-700"
-      >
-        {isVisible ? (
-          <Skeleton
-            isLoaded={imageLoaded}
-            className="data-active:saturate-0"
-            data-active={isSelected ? true : undefined}
-          >
+    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-16/10">
+      {isVisible && (
+        <div
+          onClick={onClick}
+          data-active={isSelected ? true : undefined}
+          className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
+        >
+          <Skeleton isLoaded={imageLoaded}>
             <Image
-              className="w-full aspect-16/9 duration-200"
+              data-active={isSelected ? true : undefined}
+              className="w-full duration-200 data-active:saturate-0"
               onLoad={onLoadHandle}
               loading="lazy"
               width={160}
@@ -69,18 +65,13 @@ export default function VideoCard({
               alt="Movement capture preview"
             />
           </Skeleton>
-        ) : (
-          <div className="w-full aspect-16/9"></div>
-        )}
 
-        <div
-          className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base data-active:bg-gray-700 data-active:text-gray-300 data-active:dark:bg-neutral-300 data-active:dark:text-neutral-700"
-          data-active={isSelected ? true : undefined}
-        >
-          <span>{getFormattedDate(timestamp)}</span>
-          <span>{getFormattedTime(timestamp)}</span>
+          <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base">
+            <span>{getFormattedDate(timestamp)}</span>
+            <span>{getFormattedTime(timestamp)}</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
