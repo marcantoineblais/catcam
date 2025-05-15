@@ -134,24 +134,24 @@ export default function VideoPlayerOverlay({
     updateCurrentTime(pageX);
 
     const removeListeners = () => {
-      window.removeEventListener("mousemove", handleSeeking);
-      window.removeEventListener("touchmove", handleSeeking);
-      window.removeEventListener("touchend", removeListeners);
-      window.removeEventListener("mouseup", removeListeners);
+      document.removeEventListener("mousemove", handleSeeking);
+      document.removeEventListener("touchmove", handleSeeking);
+      document.removeEventListener("touchend", removeListeners);
+      document.removeEventListener("mouseup", removeListeners);
       handleEndSeeking();
     };
 
-    window.addEventListener("mousemove", handleSeeking);
-    window.addEventListener("touchmove", handleSeeking);
-    window.addEventListener("mouseup", removeListeners);
-    window.addEventListener("touchend", removeListeners);
+    document.addEventListener("mousemove", handleSeeking);
+    document.addEventListener("touchmove", handleSeeking, { passive: false });
+    document.addEventListener("mouseup", removeListeners);
+    document.addEventListener("touchend", removeListeners);
   }
 
   function handleSeeking(e: TouchEvent | MouseEvent) {
     const video = videoRef.current;
     if (!video) return;
 
-    e.stopPropagation();
+    e.preventDefault();
     let pageX = 0;
     if ("touches" in e && e.touches.length > 0) {
       if (e.touches.length > 1) return;
@@ -242,7 +242,7 @@ export default function VideoPlayerOverlay({
 
     return (
       <button
-        className="absolute size-7 -ms-1.5 -top-2.5 -translate-x-2 bg-gray-100 rounded-full cursor-pointer dark:bg-zinc-200"
+        className="absolute size-7 -ms-1.5 -top-2.75 -translate-x-2 bg-gray-100 rounded-full cursor-pointer dark:bg-zinc-200"
         style={{ left: `${seekingBarPosition}%` }}
       ></button>
     );
@@ -292,7 +292,7 @@ export default function VideoPlayerOverlay({
         {!isLive && (
           <div className="pt-5 pb-3 w-full flex justify-center">
             <div
-              className="h-2 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
+              className="h-1.5 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
               onMouseDown={handleStartSeeking}
               onTouchStart={handleStartSeeking}
               ref={seekingBarRef}
@@ -347,7 +347,7 @@ export default function VideoPlayerOverlay({
                   </button>
                 </div>
 
-                <div className="flex items-center font-mono text-2xl text-center gap-1">
+                <div className="flex items-center font-mono text-lg text-center gap-1">
                   {renderCurrentTime()}
                 </div>
               </div>
