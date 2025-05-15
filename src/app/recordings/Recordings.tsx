@@ -95,6 +95,19 @@ export default function Recordings({
     setIsDrawerOpen((isOpen) => !isOpen);
   }
 
+  function seekNextVideo(n: number = 1) {
+    let index = filteredVideosList.findIndex((video) => video === selectedVideo) + n;
+    if (index < 0) {
+      index = 0;
+    } 
+    
+    if (index >= filteredVideosList.length) {
+      index = filteredVideosList.length - 1;
+    }
+
+    setSelectedVideo(filteredVideosList[index]);
+  }
+
   return (
     <div className="h-full overflow-hidden">
       <main className="h-full p-1 container mx-auto max-w-(--breakpoint-lg) flex flex-col overflow-hidden">
@@ -106,6 +119,7 @@ export default function Recordings({
           <VideoPlayer
             title={selectedVideo?.filename}
             src={selectedVideo?.src}
+            seekNext={seekNextVideo}
           />
         </div>
 

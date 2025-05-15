@@ -9,10 +9,12 @@ import Loader from "../Loader";
 export default function VideoPlayer({
   title,
   src = "",
+  seekNext = () => {},
   isLiveStream,
 }: {
   title?: string;
   src?: string;
+  seekNext?: Function;
   isLiveStream?: boolean;
 }) {
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -66,7 +68,7 @@ export default function VideoPlayer({
   useEffect(() => {
     setIsBuffering(true);
     setIsLoaded(false);
-  }, [src])
+  }, [src]);
 
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
     const length = e.currentTarget.buffered.length;
@@ -80,7 +82,7 @@ export default function VideoPlayer({
   }
 
   function toggleFullscreen() {
-    setIsFullscreen(!!isFullscreen);
+    setIsFullscreen(!isFullscreen);
   }
 
   return (
@@ -110,9 +112,10 @@ export default function VideoPlayer({
           playsInline
           controlsList="noremoteplayback nufullscreen nodownload"
           poster=""
-          onCanPlay={() => {
+          onCanPlay={(e) => {
             setIsLoaded(true);
             setIsBuffering(false);
+            setLastBuffer(e);
           }}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
           onDurationChange={(e) => setDuration(e.currentTarget.duration)}
@@ -133,11 +136,11 @@ export default function VideoPlayer({
           currentTime={currentTime}
           duration={duration}
           buffer={buffer}
-          setCurrentTime={setCurrentTime}
           videoSource={src}
           videoRef={videoRef}
           isFullscreen={isFullscreen}
           toggleFullscreen={toggleFullscreen}
+          seekNext={seekNext}
         />
       </div>
     </div>
