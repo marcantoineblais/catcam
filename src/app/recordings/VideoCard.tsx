@@ -28,9 +28,11 @@ export default function VideoCard({
   const isVisible = useIntersectionObserver(cardRef, options);
 
   useEffect(() => {
-    const height = containerRef?.current?.clientHeight || 1000;
-    const root = containerRef?.current || null;
-    const rootMargin = height * 2 + "px";
+    const container = containerRef?.current;
+
+    const height = container ? container.clientHeight / 2 : 0;
+    const root = container || null;
+    const rootMargin = height + "px";
     const threshold = 0;
 
     setOptions({
@@ -39,6 +41,18 @@ export default function VideoCard({
       threshold,
     });
   }, [containerRef]);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    const container = containerRef?.current;
+
+    if (!card || !container) return;
+
+    if (isSelected) {
+      const top = card.offsetTop - 16;
+      container.scrollTo({ top: top, behavior: "instant" });
+    }
+  }, [isSelected, containerRef]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);

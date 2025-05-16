@@ -64,8 +64,9 @@ const Navbar = () => {
           >
             <FontAwesomeIcon
               data-active={isMenuOpen ? true : undefined}
-              className="text-2xl cursor-pointer duration-500 ease-in-out data-[active]:rotate-90"
+              className="cursor-pointer duration-500 ease-in-out data-[active]:rotate-90"
               icon={faBars}
+              size="2x"
             />
           </div>
           <div

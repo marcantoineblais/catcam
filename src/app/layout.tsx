@@ -3,7 +3,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import ServiceManager from "../components/ServiceManager";
 import Navbar from "../components/navbar/Navbar";
 import { TZDate } from "@date-fns/tz";
 
@@ -49,10 +48,8 @@ export default async function RootLayout({
   const dark = await darkMode();
 
   return (
-    <html lang="en" className={dark}>
-      {/* <ServiceManager /> */}
-
-      <body className={inter.className}>
+    <html lang="en" className={`${dark} h-screen max-h-screen min-h-screen overflow-x-hidden`}>
+      <body className={`${inter.className} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-screen max-h-screen min-h-screen flex flex-col`}>
         <Navbar />
         {children}
       </body>

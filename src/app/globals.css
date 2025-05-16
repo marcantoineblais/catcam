@@ -7,36 +7,9 @@
 /* Tailwind custom classes */
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  --background-rgb: rgb(243, 244, 246);
-  --foreground-rgb: rgb(3, 7, 18);
-}
-
-.dark {
-  --foreground-rgb: rgb(228, 228, 231);
-  --background-rgb: rgb(24, 24, 27);
-}
-
 * {
   user-select: none;
   box-sizing: border-box;
-}
-
-html {
-  height: 100%;
-  max-height: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground-rgb);
-  background: var(--background-rgb);
-  height: 100vh;
-  max-height: 100vh;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 video::-webkit-media-controls {

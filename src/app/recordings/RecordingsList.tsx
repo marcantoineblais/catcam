@@ -1,6 +1,13 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  RefObject,
+  use,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import VideoCard from "./VideoCard";
 import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loader";
@@ -40,7 +47,7 @@ export default function RecordingsList({
             containerRef={containerRef}
           />
         );
-      }),
+      })
     );
   }, [videosList, selectedVideo, setSelectedVideo]);
 
@@ -52,7 +59,7 @@ export default function RecordingsList({
         ref={containerRef}
       >
         {videosCards.length > 0 ? (
-            videosCards
+          videosCards
         ) : (
           <div className="pb-3 w-full flex justify-center items-center">
             No videos available

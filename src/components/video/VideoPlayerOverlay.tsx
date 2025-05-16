@@ -38,22 +38,24 @@ export default function VideoPlayerOverlay({
   seekNext?: Function;
   toggleFullscreen: MouseEventHandler;
 }) {
+  const timeoutDuration = 3000; // 3 seconds
   const [timeoutTime, setTimeoutTime] = useState<number>(0);
   const [seekingBarPosition, setSeekingBarPosition] = useState<number>(0);
+  const [bufferBarPosition, setBufferBarPosition] = useState<number>(0);
   const isCurrentlyPlaying = useRef<boolean>(isPlaying);
   const seekingBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (videoSource && !isLive) setTimeoutTime(1000);
+    if (videoSource && !isLive) setTimeoutTime(timeoutDuration);
   }, [videoSource, isLive]);
 
   useEffect(() => {
-    if (!isPlaying) setTimeoutTime(1000);
-  }, [isPlaying]);
+    setSeekingBarPosition((currentTime / duration) * 100);
+  }, [currentTime, duration]);
 
   useEffect(() => {
-    setSeekingBarPosition((currentTime / duration) * 100)
-  }, [currentTime, duration])
+    setBufferBarPosition((buffer / duration) * 100);
+  }, [buffer, duration]);
 
   useEffect(() => {
     if (!timeoutTime || !isPlaying) return;
@@ -104,8 +106,8 @@ export default function VideoPlayerOverlay({
     if (position > right) position = right;
 
     const positionRatio = (position - left) / width;
-    const updatedTime = positionRatio * duration; 
-    setSeekingBarPosition(positionRatio * 100)
+    const updatedTime = positionRatio * duration;
+    setSeekingBarPosition(positionRatio * 100);
     video.currentTime = updatedTime;
   }
 
@@ -175,31 +177,30 @@ export default function VideoPlayerOverlay({
     isCurrentlyPlaying.current = false;
   }
 
-  function fastSeeking(step: number = 10) {
+  function fastSeeking(
+    e: React.ToggleEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
+    step: number = 10
+  ) {
     if (currentTime === undefined || duration === undefined) return;
 
-    const video = videoRef.current;
-    if (!video) return;
+    e.stopPropagation();
 
-    let updatedTime = currentTime + step;
-    if (updatedTime < 0) updatedTime = 0;
-    else if (updatedTime > duration) updatedTime = duration;
-
-    video.currentTime = updatedTime;
-  }
-
-  function touchFastSeeking(e: React.TouchEvent<HTMLDivElement>, step: number) {
     const target = e.currentTarget;
-    const removeListener = () => {
-      target.removeEventListener("touchstart", seek);
-    };
-    const timer = setTimeout(removeListener, 200);
     const seek = () => {
-      fastSeeking(step);
-      removeListener();
+      const video = videoRef.current;
+      if (!video) return;
+
+      let updatedTime = currentTime + step;
+      if (updatedTime < 0) updatedTime = 0;
+      else if (updatedTime > duration) updatedTime = duration;
+
+      video.currentTime = updatedTime;
+      clearListener();
       clearTimeout(timer);
     };
-    target.addEventListener("touchstart", seek);
+    const clearListener = () => target.removeEventListener("click", seek);
+    const timer = setTimeout(clearListener, 200);
+    target.addEventListener("click", seek);
   }
 
   function seekNextVideo(n: number = 1) {
@@ -209,14 +210,24 @@ export default function VideoPlayerOverlay({
     if (n < 0 && currentTime < 2) {
       seekNext(n);
     } else if (n < 0) {
-      video.currentTime = 0
+      video.currentTime = 0;
     } else {
       seekNext(n);
     }
   }
 
-  function showOverlay(e: React.TouchEvent | React.MouseEvent) {
-    setTimeoutTime(3000);
+  function toggleOverlay() {
+    if (timeoutTime > 0) {
+      setTimeoutTime(0);
+    } else {
+      showOverlay();
+    }
+  }
+
+  function showOverlay() {
+    if (isLoaded) {
+      setTimeoutTime(timeoutDuration);
+    }
   }
 
   function renderDurationBar() {
@@ -228,11 +239,11 @@ export default function VideoPlayerOverlay({
     );
   }
 
-  function renderBufferBar() {    
+  function renderBufferBar() {
     return (
       <div
         className="absolute top-0 bottom-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"
-        style={{ width: `${seekingBarPosition}%` }}
+        style={{ width: `${bufferBarPosition}%` }}
       ></div>
     );
   }
@@ -272,11 +283,10 @@ export default function VideoPlayerOverlay({
 
   return (
     <div
-      className="absolute hidden opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-ready:block data-visible:opacity-100 data-fullscreen:fixed"
-      data-ready={isLoaded ? true : undefined}
+      className="absolute opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-visible:opacity-100 data-fullscreen:fixed"
       data-visible={timeoutTime > 0 ? true : undefined}
       data-fullscreen={isFullscreen ? true : undefined}
-      onClick={showOverlay}
+      onClick={toggleOverlay}
       onMouseMove={showOverlay}
     >
       <div
@@ -368,13 +378,11 @@ export default function VideoPlayerOverlay({
         <>
           <div
             className="absolute top-0 bottom-27 left-0 w-1/5"
-            onDoubleClick={() => fastSeeking(-10)}
-            onTouchStart={(e) => touchFastSeeking(e, -10)}
+            onClick={(e) => fastSeeking(e, -10)}
           ></div>
           <div
             className="absolute top-0 bottom-27 right-0 w-1/5"
-            onDoubleClick={() => fastSeeking(10)}
-            onTouchStart={(e) => touchFastSeeking(e, 10)}
+            onClick={(e) => fastSeeking(e, 10)}
           ></div>
         </>
       )}

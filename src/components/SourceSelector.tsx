@@ -14,14 +14,14 @@ export default function SourceSelector({
 
   useEffect(() => {
     const buttons = monitors.map((monitor, i) => {
-      const isActive = selectedMonitor === monitor;
+      const isActive = selectedMonitor === monitor ? true : undefined;
 
       return (
         <div key={i} className="p-1.5 w-full md:w-fit md:basis-1/3 h-12">
           <button
-            className="w-full h-full bg-linear-to-t from-gray-900 to-sky-700 text-white rounded shadow shadow-gray-900/50 cursor-pointer dark:shadow-zinc-50/50 duration-200 saturate-0 hover:brightness-125 disabled:cursor-default disabled:brightness-100 disabled:saturate-100"
+            className="w-full h-full bg-gray-700 dark:bg-zinc-300 text-white dark:text-neutral-900 rounded shadow shadow-gray-900/50 cursor-pointer dark:shadow-zinc-50/50 duration-200 hover:brightness-125 dark:hover:brightness-50 data-active:bg-sky-700 data-active:cursor-default data-active:hover:brightness-100 data-active:text-white data-active:shadow-sky-700/50"
             onClick={() => setSelectedMonitor(monitor)}
-            disabled={isActive}
+            data-active={isActive}
           >
             {monitor.name}
           </button>
