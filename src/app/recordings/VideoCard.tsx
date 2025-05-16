@@ -71,6 +71,7 @@ export default function VideoCard({
               data-active={isSelected ? true : undefined}
               className="w-full duration-200 data-active:saturate-0"
               onLoad={onLoadHandle}
+              placeholder="empty"
               loading="lazy"
               width={160}
               height={90}
