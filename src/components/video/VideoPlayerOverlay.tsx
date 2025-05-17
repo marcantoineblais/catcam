@@ -9,7 +9,7 @@ import {
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function VideoPlayerOverlay({
   currentTime = 0,
@@ -23,7 +23,7 @@ export default function VideoPlayerOverlay({
   videoRef,
   isFullscreen = false,
   seekNext = () => {},
-  toggleFullscreen,
+  toggleFullscreen = () => {},
 }: {
   currentTime?: number;
   buffer?: number;
@@ -36,7 +36,7 @@ export default function VideoPlayerOverlay({
   videoRef: React.RefObject<HTMLVideoElement | null>;
   isFullscreen?: boolean;
   seekNext?: Function;
-  toggleFullscreen: MouseEventHandler;
+  toggleFullscreen?: Function;
 }) {
   const timeoutDuration = 3000; // 3 seconds
   const [timeoutTime, setTimeoutTime] = useState<number>(0);
@@ -111,8 +111,18 @@ export default function VideoPlayerOverlay({
     video.currentTime = updatedTime;
   }
 
+  async function handlePlay(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    await play();
+  }
+
+  async function handlePause(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    await pause();
+  }
+
   async function handleStartSeeking(
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
   ) {
     e.stopPropagation();
     isCurrentlyPlaying.current = isPlaying;
@@ -154,6 +164,8 @@ export default function VideoPlayerOverlay({
     if (!video) return;
 
     e.preventDefault();
+    e.stopPropagation();
+
     let pageX = 0;
     if ("touches" in e && e.touches.length > 0) {
       if (e.touches.length > 1) return;
@@ -177,9 +189,14 @@ export default function VideoPlayerOverlay({
     isCurrentlyPlaying.current = false;
   }
 
+  function handleFullscreen(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    toggleFullscreen();
+  }
+
   function fastSeeking(
     e: React.ToggleEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
-    step: number = 10
+    step: number = 10,
   ) {
     if (currentTime === undefined || duration === undefined) return;
 
@@ -305,6 +322,7 @@ export default function VideoPlayerOverlay({
               className="h-1.5 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
               onMouseDown={handleStartSeeking}
               onTouchStart={handleStartSeeking}
+              onClick={(e) => e.stopPropagation()}
               ref={seekingBarRef}
             >
               {renderBufferBar()}
@@ -323,35 +341,34 @@ export default function VideoPlayerOverlay({
             ) : (
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-4">
-                  <button className="cursor-pointer">
+                  <button className="cursor-pointer hover:brightness-75">
                     <FontAwesomeIcon
                       icon={faBackwardStep}
                       size="xl"
-                      className="hover:opacity-90"
                       onClick={() => seekNextVideo(-1)}
                     />
                   </button>
 
-                  <button
-                    className="cursor-pointer w-6"
-                    onClick={
-                      isPlaying
-                        ? async () => await pause()
-                        : async () => await play()
-                    }
-                  >
-                    <FontAwesomeIcon
-                      icon={isPlaying ? faPause : faPlay}
-                      size="xl"
-                      className="hover:opacity-90"
-                    />
-                  </button>
+                  {isPlaying ? (
+                    <button
+                      className="cursor-pointer hover:brightness-75 px-[1.7px]"
+                      onClick={handlePause}
+                    >
+                      <FontAwesomeIcon icon={faPause} size="xl" />
+                    </button>
+                  ) : (
+                    <button
+                      className="cursor-pointer hover:brightness-75"
+                      onClick={handlePlay}
+                    >
+                      <FontAwesomeIcon icon={faPlay} size="xl" />
+                    </button>
+                  )}
 
-                  <button className="cursor-pointer">
+                  <button className="cursor-pointer hover:brightness-75">
                     <FontAwesomeIcon
                       icon={faForwardStep}
                       size="xl"
-                      className="hover:opacity-90"
                       onClick={() => seekNextVideo(1)}
                     />
                   </button>
@@ -364,12 +381,11 @@ export default function VideoPlayerOverlay({
             )}
           </div>
 
-          <button onClick={toggleFullscreen}>
-            <FontAwesomeIcon
-              className="flex items-center cursor-pointer data-disabled:hidden"
-              icon={faExpand}
-              size="xl"
-            />
+          <button
+            onClick={handleFullscreen}
+            className="cursor-pointer hover:brightness-75"
+          >
+            <FontAwesomeIcon icon={faExpand} size="xl" />
           </button>
         </div>
       </div>

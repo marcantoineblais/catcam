@@ -47,7 +47,7 @@ export default function RecordingsList({
             containerRef={containerRef}
           />
         );
-      })
+      }),
     );
   }, [videosList, selectedVideo, setSelectedVideo]);
 

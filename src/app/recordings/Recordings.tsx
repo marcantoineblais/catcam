@@ -8,6 +8,8 @@ import SourceSelector from "@/src/components/SourceSelector";
 import { Video } from "@/src/models/video";
 import Carousel from "@/src/components/carousel/Carousel";
 import { getDateTime } from "@/src/utils/formatDate";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function Recordings({
   monitors = [],
@@ -96,11 +98,12 @@ export default function Recordings({
   }
 
   function seekNextVideo(n: number = 1) {
-    let index = filteredVideosList.findIndex((video) => video === selectedVideo) + n;
+    let index =
+      filteredVideosList.findIndex((video) => video === selectedVideo) + n;
     if (index < 0) {
       index = 0;
-    } 
-    
+    }
+
     if (index >= filteredVideosList.length) {
       index = filteredVideosList.length - 1;
     }
@@ -120,6 +123,16 @@ export default function Recordings({
             title={selectedVideo?.filename}
             src={selectedVideo?.src}
             seekNext={seekNextVideo}
+          />
+        </div>
+
+        <div className="w-full text-center z-10 bg-gray-100 dark:bg-zinc-900 -mb-2">
+          <FontAwesomeIcon
+            onClick={() => toggleCarouselDrawer()}
+            icon={faAngleUp}
+            className="duration-500 cursor-pointer data-active:rotate-180"
+            data-active={isDrawerOpen ? true : undefined}
+            size="2x"
           />
         </div>
 
@@ -151,8 +164,6 @@ export default function Recordings({
               ),
             },
           ]}
-          isOpen={isDrawerOpen}
-          toggleCarouselDrawer={toggleCarouselDrawer}
         />
       </main>
     </div>

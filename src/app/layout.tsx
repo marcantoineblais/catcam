@@ -36,7 +36,7 @@ async function darkMode() {
       return "dark";
     }
   }
-  
+
   return mode;
 }
 
@@ -48,8 +48,13 @@ export default async function RootLayout({
   const dark = await darkMode();
 
   return (
-    <html lang="en" className={`${dark} h-screen max-h-screen min-h-screen overflow-x-hidden`}>
-      <body className={`${inter.className} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-screen max-h-screen min-h-screen flex flex-col`}>
+    <html
+      lang="en"
+      className={`${dark} h-screen max-h-screen min-h-screen overflow-x-hidden`}
+    >
+      <body
+        className={`${inter.className} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-screen max-h-screen min-h-screen flex flex-col`}
+      >
         <Navbar />
         {children}
       </body>

@@ -44,13 +44,11 @@ export default function VideoCard({
 
   useEffect(() => {
     const card = cardRef.current;
-    const container = containerRef?.current;
 
-    if (!card || !container) return;
+    if (!card) return;
 
     if (isSelected) {
-      const top = card.offsetTop - 16;
-      container.scrollTo({ top: top, behavior: "instant" });
+      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [isSelected, containerRef]);
 

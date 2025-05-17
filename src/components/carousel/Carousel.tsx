@@ -1,17 +1,11 @@
-import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
 
 export default function Carousel({
   sections,
-  toggleCarouselDrawer = () => {},
-  isOpen = false,
 }: {
   sections?: { label: string; node: ReactElement }[];
-  isOpen?: boolean;
-  toggleCarouselDrawer?: Function;
 }) {
   const [buttons, setButtons] = useState<ReactNode[]>([]);
   const [nodes, setNodes] = useState<ReactNode[]>([]);
@@ -64,18 +58,8 @@ export default function Carousel({
 
   return (
     <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
-      <div className="w-full flex flex-col items-center shadow dark:shadow-zinc-50/10">
-        <FontAwesomeIcon
-          onClick={() => toggleCarouselDrawer()}
-          icon={faAngleUp}
-          className="duration-500 cursor-pointer data-active:rotate-180 -mb-3"
-          data-active={isOpen ? true : undefined}
-          size="2x"
-        />
-
-        <div className="w-full flex justify-between items-center gap-3">
-          {buttons}
-        </div>
+      <div className="w-full flex justify-between items-center gap-3">
+        {buttons}
       </div>
 
       <div
