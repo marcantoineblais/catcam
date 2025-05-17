@@ -64,7 +64,7 @@ export default function VideoCard({
         <div
           onClick={onClick}
           data-active={isSelected ? true : undefined}
-          className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-neutral-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
+          className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-zinc-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
         >
           <Skeleton isLoaded={imageLoaded}>
             <Image
