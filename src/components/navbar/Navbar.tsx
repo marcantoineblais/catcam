@@ -70,9 +70,7 @@ const Navbar = () => {
             />
           </div>
           <div
-            className="w-full flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 dark:bg-zinc-900 translate-x-full duration-500 origin-right 
-                md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:translate-x-0
-                data-[active]:translate-x-0 ease-in-out"
+            className="w-full flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 dark:bg-zinc-900 translate-x-full duration-500 origin-right md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:translate-x-0 data-[active]:translate-x-0 ease-in-out"
             data-active={isMenuOpen ? true : undefined}
           >
             <NavbarButton
