@@ -47,9 +47,20 @@ export default function VideoCard({
 
     if (!card) return;
 
+    let timer = null;
     if (isSelected) {
       card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      timer = setTimeout(
+        () => card.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+        1000
+      );
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [isSelected, containerRef]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
