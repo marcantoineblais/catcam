@@ -1,11 +1,11 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
-import QualityButton from "../../components/QualityButton";
+import OnOffSwitch from "../../components/OnOffSwitch";
 
 export default function LiveStream({
   monitors = [],
@@ -64,9 +64,11 @@ export default function LiveStream({
         </div>
 
         <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
-          <QualityButton
-            isHQ={isHQ}
-            setIsHQ={setIsHQ}
+          <OnOffSwitch
+            onLabel="HQ"
+            offLabel="SQ"
+            isOn={isHQ}
+            setIsOn={setIsHQ}
             isEnabled={(selectedMonitor?.streams?.length ?? 0) > 1}
           />
         </div>
