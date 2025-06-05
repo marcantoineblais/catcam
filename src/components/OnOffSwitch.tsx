@@ -15,7 +15,6 @@ export default function OnOffSwitch({
 }) {
   return (
     <button
-    // style={{boxSizing: "content-box"}}
       className="h-10 w-20 text-sm font-bold rounded-full text-white !box-content border-2 border-gray-50/50 dark:border-zinc-50/50 overflow-hidden ease-in-out cursor-pointer disabled:grayscale-50 disabled:cursor-default"
       disabled={isEnabled ? undefined : true}
       onClick={isEnabled ? () => setIsOn(!isOn) : undefined}
