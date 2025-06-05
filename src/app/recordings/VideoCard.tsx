@@ -52,7 +52,7 @@ export default function VideoCard({
       card.scrollIntoView({ behavior: "smooth", block: "nearest" });
       timer = setTimeout(
         () => card.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-        1000
+        1000,
       );
     }
 
