@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
+import useSmoothScroller from "@/src/app/hooks/useSmoothScroller";
 
 export default function Carousel({
   sections,
@@ -11,6 +12,7 @@ export default function Carousel({
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { isScrolling, scrollLeft } = useSmoothScroller(carouselRef, 20);
 
   useEffect(() => {
     if (!sections) return;
@@ -53,8 +55,31 @@ export default function Carousel({
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    carousel.style.left = `${selectedIndex * -100}%`;
+    const scrollPosition = selectedIndex * carousel.clientWidth;
+    scrollLeft(scrollPosition);
   }, [selectedIndex]);
+
+  function handleScrollEnd() {
+    const carousel = carouselRef.current;
+    if (!carousel || isScrolling) return;
+
+    const scrollPosition = carousel.scrollLeft;
+    let index = Math.floor(
+      scrollPosition /
+        ((carousel.scrollWidth - carousel.clientWidth) / nodes.length)
+    );
+
+    if (index > nodes.length - 1) {
+      index = nodes.length - 1
+    }
+    
+    if (index === selectedIndex) {
+      const scrollPosition = selectedIndex * carousel.clientWidth;
+      scrollLeft(scrollPosition);
+    } else {
+      setSelectedIndex(index);
+    }
+  }
 
   return (
     <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
@@ -63,11 +88,17 @@ export default function Carousel({
       </div>
 
       <div
-        className="pt-3 relative flex h-full overflow-hidden"
+        className="pt-3 w-full h-full overflow-y-hidden overflow-x-scroll no-scrollbar data-no-scroll:overflow-x-hidden"
         ref={carouselRef}
-        style={{ width: `${nodes.length * 100}%` }}
+        onScrollEnd={handleScrollEnd}
+        data-no-scroll={isScrolling ? true : undefined}
       >
-        {nodes}
+        <div
+          className="h-full flex overflow-hidden"
+          style={{ width: `${nodes.length * 100}%` }}
+        >
+          {nodes}
+        </div>
       </div>
     </div>
   );
