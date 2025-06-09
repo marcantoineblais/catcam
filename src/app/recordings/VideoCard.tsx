@@ -7,7 +7,6 @@ import { Skeleton } from "@heroui/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
-import useSmoothScroller from "../hooks/useSmoothScroller";
 
 export default function VideoCard({
   thumbnail = "",
@@ -27,7 +26,6 @@ export default function VideoCard({
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
-  const { scrollTo } = useSmoothScroller(containerRef, "top", 10);
 
   useEffect(() => {
     const container = containerRef?.current;
@@ -50,19 +48,13 @@ export default function VideoCard({
 
     if (!card || !container || !isSelected) return;
 
-    const scroll = container.scrollTop;
-    const height = container.clientHeight;
-    const top = card.offsetTop;
-    const bottom = top + card.clientHeight;
-    
-    if (top < scroll) scrollTo(top);
-    else if (bottom > scroll + height) scrollTo(bottom - height);
+    card.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [isSelected, containerRef, scrollTo]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
   }
-  
+
   return (
     <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-7/4">
       {isVisible && (

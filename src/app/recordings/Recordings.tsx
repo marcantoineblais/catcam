@@ -26,6 +26,7 @@ export default function Recordings({
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);
+  const [isCarouselLocked, setIsCarouselLocked] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -111,6 +112,15 @@ export default function Recordings({
     setSelectedVideo(filteredVideosList[index]);
   }
 
+  async function handleScroll(e: React.SyntheticEvent<HTMLDivElement>) {
+    await fetchDataOnScroll(e)
+    setIsCarouselLocked(true);
+  }
+
+  function handleScrollEnd() {
+    setIsCarouselLocked(false);
+  }
+
   return (
     <div className="h-full overflow-hidden">
       <main className="h-full p-1 container mx-auto max-w-(--breakpoint-lg) flex flex-col overflow-hidden">
@@ -137,6 +147,7 @@ export default function Recordings({
         </div>
 
         <Carousel
+          isLocked={isCarouselLocked}
           sections={[
             {
               label: selectedMonitor.name,
@@ -146,7 +157,8 @@ export default function Recordings({
                   videosList={filteredVideosList}
                   selectedVideo={selectedVideo}
                   setSelectedVideo={setSelectedVideo}
-                  onScroll={fetchDataOnScroll}
+                  onScroll={handleScroll}
+                  onScrollEnd={handleScrollEnd}
                   isLoading={isLoading}
                   nothingToLoad={nothingToLoad}
                 />

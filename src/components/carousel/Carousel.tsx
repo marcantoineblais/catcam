@@ -1,19 +1,24 @@
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, TouchEvent, useEffect, useRef, useState } from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
-import useSmoothScroller from "@/src/app/hooks/useSmoothScroller";
+import { select } from "@heroui/react";
 
 export default function Carousel({
   sections,
+  isLocked = false,
 }: {
   sections?: { label: string; node: ReactElement }[];
+  isLocked?: boolean;
 }) {
   const [buttons, setButtons] = useState<ReactNode[]>([]);
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const { isScrolling, scrollTo } = useSmoothScroller(carouselRef, "left", 20);
+  const [initPosition, setInitPosition] = useState<number | null>(null);
+  const [scrollSpeed, setScrollSpeed] = useState<number>(0);
+  const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const [isScrolling, setIsScrolling] = useState<boolean>(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sections) return;
@@ -53,40 +58,90 @@ export default function Carousel({
   }, [sections, selectedIndex]);
 
   useEffect(() => {
-    const carousel = carouselRef.current;
+    const container = containerRef.current;
 
-    if (!carousel) return;
-    setWidth(carousel.clientWidth * nodes.length);
-  }, [carouselRef, nodes]);
+    if (!container) return;
+    setWidth(container.clientWidth * nodes.length);
+  }, [containerRef, nodes]);
 
   useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
+    if (width === 0) return;
+    setIsScrolling(false);
+  }, [width])
 
-    const scrollPosition = selectedIndex * carousel.clientWidth;
-    scrollTo(scrollPosition);
-  }, [selectedIndex, scrollTo]);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  function handleScrollEnd() {
-    const carousel = carouselRef.current;
-    if (!carousel || isScrolling) return;
+    setScrollPosition(-selectedIndex * container.clientWidth);
+  }, [selectedIndex]);
 
-    const scrollPosition = carousel.scrollLeft;
-    let index = Math.floor(
-      scrollPosition /
-        ((carousel.scrollWidth - carousel.clientWidth) / nodes.length)
-    );
+  function handleTouchStart(e: TouchEvent) {
+    if (isLocked) return;
 
-    if (index > nodes.length - 1) {
-      index = nodes.length - 1
-    }
+    const position = e.touches[0].clientX;
+    setInitPosition(position);
+    setIsScrolling(true);
+  }
+
+  function handleTouchMove(e: TouchEvent) {
+    if (isLocked || initPosition === null) return;
+
+    const position = e.touches[0].clientX;
+    const delta = position - initPosition;
     
-    if (index === selectedIndex) {
-      const scrollPosition = selectedIndex * carousel.clientWidth;
-      scrollTo(scrollPosition);
-    } else {
-      setSelectedIndex(index);
-    }
+    setInitPosition(position);
+    setScrollSpeed(delta);
+    setScrollPosition((position) => {
+      const maxScroll = width / nodes.length * (nodes.length - 1);
+      let newPosition = position + delta;
+
+      if (newPosition > 0) newPosition = 0;
+      if (newPosition < -maxScroll) newPosition = -maxScroll;
+
+      return newPosition;
+    });
+  }
+
+  function handleTouchEnd() {    
+    const maxScroll = width / nodes.length * (nodes.length - 1);
+    let speed = scrollSpeed;
+    let currentPosition = scrollPosition;
+
+    const interval = setInterval(() => {
+      if (speed === 0) {
+        let index = Math.floor(-currentPosition / (maxScroll / nodes.length));
+        
+        if (index > nodes.length - 1) {
+          index = nodes.length - 1;
+        }
+        
+        const position = -selectedIndex * (width / nodes.length);
+        setInitPosition(null);
+        setScrollPosition(position);
+        setScrollSpeed(0);
+        setSelectedIndex(index);
+        setIsScrolling(false);
+        clearInterval(interval)
+      } else {
+        setScrollPosition((position) => {
+          const maxScroll = width / nodes.length * (nodes.length - 1);
+          let newPosition = position + speed;
+
+          if (newPosition > 0) newPosition = 0;
+          if (newPosition < -maxScroll) newPosition = -maxScroll;
+
+          currentPosition = newPosition;
+          return newPosition;
+        });
+
+        if (Math.abs(speed) < 1) {
+          speed = 0
+        } else {
+          speed = speed * 0.9;
+        }
+      }
+    }, 20)
   }
 
   return (
@@ -95,15 +150,14 @@ export default function Carousel({
         {buttons}
       </div>
 
-      <div
-        className="pt-3 w-full h-full overflow-y-hidden overflow-x-scroll no-scrollbar data-no-scroll:overflow-x-hidden"
-        ref={carouselRef}
-        onScrollEnd={handleScrollEnd}
-        data-no-scroll={isScrolling ? true : undefined}
-      >
+      <div ref={containerRef} className="pt-3 w-full h-full overflow-hidden">
         <div
-          className="h-full flex overflow-hidden"
-          style={{ width: `${width}px`}}
+          className="relative h-full flex duration-1000 data-scrolling:duration-0"
+          style={{ width: `${width}px`, left: `${scrollPosition}px` }}
+          data-scrolling={isScrolling || undefined}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {nodes}
         </div>

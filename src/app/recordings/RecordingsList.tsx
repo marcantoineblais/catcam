@@ -2,6 +2,7 @@
 
 import React, {
   ReactNode,
+  SyntheticEvent,
   useEffect,
   useRef,
   useState,
@@ -19,13 +20,15 @@ export default function RecordingsList({
   isLoading = false,
   nothingToLoad = false,
   onScroll = () => {},
+  onScrollEnd = () => {},
 }: {
   videosList?: Video[];
   selectedVideo?: Video;
   setSelectedVideo?: Function;
   isLoading?: boolean;
   nothingToLoad?: boolean;
-  onScroll?: Function;
+  onScroll?: (e: SyntheticEvent<HTMLDivElement>) => void;
+  onScrollEnd?: (e: SyntheticEvent<HTMLDivElement>) => void;
 }) {
   const [videosCards, setVideosCards] = useState<ReactNode[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +56,8 @@ export default function RecordingsList({
     <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
       <div
         className="relative w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
-        onScroll={(e) => onScroll(e)}
+        onScroll={onScroll}
+        onTouchEnd={onScrollEnd}
         ref={containerRef}
       >
         {videosCards.length > 0 ? (
