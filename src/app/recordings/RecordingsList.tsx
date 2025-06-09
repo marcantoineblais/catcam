@@ -2,8 +2,6 @@
 
 import React, {
   ReactNode,
-  RefObject,
-  use,
   useEffect,
   useRef,
   useState,
@@ -54,7 +52,7 @@ export default function RecordingsList({
   return (
     <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
       <div
-        className="w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
+        className="relative w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
         onScroll={(e) => onScroll(e)}
         ref={containerRef}
       >

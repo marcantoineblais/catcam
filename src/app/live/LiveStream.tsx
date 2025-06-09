@@ -38,7 +38,6 @@ export default function LiveStream({
   React.useEffect(() => {
     if (!monitors) return;
 
-    console.log(defaultMonitor);
     const monitor =
       monitors.find((monitor) => monitor.id === defaultMonitor) || monitors[0];
     setSelectedMonitor(monitor);

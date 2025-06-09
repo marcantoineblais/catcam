@@ -7,6 +7,7 @@ import { Skeleton } from "@heroui/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
+import useSmoothScroller from "../hooks/useSmoothScroller";
 
 export default function VideoCard({
   thumbnail = "",
@@ -26,6 +27,7 @@ export default function VideoCard({
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
+  const { scrollTo } = useSmoothScroller(containerRef, "top", 10);
 
   useEffect(() => {
     const container = containerRef?.current;
@@ -44,24 +46,18 @@ export default function VideoCard({
 
   useEffect(() => {
     const card = cardRef.current;
+    const container = containerRef?.current;
 
-    if (!card) return;
+    if (!card || !container || !isSelected) return;
 
-    let timer = null;
-    if (isSelected) {
-      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      timer = setTimeout(
-        () => card.scrollIntoView({ behavior: "smooth", block: "nearest" }),
-        1000,
-      );
-    }
-
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isSelected, containerRef]);
+    const scroll = container.scrollTop;
+    const height = container.clientHeight;
+    const top = card.offsetTop;
+    const bottom = top + card.clientHeight;
+    
+    if (top < scroll) scrollTo(top);
+    else if (bottom > scroll + height) scrollTo(bottom - height);
+  }, [isSelected, containerRef, scrollTo]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);

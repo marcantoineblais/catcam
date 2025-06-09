@@ -12,7 +12,7 @@ export default function Carousel({
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const { isScrolling, scrollLeft } = useSmoothScroller(carouselRef, 20);
+  const { isScrolling, scrollTo } = useSmoothScroller(carouselRef, "left", 20);
 
   useEffect(() => {
     if (!sections) return;
@@ -56,8 +56,8 @@ export default function Carousel({
     if (!carousel) return;
 
     const scrollPosition = selectedIndex * carousel.clientWidth;
-    scrollLeft(scrollPosition);
-  }, [selectedIndex]);
+    scrollTo(scrollPosition);
+  }, [selectedIndex, scrollTo]);
 
   function handleScrollEnd() {
     const carousel = carouselRef.current;
@@ -75,7 +75,7 @@ export default function Carousel({
     
     if (index === selectedIndex) {
       const scrollPosition = selectedIndex * carousel.clientWidth;
-      scrollLeft(scrollPosition);
+      scrollTo(scrollPosition);
     } else {
       setSelectedIndex(index);
     }

@@ -17,7 +17,7 @@ export default function OnOffSwitch({
   offLabel?: string;
 }) {
   const btnRef = useRef<HTMLButtonElement>(null);
-  const { isScrolling, scrollLeft } = useSmoothScroller(btnRef, 1);
+  const { isScrolling, scrollTo } = useSmoothScroller(btnRef, "left", 1);
 
   function handleClick() {
     const btn = btnRef.current;
@@ -27,10 +27,10 @@ export default function OnOffSwitch({
     const status = !isOn;
 
     if (status) {
-      scrollLeft(0);
+      scrollTo(0);
     } else {
       const maxScroll = btn.scrollWidth - btn.clientWidth;
-      scrollLeft(maxScroll);
+      scrollTo(maxScroll);
     }
 
     setIsOn(status);
@@ -44,11 +44,11 @@ export default function OnOffSwitch({
     const scrollMidway = (btn.scrollWidth - btn.clientWidth) / 2;
 
     if (scrollPosition <= scrollMidway) {
-      scrollLeft(0);
+      scrollTo(0);
       setIsOn(true);
     } else {
       const maxScroll = btn.scrollWidth - btn.clientWidth;      
-      scrollLeft(maxScroll);
+      scrollTo(maxScroll);
       setIsOn(false);
     }
   }
