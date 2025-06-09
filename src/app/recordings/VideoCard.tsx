@@ -49,7 +49,7 @@ export default function VideoCard({
     if (!card || !container || !isSelected) return;
 
     card.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [isSelected, containerRef, scrollTo]);
+  }, [isSelected, containerRef]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
