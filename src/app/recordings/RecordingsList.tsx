@@ -57,7 +57,7 @@ export default function RecordingsList({
       <div
         className="relative w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
         onScroll={onScroll}
-        onTouchEnd={onScrollEnd}
+        onScrollEnd={onScrollEnd}
         ref={containerRef}
       >
         {videosCards.length > 0 ? (

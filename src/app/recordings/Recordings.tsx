@@ -118,7 +118,7 @@ export default function Recordings({
   }
 
   function handleScrollEnd() {
-    setIsCarouselLocked(false);
+    setIsCarouselLocked(false);    
   }
 
   return (

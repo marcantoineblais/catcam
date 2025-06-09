@@ -1,10 +1,10 @@
 "use client";
 
-import { TouchEvent, useEffect, useRef, useState } from "react";
+import { TouchEvent, useRef, useState } from "react";
 
 export default function OnOffSwitch({
   isOn = true,
-  setIsOn = () => {},
+  setIsOn = () => true,
   isEnabled = false,
   onLabel = "ON",
   offLabel = "OFF",
@@ -23,20 +23,34 @@ export default function OnOffSwitch({
   const innerBtnRef = useRef<HTMLDivElement>(null);
   const btnHeadRef = useRef<HTMLDivElement>(null);
 
-  function handleClick() {
+  function scrollToIdle(currentPosition: number | null = null) {    
+    const btn = btnRef.current;
     const innerBtn = innerBtnRef.current;
     const head = btnHeadRef.current;
-    if (!innerBtn || !head) return;
+    if (!btn || !innerBtn || !head) return;
 
     const maxScroll = (innerBtn.clientWidth - head.clientWidth) / 2;
-    setScrollPosition(isOn ? 0 : maxScroll);
-    setIsOn(!isOn);
+    const threshold = maxScroll / 2;
+
+    if (currentPosition) {
+      const updatedStatus = currentPosition < threshold
+      setIsOn(updatedStatus);
+      setScrollPosition(updatedStatus ? 0 : maxScroll)
+    } else {
+      const updatedStatus = !isOn
+      setIsOn(updatedStatus)
+      setScrollPosition(updatedStatus ? 0 : maxScroll)
+    }
+  }
+
+  function handleClick() {
+    if (isScrolling) return;
+    scrollToIdle();
   }
 
   function handleTouchStart(e: TouchEvent) {
     const position = e.touches[0].clientX;
     setInitPosition(position);
-    setIsScrolling(true);
   }
 
   function handleTouchMove(e: TouchEvent) {
@@ -47,7 +61,7 @@ export default function OnOffSwitch({
 
     const position = e.touches[0].clientX;
     const delta = initPosition - position;
-
+    setIsScrolling(true);
     setInitPosition(position);
     setScrollSpeed(delta);
     setScrollPosition((position) => {
@@ -62,10 +76,12 @@ export default function OnOffSwitch({
   }
 
   function handleTouchEnd() {
+    if (!isScrolling) return;
+
     const btn = btnRef.current;
     const innerBtn = innerBtnRef.current;
     const head = btnHeadRef.current;
-    if (!btn || !innerBtn || !head) return;
+    if (!btn || !innerBtn || !head || !initPosition) return;
 
     const maxScroll = (innerBtn.clientWidth - head.clientWidth) / 2;
     let speed = scrollSpeed;
@@ -73,13 +89,10 @@ export default function OnOffSwitch({
 
     const interval = setInterval(() => {
       if (speed === 0) {
-        const threshold = maxScroll / 2;
-
         setInitPosition(null);
         setScrollSpeed(0);
         setIsScrolling(false);
-        setIsOn(currentPosition < threshold);
-        setScrollPosition(currentPosition < threshold ? 0 : maxScroll);
+        scrollToIdle(currentPosition);
         clearInterval(interval);
       } else {
         setScrollPosition((position) => {
@@ -125,10 +138,10 @@ export default function OnOffSwitch({
         <div
           ref={btnHeadRef}
           className="absolute z-10 -top-0.5 -bottom-0.5 left-1/2 -translate-x-1/2 origin-center aspect-square rounded-full bg-gray-50 dark:bg-zinc-950 inset-ring-2 inset-ring-gray-950/50 dark:inset-ring-zinc-50/50 cursor-pointer data-disabled:cursor-default"
-          onClick={handleClick}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onClick={handleClick}
           data-disabled={isEnabled ? undefined : true}
         ></div>
       </div>
