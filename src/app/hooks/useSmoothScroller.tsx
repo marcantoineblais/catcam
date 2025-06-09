@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { RefObject, useCallback, useEffect, useState } from "react";
 
 const useSmoothScroller = (
   element: RefObject<HTMLElement | null> | null = null,
@@ -23,9 +23,9 @@ const useSmoothScroller = (
 
     let maxScroll = 0;
     if (scrollDirection === "left") {
-      maxScroll = el.scrollWidth - el.clientWidth;
+      maxScroll = el.scrollWidth - el.clientWidth + 1;
     } else {
-      maxScroll = el.scrollHeight - el.clientHeight;
+      maxScroll = el.scrollHeight - el.clientHeight + 1;
     }
     
     let correctedScroll = nextScroll;

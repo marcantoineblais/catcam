@@ -62,9 +62,9 @@ export default function VideoCard({
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
   }
-
+  
   return (
-    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-16/10">
+    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-7/4">
       {isVisible && (
         <div
           onClick={onClick}
@@ -86,7 +86,7 @@ export default function VideoCard({
             />
           </Skeleton>
 
-          <div className="w-full pt-1.5 px-3 flex justify-between text-sm md:text-base">
+          <div className="w-full pt-1.5 px-3 flex justify-between items-center text-sm md:text-base">
             <span>{getFormattedDate(timestamp)}</span>
             <span>{getFormattedTime(timestamp)}</span>
           </div>

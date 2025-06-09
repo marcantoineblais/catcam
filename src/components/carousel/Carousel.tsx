@@ -11,6 +11,7 @@ export default function Carousel({
   const [buttons, setButtons] = useState<ReactNode[]>([]);
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [width, setWidth] = useState<number>(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const { isScrolling, scrollTo } = useSmoothScroller(carouselRef, "left", 20);
 
@@ -50,6 +51,13 @@ export default function Carousel({
     setButtons(buttons);
     setNodes(nodes);
   }, [sections, selectedIndex]);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+
+    if (!carousel) return;
+    setWidth(carousel.clientWidth * nodes.length);
+  }, [carouselRef, nodes]);
 
   useEffect(() => {
     const carousel = carouselRef.current;
@@ -95,7 +103,7 @@ export default function Carousel({
       >
         <div
           className="h-full flex overflow-hidden"
-          style={{ width: `${nodes.length * 100}%` }}
+          style={{ width: `${width}px`}}
         >
           {nodes}
         </div>
