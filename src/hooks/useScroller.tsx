@@ -1,4 +1,4 @@
-import { RefObject, TouchEvent, useRef, useState } from "react";
+import { RefObject, TouchEvent, useCallback, useRef, useState } from "react";
 
 export default function useScroller({
   containerRef,
@@ -19,7 +19,7 @@ export default function useScroller({
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const timer = useRef<NodeJS.Timeout | number>(0);
 
-  function calculateElementWidth() {
+  const calculateElementWidth = useCallback(() => {
     const container = containerRef.current;
     if (!container) return {};
 
@@ -28,9 +28,9 @@ export default function useScroller({
     const maxScroll = scrollWidth - elementWidth - offset * itemsNumber;
 
     return { maxScroll, elementWidth };
-  }
+  }, [containerRef, itemsNumber, offset]);
 
-  function calculateSelectedIndex() {
+  const calculateSelectedIndex = useCallback(() => {
     const { maxScroll, elementWidth } = calculateElementWidth();
     if (maxScroll === undefined || elementWidth === undefined)
       return { index: 0, newPosition: 0 };
@@ -48,7 +48,7 @@ export default function useScroller({
     const newPosition = index * elementWidth;
 
     return { index, newPosition };
-  }
+  }, [calculateElementWidth, position, itemsNumber, scrollDirection]);
 
   function resetTimer() {
     clearTimeout(timer.current);
@@ -57,46 +57,64 @@ export default function useScroller({
     }, 200);
   }
 
-  function handleClick(index: number) {
-    const { elementWidth } = calculateElementWidth();
-    if (elementWidth === undefined) return;
-    const scrollPosition = elementWidth * index;
-    setPosition(scrollPosition);
-  }
+  const handleClick = useCallback(
+    (index: number) => {
+      const { elementWidth } = calculateElementWidth();
+      if (elementWidth === undefined) return;
+      const scrollPosition = elementWidth * index;
+      setPosition(scrollPosition);
+    },
+    [calculateElementWidth]
+  );
 
-  function handleTouchStart(e: TouchEvent) {
-    if (isLocked) return;
+  const handleTouchStart = useCallback(
+    (e: TouchEvent) => {
+      if (isLocked) return;
 
-    const clientX = e.touches[0].clientX;
-    setIsScrolling(true);
-    setPreviousPosition(clientX);
-  }
+      const clientX = e.touches[0].clientX;
+      setIsScrolling(true);
+      setPreviousPosition(clientX);
+    },
+    [isLocked]
+  );
 
-  function handleTouchMove(e: TouchEvent) {
-    if (isLocked || !isScrolling) return;
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (isLocked || !isScrolling) return;
 
-    const { elementWidth, maxScroll } = calculateElementWidth();
-    const container = containerRef.current;
-    if (elementWidth === null || maxScroll === undefined || !container) return;
+      const { elementWidth, maxScroll } = calculateElementWidth();
+      const container = containerRef.current;
+      if (elementWidth === null || maxScroll === undefined || !container)
+        return;
 
-    const clientX = e.touches[0].clientX;
-    const deltaX = previousPosition - clientX;
+      const clientX = e.touches[0].clientX;
+      const deltaX = previousPosition - clientX;
 
-    let newPosition = position + deltaX;
-    if (newPosition < 0) newPosition = 0;
-    if (newPosition > maxScroll) newPosition = maxScroll;
+      let newPosition = position + deltaX;
+      if (newPosition < 0) newPosition = 0;
+      if (newPosition > maxScroll) newPosition = maxScroll;
 
-    let newScrollDirection = scrollDirection;
-    if (newPosition > position) newScrollDirection = "left";
-    else newScrollDirection = "right";
+      let newScrollDirection = scrollDirection;
+      if (newPosition > position) newScrollDirection = "left";
+      else newScrollDirection = "right";
 
-    setScrollDirection(newScrollDirection);
-    setPreviousPosition(clientX);
-    setPosition(newPosition);
-    resetTimer();
-  }
+      setScrollDirection(newScrollDirection);
+      setPreviousPosition(clientX);
+      setPosition(newPosition);
+      resetTimer();
+    },
+    [
+      isLocked,
+      containerRef,
+      calculateElementWidth,
+      isScrolling,
+      position,
+      previousPosition,
+      scrollDirection,
+    ]
+  );
 
-  function handleTouchEnd() {
+  const handleTouchEnd = useCallback(() => {
     const { index, newPosition } = calculateSelectedIndex();
 
     setScrollDirection(null);
@@ -104,7 +122,7 @@ export default function useScroller({
     setPosition(newPosition);
     clearTimeout(timer.current);
     return index;
-  }
+  }, [calculateSelectedIndex]);
 
   return {
     position,

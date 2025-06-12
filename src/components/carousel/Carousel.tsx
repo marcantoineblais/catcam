@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
 import useScroller from "@/src/hooks/useScroller";
@@ -50,13 +50,17 @@ export default function Carousel({
     const buttons = labels.map((label, i) => {
       const isActive = i === selectedIndex;
       const align = getAlignment(i);
+      const selectIndex = () => {
+        setSelectedIndex(i);
+        handleClick(i);
+      }
 
       return (
         <CarouselButton
           key={i}
           label={label}
           isActive={isActive}
-          onClick={() => handleClick(i)}
+          onClick={selectIndex}
           align={align}
         />
       );
@@ -64,7 +68,7 @@ export default function Carousel({
 
     setButtons(buttons);
     setNodes(nodes);
-  }, [sections, selectedIndex]);
+  }, [sections, selectedIndex, handleClick]);
 
   useEffect(() => {
     const container = containerRef.current;
