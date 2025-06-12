@@ -13,6 +13,7 @@ export default function useScroller({
 }) {
   const [position, setPosition] = useState<number>(0);
   const [previousPosition, setPreviousPosition] = useState<number>(0);
+  const [previousYPosition, setPreviousYPosition] = useState<number>(0);
   const [scrollDirection, setScrollDirection] = useState<
     "left" | "right" | null
   >(null);
@@ -72,8 +73,11 @@ export default function useScroller({
       if (isLocked) return;
 
       const clientX = e.touches[0].clientX;
+      const clientY = e.touches[0].clientX;
+
       setIsScrolling(true);
       setPreviousPosition(clientX);
+      setPreviousYPosition(clientY);
     },
     [isLocked]
   );
@@ -88,18 +92,22 @@ export default function useScroller({
         return;
 
       const clientX = e.touches[0].clientX;
+      const clientY = e.touches[0].clientY;
       const deltaX = previousPosition - clientX;
+      const deltaY = previousYPosition - clientY;
 
       let newPosition = position + deltaX;
       if (newPosition < 0) newPosition = 0;
       if (newPosition > maxScroll) newPosition = maxScroll;
 
       let newScrollDirection = scrollDirection;
-      if (newPosition > position) newScrollDirection = "left";
+      if (Math.abs(deltaY) >= Math.abs(deltaX)) newScrollDirection = null;
+      else if (newPosition > position) newScrollDirection = "left";
       else newScrollDirection = "right";
 
       setScrollDirection(newScrollDirection);
       setPreviousPosition(clientX);
+      setPreviousYPosition(clientY);
       setPosition(newPosition);
       resetTimer();
     },
@@ -117,6 +125,8 @@ export default function useScroller({
   const handleTouchEnd = useCallback(() => {
     const { index, newPosition } = calculateSelectedIndex();
 
+    setPreviousPosition(0);
+    setPreviousYPosition(0);
     setScrollDirection(null);
     setIsScrolling(false);
     setPosition(newPosition);
