@@ -113,12 +113,12 @@ export default function Recordings({
   }
 
   async function handleScroll(e: React.SyntheticEvent<HTMLDivElement>) {
-    await fetchDataOnScroll(e)
+    await fetchDataOnScroll(e);
     setIsCarouselLocked(true);
   }
 
   function handleScrollEnd() {
-    setIsCarouselLocked(false);    
+    setIsCarouselLocked(false);
   }
 
   return (

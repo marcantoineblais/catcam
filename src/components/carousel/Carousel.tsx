@@ -1,14 +1,7 @@
-import {
-  ReactElement,
-  ReactNode,
-  TouchEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
-import { select } from "@heroui/react";
+import useScroller from "@/src/hooks/useScroller";
 
 export default function Carousel({
   sections,
@@ -21,11 +14,20 @@ export default function Carousel({
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
-  const [initPosition, setInitPosition] = useState<number | null>(null);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(0);
-  const [scrollPosition, setScrollPosition] = useState<number>(0);
-  const [isScrolling, setIsScrolling] = useState<boolean>(true);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    position,
+    isScrolling,
+    handleClick,
+    handleTouchStart,
+    handleTouchEnd,
+    handleTouchMove,
+  } = useScroller({
+    containerRef: containerRef,
+    itemsNumber: nodes.length,
+    isLocked: isLocked,
+  });
 
   useEffect(() => {
     if (!sections) return;
@@ -54,7 +56,7 @@ export default function Carousel({
           key={i}
           label={label}
           isActive={isActive}
-          onClick={() => setSelectedIndex(i)}
+          onClick={() => handleClick(i)}
           align={align}
         />
       );
@@ -72,86 +74,8 @@ export default function Carousel({
   }, [containerRef, nodes]);
 
   useEffect(() => {
-    if (width === 0) return;
-    setIsScrolling(false);
+    setIsLoaded(width > 0);
   }, [width]);
-
-  useEffect(() => {
-    setScrollPosition(selectedIndex * (width / nodes.length));
-  }, [selectedIndex, nodes, width]);
-
-  useEffect(() => {
-    setInitPosition(null);
-    setScrollSpeed(0);
-  }, [isLocked]);
-
-  function handleTouchStart(e: TouchEvent) {
-    if (isLocked) return;
-
-    const position = e.touches[0].clientX;
-    setInitPosition(position);
-    setIsScrolling(true);
-  }
-
-  function handleTouchMove(e: TouchEvent) {
-    if (isLocked || initPosition === null) return;
-
-    const position = e.touches[0].clientX;
-    const delta = initPosition - position;
-
-    setInitPosition(position);
-    setScrollSpeed(delta);
-    setScrollPosition((position) => {
-      const maxScroll = (width / nodes.length) * (nodes.length - 1);
-      let newPosition = position + delta;
-
-      if (newPosition < 0) newPosition = 0;
-      if (newPosition > maxScroll) newPosition = maxScroll;
-
-      return newPosition;
-    });
-  }
-
-  function handleTouchEnd() {
-    const maxScroll = (width / nodes.length) * (nodes.length - 1);
-    let speed = scrollSpeed;
-    let currentPosition = scrollPosition;
-
-    const interval = setInterval(() => {
-      if (speed === 0) {
-        let index = Math.floor(currentPosition / (maxScroll / nodes.length));
-
-        if (index > nodes.length - 1) {
-          index = nodes.length - 1;
-        }
-
-        const position = selectedIndex * (width / nodes.length);
-        setInitPosition(null);
-        setScrollPosition(position);
-        setScrollSpeed(0);
-        setSelectedIndex(index);
-        setIsScrolling(false);
-        clearInterval(interval);
-      } else {
-        setScrollPosition((position) => {
-          const maxScroll = (width / nodes.length) * (nodes.length - 1);
-          let newPosition = position + speed;
-
-          if (newPosition < 0) newPosition = 0;
-          if (newPosition > maxScroll) newPosition = maxScroll;
-
-          currentPosition = newPosition;
-          return newPosition;
-        });
-
-        if (Math.abs(speed) < 1) {
-          speed = 0;
-        } else {
-          speed = speed * 0.9;
-        }
-      }
-    }, 20);
-  }
 
   return (
     <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
@@ -162,11 +86,11 @@ export default function Carousel({
       <div ref={containerRef} className="pt-3 w-full h-full overflow-hidden">
         <div
           className="relative h-full flex duration-500 data-scrolling:duration-0"
-          style={{ width: `${width}px`, left: `${-scrollPosition}px` }}
-          data-scrolling={isScrolling || undefined}
+          style={{ width: `${width}px`, left: `${-position}px` }}
+          data-scrolling={!isLoaded || isScrolling || undefined}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchEnd={() => setSelectedIndex(handleTouchEnd())}
         >
           {nodes}
         </div>
