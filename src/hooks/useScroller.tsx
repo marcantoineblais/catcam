@@ -73,7 +73,7 @@ export default function useScroller({
       if (isLocked) return;
 
       const clientX = e.touches[0].clientX;
-      const clientY = e.touches[0].clientX;
+      const clientY = e.touches[0].clientY;
 
       setIsScrolling(true);
       setPreviousPosition(clientX);
@@ -97,13 +97,18 @@ export default function useScroller({
       const deltaY = previousYPosition - clientY;
 
       let newPosition = position + deltaX;
-      if (newPosition < 0) newPosition = 0;
-      if (newPosition > maxScroll) newPosition = maxScroll;
-
       let newScrollDirection = scrollDirection;
-      if (Math.abs(deltaY) >= Math.abs(deltaX)) newScrollDirection = null;
-      else if (newPosition > position) newScrollDirection = "left";
-      else newScrollDirection = "right";
+
+      if (Math.abs(deltaY) > 3) {
+        newScrollDirection = null;
+        newPosition = position;
+      } else {
+        if (newPosition < 0) newPosition = 0;
+        if (newPosition > maxScroll) newPosition = maxScroll;
+
+        if (newPosition > position) newScrollDirection = "left";
+        else if (newPosition < position) newScrollDirection = "right";
+      }
 
       setScrollDirection(newScrollDirection);
       setPreviousPosition(clientX);
@@ -118,6 +123,7 @@ export default function useScroller({
       isScrolling,
       position,
       previousPosition,
+      previousYPosition,
       scrollDirection,
     ]
   );

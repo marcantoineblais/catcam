@@ -30,9 +30,8 @@ export default function VideoCard({
   useEffect(() => {
     const container = containerRef?.current;
 
-    const height = container ? container.clientHeight / 2 : 0;
     const root = container || null;
-    const rootMargin = height + "px";
+    const rootMargin = "50%";
     const threshold = 0;
 
     setOptions({
@@ -51,12 +50,16 @@ export default function VideoCard({
     card.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [isSelected, containerRef]);
 
+  useEffect(() => {
+    if (!isVisible) setImageLoaded(false);
+  }, [isVisible]);
+
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
   }
 
   return (
-    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-7/4">
+    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
       {isVisible && (
         <div
           onClick={onClick}
