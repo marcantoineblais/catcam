@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 export default function VideoPlayerOverlay({
   currentTime = 0,
+  setCurrentTime = () => {},
   buffer = 0,
   duration = 0,
   title = "",
@@ -26,6 +27,7 @@ export default function VideoPlayerOverlay({
   toggleFullscreen = () => {},
 }: {
   currentTime?: number;
+  setCurrentTime?: Function;
   buffer?: number;
   duration?: number;
   title?: string;
@@ -108,6 +110,7 @@ export default function VideoPlayerOverlay({
     const positionRatio = (position - left) / width;
     const updatedTime = positionRatio * duration;
     setSeekingBarPosition(positionRatio * 100);
+    setCurrentTime(updatedTime);
     video.currentTime = updatedTime;
   }
 
@@ -122,7 +125,7 @@ export default function VideoPlayerOverlay({
   }
 
   async function handleStartSeeking(
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) {
     e.stopPropagation();
     isCurrentlyPlaying.current = isPlaying;
@@ -196,7 +199,7 @@ export default function VideoPlayerOverlay({
 
   function fastSeeking(
     e: React.ToggleEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
-    step: number = 10,
+    step: number = 10
   ) {
     if (currentTime === undefined || duration === undefined) return;
 

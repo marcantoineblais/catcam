@@ -134,6 +134,7 @@ export default function VideoPlayer({
           isPlaying={isPlaying}
           isLoaded={isLoaded}
           currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
           duration={duration}
           buffer={buffer}
           videoSource={src}
