@@ -48,15 +48,14 @@ export default async function RootLayout({
   const dark = await darkMode();
 
   return (
-    <html
-      lang="en"
-      className={`${dark} h-screen max-h-screen min-h-screen overflow-x-hidden`}
-    >
+    <html lang="en">
       <body
-        className={`${inter.className} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-screen max-h-screen min-h-screen flex flex-col`}
+        className={`${inter.className} ${dark} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-[100lvh] w-[100lvw]`}
       >
-        <Navbar />
-        {children}
+        <div className="flex flex-col h-[100dvh] w-[100dvw] overflow-hidden">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   );
