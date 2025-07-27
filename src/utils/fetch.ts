@@ -56,7 +56,7 @@ export async function fetchVideos(searchParams: URLSearchParams | string = "") {
       const data = await response.json();
       const videos: Video[] = data.videos.map((video: any) => {
         const videoTime = new TZDate(video.time, "GMT-0000");
-        const thumbTime = addSeconds(videoTime, 5);
+        const thumbTime = addSeconds(videoTime, 7);
         const thumbPath = `${getFullDate(thumbTime)}/${getDateTimeUrl(
           thumbTime,
         )}.jpg`;
