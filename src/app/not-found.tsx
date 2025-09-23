@@ -5,7 +5,7 @@ import renderPopup from "@/src/utils/renderPopup";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 
-export default function FourOFour() {
+export default function NotFound() {
   const router = useRouter();
   const redirected = useRef(false);
 

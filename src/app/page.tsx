@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "../hooks/useSession";
 import { useEffect, useRef } from "react";
 
-const DefaultPage = () => {
+export default async function DefaultPage() {
   const router = useRouter();
   const { session } = useSession();
   const hasRedirected = useRef(false);
@@ -23,5 +23,3 @@ const DefaultPage = () => {
 
   return null;
 };
-
-export default DefaultPage;

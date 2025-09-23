@@ -3,7 +3,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "../components/navbar/Navbar";
-import { AUTO_DARK_MODE_TIME, DEFAULT_SETTINGS } from "../config";
 import SessionWrapper from "../components/SessionWrapper";
 import { fetchSession } from "../utils/fetch";
 import { redirect } from "next/navigation";

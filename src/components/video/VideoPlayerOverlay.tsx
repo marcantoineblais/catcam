@@ -99,9 +99,7 @@ export default function VideoPlayerOverlay({
   }
 
   function updateCurrentTime(position: number) {
-    dTime(() => {
-      console.log("HERE");
-      
+    dTime(() => {      
       const seekingBar = seekingBarRef.current;
       const video = videoRef.current;
       if (!seekingBar || !video) return;

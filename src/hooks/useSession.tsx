@@ -6,6 +6,7 @@ import { DEFAULT_SETTINGS } from "../config";
 type SessionContextType = {
   session: Session;
   getSession: () => Promise<any>;
+  updateSession: (data: Partial<Session>) => void;
   signIn: (data: any) => Promise<{ ok: boolean; session?: Session }>;
   signOut: () => Promise<void>;
 };
@@ -23,6 +24,7 @@ const SessionContext = createContext<SessionContextType>({
     settings: DEFAULT_SETTINGS,
   },
   getSession: async () => {},
+  updateSession: () => {},
   signIn: async () => ({ ok: false }),
   signOut: async () => {},
 });
@@ -50,7 +52,7 @@ export function SessionProvider({
         },
       });
 
-      const data = await response.json();      
+      const data = await response.json();
       if (response.ok) {
         setSession(data.session);
         return data.session;
@@ -68,6 +70,13 @@ export function SessionProvider({
     }
   }, []);
 
+  const updateSession = useCallback((data: Partial<Session>) => {
+    setSession((prev) => ({
+      ...prev,
+      ...data,
+    }));
+  }, []);
+
   const signIn = useCallback(
     async (data: any) => {
       try {
@@ -80,7 +89,7 @@ export function SessionProvider({
         });
 
         if (response.ok) {
-          const session = await getSession();      
+          const session = await getSession();
           router.replace("/");
           return { ok: true, session };
         } else {
@@ -91,7 +100,7 @@ export function SessionProvider({
         throw error;
       }
     },
-    [getSession]
+    [getSession, router]
   );
 
   const signOut = useCallback(async () => {
@@ -117,7 +126,9 @@ export function SessionProvider({
   }, [router]);
 
   return (
-    <SessionContext.Provider value={{ session, getSession, signIn, signOut }}>
+    <SessionContext.Provider
+      value={{ session, getSession, updateSession, signIn, signOut }}
+    >
       {children}
     </SessionContext.Provider>
   );

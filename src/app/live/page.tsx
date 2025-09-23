@@ -9,7 +9,7 @@ import OnOffSwitch from "../../components/OnOffSwitch";
 import { useSession } from "@/src/hooks/useSession";
 import { useRouter } from "next/navigation";
 
-export default function LiveStream() {
+export default async function LiveStream() {
   const { session: { monitors, settings } } = useSession();
   const router = useRouter();
   
@@ -34,7 +34,7 @@ export default function LiveStream() {
         "Warning",
       );
     }
-  }, [monitors]);
+  }, [monitors, router]);
 
   useEffect(() => {
     const streams = selectedMonitor?.streams;

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useSession } from "../hooks/useSession";
 import { AUTO_DARK_MODE_TIME } from "../config";
 
-const DisplayMode = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+export default function DisplayMode({ children, className }: { children: React.ReactNode; className?: string }) {
   const { session: { settings } } = useSession()
 
   const darkMode = useMemo(() => {
@@ -25,5 +25,3 @@ const DisplayMode = ({ children, className }: { children: React.ReactNode; class
     </div>
   )
 }
-
-export default DisplayMode;

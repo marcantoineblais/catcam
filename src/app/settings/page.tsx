@@ -6,10 +6,10 @@ import FormSelect from "./FormSelect";
 import { useSession } from "@/src/hooks/useSession";
 import Logo from "@/src/components/Logo";
 
-export default function Settings() {
+export default async function Settings() {
   const {
     session: { settings, monitors },
-    getSession,
+    updateSession,
   } = useSession();
   const [formData, setFormData] = useState(settings);
 
@@ -22,7 +22,7 @@ export default function Settings() {
         });
 
         if (response.ok) {
-          await getSession();
+          updateSession({ settings: formData });
         } else {
           renderPopup([
             "Could not update your settings.",
@@ -40,7 +40,7 @@ export default function Settings() {
     };
 
     saveChanges();
-  }, [formData, getSession]);
+  }, [formData, updateSession]);
 
   function handleChange(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));

@@ -12,9 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 
-export default function Recordings() {
-  const { session: { monitors, videos } } = useSession();
-  
+export default async function Recordings() {
+  const { session: { monitors, videos }, updateSession } = useSession();
+
   const [videosList, setVideosList] = useState<Video[]>(videos || []);
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
@@ -72,7 +72,9 @@ export default function Recordings() {
       if (newVideos.length === 0) {
         setNothingToLoad(true);
       } else {
-        setVideosList([...videosList, ...newVideos]);
+        const videos = [...videosList, ...newVideos];
+        updateSession({ videos });
+        setVideosList(videos);
       }
     }
 

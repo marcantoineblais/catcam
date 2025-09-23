@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 
-const Navbar = () => {
+export default function Navbar() {
   const { signOut } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const noNavbarPaths = ["/login"];
@@ -82,5 +82,3 @@ const Navbar = () => {
     </div>
   );
 };
-
-export default Navbar;

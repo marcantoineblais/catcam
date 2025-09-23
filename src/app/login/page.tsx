@@ -5,7 +5,7 @@ import Logo from "../../components/Logo";
 import renderPopup from "@/src/utils/renderPopup";
 import { useSession } from "@/src/hooks/useSession";
 
-export default function Login() {
+export default async function Login() {
   const { signIn } = useSession();
   const [formData, setFormData] = useState({
     email: "",
