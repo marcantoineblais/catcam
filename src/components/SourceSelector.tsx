@@ -6,8 +6,8 @@ export default function SourceSelector({
   selectedMonitor,
   setSelectedMonitor = () => {},
 }: {
-  monitors?: Monitor[];
-  selectedMonitor?: Monitor;
+  monitors?: (Monitor | "all")[];
+  selectedMonitor?: Monitor | "all";
   setSelectedMonitor: Function;
 }) {
   const [buttons, setButtons] = useState<ReactNode[]>([]);
@@ -23,7 +23,7 @@ export default function SourceSelector({
             onClick={() => setSelectedMonitor(monitor)}
             data-active={isActive}
           >
-            {monitor.name}
+            {monitor === "all" ? "All" : monitor.name}
           </button>
         </div>
       );

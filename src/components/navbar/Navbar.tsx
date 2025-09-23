@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import renderPopup from "@/src/utils/renderPopup";
+import { useSession } from "@/src/hooks/useSession";
 
 const Navbar = () => {
+  const { signOut } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const noNavbarPaths = ["/login"];
   const currentPage = usePathname();
-  const router = useRouter();
 
   // Close the menu when clicking anywhere on screen
   useEffect(() => {
@@ -30,20 +30,6 @@ const Navbar = () => {
   function toggleMenu(e: React.MouseEvent) {
     e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
-  }
-
-  async function logout() {
-    const response = await fetch("/api/logout");
-
-    if (response.ok) {
-      router.push("/login");
-    } else {
-      console.error("[Navbar] Could not logout:", response);
-      renderPopup([
-        "Could not disconnect you at the moment.",
-        "Please retry later.",
-      ]);
-    }
   }
 
   if (noNavbarPaths.includes(currentPage)) return null;
@@ -89,7 +75,7 @@ const Navbar = () => {
               url="/settings"
               active={currentPage === "/settings"}
             />
-            <NavbarButton label="Logout" warning={true} action={logout} />
+            <NavbarButton label="Logout" warning={true} action={signOut} />
           </div>
         </menu>
       </div>

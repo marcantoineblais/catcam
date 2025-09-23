@@ -1,6 +1,6 @@
 "use client";
 
-import { TouchEvent, useRef } from "react";
+import { TouchEvent, useMemo, useRef } from "react";
 import useScroller from "../hooks/useScroller";
 
 export default function OnOffSwitch({
@@ -9,13 +9,25 @@ export default function OnOffSwitch({
   isEnabled = false,
   onLabel = "ON",
   offLabel = "OFF",
+  height = 7,
+  width = 16,
 }: {
   isOn?: boolean;
   setIsOn?: Function;
   isEnabled?: boolean;
   onLabel?: string;
   offLabel?: string;
+  height?: number;
+  width?: number;
 }) {
+  const heightClassName = useMemo(() => {
+    return `h-${height}`;
+  }, [height]);
+
+  const widthClassName = useMemo(() => {
+    return `w-${width}`;
+  }, [width]);
+
   const btnRef = useRef<HTMLButtonElement>(null);
   const {
     position,
@@ -27,7 +39,7 @@ export default function OnOffSwitch({
   } = useScroller({
     containerRef: btnRef,
     itemsNumber: 2,
-    offset: 20,
+    offset: width,
   });
 
   function onClick() {
@@ -49,12 +61,12 @@ export default function OnOffSwitch({
   return (
     <button
       ref={btnRef}
-      className="h-10 w-20 text-sm font-bold rounded-full text-white !box-content border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out cursor-pointer disabled:opacity-50 focus:outline-none"
+      className={`${heightClassName} ${widthClassName} text-sm font-bold rounded-full text-white !box-content border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out cursor-pointer disabled:opacity-50 focus:outline-none`}
       disabled={isEnabled ? undefined : true}
       data-scrolling={isScrolling || undefined}
     >
       <div
-        className="relative w-30 h-full flex duration-500 data-scrolling:duration-0"
+        className="relative w-[150%] h-full flex duration-500 data-scrolling:duration-0"
         style={{ left: `${-position}px` }}
         data-scrolling={isScrolling || undefined}
       >

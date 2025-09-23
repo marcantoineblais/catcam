@@ -1,84 +1,111 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Session} from "../models/session";
+import { Session } from "../models/session";
+import { DEFAULT_SETTINGS } from "../config";
 
 type SessionContextType = {
-  session: Session | null;
+  session: Session;
   getSession: () => Promise<any>;
-  signIn: (data: any) => Promise<void>;
+  signIn: (data: any) => Promise<{ ok: boolean; session?: Session }>;
   signOut: () => Promise<void>;
 };
 
 type SessionProviderProps = React.PropsWithChildren<{
-  initialSession: Session | null;
+  initialSession: Session;
 }>;
 
 const SessionContext = createContext<SessionContextType>({
-  session: null,
+  session: {
+    authToken: null,
+    groupKey: null,
+    monitors: null,
+    videos: null,
+    settings: DEFAULT_SETTINGS,
+  },
   getSession: async () => {},
-  signIn: async () => {},
+  signIn: async () => ({ ok: false }),
   signOut: async () => {},
 });
 
 export function SessionProvider({
   children,
-  initialSession = null,
+  initialSession = {
+    authToken: null,
+    groupKey: null,
+    monitors: null,
+    videos: null,
+    settings: DEFAULT_SETTINGS,
+  },
 }: SessionProviderProps) {
-  const [session, setSession] = useState<Session | null>(initialSession);
+  const [session, setSession] = useState<Session>(initialSession);
   const router = useRouter();
 
   // Renew token and update session data
   const getSession = useCallback(async () => {
     try {
-      const response = await fetch("/api/auth/session");
-      const data = await response.json();
-      
-      if (response.ok) {
-        setSession(data.session || null);
-        return data.session || null;
-      }
-    } catch {
-      setSession(null);
-      return null;
-    }
-  }, []);
-
-  const signIn = useCallback(async (data: any) => {
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
+      const response = await fetch("/api/auth/session", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       });
 
+      const data = await response.json();      
       if (response.ok) {
-        const session = await getSession();
-        router.push("/");
-        return session;
-      } else {
-        throw new Error("Login failed");
+        setSession(data.session);
+        return data.session;
       }
     } catch (error) {
-      console.error("SignIn error:", error);
+      setSession((prev) => ({
+        ...prev,
+        authToken: null,
+        groupKey: null,
+        monitors: null,
+        videos: null,
+      }));
+      console.error("[GetSession] Error while fetching session:", error);
       throw error;
     }
-  }, [getSession]);
+  }, []);
+
+  const signIn = useCallback(
+    async (data: any) => {
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          const session = await getSession();      
+          router.replace("/");
+          return { ok: true, session };
+        } else {
+          return { ok: false };
+        }
+      } catch (error) {
+        console.error("SignIn error:", error);
+        throw error;
+      }
+    },
+    [getSession]
+  );
 
   const signOut = useCallback(async () => {
     try {
-      const response = await fetch("/api/logout", {
-        method: "POST",
-      });
+      const response = await fetch("/api/auth/logout");
 
       if (response.ok) {
-        setSession(null);
+        setSession((prev) => ({
+          ...prev,
+          authToken: null,
+          groupKey: null,
+          monitors: null,
+          videos: null,
+        }));
         router.push("/login");
       } else {
         throw new Error("Logout failed");
@@ -90,9 +117,7 @@ export function SessionProvider({
   }, [router]);
 
   return (
-    <SessionContext.Provider
-      value={{ session, getSession, signIn, signOut }}
-    >
+    <SessionContext.Provider value={{ session, getSession, signIn, signOut }}>
       {children}
     </SessionContext.Provider>
   );

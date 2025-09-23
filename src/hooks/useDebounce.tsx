@@ -3,17 +3,22 @@
 import { useEffect, useRef } from "react";
 
 export default function useDebounce() {
-  const timer = useRef<NodeJS.Timeout | number>(0);
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     return () => {
-      clearTimeout(timer.current);
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
     };
   }, []);
 
   const handler = (func: Function, wait: number) => {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(func, wait);
+    if (timer.current) return;
+
+    timer.current = setTimeout(() => (timer.current = null), wait);
+    func();
   };
 
   return handler;

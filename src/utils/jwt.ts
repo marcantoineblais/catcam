@@ -37,7 +37,7 @@ export async function getToken({ isServerAction = false } = {}) {
         rememberMe: true,
       });
     }
-    return { authToken: payload.sub, groupKey: payload.aud };
+    return { authToken: payload.sub, groupKey: payload.aud as string };
   } catch (error) {
     console.error("[GetToken] Error validating token:", error);
     cookie.delete("session");

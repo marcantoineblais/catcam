@@ -8,7 +8,7 @@ const SessionWrapper = ({
   initialSession,
 }: {
   children: React.ReactNode;
-  initialSession: Session | null;
+  initialSession: Session;
 }) => {
   return (
     <SessionProvider initialSession={initialSession}>

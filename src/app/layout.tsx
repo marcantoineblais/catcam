@@ -2,11 +2,12 @@ import React from "react";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
 import Navbar from "../components/navbar/Navbar";
-import { AUTO_DARK_MODE_TIME } from "../config";
+import { AUTO_DARK_MODE_TIME, DEFAULT_SETTINGS } from "../config";
 import SessionWrapper from "../components/SessionWrapper";
 import { fetchSession } from "../utils/fetch";
+import { redirect } from "next/navigation";
+import DisplayMode from "../components/display-mode";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,17 +25,14 @@ export const metadata: Metadata = {
   applicationName: "Catcam",
 };
 
-function darkMode(mode = "light") {
-  if (mode === "auto") {
-    const { start, end } = AUTO_DARK_MODE_TIME;
-    const now = new Date();
-
-    if (now.getHours() >= start || now.getHours() < end) {
-      return "dark";
-    }
+async function getSession() {
+  try {
+    const session = await fetchSession();
+    return session;
+  } catch (error) {
+    console.error("[GetSession] Error while fetching session:", error);
+    redirect("/login");
   }
-
-  return mode;
 }
 
 export default async function RootLayout({
@@ -42,18 +40,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await fetchSession();
-  const dark = darkMode(session?.settings?.mode);
+  const session = await getSession();
+
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} ${dark} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-[100lvh] w-[100lvw]`}
-      >
+      <body className={`${inter.className} h-[100lvh] w-[100lvw]`}>
         <SessionWrapper initialSession={session}>
-          <div className="flex flex-col h-[100dvh] w-[100dvw] overflow-hidden">
+          <DisplayMode className="flex flex-col h-[100dvh] w-[100dvw] bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
             <Navbar />
             {children}
-          </div>
+          </DisplayMode>
         </SessionWrapper>
       </body>
     </html>

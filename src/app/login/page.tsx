@@ -1,44 +1,32 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import Logo from "../../components/Logo";
 import renderPopup from "@/src/utils/renderPopup";
-import { useRouter } from "next/navigation";
+import { useSession } from "@/src/hooks/useSession";
 
 export default function Login() {
-  const [email, setEmail] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
-  const [rememberMe, setRememberMe] = React.useState<boolean>(false);
-  const router = useRouter();
+  const { signIn } = useSession();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false,
+  });
+  const { email, password, rememberMe } = formData;
 
-  async function submitForm() {
-    if (!email || !password) {
+  async function submitForm(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
       renderPopup("All fields are required.", "Warning");
       return;
     }
-
-    const machineID = window.navigator.userAgent;
-    const body = {
-      machineID: machineID,
-      mail: email,
-      pass: password,
-      rememberMe: rememberMe,
-    };
-
+    
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (response.ok) {
-        router.push("/");
-      } else {
+      const { ok } = await signIn(formData);      
+      if (!ok) {
         renderPopup(["Invalid password or username.", "Please try again."]);
-        setPassword("");
+        setFormData((prev) => ({ ...prev, password: "" }));
       }
     } catch (error) {
       renderPopup("An error occurred during login. Please try again.", "Error");
@@ -50,7 +38,7 @@ export default function Login() {
     <div className="h-full flex flex-col overflow-hidden">
       <main className="h-full px-1 pt-5 max-w-(--breakpoint-md) container mx-auto overflow-auto">
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={submitForm}
           className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10"
           autoComplete="on"
         >
@@ -64,7 +52,12 @@ export default function Login() {
               className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950"
               name="email"
               value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
             />
           </label>
 
@@ -75,7 +68,12 @@ export default function Login() {
               name="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.currentTarget.value)}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  password: e.target.value,
+                }))
+              }
             />
           </label>
 
@@ -87,13 +85,18 @@ export default function Login() {
               name="rememberMe"
               type="checkbox"
               checked={rememberMe}
-              onChange={(e) => setRememberMe(e.currentTarget.checked)}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  rememberMe: e.target.checked,
+                }))
+              }
             />
           </label>
 
           <div className="pt-5 flex justify-center">
             <button
-              onClick={submitForm}
+              type="submit"
               className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700"
             >
               Submit

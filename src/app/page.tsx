@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useSession } from "../hooks/useSession";
 import { useEffect, useRef } from "react";
 
@@ -9,12 +9,12 @@ const DefaultPage = () => {
   const { session } = useSession();
   const hasRedirected = useRef(false);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (hasRedirected.current) return;
     
     hasRedirected.current = true;
     if (session) {
-      const defaultPage = session.settings?.home || "/live";
+      const defaultPage = session.settings.home;
       router.push(defaultPage);
     } else {
       router.push("/login");
