@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
@@ -9,13 +9,13 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import renderPopup from "@/src/utils/renderPopup";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const noNavbarPaths = ["/login"];
   const currentPage = usePathname();
   const router = useRouter();
 
   // Close the menu when clicking anywhere on screen
-  React.useEffect(() => {
+  useEffect(() => {
     const closeMenu = () => {
       setIsMenuOpen(false);
     };
@@ -23,7 +23,7 @@ const Navbar = () => {
     window.addEventListener("click", closeMenu);
 
     return () => {
-      window.addEventListener("click", closeMenu);
+      window.removeEventListener("click", closeMenu);
     };
   }, []);
 
@@ -33,11 +33,12 @@ const Navbar = () => {
   }
 
   async function logout() {
-    const response = await fetch("/logout");
+    const response = await fetch("/api/logout");
 
     if (response.ok) {
       router.push("/login");
     } else {
+      console.error("[Navbar] Could not logout:", response);
       renderPopup([
         "Could not disconnect you at the moment.",
         "Please retry later.",

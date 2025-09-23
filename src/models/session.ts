@@ -1,5 +1,11 @@
+import { Monitor } from "./monitor";
+import { Settings } from "./settings";
+import { Video } from "./video";
+
 export interface Session {
-  auth_token: string;
-  ke: string;
-  uid: string;
+  authToken: string;
+  groupKey: string;
+  videos: Video[];
+  monitors: Monitor[];
+  settings: Settings;
 }

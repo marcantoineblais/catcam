@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect, useRef } from "react";
 
 export default function Popup({
   title,
@@ -11,10 +11,10 @@ export default function Popup({
   text: string | string[];
   close: Function;
 }) {
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const popupRef = React.useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       if (!containerRef.current || !popupRef.current) return;
 

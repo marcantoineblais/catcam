@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React from "react";
 import Logo from "../../components/Logo";
 import renderPopup from "@/src/utils/renderPopup";
 import { useRouter } from "next/navigation";
@@ -23,24 +23,26 @@ export default function Login() {
       mail: email,
       pass: password,
       rememberMe: rememberMe,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
-    const response = await fetch(
-      new URL("/login/connect", window.location.origin),
-      {
+
+    try {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-      },
-    );
+      });
 
-    if (response.ok) {
-      router.push("/");
-    } else {
-      renderPopup(["Invalid password or username.", "Please try again."]);
-      setPassword("");
+      if (response.ok) {
+        router.push("/");
+      } else {
+        renderPopup(["Invalid password or username.", "Please try again."]);
+        setPassword("");
+      }
+    } catch (error) {
+      renderPopup("An error occurred during login. Please try again.", "Error");
+      console.error("[Login] Error during login:", error);
     }
   }
 

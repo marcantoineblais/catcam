@@ -1,22 +1,36 @@
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Monitor } from "../models/monitor";
 import { Video } from "../models/video";
 import { getDateTimeUrl, getFullDate } from "./formatDate";
-import { TZDate } from "@date-fns/tz";
 import { addSeconds } from "date-fns";
-import { NextRequest } from "next/server";
+import { getToken } from "./jwt";
+import { SERVER_URL } from "../config";
+
+export async function fetchSession() {
+  try {
+    const token = await getToken({ isServerAction: true });
+    if (!token?.authToken) throw new Error("No auth token in token");
+    
+    const monitors = await fetchMonitors();
+    const videos = await fetchVideos();
+    const settings = await readSettings();
+    return { monitors, videos, settings };
+  } catch (error) {
+    console.error("[FetchSession] Error fetching session:", error);
+    redirect("/login");
+  }
+}
 
 export async function fetchMonitors() {
-  const headersValue = await headers();
-  const jwt = headersValue.get("session") as string;
-
   try {
-    const session = JSON.parse(jwt);
-    const apiUrl = process.env.SERVER_URL;
-    const key = session.auth_token;
-    const groupKey = session.ke;
-    const response = await fetch(`${apiUrl}/${key}/monitor/${groupKey}`);
+    const token = await getToken({ isServerAction: true });
+    if (!token?.authToken) throw new Error("No auth token in token");
+    if (!token?.groupKey) throw new Error("No group key in token");
+
+    const key = token.authToken;
+    const groupKey = token.groupKey;
+    const response = await fetch(`${SERVER_URL}/${key}/monitor/${groupKey}`);
 
     if (response.ok) {
       const data = await response.json();
@@ -32,33 +46,32 @@ export async function fetchMonitors() {
       monitors.sort((m1: Monitor, m2: Monitor) => (m1.name > m2.name ? 1 : -1));
       return monitors;
     } else {
-      redirect("/login");
+      throw new Error("Failed to fetch monitors");
     }
-  } catch (ex) {
+  } catch (error) {
+    console.error("[FetchMonitors] Error fetching monitors:", error);
     redirect("/login");
   }
 }
 
 export async function fetchVideos(searchParams: URLSearchParams | string = "") {
-  const headersValue = await headers();
-  const jwt = headersValue.get("session") as string;
-
   try {
-    const session = JSON.parse(jwt);
-    const apiUrl = process.env.SERVER_URL;
-    const key = session.auth_token;
-    const groupKey = session.ke;
+    const token = await getToken({ isServerAction: true });
+    if (!token?.authToken) throw new Error("No auth token in token");
+
+    const key = token.authToken;
+    const groupKey = token.groupKey;
     const response = await fetch(
-      `${apiUrl}/${key}/videos/${groupKey}?${searchParams}`,
+      `${SERVER_URL}/${key}/videos/${groupKey}?${searchParams}`
     );
 
     if (response.ok) {
       const data = await response.json();
       const videos: Video[] = data.videos.map((video: any) => {
-        const videoTime = new TZDate(video.time, "GMT-0000");
+        const videoTime = new Date(video.time);
         const thumbTime = addSeconds(videoTime, 7);
         const thumbPath = `${getFullDate(thumbTime)}/${getDateTimeUrl(
-          thumbTime,
+          thumbTime
         )}.jpg`;
         const thumbUrl = `/${key}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 
@@ -73,7 +86,9 @@ export async function fetchVideos(searchParams: URLSearchParams | string = "") {
       videos.sort((v1, v2) => v2.timestamp.valueOf() - v1.timestamp.valueOf());
       return videos;
     }
-  } catch (_) {}
+  } catch (error) {
+    console.error("[FetchVideos] Error fetching videos:", error);
+  }
 
   return [];
 }

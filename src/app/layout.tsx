@@ -4,10 +4,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import Navbar from "../components/navbar/Navbar";
-import { TZDate } from "@date-fns/tz";
+import { AUTO_DARK_MODE_TIME } from "../config";
+import SessionWrapper from "../components/SessionWrapper";
+import { fetchSession } from "../utils/fetch";
 
 const inter = Inter({ subsets: ["latin"] });
-const autoDarkModeTime = { start: 19, end: 7 };
 
 export const metadata: Metadata = {
   title: "Catcam",
@@ -23,16 +24,12 @@ export const metadata: Metadata = {
   applicationName: "Catcam",
 };
 
-async function darkMode() {
-  const cookiesValue = await cookies();
-  const mode = cookiesValue.get("mode")?.value || "";
-  const { start, end } = autoDarkModeTime;
-
+function darkMode(mode = "light") {
   if (mode === "auto") {
-    const timezone = cookiesValue.get("timezone")?.value || "GMT_0000";
-    const time = new TZDate(new Date(), timezone);
+    const { start, end } = AUTO_DARK_MODE_TIME;
+    const now = new Date();
 
-    if (time.getHours() >= start || time.getHours() < end) {
+    if (now.getHours() >= start || now.getHours() < end) {
       return "dark";
     }
   }
@@ -45,17 +42,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const dark = await darkMode();
-
+  const session = await fetchSession();
+  const dark = darkMode(session?.settings?.mode);
   return (
     <html lang="en">
       <body
         className={`${inter.className} ${dark} bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 h-[100lvh] w-[100lvw]`}
       >
-        <div className="flex flex-col h-[100dvh] w-[100dvw] overflow-hidden">
-          <Navbar />
-          {children}
-        </div>
+        <SessionWrapper initialSession={session}>
+          <div className="flex flex-col h-[100dvh] w-[100dvw] overflow-hidden">
+            <Navbar />
+            {children}
+          </div>
+        </SessionWrapper>
       </body>
     </html>
   );

@@ -15,7 +15,6 @@ export default function Settings({
   monitors: Monitor[];
 }) {
   const [mode, setMode] = React.useState<string>(currentSettings.mode);
-  const [nbItems, setNbItems] = React.useState<string>(currentSettings.nbItems);
   const [home, setHome] = React.useState<string>(currentSettings.home);
   const [camera, setCamera] = React.useState<string>(currentSettings.camera);
   const [quality, setQuality] = React.useState<string>(currentSettings.quality);
@@ -31,7 +30,7 @@ export default function Settings({
     const body = { name, value };
 
     try {
-      const response = await fetch("/settings/save", {
+      const response = await fetch("/api/settings/save", {
         method: "POST",
         body: JSON.stringify(body),
       });
@@ -44,12 +43,14 @@ export default function Settings({
           "Could not update your settings.",
           "Please try again later.",
         ]);
+        throw new Error(response.statusText);
       }
-    } catch (ex) {
+    } catch (error) {
       renderPopup([
         "Could not update your settings.",
         "Please try again later.",
       ]);
+      console.error("[Settings] Error saving settings:", error);
     }
   }
 
