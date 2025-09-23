@@ -65,7 +65,7 @@ export default function useScroller({
       const scrollPosition = elementWidth * index;
       setPosition(scrollPosition);
     },
-    [calculateElementWidth]
+    [calculateElementWidth],
   );
 
   const handleTouchStart = useCallback(
@@ -79,7 +79,7 @@ export default function useScroller({
       setPreviousPosition(clientX);
       setPreviousYPosition(clientY);
     },
-    [isLocked]
+    [isLocked],
   );
 
   const handleTouchMove = useCallback(
@@ -125,7 +125,7 @@ export default function useScroller({
       previousPosition,
       previousYPosition,
       scrollDirection,
-    ]
+    ],
   );
 
   const handleTouchEnd = useCallback(() => {

@@ -13,13 +13,21 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 
 export default function Recordings() {
-  const { session: { monitors, videos }, updateSession } = useSession();
+  const {
+    session: { monitors, videos },
+    updateSession,
+  } = useSession();
 
   const [videosList, setVideosList] = useState<Video[]>(videos || []);
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
-  const [monitorsList, _setMonitorsList] = useState<(Monitor | "all")[]>(["all", ...monitors || []]);
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">("all");
+  const [monitorsList, _setMonitorsList] = useState<(Monitor | "all")[]>([
+    "all",
+    ...(monitors || []),
+  ]);
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
+    "all",
+  );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);

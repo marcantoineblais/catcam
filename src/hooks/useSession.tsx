@@ -19,8 +19,8 @@ const SessionContext = createContext<SessionContextType>({
   session: {
     authToken: null,
     groupKey: null,
-    monitors: null,
-    videos: null,
+    monitors: [],
+    videos: [],
     settings: DEFAULT_SETTINGS,
   },
   getSession: async () => {},
@@ -34,8 +34,8 @@ export function SessionProvider({
   initialSession = {
     authToken: null,
     groupKey: null,
-    monitors: null,
-    videos: null,
+    monitors: [],
+    videos: [],
     settings: DEFAULT_SETTINGS,
   },
 }: SessionProviderProps) {
@@ -62,8 +62,8 @@ export function SessionProvider({
         ...prev,
         authToken: null,
         groupKey: null,
-        monitors: null,
-        videos: null,
+        monitors: [],
+        videos: [],
       }));
       console.error("[GetSession] Error while fetching session:", error);
       throw error;
@@ -100,7 +100,7 @@ export function SessionProvider({
         throw error;
       }
     },
-    [getSession, router]
+    [getSession, router],
   );
 
   const signOut = useCallback(async () => {
@@ -112,8 +112,8 @@ export function SessionProvider({
           ...prev,
           authToken: null,
           groupKey: null,
-          monitors: null,
-          videos: null,
+          monitors: [],
+          videos: [],
         }));
         router.push("/login");
       } else {

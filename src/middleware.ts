@@ -15,7 +15,8 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.next();
   } catch (_) {
-    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+    const host =
+      request.headers.get("x-forwarded-host") || request.headers.get("host");
     const proto = request.headers.get("x-forwarded-proto") || "http";
     const origin = `${proto}://${host}`;
 
@@ -30,6 +31,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher:
-    "/((?!_next|\\.well-known|favicon.ico|manifest.webmanifest).*)",
+  matcher: "/((?!_next|\\.well-known|favicon.ico|manifest.webmanifest).*)",
 };

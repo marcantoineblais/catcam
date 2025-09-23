@@ -3,38 +3,21 @@
 import React, { useEffect, useState } from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
-import renderPopup from "@/src/utils/renderPopup";
 import { Monitor } from "@/src/models/monitor";
 import OnOffSwitch from "../../components/OnOffSwitch";
 import { useSession } from "@/src/hooks/useSession";
-import { useRouter } from "next/navigation";
 
 export default function LiveStream() {
-  const { session: { monitors, settings } } = useSession();
-  const router = useRouter();
-  
-  if (!monitors) {
-    throw new Error("Monitors not available in session.");
-  }
+  const {
+    session: { monitors, settings },
+  } = useSession();
 
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor>(monitors.find(m => m.id === settings.camera) || monitors[0]);
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor>(
+    monitors.find((m) => m.id === settings.camera) || monitors[0],
+  );
   const [videoSource, setVideoSource] = React.useState<string>();
   const [isHQ, setIsHQ] = React.useState<boolean>(settings.quality === "HQ");
   const containerRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!monitors) {
-      router.push("/login");
-      return;
-    }
-
-    if (monitors.length === 0) {
-      renderPopup(
-        "There is not any available video monitors at the moment.",
-        "Warning",
-      );
-    }
-  }, [monitors, router]);
 
   useEffect(() => {
     const streams = selectedMonitor?.streams;

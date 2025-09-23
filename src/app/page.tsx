@@ -9,9 +9,9 @@ export default function DefaultPage() {
   const { session } = useSession();
   const hasRedirected = useRef(false);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (hasRedirected.current) return;
-    
+
     hasRedirected.current = true;
     if (session) {
       const defaultPage = session.settings.home;
@@ -22,4 +22,4 @@ export default function DefaultPage() {
   }, [router, session]);
 
   return null;
-};
+}

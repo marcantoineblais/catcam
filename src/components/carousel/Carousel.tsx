@@ -1,4 +1,12 @@
-import { ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import CarouselButton from "./CarouselButton";
 import React from "react";
 import useScroller from "@/src/hooks/useScroller";
@@ -53,7 +61,7 @@ export default function Carousel({
       const selectIndex = () => {
         setSelectedIndex(i);
         handleClick(i);
-      }
+      };
 
       return (
         <CarouselButton

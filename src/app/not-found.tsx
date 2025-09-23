@@ -11,7 +11,7 @@ export default function NotFound() {
 
   React.useEffect(() => {
     if (redirected.current) return;
-    
+
     redirected.current = true;
     renderPopup(
       [

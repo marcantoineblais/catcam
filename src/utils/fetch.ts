@@ -35,10 +35,10 @@ export async function fetchMonitors({
   groupKey: string | null;
 }) {
   try {
-    if (!authToken || !groupKey) return null;
+    if (!authToken || !groupKey) return [];
 
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/monitor/${groupKey}`
+      `${SERVER_URL}/${authToken}/monitor/${groupKey}`,
     );
     if (response.ok) {
       const data = await response.json();
@@ -70,13 +70,13 @@ export async function fetchVideos(
     authToken?: string | null;
     groupKey?: string | null;
     searchParams?: string;
-  } = { authToken: null, groupKey: null, searchParams: "" }
+  } = { authToken: null, groupKey: null, searchParams: "" },
 ) {
-  if (!authToken || !groupKey) return null;
+  if (!authToken || !groupKey) return [];
 
   try {
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`
+      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`,
     );
 
     if (response.ok) {
@@ -86,7 +86,7 @@ export async function fetchVideos(
         const thumbnailTime = new Date(video.time);
         thumbnailTime.setSeconds(thumbnailTime.getSeconds() + 7);
         const thumbPath = `${getFullDate(thumbnailTime)}/${getDateTimeUrl(
-          thumbnailTime
+          thumbnailTime,
         )}.jpg`;
         const thumbUrl = `/${authToken}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 

@@ -16,14 +16,14 @@ export default function Login() {
 
   async function submitForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.password) {
       renderPopup("All fields are required.", "Warning");
       return;
     }
-    
+
     try {
-      const { ok } = await signIn(formData);      
+      const { ok } = await signIn(formData);
       if (!ok) {
         renderPopup(["Invalid password or username.", "Please try again."]);
         setFormData((prev) => ({ ...prev, password: "" }));

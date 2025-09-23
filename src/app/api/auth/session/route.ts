@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const session = await fetchSession();
-    
+
     return NextResponse.json({ ok: true, session });
   } catch (error) {
     console.error("Error fetching session:", error);

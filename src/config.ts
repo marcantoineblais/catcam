@@ -7,4 +7,4 @@ export const DEFAULT_SETTINGS = {
   home: "/live",
   camera: "",
   quality: "HQ",
-}
+};

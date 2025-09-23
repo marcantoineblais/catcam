@@ -49,26 +49,26 @@ export default function VideoPlayerOverlay({
   const seekingBarRef = useRef<HTMLDivElement>(null);
   const dTime = useDebounce();
   const dTimeout = useDebounce();
-  
+
   useEffect(() => {
     if (videoSource && !isLive) setTimeoutTime(timeoutDuration);
   }, [videoSource, isLive]);
-  
+
   useEffect(() => {
     setSeekingBarPosition((currentTime / duration) * 100);
   }, [currentTime, duration]);
-  
+
   useEffect(() => {
     setBufferBarPosition((buffer / duration) * 100);
   }, [buffer, duration]);
-  
+
   useEffect(() => {
     if (!timeoutTime || !isPlaying) return;
-    
+
     const timeout = setTimeout(() => {
       setTimeoutTime(timeoutTime - 1000);
     }, 1000);
-    
+
     return () => {
       clearTimeout(timeout);
     };
@@ -99,7 +99,7 @@ export default function VideoPlayerOverlay({
   }
 
   function updateCurrentTime(position: number) {
-    dTime(() => {      
+    dTime(() => {
       const seekingBar = seekingBarRef.current;
       const video = videoRef.current;
       if (!seekingBar || !video) return;
@@ -130,7 +130,7 @@ export default function VideoPlayerOverlay({
   }
 
   async function handleStartSeeking(
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
   ) {
     e.stopPropagation();
     isCurrentlyPlaying.current = isPlaying;
@@ -204,7 +204,7 @@ export default function VideoPlayerOverlay({
 
   function fastSeeking(
     e: React.ToggleEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
-    step: number = 10
+    step: number = 10,
   ) {
     if (currentTime === undefined || duration === undefined) return;
 

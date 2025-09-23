@@ -1,5 +1,5 @@
 import { Monitor } from "@/src/models/monitor";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 export default function SourceSelector({
   monitors = [],
@@ -10,10 +10,16 @@ export default function SourceSelector({
   selectedMonitor?: Monitor | "all";
   setSelectedMonitor: Function;
 }) {
-  const [buttons, setButtons] = useState<ReactNode[]>([]);
+  const buttons = useMemo(() => {
+    if (monitors.length === 0) {
+      return (
+        <div className="w-full">
+          <h2 className="text-center">No monitors available</h2>
+        </div>
+      );
+    }
 
-  useEffect(() => {
-    const buttons = monitors.map((monitor, i) => {
+    return monitors.map((monitor, i) => {
       const isActive = selectedMonitor === monitor ? true : undefined;
 
       return (
@@ -28,8 +34,6 @@ export default function SourceSelector({
         </div>
       );
     });
-
-    setButtons(buttons);
   }, [monitors, selectedMonitor, setSelectedMonitor]);
 
   return (

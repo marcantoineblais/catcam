@@ -104,25 +104,25 @@ async function normalisedUA() {
   const browser = lower.includes("chrome")
     ? "chrome"
     : lower.includes("edg")
-    ? "edge"
-    : lower.includes("safari") && !lower.includes("chrome")
-    ? "safari"
-    : lower.includes("firefox")
-    ? "firefox"
-    : lower.includes("opera")
-    ? "opera"
-    : "unknown";
+      ? "edge"
+      : lower.includes("safari") && !lower.includes("chrome")
+        ? "safari"
+        : lower.includes("firefox")
+          ? "firefox"
+          : lower.includes("opera")
+            ? "opera"
+            : "unknown";
 
   // OS detection
   const os = lower.includes("windows")
     ? "windows"
     : lower.includes("mac os x")
-    ? "macos"
-    : lower.includes("android")
-    ? "android"
-    : lower.includes("iphone") || lower.includes("ipad")
-    ? "ios"
-    : "unknown";
+      ? "macos"
+      : lower.includes("android")
+        ? "android"
+        : lower.includes("iphone") || lower.includes("ipad")
+          ? "ios"
+          : "unknown";
 
   return await sha256Hex(`${browser};${os}`);
 }
