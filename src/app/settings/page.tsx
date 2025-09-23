@@ -49,7 +49,7 @@ export default function Settings() {
     };
 
     saveChanges();
-  }, [formData, updateSession]);
+  }, [formData, updateSession, settings]);
 
   function handleChange(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));
