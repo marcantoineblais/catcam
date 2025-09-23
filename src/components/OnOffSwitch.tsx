@@ -61,12 +61,12 @@ export default function OnOffSwitch({
   return (
     <button
       ref={btnRef}
-      className={`${heightClassName} ${widthClassName} text-sm font-bold rounded-full text-white !box-content border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out cursor-pointer disabled:opacity-50 focus:outline-none`}
+      className={`${heightClassName} ${widthClassName} text-sm font-bold rounded-full text-white !box-content border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out disabled:opacity-50 focus:outline-none`}
       disabled={isEnabled ? undefined : true}
       data-scrolling={isScrolling || undefined}
     >
       <div
-        className="relative w-[150%] h-full flex duration-500 data-scrolling:duration-0"
+        className="relative w-[153%] h-full flex duration-500 data-scrolling:duration-0"
         style={{ left: `${-position}px` }}
         data-scrolling={isScrolling || undefined}
       >
@@ -79,7 +79,7 @@ export default function OnOffSwitch({
         </div>
 
         <div
-          className="absolute z-10 -top-0.5 -bottom-0.5 left-1/2 -translate-x-1/2 origin-center aspect-square rounded-full bg-gray-50 dark:bg-zinc-100 inset-ring-2 inset-ring-gray-500 dark:inset-ring-zinc-500 cursor-pointer data-disabled:cursor-default"
+          className="absolute z-10 -top-0.5 -bottom-0.5 left-1/2 -translate-x-[50%] origin-center aspect-square rounded-full bg-gray-50 dark:bg-zinc-100 inset-ring-2 inset-ring-gray-500 dark:inset-ring-zinc-500 cursor-pointer data-disabled:cursor-default"
           onTouchStart={handleTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
