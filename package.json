@@ -21,7 +21,6 @@
     "@types/react-dom": "^19.1.9",
     "autoprefixer": "^10.4.21",
     "cookies-next": "^6.1.0",
-    "crypto": "^1.0.1",
     "date-fns": "^4.1.0",
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.3",
