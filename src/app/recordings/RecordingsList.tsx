@@ -40,7 +40,7 @@ export default function RecordingsList({
 
         return (
           <VideoCard
-            key={i}
+            key={video.src}
             thumbnail={video.thumbnail}
             timestamp={video.timestamp}
             isSelected={isSelected}

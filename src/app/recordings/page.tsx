@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingsList from "./RecordingsList";
 import { Monitor } from "@/src/models/monitor";
@@ -18,21 +18,18 @@ export default function Recordings() {
     updateSession,
   } = useSession();
 
-  const [videosList, setVideosList] = useState<Video[]>(videos || []);
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
-  const [monitorsList, _setMonitorsList] = useState<(Monitor | "all")[]>([
-    "all",
-    ...(monitors || []),
-  ]);
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
-    "all",
+    "all"
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);
   const [isCarouselLocked, setIsCarouselLocked] = useState<boolean>(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const monitorsList = useMemo<("all" | Monitor)[]>(() => ["all", ...(monitors || [])], [monitors]);
 
   useEffect(() => {
     if (!selectedVideo) return;
@@ -42,15 +39,15 @@ export default function Recordings() {
 
   useEffect(() => {
     if (selectedMonitor === "all") {
-      setFilteredVideosList(videosList);
+      setFilteredVideosList(videos);
     } else {
       setFilteredVideosList(
-        videosList.filter((video) => video.mid === selectedMonitor.id),
+        videos.filter((video) => video.mid === selectedMonitor.id)
       );
     }
 
     setNothingToLoad(false);
-  }, [videosList, selectedMonitor]);
+  }, [videos, selectedMonitor]);
 
   async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
     if (isLoading || nothingToLoad) return;
@@ -64,7 +61,7 @@ export default function Recordings() {
     if (scrollPosition < scrollTreshold) return;
 
     setIsLoading(true);
-    const lastVideoTime = videosList[videosList.length - 1].timestamp;
+    const lastVideoTime = videos[videos.length - 1].timestamp;
 
     // This tells shinobi backend to get videos before start time (default behavior is after)
     const searchParams = new URLSearchParams({
@@ -80,9 +77,8 @@ export default function Recordings() {
       if (newVideos.length === 0) {
         setNothingToLoad(true);
       } else {
-        const videos = [...videosList, ...newVideos];
-        updateSession({ videos });
-        setVideosList(videos);
+        const updatedVideos = [...videos, ...newVideos];
+        updateSession({ videos: updatedVideos });
       }
     }
 

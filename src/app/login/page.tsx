@@ -97,7 +97,7 @@ export default function Login() {
           <div className="pt-5 flex justify-center">
             <button
               type="submit"
-              className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700"
+              className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700 cursor-pointer"
             >
               Submit
             </button>

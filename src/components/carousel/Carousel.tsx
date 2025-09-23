@@ -22,7 +22,7 @@ export default function Carousel({
   const [nodes, setNodes] = useState<ReactNode[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isResizing, setIsResizing] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     position,
@@ -80,14 +80,22 @@ export default function Carousel({
 
   useEffect(() => {
     const container = containerRef.current;
+    const resize = () => {
+      if (!container) return;
+      setIsResizing(true);
+      setWidth(container.clientWidth * nodes.length);
+      setTimeout(() => setIsResizing(false), 500);
+    }
 
     if (!container) return;
-    setWidth(container.clientWidth * nodes.length);
-  }, [containerRef, nodes]);
+    const observer = new ResizeObserver(resize);
 
-  useEffect(() => {
-    setIsLoaded(width > 0);
-  }, [width]);
+    observer.observe(container);
+    resize();
+    return () => {
+      observer.disconnect();
+    };
+  }, [containerRef, nodes]);
 
   return (
     <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
@@ -99,7 +107,7 @@ export default function Carousel({
         <div
           className="relative h-full flex duration-500 data-scrolling:duration-0"
           style={{ width: `${width}px`, left: `${-position}px` }}
-          data-scrolling={!isLoaded || isScrolling || undefined}
+          data-scrolling={isResizing || isScrolling || undefined}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={() => setSelectedIndex(handleTouchEnd())}

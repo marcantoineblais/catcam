@@ -51,7 +51,7 @@ export async function fetchMonitors({
         };
       });
 
-      monitors.sort((m1: Monitor, m2: Monitor) => (m1.name > m2.name ? 1 : -1));
+      monitors.sort((m1: Monitor, m2: Monitor) => (m1.name.localeCompare(m2.name) > 0 ? 1 : -1));
       return monitors;
     } else {
       throw new Error("Failed to fetch monitors");
