@@ -14,6 +14,15 @@ export default function Settings() {
   const [formData, setFormData] = useState(settings);
 
   useEffect(() => {
+    if (
+      settings.mode === formData.mode &&
+      settings.home === formData.home &&
+      settings.camera === formData.camera &&
+      settings.quality === formData.quality
+    ) {
+      return;
+    }
+
     const saveChanges = async () => {
       try {
         const response = await fetch("/api/settings/save", {

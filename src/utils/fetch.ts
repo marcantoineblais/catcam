@@ -1,19 +1,20 @@
-import { cookies } from "next/headers";
 import { Monitor } from "../models/monitor";
 import { Video } from "../models/video";
 import { getToken } from "./jwt";
 import { DEFAULT_SETTINGS, SERVER_URL } from "../config";
 import { getDateTimeUrl, getFullDate } from "./formatDate";
+import { readSettings } from "./settings";
 
 export async function fetchSession() {
   try {
     const token = await getToken({ isServerAction: true });
     const authToken = token?.authToken ?? null;
     const groupKey = (token?.groupKey ?? null) as string | null;
+    const email = token?.email ?? null;
 
     const monitors = await fetchMonitors({ authToken, groupKey });
     const videos = await fetchVideos({ authToken, groupKey });
-    const settings = await readSettings();
+    const settings = await fetchSettings(token?.email);
     return {
       authToken,
       groupKey,
@@ -38,7 +39,7 @@ export async function fetchMonitors({
     if (!authToken || !groupKey) return [];
 
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/monitor/${groupKey}`,
+      `${SERVER_URL}/${authToken}/monitor/${groupKey}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -51,7 +52,9 @@ export async function fetchMonitors({
         };
       });
 
-      monitors.sort((m1: Monitor, m2: Monitor) => (m1.name.localeCompare(m2.name) > 0 ? 1 : -1));
+      monitors.sort((m1: Monitor, m2: Monitor) =>
+        m1.name.localeCompare(m2.name) > 0 ? 1 : -1
+      );
       return monitors;
     } else {
       throw new Error("Failed to fetch monitors");
@@ -70,13 +73,13 @@ export async function fetchVideos(
     authToken?: string | null;
     groupKey?: string | null;
     searchParams?: string;
-  } = { authToken: null, groupKey: null, searchParams: "" },
+  } = { authToken: null, groupKey: null, searchParams: "" }
 ) {
   if (!authToken || !groupKey) return [];
 
   try {
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`,
+      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`
     );
 
     if (response.ok) {
@@ -86,7 +89,7 @@ export async function fetchVideos(
         const thumbnailTime = new Date(video.time);
         thumbnailTime.setSeconds(thumbnailTime.getSeconds() + 7);
         const thumbPath = `${getFullDate(thumbnailTime)}/${getDateTimeUrl(
-          thumbnailTime,
+          thumbnailTime
         )}.jpg`;
         const thumbUrl = `/${authToken}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 
@@ -109,13 +112,10 @@ export async function fetchVideos(
   }
 }
 
-export async function readSettings() {
-  const cookiesValue = await cookies();
-  const mode = cookiesValue.get("mode")?.value || DEFAULT_SETTINGS.mode;
-  const camera = cookiesValue.get("camera")?.value || DEFAULT_SETTINGS.camera;
-  const home = cookiesValue.get("home")?.value || DEFAULT_SETTINGS.home;
-  const quality =
-    cookiesValue.get("quality")?.value || DEFAULT_SETTINGS.quality;
+export async function fetchSettings(email?: string) {
+  if (!email) {
+    return DEFAULT_SETTINGS;
+  }
 
-  return { mode, camera, home, quality };
+  return await readSettings(email);
 }

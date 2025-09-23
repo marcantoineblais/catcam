@@ -29,15 +29,21 @@ export async function getToken({ isServerAction = false } = {}) {
       typeof payload.renewAt === "number" &&
       payload.renewAt < now &&
       payload.sub &&
-      payload.aud
+      payload.aud &&
+      payload.user
     ) {
       await createToken({
         authToken: payload.sub,
         groupKey: payload.aud as string,
+        email: payload.user as string,
         rememberMe: true,
       });
     }
-    return { authToken: payload.sub, groupKey: payload.aud as string };
+    return {
+      authToken: payload.sub,
+      groupKey: payload.aud as string,
+      email: payload.user as string,
+    };
   } catch (error) {
     console.error("[GetToken] Error validating token:", error);
     cookie.delete("session");
@@ -48,16 +54,19 @@ export async function getToken({ isServerAction = false } = {}) {
 export async function createToken({
   authToken,
   groupKey,
+  email,
   rememberMe,
 }: {
   authToken: string;
   groupKey: string;
+  email: string;
   rememberMe: boolean;
 }) {
   const now = Math.floor(Date.now() / 1000);
   const claims = {
     sub: authToken,
     aud: groupKey,
+    user: email,
     iat: now, // Issued at
     exp: now + 7 * 24 * 60 * 60, // Expires in 7 days
     jti: crypto.randomUUID(), // Unique identifier for the token
@@ -104,25 +113,25 @@ async function normalisedUA() {
   const browser = lower.includes("chrome")
     ? "chrome"
     : lower.includes("edg")
-      ? "edge"
-      : lower.includes("safari") && !lower.includes("chrome")
-        ? "safari"
-        : lower.includes("firefox")
-          ? "firefox"
-          : lower.includes("opera")
-            ? "opera"
-            : "unknown";
+    ? "edge"
+    : lower.includes("safari") && !lower.includes("chrome")
+    ? "safari"
+    : lower.includes("firefox")
+    ? "firefox"
+    : lower.includes("opera")
+    ? "opera"
+    : "unknown";
 
   // OS detection
   const os = lower.includes("windows")
     ? "windows"
     : lower.includes("mac os x")
-      ? "macos"
-      : lower.includes("android")
-        ? "android"
-        : lower.includes("iphone") || lower.includes("ipad")
-          ? "ios"
-          : "unknown";
+    ? "macos"
+    : lower.includes("android")
+    ? "android"
+    : lower.includes("iphone") || lower.includes("ipad")
+    ? "ios"
+    : "unknown";
 
   return await sha256Hex(`${browser};${os}`);
 }

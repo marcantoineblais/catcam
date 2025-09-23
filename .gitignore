@@ -36,3 +36,6 @@ next-env.d.ts
 
 # APIKEY
 next.config.js
+
+# local settings
+/user-settings
