@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 
-export default async function Recordings() {
+export default function Recordings() {
   const { session: { monitors, videos }, updateSession } = useSession();
 
   const [videosList, setVideosList] = useState<Video[]>(videos || []);

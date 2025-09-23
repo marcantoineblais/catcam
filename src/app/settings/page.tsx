@@ -6,7 +6,7 @@ import FormSelect from "./FormSelect";
 import { useSession } from "@/src/hooks/useSession";
 import Logo from "@/src/components/Logo";
 
-export default async function Settings() {
+export default function Settings() {
   const {
     session: { settings, monitors },
     updateSession,

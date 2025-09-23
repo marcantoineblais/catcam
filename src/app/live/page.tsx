@@ -9,7 +9,7 @@ import OnOffSwitch from "../../components/OnOffSwitch";
 import { useSession } from "@/src/hooks/useSession";
 import { useRouter } from "next/navigation";
 
-export default async function LiveStream() {
+export default function LiveStream() {
   const { session: { monitors, settings } } = useSession();
   const router = useRouter();
   
