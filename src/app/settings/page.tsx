@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import renderPopup from "@/src/utils/renderPopup";
 import FormSelect from "./FormSelect";
 import { useSession } from "@/src/hooks/useSession";
 import Logo from "@/src/components/Logo";
+import { useModal } from "@/src/hooks/useModal";
 
 export default function Settings() {
   const {
     session: { settings, monitors },
     updateSession,
   } = useSession();
+  const { openModal } = useModal();
   const [formData, setFormData] = useState(settings);
 
   useEffect(() => {
@@ -33,17 +34,21 @@ export default function Settings() {
         if (response.ok) {
           updateSession({ settings: formData });
         } else {
-          renderPopup([
-            "Could not update your settings.",
-            "Please try again later.",
-          ]);
+          openModal({
+            modalTitle: "Error",
+            modalContent: (
+              <p>Could not update your settings. Please try again later.</p>
+            ),
+          });
           throw new Error(response.statusText);
         }
       } catch (error) {
-        renderPopup([
-          "Could not update your settings.",
-          "Please try again later.",
-        ]);
+        openModal({
+          modalTitle: "Error",
+          modalContent: (
+            <p>Could not update your settings. Please try again later.</p>
+          ),
+        });
         console.error("[Settings] Error saving settings:", error);
       }
     };

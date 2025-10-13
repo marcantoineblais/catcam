@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Logo from "../../components/Logo";
-import renderPopup from "@/src/utils/renderPopup";
 import { useSession } from "@/src/hooks/useSession";
+import { useModal } from "@/src/hooks/useModal";
 
 export default function Login() {
   const { signIn } = useSession();
+  const { openModal } = useModal();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,18 +19,27 @@ export default function Login() {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      renderPopup("All fields are required.", "Warning");
+      openModal({
+        modalTitle: "Missing fields",
+        modalContent: <p>Please fill in both email and password fields.</p>,
+      });
       return;
     }
 
     try {
       const { ok } = await signIn(formData);
       if (!ok) {
-        renderPopup(["Invalid password or username.", "Please try again."]);
+        openModal({
+          modalTitle: "Wrong credentials",
+          modalContent: <p>Invalid password or username.</p>,
+        });
         setFormData((prev) => ({ ...prev, password: "" }));
       }
     } catch (error) {
-      renderPopup("An error occurred during login. Please try again.", "Error");
+      openModal({
+        modalTitle: "Unexpected error",
+        modalContent: <p>An unexpected error occured, please retry.</p>,
+      });
       console.error("[Login] Error during login:", error);
     }
   }

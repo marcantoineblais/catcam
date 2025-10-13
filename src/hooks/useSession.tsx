@@ -8,7 +8,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Session } from "../models/session";
 import { DEFAULT_SETTINGS } from "../config";
-import { getDateTime } from "../utils/formatDate";
+import { getDateTime } from "../libs/formatDate";
 
 type SessionContextType = {
   session: Session;

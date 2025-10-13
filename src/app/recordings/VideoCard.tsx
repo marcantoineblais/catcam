@@ -1,8 +1,8 @@
 "use client";
 
 import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
-import { getFormattedDate, getFormattedTime } from "@/src/utils/formatDate";
-import imageLoader from "@/src/utils/imageLoader";
+import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
+import imageLoader from "@/src/libs/imageLoader";
 import { Skeleton } from "@heroui/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";

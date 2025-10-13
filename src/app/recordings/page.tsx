@@ -7,7 +7,7 @@ import { Monitor } from "@/src/models/monitor";
 import SourceSelector from "@/src/components/SourceSelector";
 import { Video } from "@/src/models/video";
 import Carousel from "@/src/components/carousel/Carousel";
-import { getDateTime } from "@/src/utils/formatDate";
+import { getDateTime } from "@/src/libs/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";

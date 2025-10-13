@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "./utils/jwt";
+import { getToken } from "./libs/jwt";
 
 const publicRoutes = ["/login", "/api/auth/login", "/api/auth/session"];
 

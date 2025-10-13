@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "@/src/utils/jwt";
+import { getToken } from "@/src/libs/jwt";
 import { write } from "fs";
-import { writeSettings } from "@/src/utils/settings";
+import { writeSettings } from "@/src/libs/settings";
 
 export async function POST(request: NextRequest) {
   try {

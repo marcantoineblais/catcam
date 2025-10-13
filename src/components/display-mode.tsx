@@ -23,7 +23,7 @@ export default function DisplayMode({
     } else {
       const { start, end } = AUTO_DARK_MODE_TIME;
       const hour = new Date().getHours();
-      return hour >= end || hour < start ? "dark" : "";
+      return hour < end || hour >= start ? "dark" : "";
     }
   }, [settings.mode]);
 

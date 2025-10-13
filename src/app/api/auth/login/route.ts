@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createToken } from "@/src/utils/jwt";
+import { createToken } from "@/src/libs/jwt";
 import { SERVER_URL } from "@/src/config";
 
 async function requestLogin({
@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
 
     const data = await requestLogin({ email, password });
     if (!data || !data.$user) {
+      console.error("[Login] Invalid credentials", data);
       return NextResponse.json({ ok: false }, { status: 401 });
     }
 

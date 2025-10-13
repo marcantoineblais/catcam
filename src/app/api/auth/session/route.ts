@@ -1,4 +1,4 @@
-import { fetchSession } from "@/src/utils/fetch";
+import { fetchSession } from "@/src/libs/fetch";
 import { NextResponse } from "next/server";
 
 export async function GET() {

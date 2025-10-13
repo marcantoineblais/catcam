@@ -1,7 +1,7 @@
 "use server";
 
-import { fetchVideos } from "@/src/utils/fetch";
-import { getToken } from "@/src/utils/jwt";
+import { fetchVideos } from "@/src/libs/fetch";
+import { getToken } from "@/src/libs/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
