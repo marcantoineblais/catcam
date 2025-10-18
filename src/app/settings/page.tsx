@@ -54,7 +54,7 @@ export default function Settings() {
     };
 
     saveChanges();
-  }, [formData, updateSession, settings]);
+  }, [formData, updateSession, settings, openModal]);
 
   function handleChange(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));

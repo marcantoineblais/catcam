@@ -41,10 +41,11 @@ export async function fetchMonitors({
     const response = await fetch(
       `${SERVER_URL}/${authToken}/monitor/${groupKey}`
     );
+
     if (response.ok) {
       const data = await response.json();
       if (!Array.isArray(data)) throw new Error("Invalid monitors data");
-      
+
       const monitors = data.map((monitor: any) => {
         return {
           name: monitor.name,
@@ -63,6 +64,7 @@ export async function fetchMonitors({
     }
   } catch (error) {
     console.error("[FetchMonitors] Error fetching monitors:", error);
+    throw error;
   }
 }
 
