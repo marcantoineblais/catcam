@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
     const proto = request.headers.get("x-forwarded-proto") || "http";
     const origin = `${proto}://${host}`;
 
-    return NextResponse.redirect(new URL("/logout", origin));
+    return NextResponse.redirect(new URL("/login", origin));
   }
 }
 
