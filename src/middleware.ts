@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "./libs/jwt";
 
-const publicRoutes = ["/login", "/logout", "/api/auth/login", "/api/auth/logout", "/api/auth/session"];
+const publicRoutes = [
+  "/login",
+  "/logout",
+  "/api/auth/login",
+  "/api/auth/logout",
+  "/api/auth/session",
+];
 
 export async function middleware(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
@@ -21,13 +27,7 @@ export async function middleware(request: NextRequest) {
     const proto = request.headers.get("x-forwarded-proto") || "http";
     const origin = `${proto}://${host}`;
 
-    const response = NextResponse.redirect(new URL("/logout", origin));
-    response.cookies.set("session", "", {
-      path: "/",
-      maxAge: 0,
-    });
-
-    return response;
+    return NextResponse.redirect(new URL("/logout", origin));
   }
 }
 

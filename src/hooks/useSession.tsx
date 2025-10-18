@@ -58,11 +58,11 @@ export function SessionProvider({
         start: firstVideoTime ? getDateTime(new Date(firstVideoTime)) : "",
         startOperator: firstVideoTime ? ">" : "",
       });
-      
+
       try {
         const response = await fetch(`/api/videos/?${searchParams}`);
         if (response.ok) {
-          const newVideos = await response.json();          
+          const newVideos = await response.json();
           if (newVideos.length > 0) {
             const videos = [...newVideos, ...session.videos];
             setSession((prev) => ({ ...prev, videos }));
@@ -137,7 +137,7 @@ export function SessionProvider({
         throw error;
       }
     },
-    [getSession, router]
+    [getSession, router],
   );
 
   const signOut = useCallback(async () => {

@@ -21,7 +21,7 @@ export default function Recordings() {
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
-    "all"
+    "all",
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,7 +29,10 @@ export default function Recordings() {
   const [isCarouselLocked, setIsCarouselLocked] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const monitorsList = useMemo<("all" | Monitor)[]>(() => ["all", ...(monitors || [])], [monitors]);
+  const monitorsList = useMemo<("all" | Monitor)[]>(
+    () => ["all", ...(monitors || [])],
+    [monitors],
+  );
 
   useEffect(() => {
     if (!selectedVideo) return;
@@ -42,7 +45,7 @@ export default function Recordings() {
       setFilteredVideosList(videos);
     } else {
       setFilteredVideosList(
-        videos.filter((video) => video.mid === selectedMonitor.id)
+        videos.filter((video) => video.mid === selectedMonitor.id),
       );
     }
 

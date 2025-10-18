@@ -27,13 +27,17 @@ export async function writeSettings({
       mode: typeof mode === "string" ? mode : "auto",
       updatedAt: new Date().toISOString(),
     };
-  
+
     const dataDir = path.join(process.cwd(), "user-settings");
     const settingsPath = path.join(dataDir, `${email}.json`);
     await fs.promises.mkdir(dataDir, { recursive: true });
-    await fs.promises.writeFile(settingsPath, JSON.stringify(settings, null, 2), {
-      encoding: "utf-8",
-    });
+    await fs.promises.writeFile(
+      settingsPath,
+      JSON.stringify(settings, null, 2),
+      {
+        encoding: "utf-8",
+      },
+    );
 
     return settings;
   } catch (error) {
@@ -48,8 +52,14 @@ export async function readSettings(email: string) {
   }
 
   try {
-    const settingsPath = path.join(process.cwd(), "user-settings", `${email}.json`);
-    const data = await fs.promises.readFile(settingsPath, { encoding: "utf-8" });
+    const settingsPath = path.join(
+      process.cwd(),
+      "user-settings",
+      `${email}.json`,
+    );
+    const data = await fs.promises.readFile(settingsPath, {
+      encoding: "utf-8",
+    });
     return JSON.parse(data);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {

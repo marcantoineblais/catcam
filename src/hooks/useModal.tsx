@@ -37,7 +37,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
       setTitle(modalTitle);
       setIsOpen(true);
     },
-    []
+    [],
   );
 
   const closeModal = useCallback(() => {

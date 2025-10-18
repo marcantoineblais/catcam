@@ -85,7 +85,7 @@ export default function Carousel({
       setIsResizing(true);
       setWidth(container.clientWidth * nodes.length);
       setTimeout(() => setIsResizing(false), 500);
-    }
+    };
 
     if (!container) return;
     const observer = new ResizeObserver(resize);

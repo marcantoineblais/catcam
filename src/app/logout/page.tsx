@@ -8,7 +8,7 @@ export default function Logout() {
 
   useEffect(() => {
     signOut();
-  }, [signOut])
+  }, [signOut]);
 
   return null;
 }
