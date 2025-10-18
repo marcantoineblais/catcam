@@ -75,7 +75,12 @@ export default function Navbar() {
               url="/settings"
               active={currentPage === "/settings"}
             />
-            <NavbarButton label="Logout" warning={true} action={signOut} />
+            <NavbarButton
+              label="Logout"
+              warning={true}
+              url="/logout"
+              active={currentPage === "/logout"}
+            />
           </div>
         </menu>
       </div>

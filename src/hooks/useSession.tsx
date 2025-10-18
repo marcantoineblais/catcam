@@ -152,7 +152,7 @@ export function SessionProvider({
           monitors: [],
           videos: [],
         }));
-        router.push("/login");
+        router.replace("/login");
       } else {
         throw new Error("Logout failed");
       }
