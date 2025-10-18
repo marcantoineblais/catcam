@@ -10,11 +10,11 @@ export async function fetchSession() {
     const token = await getToken({ isServerAction: true });
     const authToken = token?.authToken ?? null;
     const groupKey = (token?.groupKey ?? null) as string | null;
-    const email = token?.email ?? null;
+    const email = token?.email;
 
     const monitors = await fetchMonitors({ authToken, groupKey });
     const videos = await fetchVideos({ authToken, groupKey });
-    const settings = await fetchSettings(token?.email);
+    const settings = await fetchSettings(email);
     return {
       authToken,
       groupKey,
@@ -43,6 +43,8 @@ export async function fetchMonitors({
     );
     if (response.ok) {
       const data = await response.json();
+      if (!Array.isArray(data)) throw new Error("Invalid monitors data");
+      
       const monitors = data.map((monitor: any) => {
         return {
           name: monitor.name,

@@ -33,7 +33,7 @@ async function getSession() {
     return session;
   } catch (error) {
     console.error("[GetSession] Error while fetching session:", error);
-    redirect("/login");
+    redirect("/logout");
   }
 }
 
