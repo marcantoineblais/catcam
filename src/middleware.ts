@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "./libs/jwt";
 
-const publicRoutes = ["/login", "/api/auth/login", "/api/auth/session"];
+const publicRoutes = ["/login", "/logout", "/api/auth/login", "/api/auth/session"];
 
 export async function middleware(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
@@ -14,13 +14,14 @@ export async function middleware(request: NextRequest) {
     if (!token?.authToken) throw new Error("No auth token in token");
 
     return NextResponse.next();
-  } catch (_) {
+  } catch (error) {
+    console.error("[MIDDLEWARE] Unauthorized access to", requestedPath, error);
     const host =
       request.headers.get("x-forwarded-host") || request.headers.get("host");
     const proto = request.headers.get("x-forwarded-proto") || "http";
     const origin = `${proto}://${host}`;
 
-    const response = NextResponse.redirect(new URL("/login", origin));
+    const response = NextResponse.redirect(new URL("/logout", origin));
     response.cookies.set("session", "", {
       path: "/",
       maxAge: 0,
