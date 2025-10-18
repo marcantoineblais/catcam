@@ -1,15 +1,17 @@
 import { cookies, headers } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
+import { SESSION_COOKIE_NAME } from "../config";
 
 const ISSUER = "catcam_app";
 const JWT_SIGN_SECRET = new TextEncoder().encode(process.env.JWT_SIGN_SECRET!);
 const isProd = process.env.NODE_ENV === "production";
+const sessionCookieName = SESSION_COOKIE_NAME;
 
 export async function getToken({ isServerAction = false } = {}) {
   const cookie = await cookies();
 
   try {
-    const signedToken = cookie.get("session")?.value;
+    const signedToken = cookie.get(sessionCookieName)?.value;
     if (!signedToken) return null;
 
     const { payload } = await jwtVerify(signedToken, JWT_SIGN_SECRET, {
@@ -46,7 +48,7 @@ export async function getToken({ isServerAction = false } = {}) {
     };
   } catch (error) {
     console.error("[GetToken] Error validating token:", error);
-    cookie.delete("session");
+    cookie.delete(sessionCookieName);
     throw error;
   }
 }
@@ -81,7 +83,7 @@ export async function createToken({
       .setIssuer(ISSUER)
       .sign(JWT_SIGN_SECRET);
 
-    cookie.set("session", signedToken, {
+    cookie.set(sessionCookieName, signedToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: "lax",
@@ -98,7 +100,7 @@ async function normalisedUA() {
   const ua = header.get("User-Agent");
 
   // Dev mode override
-  if (process.env.NODE_ENV !== "production") {
+  if (!isProd) {
     return await sha256Hex("dev;dev");
   }
 

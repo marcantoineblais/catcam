@@ -8,3 +8,4 @@ export const DEFAULT_SETTINGS = {
   camera: "",
   quality: "HQ",
 };
+export const SESSION_COOKIE_NAME = isProd ? "__Secure_session" : "session";
