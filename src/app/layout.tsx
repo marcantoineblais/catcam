@@ -37,8 +37,7 @@ async function getSession() {
     console.error("[GetSession] Error while fetching session:", error);
 
     const headersStore = await headers();
-    const origin = headersStore.get("origin") || "";
-    const currentPath = new URL(origin).pathname;
+    const currentPath = headersStore.get("x-pathname") || "";
 
     // Prevent redirect loop on token revocation
     if (currentPath === "/logout") {

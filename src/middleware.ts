@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
   if (publicRoutes.includes(requestedPath)) {
     const response = NextResponse.next();
-    response.headers.set("X-Pathname", requestedPath);
+    response.headers.set("x-pathname", requestedPath);
     return response;
   }
 
@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
     if (!token?.authToken) throw new Error("No auth token");
 
     const response = NextResponse.next();
-    response.headers.set("X-Skip-Auth", "false");
+    response.headers.set("x-pathname", requestedPath);
     return response;
   } catch (error) {
     console.error("[MIDDLEWARE] Unauthorized access to", requestedPath, error);
