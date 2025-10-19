@@ -12,14 +12,18 @@ const publicRoutes = [
 export async function middleware(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
   if (publicRoutes.includes(requestedPath)) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("X-Pathname", requestedPath);
+    return response;
   }
 
   try {
     const token = await getToken();
-    if (!token?.authToken) throw new Error("No auth token in token");
+    if (!token?.authToken) throw new Error("No auth token");
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("X-Skip-Auth", "false");
+    return response;
   } catch (error) {
     console.error("[MIDDLEWARE] Unauthorized access to", requestedPath, error);
     const host =

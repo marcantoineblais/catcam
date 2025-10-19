@@ -44,8 +44,8 @@ export async function fetchMonitors({
 
     if (response.ok) {
       const data = await response.json();
-      if (!Array.isArray(data)) {
-        console.error("[FetchMonitors] Invalid monitors data:", data);
+      if (data.message === "Not Authorized") {
+        console.error("[FetchMonitors] Token was revoked by server. User needs to log in again.");
         throw new Error("Invalid monitors data");
       }
 
@@ -91,6 +91,11 @@ export async function fetchVideos(
 
     if (response.ok) {
       const data = await response.json();
+      if (data.message === "Not Authorized") {
+        console.error("[FetchMonitors] Token was revoked by server. User needs to log in again.");
+        throw new Error("Invalid monitors data");
+      }
+      
       const videos: Video[] = data.videos.map((video: any) => {
         const videoTime = new Date(video.time);
         const thumbnailTime = new Date(video.time);
