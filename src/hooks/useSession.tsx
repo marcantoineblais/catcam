@@ -90,10 +90,12 @@ export function SessionProvider({
       });
 
       const data = await response.json();
-      if (response.ok) {
-        setSession(data.session);
-        return data.session;
+      if (!data.ok) {
+        throw new Error("Failed to fetch session");
       }
+      
+      setSession(data.session);
+      return data.session;
     } catch (error) {
       setSession((prev) => ({
         ...prev,

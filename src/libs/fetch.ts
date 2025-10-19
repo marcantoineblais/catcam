@@ -92,8 +92,8 @@ export async function fetchVideos(
     if (response.ok) {
       const data = await response.json();
       if (!data.ok) {
-        console.error("[FetchMonitors] Token was revoked by server. User needs to log in again.");
-        throw new Error("Invalid monitors data");
+        console.error("[FetchVideos] Token was revoked by server. User needs to log in again.");
+        throw new Error("Invalid Videos data");
       }
       
       const videos: Video[] = data.videos.map((video: any) => {
