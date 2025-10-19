@@ -44,7 +44,10 @@ export async function fetchMonitors({
 
     if (response.ok) {
       const data = await response.json();
-      if (!Array.isArray(data)) throw new Error("Invalid monitors data");
+      if (!Array.isArray(data)) {
+        console.error("[FetchMonitors] Invalid monitors data:", data);
+        throw new Error("Invalid monitors data");
+      }
 
       const monitors = data.map((monitor: any) => {
         return {
