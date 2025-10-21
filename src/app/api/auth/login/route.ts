@@ -22,7 +22,7 @@ async function requestLogin({
     },
     body: JSON.stringify(creds),
   });
-
+  
   if (response.ok) {
     return await response.json();
   } else {
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     await createToken({
       authToken: data.$user.auth_token,
       groupKey: data.$user.ke,
+      permissions: data.$user.permissions,
       email,
       rememberMe,
     });

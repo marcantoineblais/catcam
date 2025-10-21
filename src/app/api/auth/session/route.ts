@@ -1,9 +1,9 @@
-import { fetchSession } from "@/src/libs/fetch";
+import { SessionService } from "@/src/services/session-service";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const session = await fetchSession();
+    const session = await SessionService.getSession();
 
     return NextResponse.json({ ok: true, session });
   } catch (error) {

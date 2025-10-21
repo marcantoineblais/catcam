@@ -1,11 +1,11 @@
 import { cookies, headers } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
-import { SESSION_COOKIE_NAME } from "../config";
+import { JWT_SIGN_SECRET, SESSION_COOKIE_NAME } from "../config";
 
 const ISSUER = "catcam_app";
-const JWT_SIGN_SECRET = new TextEncoder().encode(process.env.JWT_SIGN_SECRET!);
 const isProd = process.env.NODE_ENV === "production";
 const sessionCookieName = SESSION_COOKIE_NAME;
+const jwtSignSecret = JWT_SIGN_SECRET;
 
 export async function getToken({ isServerAction = false } = {}) {
   const cookie = await cookies();
@@ -14,7 +14,7 @@ export async function getToken({ isServerAction = false } = {}) {
     const signedToken = cookie.get(sessionCookieName)?.value;
     if (!signedToken) return null;
 
-    const { payload } = await jwtVerify(signedToken, JWT_SIGN_SECRET, {
+    const { payload } = await jwtVerify(signedToken, jwtSignSecret, {
       issuer: ISSUER,
       clockTolerance: 60,
     });
@@ -32,12 +32,14 @@ export async function getToken({ isServerAction = false } = {}) {
       payload.renewAt < now &&
       payload.sub &&
       payload.aud &&
-      payload.user
+      payload.user &&
+      payload.perms
     ) {
       await createToken({
         authToken: payload.sub,
         groupKey: payload.aud as string,
         email: payload.user as string,
+        permissions: payload.perms as string,
         rememberMe: true,
       });
     }
@@ -45,10 +47,11 @@ export async function getToken({ isServerAction = false } = {}) {
       authToken: payload.sub,
       groupKey: payload.aud as string,
       email: payload.user as string,
+      permissions: payload.perms as string,
     };
   } catch (error) {
     console.error("[GetToken] Error validating token:", error);
-    cookie.delete(sessionCookieName);
+    if (!isServerAction) cookie.delete(sessionCookieName);
     throw error;
   }
 }
@@ -56,11 +59,13 @@ export async function getToken({ isServerAction = false } = {}) {
 export async function createToken({
   authToken,
   groupKey,
+  permissions,
   email,
   rememberMe,
 }: {
   authToken: string;
   groupKey: string;
+  permissions: string;
   email: string;
   rememberMe: boolean;
 }) {
@@ -69,6 +74,7 @@ export async function createToken({
     sub: authToken,
     aud: groupKey,
     user: email,
+    perms: permissions,
     iat: now, // Issued at
     exp: now + 7 * 24 * 60 * 60, // Expires in 7 days
     jti: crypto.randomUUID(), // Unique identifier for the token
@@ -81,7 +87,7 @@ export async function createToken({
     const signedToken = await new SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setIssuer(ISSUER)
-      .sign(JWT_SIGN_SECRET);
+      .sign(jwtSignSecret);
 
     cookie.set(sessionCookieName, signedToken, {
       httpOnly: true,

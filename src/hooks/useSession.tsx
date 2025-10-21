@@ -24,8 +24,6 @@ type SessionProviderProps = React.PropsWithChildren<{
 
 const SessionContext = createContext<SessionContextType>({
   session: {
-    authToken: null,
-    groupKey: null,
     monitors: [],
     videos: [],
     settings: DEFAULT_SETTINGS,
@@ -39,8 +37,6 @@ const SessionContext = createContext<SessionContextType>({
 export function SessionProvider({
   children,
   initialSession = {
-    authToken: null,
-    groupKey: null,
     monitors: [],
     videos: [],
     settings: DEFAULT_SETTINGS,
@@ -93,17 +89,15 @@ export function SessionProvider({
       if (!data.ok) {
         throw new Error("Failed to fetch session");
       }
-      
+
       setSession(data.session);
       return data.session;
     } catch (error) {
-      setSession((prev) => ({
-        ...prev,
-        authToken: null,
-        groupKey: null,
+      setSession({
         monitors: [],
         videos: [],
-      }));
+        settings: DEFAULT_SETTINGS,
+      });
       console.error("[GetSession] Error while fetching session:", error);
       throw error;
     }
@@ -139,7 +133,7 @@ export function SessionProvider({
         throw error;
       }
     },
-    [getSession, router],
+    [getSession, router]
   );
 
   const signOut = useCallback(async () => {
@@ -147,13 +141,11 @@ export function SessionProvider({
       const response = await fetch("/api/auth/logout");
 
       if (response.ok) {
-        setSession((prev) => ({
-          ...prev,
-          authToken: null,
-          groupKey: null,
+        setSession({
           monitors: [],
           videos: [],
-        }));
+          settings: DEFAULT_SETTINGS,
+        });
         router.replace("/login");
       } else {
         throw new Error("Logout failed");

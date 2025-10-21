@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "@/src/libs/jwt";
-import { write } from "fs";
-import { writeSettings } from "@/src/libs/settings";
+import { SettingsService } from "@/src/services/settings-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +10,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { home, camera, quality, mode } = await request.json();
-    const settings = await writeSettings({
+    const settings = await SettingsService.writeSettings({
       home,
       camera,
       quality,

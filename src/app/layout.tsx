@@ -6,12 +6,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "../components/navbar/Navbar";
 import SessionWrapper from "../components/SessionWrapper";
-import { fetchSession } from "../libs/fetch";
 import { redirect } from "next/navigation";
 import DisplayMode from "../components/display-mode";
 import ModalWrapper from "../components/modal-wrapper";
 import { headers } from "next/headers";
 import { DEFAULT_SETTINGS } from "../config";
+import { SessionService } from "../services/session-service";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 async function getSession() {
   try {
-    const session = await fetchSession();
+    const session = await SessionService.getSession();
     return session;
   } catch (error) {
     console.error("[GetSession] Error while fetching session:", error);

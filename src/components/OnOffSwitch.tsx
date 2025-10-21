@@ -13,7 +13,7 @@ export default function OnOffSwitch({
   width = 16,
 }: {
   isOn?: boolean;
-  setIsOn?: Function;
+  setIsOn?: (value: boolean) => void;
   isEnabled?: boolean;
   onLabel?: string;
   offLabel?: string;

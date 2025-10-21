@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FormSelect from "./FormSelect";
 import { useSession } from "@/src/hooks/useSession";
 import Logo from "@/src/components/Logo";
 import { useModal } from "@/src/hooks/useModal";
+import OnOffSwitch from "@/src/components/OnOffSwitch";
+import { Monitor } from "@/src/models/monitor";
+import { isMonitorOnline, updateMonitorsStatus } from "@/src/libs/monitor-status";
 
 export default function Settings() {
   const {
-    session: { settings, monitors },
+    session: { settings, monitors, permissions },
     updateSession,
   } = useSession();
   const { openModal } = useModal();
   const [formData, setFormData] = useState(settings);
+  const isAdmin = useMemo(() => permissions === "all", [permissions]);
 
   useEffect(() => {
     if (
@@ -58,6 +62,13 @@ export default function Settings() {
 
   function handleChange(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function toggleMonitor(monitor: Monitor, isOn: boolean) {
+    if (isMonitorOnline(monitor) === isOn) return;
+
+    const updatedStatus = updateMonitorsStatus(isOn);
+
   }
 
   return (
@@ -110,6 +121,15 @@ export default function Settings() {
             ]}
           />
         </form>
+
+        {isAdmin && (
+          monitors.map((monitor) => (
+            <div className="flex">
+              <span>{monitor.name}</span>
+              <OnOffSwitch isOn={monitor.mode === "start"} />
+            </div>
+          ))
+        )}
       </main>
 
       <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />

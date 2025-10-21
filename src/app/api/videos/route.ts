@@ -1,7 +1,5 @@
-"use server";
-
-import { fetchVideos } from "@/src/libs/fetch";
 import { getToken } from "@/src/libs/jwt";
+import { ShinobiService } from "@/src/services/shinobi-service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -11,7 +9,7 @@ export async function GET(request: NextRequest) {
     const token = await getToken();
     if (!token?.authToken || !token?.groupKey) throw new Error("No token");
 
-    const videos = await fetchVideos({
+    const videos = await ShinobiService.getVideos({
       authToken: token.authToken,
       groupKey: token.groupKey,
       searchParams,
