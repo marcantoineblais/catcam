@@ -11,11 +11,13 @@ export default function VideoPlayer({
   src = "",
   seekNext = () => {},
   isLiveStream,
+  isStreamOnline = true,
 }: {
   title?: string;
   src?: string;
-  seekNext?: Function;
+  seekNext?: (n: number) => void;
   isLiveStream?: boolean;
+  isStreamOnline?: boolean;
 }) {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [buffer, setBuffer] = useState<number>(0);
@@ -131,6 +133,7 @@ export default function VideoPlayer({
         <VideoPlayerOverlay
           title={title}
           isLive={isLiveStream ? true : undefined}
+          isStreamOnline={isStreamOnline}
           isPlaying={isPlaying}
           isLoaded={isLoaded}
           currentTime={currentTime}

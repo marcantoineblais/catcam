@@ -7,7 +7,10 @@ import Logo from "@/src/components/Logo";
 import { useModal } from "@/src/hooks/useModal";
 import OnOffSwitch from "@/src/components/OnOffSwitch";
 import { Monitor } from "@/src/models/monitor";
-import { isMonitorOnline, updateMonitorsStatus } from "@/src/libs/monitor-status";
+import {
+  isMonitorOnline,
+  updateMonitorsStatus,
+} from "@/src/libs/monitor-status";
 
 export default function Settings() {
   const {
@@ -16,6 +19,7 @@ export default function Settings() {
   } = useSession();
   const { openModal } = useModal();
   const [formData, setFormData] = useState(settings);
+  const [switchEnabled, setSwitchEnabled] = useState(true);
   const isAdmin = useMemo(() => permissions === "all", [permissions]);
 
   useEffect(() => {
@@ -66,15 +70,46 @@ export default function Settings() {
 
   async function toggleMonitor(monitor: Monitor, isOn: boolean) {
     if (isMonitorOnline(monitor) === isOn) return;
+    setSwitchEnabled(false);
+    const updatedStatus = {
+      monitorId: monitor.id,
+      monitorMode: updateMonitorsStatus(isOn),
+    };
 
-    const updatedStatus = updateMonitorsStatus(isOn);
+    try {
+      const response = await fetch(`/api/settings/monitors/change-mode`, {
+        method: "POST",
+        body: JSON.stringify(updatedStatus),
+      });
 
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      if (!data.ok) {
+        throw new Error("Failed to update monitor status");
+      }
+
+      const updatedMonitors = monitors.map((m) => {
+        if (m.id === monitor.id) {
+          return { ...m, mode: updateMonitorsStatus(isOn) };
+        }
+
+        return m;
+      });
+
+      updateSession({ monitors: updatedMonitors });
+    } catch (error) {
+      console.error("[Settings] Error updating monitor status:", error);
+    }
+    setSwitchEnabled(true);
   }
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <main className="h-full pt-3 p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden">
-        <form className="grow w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
+        <form className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
           <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
 
           <FormSelect
@@ -105,7 +140,7 @@ export default function Settings() {
             name="camera"
             value={formData.camera}
             onChange={(e) => handleChange("camera", e.target.value)}
-            options={monitors?.map((monitor) => {
+            options={monitors.map((monitor) => {
               return { label: monitor.name, value: monitor.id };
             })}
           />
@@ -123,12 +158,24 @@ export default function Settings() {
         </form>
 
         {isAdmin && (
-          monitors.map((monitor) => (
-            <div className="flex">
-              <span>{monitor.name}</span>
-              <OnOffSwitch isOn={monitor.mode === "start"} />
+          <div className="w-full mt-3 px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
+            <h2 className="w-full pb-10 text-center text-3xl">Monitors</h2>
+            <div className="w-fit flex flex-col items-start gap-3">
+              {monitors.map((monitor) => (
+                <div
+                  className="w-full flex justify-between items-center gap-10"
+                  key={monitor.id}
+                >
+                  <div className="flex-grow text-sm">{monitor.name}</div>
+                  <OnOffSwitch
+                    isOn={isMonitorOnline(monitor)}
+                    setIsOn={(value) => toggleMonitor(monitor, value)}
+                    isEnabled={switchEnabled}
+                  />
+                </div>
+              ))}
             </div>
-          ))
+          </div>
         )}
       </main>
 

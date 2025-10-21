@@ -33,6 +33,7 @@ export class ShinobiService {
       return {
         name: monitor.name,
         id: monitor.mid,
+        mode: monitor.mode,
         streams: monitor.streams,
         groupKey: monitor.ke,
       };

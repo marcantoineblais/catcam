@@ -10,7 +10,7 @@ export default function OnOffSwitch({
   onLabel = "ON",
   offLabel = "OFF",
   height = 7,
-  width = 16,
+  width = 15,
 }: {
   isOn?: boolean;
   setIsOn?: (value: boolean) => void;
@@ -19,7 +19,7 @@ export default function OnOffSwitch({
   offLabel?: string;
   height?: number;
   width?: number;
-}) {
+}) {  
   const heightClassName = useMemo(() => {
     return `h-${height}`;
   }, [height]);
@@ -40,6 +40,7 @@ export default function OnOffSwitch({
     containerRef: btnRef,
     itemsNumber: 2,
     offset: width,
+    initialIndex: isOn ? 0 : 1
   });
 
   function onClick() {
@@ -66,7 +67,7 @@ export default function OnOffSwitch({
       data-scrolling={isScrolling || undefined}
     >
       <div
-        className="relative w-[153%] h-full flex duration-500 data-scrolling:duration-0"
+        className="relative w-[calc(150%+0.5rem)] h-full flex duration-500 data-scrolling:duration-0"
         style={{ left: `${-position}px` }}
         data-scrolling={isScrolling || undefined}
       >

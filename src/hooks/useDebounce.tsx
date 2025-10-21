@@ -14,7 +14,7 @@ export default function useDebounce() {
     };
   }, []);
 
-  const handler = (func: Function, wait: number) => {
+  const handler = (func: () => void, wait: number) => {
     if (timer.current) return;
 
     timer.current = setTimeout(() => (timer.current = null), wait);

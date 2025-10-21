@@ -10,7 +10,7 @@ import {
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 
 export default function VideoPlayerOverlay({
   currentTime = 0,
@@ -19,6 +19,7 @@ export default function VideoPlayerOverlay({
   duration = 0,
   title = "",
   isLive = false,
+  isStreamOnline = true,
   isPlaying = false,
   isLoaded = false,
   videoSource = "",
@@ -28,18 +29,19 @@ export default function VideoPlayerOverlay({
   toggleFullscreen = () => {},
 }: {
   currentTime?: number;
-  setCurrentTime?: Function;
+  setCurrentTime?: Dispatch<React.SetStateAction<number>>;
   buffer?: number;
   duration?: number;
   title?: string;
   isLive?: boolean;
+  isStreamOnline?: boolean;
   isPlaying?: boolean;
   isLoaded?: boolean;
   videoSource?: string;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   isFullscreen?: boolean;
-  seekNext?: Function;
-  toggleFullscreen?: Function;
+  seekNext?: (n: number) => void;
+  toggleFullscreen?: () => void;
 }) {
   const timeoutDuration = 3000; // 3 seconds
   const [timeoutTime, setTimeoutTime] = useState<number>(0);
@@ -342,7 +344,7 @@ export default function VideoPlayerOverlay({
         <div className="w-full py-1.5 flex justify-between items-center grow">
           <div>
             {isLive ? (
-              <div className="relative grow animate-pulse">
+              <div className="relative grow animate-pulse data-[online=false]:text-red-700" data-online={isStreamOnline}>
                 <FontAwesomeIcon icon={faVideo} className="pe-1" size="xl" />
                 <span>LIVE</span>
               </div>

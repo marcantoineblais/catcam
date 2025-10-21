@@ -1,6 +1,7 @@
 "use client";
 
 import React, {
+  Dispatch,
   ReactNode,
   SyntheticEvent,
   useEffect,
@@ -24,7 +25,7 @@ export default function RecordingsList({
 }: {
   videosList?: Video[];
   selectedVideo?: Video;
-  setSelectedVideo?: Function;
+  setSelectedVideo?: Dispatch<React.SetStateAction<Video | undefined>>;
   isLoading?: boolean;
   nothingToLoad?: boolean;
   onScroll?: (e: SyntheticEvent<HTMLDivElement>) => void;
@@ -35,7 +36,7 @@ export default function RecordingsList({
 
   useEffect(() => {
     setVideosCards(
-      videosList.map((video, i) => {
+      videosList.map((video) => {
         const isSelected = selectedVideo === video;
 
         return (

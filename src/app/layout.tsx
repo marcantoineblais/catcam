@@ -31,8 +31,7 @@ export const metadata: Metadata = {
 
 async function getSession() {
   try {
-    const session = await SessionService.getSession();
-    return session;
+    return await SessionService.getSession();
   } catch (error) {
     console.error("[GetSession] Error while fetching session:", error);
 
@@ -42,8 +41,6 @@ async function getSession() {
     // Prevent redirect loop on token revocation
     if (currentPath === "/logout") {
       return {
-        authToken: null,
-        groupKey: null,
         monitors: [],
         videos: [],
         settings: DEFAULT_SETTINGS,

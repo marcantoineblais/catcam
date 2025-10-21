@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     await createToken({
       authToken: data.$user.auth_token,
       groupKey: data.$user.ke,
-      permissions: data.$user.permissions,
+      permissions: data.$user.details?.permissions,
       email,
       rememberMe,
     });

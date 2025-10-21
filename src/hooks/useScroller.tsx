@@ -1,15 +1,17 @@
-import { RefObject, TouchEvent, useCallback, useRef, useState } from "react";
+import { RefObject, TouchEvent, useCallback, useEffect, useRef, useState } from "react";
 
 export default function useScroller({
   containerRef,
   itemsNumber = 2,
   offset = 0,
   isLocked = false,
+  initialIndex = 0,
 }: {
   containerRef: RefObject<HTMLElement | null>;
   itemsNumber?: number;
   offset?: number;
   isLocked?: boolean;
+  initialIndex?: number;
 }) {
   const [position, setPosition] = useState<number>(0);
   const [previousPosition, setPreviousPosition] = useState<number>(0);
@@ -50,13 +52,6 @@ export default function useScroller({
 
     return { index, newPosition };
   }, [calculateElementWidth, position, itemsNumber, scrollDirection]);
-
-  function resetTimer() {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setScrollDirection(null);
-    }, 200);
-  }
 
   const handleClick = useCallback(
     (index: number) => {
@@ -139,6 +134,18 @@ export default function useScroller({
     clearTimeout(timer.current);
     return index;
   }, [calculateSelectedIndex]);
+
+  useEffect(() => {
+    handleClick(initialIndex);
+  }, [initialIndex, handleClick]);
+
+  
+  function resetTimer() {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setScrollDirection(null);
+    }, 200);
+  }
 
   return {
     position,

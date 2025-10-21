@@ -4,7 +4,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -18,14 +17,12 @@ type ModalContextType = {
   closeModal: () => void;
 };
 
-type ModalProviderProps = React.PropsWithChildren<{}>;
-
 const ModalContext = createContext<ModalContextType>({
   openModal: () => {},
   closeModal: () => {},
 });
 
-export function ModalProvider({ children }: ModalProviderProps) {
+export function ModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ReactNode>(null);
   const [title, setTitle] = useState<ReactNode>(null);

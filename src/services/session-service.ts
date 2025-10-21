@@ -8,7 +8,7 @@ export class SessionService {
     const authToken = token?.authToken;
     const groupKey = token?.groupKey;
     const email = token?.email;
-    const permissions = token?.permissions ?? null;
+    const permissions = token?.permissions;
 
     const monitors = await ShinobiService.getMonitors({ authToken, groupKey });
     const videos = await ShinobiService.getVideos({ authToken, groupKey });
