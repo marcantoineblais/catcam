@@ -60,10 +60,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} h-[100lvh] w-[100lvw]`}>
+      <body className={`${inter.className} h-lvh w-lvw overflow-x-hidden`}>
         <SessionWrapper initialSession={session}>
           <ModalWrapper>
-            <DisplayMode className="flex flex-col h-[100dvh] w-[100dvw] bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
+            <DisplayMode className="flex flex-col h-dvh w-dvw bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
               <Navbar />
               {children}
             </DisplayMode>

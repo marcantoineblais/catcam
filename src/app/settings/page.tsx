@@ -108,9 +108,9 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <main className="h-full pt-3 p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden">
-        <form className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
-          <h1 className="w-full pb-10 text-center text-3xl">Settings</h1>
+      <main className="z-10 h-full pt-3 p-1 container mx-auto max-w-(--breakpoint-lg) overflow-y-auto">
+        <form className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
+          <h1 className="w-full pb-3 text-center text-3xl">Settings</h1>
 
           <FormSelect
             label="Appearance"
@@ -158,15 +158,15 @@ export default function Settings() {
         </form>
 
         {isAdmin && (
-          <div className="w-full mt-3 px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10 overflow-auto">
-            <h2 className="w-full pb-10 text-center text-3xl">Monitors</h2>
-            <div className="w-fit flex flex-col items-start gap-3">
+          <div className="w-full mt-3 px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
+            <h2 className="w-full pb-3 text-center text-3xl">Monitors</h2>
+            <div className="w-full md:w-fit flex flex-col items-start gap-3">
               {monitors.map((monitor) => (
                 <div
                   className="w-full flex justify-between items-center gap-10"
                   key={monitor.id}
                 >
-                  <div className="flex-grow text-sm">{monitor.name}</div>
+                  <div className="grow text-sm">{monitor.name}</div>
                   <OnOffSwitch
                     isOn={isMonitorOnline(monitor)}
                     setIsOn={(value) => toggleMonitor(monitor, value)}
@@ -179,7 +179,7 @@ export default function Settings() {
         )}
       </main>
 
-      <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />
+      <Logo className="fixed -bottom-7 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-125 landscape:hidden lg:landscape:block" />
     </div>
   );
 }

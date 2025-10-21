@@ -46,7 +46,7 @@ export default function Login() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <main className="h-full px-1 pt-5 max-w-(--breakpoint-md) container mx-auto overflow-auto">
+      <main className="z-10 h-full px-1 pt-5 max-w-(--breakpoint-md) container mx-auto overflow-auto">
         <form
           onSubmit={submitForm}
           className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10"
@@ -115,7 +115,7 @@ export default function Login() {
         </form>
       </main>
 
-      <Logo className="text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150 landscape:hidden lg:landscape:block" />
+      <Logo className="fixed -bottom-7 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-125 landscape:hidden lg:landscape:block" />
     </div>
   );
 }
