@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   useCallback,
@@ -13,7 +15,7 @@ import { getDateTime } from "../libs/formatDate";
 type SessionContextType = {
   session: Session;
   getSession: () => Promise<any>;
-  updateSession: (data: Partial<Session>) => void;
+  updateSession: (data: Partial<Session> | ((prev: Session) => Partial<Session>)) => void;
   signIn: (data: any) => Promise<{ ok: boolean; session?: Session }>;
   signOut: () => Promise<void>;
 };
@@ -103,12 +105,23 @@ export function SessionProvider({
     }
   }, []);
 
-  const updateSession = useCallback((data: Partial<Session>) => {
-    setSession((prev) => ({
-      ...prev,
-      ...data,
-    }));
-  }, []);
+  const updateSession = useCallback(
+    (data: Partial<Session> | ((prev: Session) => Partial<Session>)) => {
+      setSession((prev) => {
+        if (typeof data === "function") {
+          return {
+            ...prev,
+            ...data(prev),
+          };
+        }
+        return {
+          ...prev,
+          ...data,
+        };
+      });
+    },
+    []
+  );
 
   const signIn = useCallback(
     async (data: any) => {

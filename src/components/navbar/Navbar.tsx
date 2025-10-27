@@ -34,7 +34,7 @@ export default function Navbar() {
 
   return (
     <div className="pt-1 shadow dark:shadow-zinc-50/10 landscape:hidden lg:landscape:block">
-      <div className="px-3 h-12 container max-w-screen-lg flex justify-between items-center mx-auto">
+      <div className="px-3 h-12 container max-w-4xl flex justify-between items-center mx-auto">
         <div className="h-full flex items-center text-gray-950 dark:text-zinc-100">
           <Logo />
           <h1 className="-m-3 pt-3.5 text-xl italic self-start underline">
@@ -49,13 +49,13 @@ export default function Navbar() {
           >
             <FontAwesomeIcon
               data-active={isMenuOpen ? true : undefined}
-              className="cursor-pointer duration-500 ease-in-out data-[active]:rotate-90"
+              className="cursor-pointer duration-500 ease-in-out data-active:rotate-90"
               icon={faBars}
               size="2x"
             />
           </div>
           <div
-            className="w-full flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 dark:bg-zinc-900 translate-x-full duration-500 origin-right md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:translate-x-0 data-[active]:translate-x-0 ease-in-out"
+            className="w-full flex flex-col justify-end items-end fixed top-12 right-0 z-50 bg-gray-50 dark:bg-zinc-900 translate-x-full duration-500 origin-right md:w-full md:bg-inherit md:static md:p-0 md:flex-row md:translate-x-0 data-active:translate-x-0 ease-in-out"
             data-active={isMenuOpen ? true : undefined}
           >
             <NavbarButton

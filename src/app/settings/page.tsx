@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import FormSelect from "./FormSelect";
-import { useSession } from "@/src/hooks/useSession";
 import Logo from "@/src/components/Logo";
 import { useModal } from "@/src/hooks/useModal";
 import OnOffSwitch from "@/src/components/OnOffSwitch";
@@ -11,6 +10,7 @@ import {
   isMonitorOnline,
   updateMonitorsStatus,
 } from "@/src/libs/monitor-status";
+import { useSession } from "@/src/hooks/useSession";
 
 export default function Settings() {
   const {
@@ -19,7 +19,9 @@ export default function Settings() {
   } = useSession();
   const { openModal } = useModal();
   const [formData, setFormData] = useState(settings);
-  const [switchEnabled, setSwitchEnabled] = useState(true);
+  const [switchesDisabled, setSwitchesDisabled] = useState(
+    monitors.map(() => false)
+  );
   const isAdmin = useMemo(() => permissions === "all", [permissions]);
 
   useEffect(() => {
@@ -70,7 +72,10 @@ export default function Settings() {
 
   async function toggleMonitor(monitor: Monitor, isOn: boolean) {
     if (isMonitorOnline(monitor) === isOn) return;
-    setSwitchEnabled(false);
+
+    setSwitchesDisabled((prev) =>
+      prev.map((p, index) => (monitors[index].id === monitor.id ? true : p))
+    );
     const updatedStatus = {
       monitorId: monitor.id,
       monitorMode: updateMonitorsStatus(isOn),
@@ -91,19 +96,22 @@ export default function Settings() {
         throw new Error("Failed to update monitor status");
       }
 
-      const updatedMonitors = monitors.map((m) => {
-        if (m.id === monitor.id) {
-          return { ...m, mode: updateMonitorsStatus(isOn) };
-        }
+      updateSession((prev) => {
+        const monitors = prev.monitors.map((m) => {
+          if (m.id === monitor.id) {
+            return { ...m, mode: updateMonitorsStatus(isOn) };
+          }
+          return m;
+        });
 
-        return m;
+        return { monitors };
       });
-
-      updateSession({ monitors: updatedMonitors });
     } catch (error) {
       console.error("[Settings] Error updating monitor status:", error);
     }
-    setSwitchEnabled(true);
+    setSwitchesDisabled((prev) =>
+      prev.map((p, index) => (monitors[index].id === monitor.id ? false : p))
+    );
   }
 
   return (
@@ -161,19 +169,25 @@ export default function Settings() {
           <div className="w-full mt-3 px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10">
             <h2 className="w-full pb-3 text-center text-3xl">Monitors</h2>
             <div className="w-full md:w-fit flex flex-col items-start gap-3">
-              {monitors.map((monitor) => (
-                <div
-                  className="w-full flex justify-between items-center gap-10"
-                  key={monitor.id}
-                >
-                  <div className="grow text-sm">{monitor.name}</div>
-                  <OnOffSwitch
-                    isOn={isMonitorOnline(monitor)}
-                    setIsOn={(value) => toggleMonitor(monitor, value)}
-                    isEnabled={switchEnabled}
-                  />
-                </div>
-              ))}
+              {monitors.map((monitor, i) => {
+                const isDisabled = switchesDisabled[i];
+                const isOn = isMonitorOnline(monitor);
+
+                return (
+                  <div
+                    className="w-full flex justify-between items-center gap-10"
+                    key={monitor.id}
+                  >
+                    <div className="grow text-sm">{monitor.name}</div>
+                    <OnOffSwitch
+                      isOn={isMonitorOnline(monitor)}
+                      onClick={() => toggleMonitor(monitor, !isOn)}
+                      disabled={isDisabled}
+                      width={72}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

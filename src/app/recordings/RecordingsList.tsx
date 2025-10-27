@@ -1,75 +1,71 @@
 "use client";
 
-import React, {
-  Dispatch,
-  ReactNode,
-  SyntheticEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, useRef } from "react";
 import VideoCard from "./VideoCard";
 import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { twMerge } from "tailwind-merge";
 
-export default function RecordingsList({
-  videosList = [],
-  selectedVideo,
-  setSelectedVideo = () => {},
-  isLoading = false,
-  nothingToLoad = false,
-  onScroll = () => {},
-  onScrollEnd = () => {},
-}: {
-  videosList?: Video[];
+type RecordingsListProps = {
+  videos?: Video[];
   selectedVideo?: Video;
   setSelectedVideo?: Dispatch<React.SetStateAction<Video | undefined>>;
   isLoading?: boolean;
   nothingToLoad?: boolean;
-  onScroll?: (e: SyntheticEvent<HTMLDivElement>) => void;
-  onScrollEnd?: (e: SyntheticEvent<HTMLDivElement>) => void;
-}) {
-  const [videosCards, setVideosCards] = useState<ReactNode[]>([]);
+} & React.ComponentProps<"div">;
+export default function RecordingsList({
+  videos = [],
+  selectedVideo,
+  setSelectedVideo = () => {},
+  isLoading = false,
+  nothingToLoad = false,
+  className,
+  onScroll,
+  onScrollEnd,
+  ...props
+}: RecordingsListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setVideosCards(
-      videosList.map((video) => {
-        const isSelected = selectedVideo === video;
-
-        return (
-          <VideoCard
-            key={video.src}
-            thumbnail={video.thumbnail}
-            timestamp={video.timestamp}
-            isSelected={isSelected}
-            onClick={() => setSelectedVideo(video)}
-            containerRef={containerRef}
-          />
-        );
-      }),
+  if (videos.length === 0 && !isLoading) {
+    return (
+      <div className="pb-3 w-full flex justify-center items-center">
+        No videos available
+      </div>
     );
-  }, [videosList, selectedVideo, setSelectedVideo]);
+  }
 
   return (
-    <div className="pt-1 pb-3 w-full flex flex-col items-center overflow-hidden">
+    <div
+      className={twMerge(
+        "pt-1 pb-3 w-full h-full flex flex-col items-center overflow-hidden",
+        className
+      )}
+      {...props}
+    >
       <div
-        className="relative w-full flex-grow flex justify-start content-start flex-wrap overflow-y-auto"
+        className="relative w-full h-full flex justify-start content-start flex-wrap overflow-y-auto"
         onScroll={onScroll}
         onScrollEnd={onScrollEnd}
         ref={containerRef}
       >
-        {videosCards.length > 0 ? (
-          videosCards
-        ) : (
-          <div className="pb-3 w-full flex justify-center items-center">
-            No videos available
-          </div>
-        )}
+        {videos.map((video) => {
+          const isSelected = selectedVideo === video;
 
-        {nothingToLoad && videosList.length > 0 && (
+          return (
+            <VideoCard
+              key={video.src}
+              thumbnail={video.thumbnail}
+              timestamp={video.timestamp}
+              isSelected={isSelected}
+              onClick={() => setSelectedVideo(video)}
+              containerRef={containerRef}
+            />
+          );
+        })}
+
+        {nothingToLoad && (
           <div className="w-full flex justify-center items-center gap-1 text-sky-700">
             <FontAwesomeIcon icon={faCircleXmark} size="lg" />
             <h3 className="text-lg font-bold py-5">

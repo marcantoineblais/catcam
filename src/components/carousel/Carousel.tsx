@@ -1,116 +1,77 @@
-import {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import CarouselButton from "./CarouselButton";
+import useCarousel from "@/src/hooks/useCarousel";
+import { ReactNode } from "react";
 import React from "react";
-import useScroller from "@/src/hooks/useScroller";
+import { twMerge } from "tailwind-merge";
+
+type CarouselProps = {
+  children: ReactNode[];
+  selectors?:
+    | ReactNode
+    | (({
+        selectedIndex,
+        selectIndex,
+      }: {
+        selectedIndex: number;
+        selectIndex: (index: number) => void;
+      }) => ReactNode);
+  isLocked?: boolean;
+} & React.ComponentProps<"div">;
 
 export default function Carousel({
-  sections,
+  className,
+  children,
+  selectors,
   isLocked = false,
-}: {
-  sections?: { label: string; node: ReactElement }[];
-  isLocked?: boolean;
-}) {
-  const [buttons, setButtons] = useState<ReactNode[]>([]);
-  const [nodes, setNodes] = useState<ReactNode[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [width, setWidth] = useState<number>(0);
-  const [isResizing, setIsResizing] = useState<boolean>(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  ...props
+}: CarouselProps) {
   const {
+    width,
+    isResizing,
+    selectedIndex,
     position,
     isScrolling,
-    handleClick,
+    selectIndex,
     handleTouchStart,
     handleTouchEnd,
     handleTouchMove,
-  } = useScroller({
-    containerRef: containerRef,
-    itemsNumber: nodes.length,
-    isLocked: isLocked,
-  });
-
-  useEffect(() => {
-    if (!sections) return;
-
-    const labels = sections.map(({ label }) => label);
-    const nodes = sections.map(({ node }) => node);
-    const median = Math.floor(labels.length / 2);
-    const hasCenter = labels.length % 2 === 1;
-    const getAlignment = (i: number) => {
-      switch (true) {
-        case hasCenter && i === median:
-          return "center";
-        case i + 1 > median:
-          return "right";
-        default:
-          return "left";
-      }
-    };
-
-    const buttons = labels.map((label, i) => {
-      const isActive = i === selectedIndex;
-      const align = getAlignment(i);
-      const selectIndex = () => {
-        setSelectedIndex(i);
-        handleClick(i);
-      };
-
-      return (
-        <CarouselButton
-          key={i}
-          label={label}
-          isActive={isActive}
-          onClick={selectIndex}
-          align={align}
-        />
-      );
-    });
-
-    setButtons(buttons);
-    setNodes(nodes);
-  }, [sections, selectedIndex, handleClick]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const resize = () => {
-      if (!container) return;
-      setIsResizing(true);
-      setWidth(container.clientWidth * nodes.length);
-      setTimeout(() => setIsResizing(false), 500);
-    };
-
-    if (!container) return;
-    const observer = new ResizeObserver(resize);
-
-    observer.observe(container);
-    resize();
-    return () => {
-      observer.disconnect();
-    };
-  }, [containerRef, nodes]);
+    containerRef,
+  } = useCarousel({ children, isLocked });
 
   return (
-    <div className="z-10 flex-grow flex flex-col bg-gray-100 dark:bg-zinc-900 overflow-hidden landscape:hidden lg:landscape:flex">
+    <div
+      className={twMerge(
+        "z-10 h-full flex flex-col bg-gray-100 dark:bg-zinc-900 landscape:hidden lg:landscape:flex",
+        className
+      )}
+      {...props}
+    >
       <div className="w-full flex justify-between items-center gap-3">
-        {buttons}
+        {typeof selectors === "function"
+          ? selectors({ selectedIndex, selectIndex })
+          : selectors}
       </div>
 
-      <div ref={containerRef} className="pt-3 w-full h-full overflow-hidden">
+      <div
+        ref={containerRef}
+        className="flex pt-3 w-full h-full overflow-x-hidden"
+      >
         <div
           className="relative h-full flex duration-500 data-scrolling:duration-0"
           style={{ width: `${width}px`, left: `${-position}px` }}
           data-scrolling={isResizing || isScrolling || undefined}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
-          onTouchEnd={() => setSelectedIndex(handleTouchEnd())}
+          onTouchEnd={handleTouchEnd}
         >
-          {nodes}
+          {children.map((child, i) => (
+            <div
+              className="flex h-full"
+              style={{ width: `${width / children.length}px` }}
+              key={i}
+            >
+              {child}
+            </div>
+          ))}
         </div>
       </div>
     </div>

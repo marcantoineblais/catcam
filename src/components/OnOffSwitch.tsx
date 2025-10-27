@@ -1,76 +1,39 @@
 "use client";
 
-import { TouchEvent, useMemo, useRef } from "react";
-import useScroller from "../hooks/useScroller";
+import { twMerge } from "tailwind-merge";
 
-export default function OnOffSwitch({
-  isOn = true,
-  setIsOn = () => true,
-  isEnabled = false,
-  onLabel = "ON",
-  offLabel = "OFF",
-  height = 7,
-  width = 15,
-}: {
+type OnOffSwitchProps = {
   isOn?: boolean;
-  setIsOn?: (value: boolean) => void;
-  isEnabled?: boolean;
   onLabel?: string;
   offLabel?: string;
   height?: number;
   width?: number;
-}) {  
-  const heightClassName = useMemo(() => {
-    return `h-${height}`;
-  }, [height]);
+  borderWidth?: number;
+} & React.ComponentProps<"button">;
 
-  const widthClassName = useMemo(() => {
-    return `w-${width}`;
-  }, [width]);
-
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const {
-    position,
-    isScrolling,
-    handleClick,
-    handleTouchStart,
-    handleTouchEnd,
-    handleTouchMove,
-  } = useScroller({
-    containerRef: btnRef,
-    itemsNumber: 2,
-    offset: width,
-    initialIndex: isOn ? 0 : 1
-  });
-
-  function onClick() {
-    const status = !isOn;
-    const index = status ? 0 : 1;
-    setIsOn(status);
-    handleClick(index);
-  }
-
-  function onTouchMove(e: TouchEvent) {
-    handleTouchMove(e);
-  }
-
-  function onTouchEnd() {
-    const index = handleTouchEnd();
-    setIsOn(index === 0);
-  }
+export default function OnOffSwitch({
+  isOn = true,
+  onLabel = "ON",
+  offLabel = "OFF",
+  height = 28,
+  width = 64,
+  className,
+  style,
+  ...props
+}: OnOffSwitchProps) {
+  const radius = height / 2;
+  const totalWidth = (width - radius) * 2
 
   return (
     <button
-      ref={btnRef}
-      className={`${heightClassName} ${widthClassName} text-sm font-bold rounded-full text-white !box-content border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out disabled:opacity-50 focus:outline-none`}
-      disabled={isEnabled ? undefined : true}
-      data-scrolling={isScrolling || undefined}
+      className={twMerge(
+        "text-sm font-bold rounded-full text-white box-content! border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out cursor-pointer disabled:opacity-50 focus:outline-none disabled:cursor-default",
+        className
+      )}
+      style={{ width, height, ...style }}
+      {...props}
     >
-      <div
-        className="relative w-[calc(150%+0.5rem)] h-full flex duration-500 data-scrolling:duration-0"
-        style={{ left: `${-position}px` }}
-        data-scrolling={isScrolling || undefined}
-      >
+      <div className="relative h-full flex duration-500" style={{ width: totalWidth, left: isOn ? 0 : -(totalWidth / 2) + radius}}>
         <div className="px-1.5 w-full h-full flex justify-start items-center rounded-l-full bg-sky-700 dark:bg-sky-700">
           {onLabel}
         </div>
@@ -79,14 +42,7 @@ export default function OnOffSwitch({
           {offLabel}
         </div>
 
-        <div
-          className="absolute z-10 -top-0.5 -bottom-0.5 left-1/2 -translate-x-[50%] origin-center aspect-square rounded-full bg-gray-50 dark:bg-zinc-100 inset-ring-2 inset-ring-gray-500 dark:inset-ring-zinc-500 cursor-pointer data-disabled:cursor-default"
-          onTouchStart={handleTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onClick={onClick}
-          data-disabled={isEnabled ? undefined : true}
-        ></div>
+        <div className="absolute z-10 -top-0.5 -bottom-0.5 left-1/2 -translate-x-[50%] origin-center aspect-square rounded-full bg-gray-50 dark:bg-zinc-100 inset-ring-2 inset-ring-gray-500 dark:inset-ring-zinc-500 cursor-pointer"></div>
       </div>
     </button>
   );

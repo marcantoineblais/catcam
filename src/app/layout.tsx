@@ -5,13 +5,13 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "../components/navbar/Navbar";
-import SessionWrapper from "../components/SessionWrapper";
 import { redirect } from "next/navigation";
 import DisplayMode from "../components/display-mode";
-import ModalWrapper from "../components/modal-wrapper";
 import { headers } from "next/headers";
 import { DEFAULT_SETTINGS } from "../config";
 import { SessionService } from "../services/session-service";
+import { ModalProvider } from "../hooks/useModal";
+import { SessionProvider } from "../hooks/useSession";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +46,7 @@ async function getSession() {
         settings: DEFAULT_SETTINGS,
       };
     }
-    
+
     redirect("/logout");
   }
 }
@@ -60,15 +60,17 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} h-lvh w-lvw overflow-x-hidden`}>
-        <SessionWrapper initialSession={session}>
-          <ModalWrapper>
-            <DisplayMode className="flex flex-col h-dvh w-dvw bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
+      <body
+        className={`${inter.className} h-screen w-screen max-w-screen max-h-screen overflow-x-hidden`}
+      >
+        <SessionProvider initialSession={session}>
+          <ModalProvider>
+            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
               <Navbar />
               {children}
             </DisplayMode>
-          </ModalWrapper>
-        </SessionWrapper>
+          </ModalProvider>
+        </SessionProvider>
       </body>
     </html>
   );

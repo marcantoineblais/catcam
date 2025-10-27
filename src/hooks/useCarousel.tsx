@@ -1,66 +1,70 @@
-import { RefObject, TouchEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  TouchEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-export default function useScroller({
-  containerRef,
-  itemsNumber = 2,
-  offset = 0,
+export default function useCarousel({
   isLocked = false,
   initialIndex = 0,
+  children,
 }: {
-  containerRef: RefObject<HTMLElement | null>;
-  itemsNumber?: number;
-  offset?: number;
   isLocked?: boolean;
   initialIndex?: number;
+  children: ReactNode[];
 }) {
+  const [selectedIndex, setSelectedIndex] = useState<number>(initialIndex);
   const [position, setPosition] = useState<number>(0);
   const [previousPosition, setPreviousPosition] = useState<number>(0);
   const [previousYPosition, setPreviousYPosition] = useState<number>(0);
+  const [width, setWidth] = useState<number>(0);
+  const [isResizing, setIsResizing] = useState<boolean>(false);
   const [scrollDirection, setScrollDirection] = useState<
     "left" | "right" | null
   >(null);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const timer = useRef<NodeJS.Timeout | number>(0);
+  const itemsNumber = useMemo(() => children.length, [children]);
 
-  const calculateElementWidth = useCallback(() => {
+  const snapToSelection = useCallback(() => {
     const container = containerRef.current;
-    if (!container) return {};
+    if (!container) return;
 
-    const scrollWidth = container.scrollWidth;
-    const elementWidth = scrollWidth / itemsNumber - offset;
-    const maxScroll = scrollWidth - elementWidth - offset * itemsNumber;
-
-    return { maxScroll, elementWidth };
-  }, [containerRef, itemsNumber, offset]);
-
-  const calculateSelectedIndex = useCallback(() => {
-    const { maxScroll, elementWidth } = calculateElementWidth();
-    if (maxScroll === undefined || elementWidth === undefined)
-      return { index: 0, newPosition: 0 };
-
-    let currentIndex = Math.floor(position / (maxScroll / itemsNumber));
-    if (currentIndex > itemsNumber - 1) currentIndex = itemsNumber - 1;
-
-    const baseline = currentIndex * elementWidth;
-    let index = currentIndex;
+    const elementWidth = container.clientWidth;
+    const baseline = selectedIndex * elementWidth;
+    let index = selectedIndex;
     if (scrollDirection === "left" && position > baseline)
-      index = currentIndex + 1;
+      index = selectedIndex + 1;
     else if (scrollDirection === "right" && position < baseline)
-      index = currentIndex - 1;
+      index = selectedIndex - 1;
 
     const newPosition = index * elementWidth;
+    setSelectedIndex(index);
+    setPosition(newPosition);
+    return newPosition;
+  }, [selectedIndex, position, scrollDirection]);
 
-    return { index, newPosition };
-  }, [calculateElementWidth, position, itemsNumber, scrollDirection]);
+  const selectIndex = useCallback(
+    (newIndex: number) => {
+      const container = containerRef.current;
+      if (!container) return;
 
-  const handleClick = useCallback(
-    (index: number) => {
-      const { elementWidth } = calculateElementWidth();
-      if (elementWidth === undefined) return;
+      let index = newIndex;
+      if (index < 0) index = itemsNumber - 1;
+      if (index >= itemsNumber) index = 0;
+
+      const elementWidth = container.clientWidth;
       const scrollPosition = elementWidth * index;
+      setSelectedIndex(index);
       setPosition(scrollPosition);
     },
-    [calculateElementWidth],
+    [itemsNumber]
   );
 
   const handleTouchStart = useCallback(
@@ -74,17 +78,15 @@ export default function useScroller({
       setPreviousPosition(clientX);
       setPreviousYPosition(clientY);
     },
-    [isLocked],
+    [isLocked]
   );
 
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
-      if (isLocked || !isScrolling) return;
-
-      const { elementWidth, maxScroll } = calculateElementWidth();
       const container = containerRef.current;
-      if (elementWidth === null || maxScroll === undefined || !container)
-        return;
+      if (isLocked || !isScrolling || !container) return;
+
+      const maxScroll = container.scrollWidth - container.clientWidth;
 
       const clientX = e.touches[0].clientX;
       const clientY = e.touches[0].clientY;
@@ -114,32 +116,24 @@ export default function useScroller({
     [
       isLocked,
       containerRef,
-      calculateElementWidth,
       isScrolling,
       position,
       previousPosition,
       previousYPosition,
       scrollDirection,
-    ],
+    ]
   );
 
   const handleTouchEnd = useCallback(() => {
-    const { index, newPosition } = calculateSelectedIndex();
+    snapToSelection();
 
     setPreviousPosition(0);
     setPreviousYPosition(0);
     setScrollDirection(null);
     setIsScrolling(false);
-    setPosition(newPosition);
     clearTimeout(timer.current);
-    return index;
-  }, [calculateSelectedIndex]);
+  }, [snapToSelection]);
 
-  useEffect(() => {
-    handleClick(initialIndex);
-  }, [initialIndex, handleClick]);
-
-  
   function resetTimer() {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
@@ -147,12 +141,34 @@ export default function useScroller({
     }, 200);
   }
 
+  useEffect(() => {
+    const resize = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      setIsResizing(true);
+      setWidth(container.clientWidth * children.length);
+      setTimeout(() => setIsResizing(false), 500);
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, [containerRef, children]);
+
   return {
+    width,
     position,
     isScrolling,
-    handleClick,
+    isResizing,
+    selectIndex,
     handleTouchMove,
     handleTouchStart,
     handleTouchEnd,
+    containerRef,
+    selectedIndex,
   };
 }

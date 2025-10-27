@@ -50,8 +50,8 @@ export default function LiveStream() {
             onLabel="HQ"
             offLabel="SQ"
             isOn={isHQ}
-            setIsOn={setIsHQ}
-            isEnabled={((selectedMonitor as Monitor).streams?.length ?? 0) > 1}
+            onClick={() => setIsHQ(!isHQ)}
+            disabled={!(selectedMonitor as Monitor)?.streams?.length}
           />
         </div>
 

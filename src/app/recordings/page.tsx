@@ -11,6 +11,7 @@ import { getDateTime } from "@/src/libs/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
+import CarouselButton from "@/src/components/carousel/CarouselButton";
 
 export default function Recordings() {
   const {
@@ -21,7 +22,7 @@ export default function Recordings() {
   const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<any>();
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
-    "all",
+    "all"
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,7 +32,7 @@ export default function Recordings() {
   const containerRef = useRef<HTMLDivElement>(null);
   const monitorsList = useMemo<("all" | Monitor)[]>(
     () => ["all", ...(monitors || [])],
-    [monitors],
+    [monitors]
   );
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function Recordings() {
       setFilteredVideosList(videos);
     } else {
       setFilteredVideosList(
-        videos.filter((video) => video.mid === selectedMonitor.id),
+        videos.filter((video) => video.mid === selectedMonitor.id)
       );
     }
 
@@ -116,62 +117,75 @@ export default function Recordings() {
   }
 
   return (
-    <div className="h-full overflow-hidden">
-      <main className="h-full p-1 container mx-auto max-w-(--breakpoint-lg) flex flex-col overflow-hidden">
-        <div
-          ref={containerRef}
-          data-close={isDrawerOpen ? true : undefined}
-          className="w-full max-h-full duration-1000 data-close:max-h-0 data-close:landscape:max-h-full data-close:lg:landscape:max-h-0 data-close:landscape:duration-0 data-close:landscape:lg:duration-1000"
-        >
-          <VideoPlayer
-            title={selectedVideo?.filename}
-            src={selectedVideo?.src}
-            seekNext={seekNextVideo}
-          />
-        </div>
-
-        <div className="w-full text-center z-10 bg-gray-100 dark:bg-zinc-900 -mb-2">
-          <FontAwesomeIcon
-            onClick={() => toggleCarouselDrawer()}
-            icon={faAngleUp}
-            className="duration-500 cursor-pointer data-active:rotate-180"
-            data-active={isDrawerOpen ? true : undefined}
-            size="2x"
-          />
-        </div>
-
-        <Carousel
-          isLocked={isCarouselLocked}
-          sections={[
-            {
-              label: selectedMonitor === "all" ? "All" : selectedMonitor.name,
-              node: (
-                <RecordingsList
-                  key={"0"}
-                  videosList={filteredVideosList}
-                  selectedVideo={selectedVideo}
-                  setSelectedVideo={setSelectedVideo}
-                  onScroll={handleScroll}
-                  onScrollEnd={handleScrollEnd}
-                  isLoading={isLoading}
-                  nothingToLoad={nothingToLoad}
-                />
-              ),
-            },
-            {
-              label: "Filters",
-              node: (
-                <SourceSelector
-                  key={"1"}
-                  monitors={monitorsList}
-                  selectedMonitor={selectedMonitor}
-                  setSelectedMonitor={setSelectedMonitor}
-                />
-              ),
-            },
-          ]}
+    <main className="grow p-1 container mx-auto max-w-4xl flex flex-col overflow-hidden">
+      <div
+        ref={containerRef}
+        data-close={isDrawerOpen || undefined}
+        className="w-full max-h-full duration-1000 data-close:max-h-0 data-close:landscape:max-h-full data-close:lg:landscape:max-h-0 data-close:landscape:duration-0 data-close:landscape:lg:duration-1000"
+      >
+        <VideoPlayer
+          title={selectedVideo?.filename}
+          src={selectedVideo?.src}
+          seekNext={seekNextVideo}
         />
-      </main>
-    </div>
+      </div>
+
+      <div className="w-full text-center z-10 bg-gray-100 dark:bg-zinc-900 -mb-2">
+        <FontAwesomeIcon
+          onClick={() => toggleCarouselDrawer()}
+          icon={faAngleUp}
+          className="duration-500 cursor-pointer data-active:rotate-180"
+          data-active={isDrawerOpen || undefined}
+          size="2x"
+        />
+      </div>
+
+      <Carousel
+        className="flex w-full h-full overflow-hidden"
+        isLocked={isCarouselLocked}
+        selectors={({
+          selectedIndex,
+          selectIndex,
+        }: {
+          selectedIndex: number;
+          selectIndex: (index: number) => void;
+        }) => (
+          <>
+            <CarouselButton
+              onClick={() => selectIndex(0)}
+              align="left"
+              disabled={selectedIndex === 0}
+            >
+              {selectedMonitor === "all" ? "All" : selectedMonitor.name}
+            </CarouselButton>
+
+            <CarouselButton
+              onClick={() => selectIndex(1)}
+              align="right"
+              disabled={selectedIndex === 1}
+            >
+              Filters
+            </CarouselButton>
+          </>
+        )}
+      >
+        <RecordingsList
+          key={"0"}
+          videos={filteredVideosList}
+          selectedVideo={selectedVideo}
+          setSelectedVideo={setSelectedVideo}
+          onScroll={handleScroll}
+          onScrollEnd={handleScrollEnd}
+          isLoading={isLoading}
+          nothingToLoad={nothingToLoad}
+        />
+        <SourceSelector
+          key={"1"}
+          monitors={monitorsList}
+          selectedMonitor={selectedMonitor}
+          setSelectedMonitor={setSelectedMonitor}
+        />
+      </Carousel>
+    </main>
   );
 }
