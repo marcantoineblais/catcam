@@ -9,7 +9,7 @@ const publicRoutes = [
   "/api/auth/session",
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
   if (publicRoutes.includes(requestedPath)) {
     const response = NextResponse.next();
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     response.headers.set("x-pathname", requestedPath);
     return response;
   } catch (error) {
-    console.error("[MIDDLEWARE] Unauthorized access to", requestedPath, error);
+    console.error("[PROXY] Unauthorized access to", requestedPath, error);
     const host =
       request.headers.get("x-forwarded-host") || request.headers.get("host");
     const proto = request.headers.get("x-forwarded-proto") || "http";
