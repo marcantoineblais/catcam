@@ -32,6 +32,13 @@ export default function useCarousel({
   const timer = useRef<NodeJS.Timeout | number>(0);
   const itemsNumber = useMemo(() => children.length, [children]);
 
+  const resetTimer = () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setScrollDirection(null);
+    }, 200);
+  }
+
   const snapToSelection = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -133,13 +140,6 @@ export default function useCarousel({
     setIsScrolling(false);
     clearTimeout(timer.current);
   }, [snapToSelection]);
-
-  function resetTimer() {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setScrollDirection(null);
-    }, 200);
-  }
 
   useEffect(() => {
     const resize = () => {

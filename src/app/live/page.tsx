@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { startTransition, useEffect, useMemo, useRef, useState } from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import { Monitor } from "@/src/models/monitor";
@@ -30,7 +30,7 @@ export default function LiveStream() {
     if (!streams) return;
 
     const index = streams.length > 1 && !isHQ ? 1 : 0;
-    setVideoSource("api" + streams[index]);
+    startTransition(() => setVideoSource("api" + streams[index]));
   }, [selectedMonitor, isHQ]);
 
   return (

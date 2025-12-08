@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  startTransition,
   useCallback,
   useContext,
   useEffect,
@@ -47,7 +48,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isOpen) {
-      setIsVisible(false);
+      startTransition(() => {
+        setIsVisible(false);
+      });
       return;
     }
 

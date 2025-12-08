@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { startTransition, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import Logo from "../Logo";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
@@ -68,8 +68,10 @@ export default function VideoPlayer({
   }, [src, videoRef, isLiveStream]);
 
   useEffect(() => {
-    setIsBuffering(true);
-    setIsLoaded(false);
+    startTransition(() => {
+      setIsBuffering(true);
+      setIsLoaded(false);
+    });
   }, [src]);
 
   function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
@@ -94,13 +96,13 @@ export default function VideoPlayer({
     >
       <div
         ref={videoContainerRef}
-        className="relative aspect-[16/9] w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10"
+        className="relative aspect-video w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10"
       >
         {!src && !isLiveStream && (
           <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />
         )}
 
-        {src && videoRef.current && isBuffering && (
+        {src && isBuffering && (
           <div className="absolute inset-0 flex justify-center items-center">
             <Loader />
           </div>

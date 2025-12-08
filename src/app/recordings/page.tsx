@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingsList from "./RecordingsList";
 import { Monitor } from "@/src/models/monitor";
@@ -38,19 +44,21 @@ export default function Recordings() {
   useEffect(() => {
     if (!selectedVideo) return;
 
-    setIsDrawerOpen(false);
+    startTransition(() => setIsDrawerOpen(false));
   }, [selectedVideo]);
 
   useEffect(() => {
-    if (selectedMonitor === "all") {
-      setFilteredVideosList(videos);
-    } else {
-      setFilteredVideosList(
-        videos.filter((video) => video.mid === selectedMonitor.id)
-      );
-    }
+    startTransition(() => {
+      if (selectedMonitor === "all") {
+        setFilteredVideosList(videos);
+      } else {
+        setFilteredVideosList(
+          videos.filter((video) => video.mid === selectedMonitor.id)
+        );
+      }
 
-    setNothingToLoad(false);
+      setNothingToLoad(false);
+    });
   }, [videos, selectedMonitor]);
 
   async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
