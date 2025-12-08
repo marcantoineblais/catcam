@@ -344,7 +344,10 @@ export default function VideoPlayerOverlay({
         <div className="w-full py-1.5 flex justify-between items-center grow">
           <div>
             {isLive ? (
-              <div className="relative grow animate-pulse data-[online=false]:text-red-700" data-online={isStreamOnline}>
+              <div
+                className="relative grow animate-pulse data-[online=false]:text-red-700"
+                data-online={isStreamOnline}
+              >
                 <FontAwesomeIcon icon={faVideo} className="pe-1" size="xl" />
                 <span>LIVE</span>
               </div>

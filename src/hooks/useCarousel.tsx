@@ -37,7 +37,7 @@ export default function useCarousel({
     timer.current = setTimeout(() => {
       setScrollDirection(null);
     }, 200);
-  }
+  };
 
   const snapToSelection = useCallback(() => {
     const container = containerRef.current;
@@ -71,7 +71,7 @@ export default function useCarousel({
       setSelectedIndex(index);
       setPosition(scrollPosition);
     },
-    [itemsNumber]
+    [itemsNumber],
   );
 
   const handleTouchStart = useCallback(
@@ -85,7 +85,7 @@ export default function useCarousel({
       setPreviousPosition(clientX);
       setPreviousYPosition(clientY);
     },
-    [isLocked]
+    [isLocked],
   );
 
   const handleTouchMove = useCallback(
@@ -128,7 +128,7 @@ export default function useCarousel({
       previousPosition,
       previousYPosition,
       scrollDirection,
-    ]
+    ],
   );
 
   const handleTouchEnd = useCallback(() => {

@@ -14,17 +14,17 @@ export class ShinobiService {
     if (!authToken || !groupKey) return [];
 
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/monitor/${groupKey}`
+      `${SERVER_URL}/${authToken}/monitor/${groupKey}`,
     );
 
     if (!response.ok) {
       throw new Error("Failed to fetch monitors");
     }
-    
+
     const data = await response.json();
     if (data.ok === false) {
       console.error(
-        "[FetchMonitors] Token was revoked by server. User needs to log in again."
+        "[FetchMonitors] Token was revoked by server. User needs to log in again.",
       );
       throw new Error("Invalid monitors data");
     }
@@ -40,7 +40,7 @@ export class ShinobiService {
     });
 
     monitors.sort((m1: Monitor, m2: Monitor) =>
-      m1.name.localeCompare(m2.name) > 0 ? 1 : -1
+      m1.name.localeCompare(m2.name) > 0 ? 1 : -1,
     );
 
     return monitors;
@@ -55,12 +55,12 @@ export class ShinobiService {
       authToken?: string | null;
       groupKey?: string | null;
       searchParams?: string;
-    } = { authToken: null, groupKey: null, searchParams: "" }
+    } = { authToken: null, groupKey: null, searchParams: "" },
   ) {
     if (!authToken || !groupKey) return [];
 
     const response = await fetch(
-      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`
+      `${SERVER_URL}/${authToken}/videos/${groupKey}?${searchParams}`,
     );
 
     if (!response.ok) {
@@ -70,7 +70,7 @@ export class ShinobiService {
     const data = await response.json();
     if (data.ok === false) {
       console.error(
-        "[FetchVideos] Token was revoked by server. User needs to log in again."
+        "[FetchVideos] Token was revoked by server. User needs to log in again.",
       );
       throw new Error("Invalid Videos data");
     }
@@ -80,7 +80,7 @@ export class ShinobiService {
       const thumbnailTime = new Date(video.time);
       thumbnailTime.setSeconds(thumbnailTime.getSeconds() + 7);
       const thumbPath = `${getFullDate(thumbnailTime)}/${getDateTimeUrl(
-        thumbnailTime
+        thumbnailTime,
       )}.jpg`;
       const thumbUrl = `/${authToken}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
 

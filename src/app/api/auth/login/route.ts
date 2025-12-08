@@ -22,7 +22,7 @@ async function requestLogin({
     },
     body: JSON.stringify(creds),
   });
-  
+
   if (response.ok) {
     return await response.json();
   } else {

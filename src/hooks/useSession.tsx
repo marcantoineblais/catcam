@@ -15,7 +15,9 @@ import { getDateTime } from "../libs/formatDate";
 type SessionContextType = {
   session: Session;
   getSession: () => Promise<any>;
-  updateSession: (data: Partial<Session> | ((prev: Session) => Partial<Session>)) => void;
+  updateSession: (
+    data: Partial<Session> | ((prev: Session) => Partial<Session>),
+  ) => void;
   signIn: (data: any) => Promise<{ ok: boolean; session?: Session }>;
   signOut: () => Promise<void>;
 };
@@ -120,7 +122,7 @@ export function SessionProvider({
         };
       });
     },
-    []
+    [],
   );
 
   const signIn = useCallback(
@@ -146,7 +148,7 @@ export function SessionProvider({
         throw error;
       }
     },
-    [getSession, router]
+    [getSession, router],
   );
 
   const signOut = useCallback(async () => {

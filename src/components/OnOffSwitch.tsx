@@ -22,18 +22,24 @@ export default function OnOffSwitch({
   ...props
 }: OnOffSwitchProps) {
   const radius = height / 2;
-  const totalWidth = (width - radius) * 2
+  const totalWidth = (width - radius) * 2;
 
   return (
     <button
       className={twMerge(
         "text-sm font-bold rounded-full text-white box-content! border-2 border-gray-500 dark:border-zinc-500 overflow-hidden ease-in-out cursor-pointer disabled:opacity-50 focus:outline-none disabled:cursor-default",
-        className
+        className,
       )}
       style={{ width, height, ...style }}
       {...props}
     >
-      <div className="relative h-full flex duration-500" style={{ width: totalWidth, left: isOn ? 0 : -(totalWidth / 2) + radius}}>
+      <div
+        className="relative h-full flex duration-500"
+        style={{
+          width: totalWidth,
+          left: isOn ? 0 : -(totalWidth / 2) + radius,
+        }}
+      >
         <div className="px-1.5 w-full h-full flex justify-start items-center rounded-l-full bg-sky-700 dark:bg-sky-700">
           {onLabel}
         </div>

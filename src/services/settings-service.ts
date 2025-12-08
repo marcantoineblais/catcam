@@ -20,7 +20,7 @@ export class SettingsService {
       const settingsPath = path.join(
         process.cwd(),
         "user-settings",
-        `${email}.json`
+        `${email}.json`,
       );
       const data = await fs.promises.readFile(settingsPath, {
         encoding: "utf-8",
@@ -72,7 +72,7 @@ export class SettingsService {
       JSON.stringify(settings, null, 2),
       {
         encoding: "utf-8",
-      }
+      },
     );
 
     return settings;

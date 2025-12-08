@@ -9,20 +9,20 @@ export const POST = withAdminRole(async (request: NextRequest) => {
     if (!token || !token.authToken) {
       return NextResponse.json(
         { ok: false, message: "unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const { monitorId, monitorMode } = await request.json();
     const url = new URL(
       `${token.authToken}/monitor/${token.groupKey}/${monitorId}/${monitorMode}`,
-      SERVER_URL
+      SERVER_URL,
     );
 
     const response = await fetch(url.toString());
     if (!response.ok) {
       throw new Error(
-        "Failed to update monitor " + monitorId + ": " + response.statusText
+        "Failed to update monitor " + monitorId + ": " + response.statusText,
       );
     }
 
@@ -32,7 +32,7 @@ export const POST = withAdminRole(async (request: NextRequest) => {
     console.error("[Update Monitor] Error updating monitor:", error);
     return NextResponse.json(
       { ok: false, message: "Update to monitor failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

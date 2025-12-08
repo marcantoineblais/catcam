@@ -1,6 +1,12 @@
 "use client";
 
-import React, { startTransition, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import { Monitor } from "@/src/models/monitor";
@@ -14,7 +20,7 @@ export default function LiveStream() {
   } = useSession();
 
   const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
-    monitors.find((m) => m.id === settings.camera) || monitors[0]
+    monitors.find((m) => m.id === settings.camera) || monitors[0],
   );
   const [videoSource, setVideoSource] = useState<string>();
   const [isHQ, setIsHQ] = useState<boolean>(settings.quality === "HQ");

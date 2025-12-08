@@ -20,7 +20,7 @@ export default function Settings() {
   const { openModal } = useModal();
   const [formData, setFormData] = useState(settings);
   const [switchesDisabled, setSwitchesDisabled] = useState(
-    monitors.map(() => false)
+    monitors.map(() => false),
   );
   const isAdmin = useMemo(() => permissions === "all", [permissions]);
 
@@ -74,7 +74,7 @@ export default function Settings() {
     if (isMonitorOnline(monitor) === isOn) return;
 
     setSwitchesDisabled((prev) =>
-      prev.map((p, index) => (monitors[index].id === monitor.id ? true : p))
+      prev.map((p, index) => (monitors[index].id === monitor.id ? true : p)),
     );
     const updatedStatus = {
       monitorId: monitor.id,
@@ -110,7 +110,7 @@ export default function Settings() {
       console.error("[Settings] Error updating monitor status:", error);
     }
     setSwitchesDisabled((prev) =>
-      prev.map((p, index) => (monitors[index].id === monitor.id ? false : p))
+      prev.map((p, index) => (monitors[index].id === monitor.id ? false : p)),
     );
   }
 

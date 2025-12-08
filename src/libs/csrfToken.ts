@@ -1,5 +1,10 @@
 import Tokens from "csrf";
-import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME, CSRF_TOKEN_SECRET, isProd } from "../config";
+import {
+  CSRF_COOKIE_NAME,
+  CSRF_HEADER_NAME,
+  CSRF_TOKEN_SECRET,
+  isProd,
+} from "../config";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
