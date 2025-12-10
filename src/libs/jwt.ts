@@ -1,21 +1,16 @@
 import { cookies, headers } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
-import { JWT_SIGN_SECRET, SESSION_COOKIE_NAME } from "../config";
-
-const ISSUER = "catcam_app";
-const isProd = process.env.NODE_ENV === "production";
-const sessionCookieName = SESSION_COOKIE_NAME;
-const jwtSignSecret = JWT_SIGN_SECRET;
+import { isProd, JWT_ISSUER, JWT_SIGN_SECRET, SESSION_COOKIE_NAME } from "../config";
 
 export async function getToken({ isServerAction = false } = {}) {
   const cookie = await cookies();
 
   try {
-    const signedToken = cookie.get(sessionCookieName)?.value;
+    const signedToken = cookie.get(SESSION_COOKIE_NAME)?.value;
     if (!signedToken) return null;
 
-    const { payload } = await jwtVerify(signedToken, jwtSignSecret, {
-      issuer: ISSUER,
+    const { payload } = await jwtVerify(signedToken, JWT_SIGN_SECRET, {
+      issuer: JWT_ISSUER,
       clockTolerance: 60,
     });
 
@@ -51,7 +46,7 @@ export async function getToken({ isServerAction = false } = {}) {
     };
   } catch (error) {
     console.error("[GetToken] Error validating token:", error);
-    if (!isServerAction) cookie.delete(sessionCookieName);
+    if (!isServerAction) cookie.delete(SESSION_COOKIE_NAME);
     throw error;
   }
 }
@@ -86,10 +81,10 @@ export async function createToken({
     const cookie = await cookies();
     const signedToken = await new SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-      .setIssuer(ISSUER)
-      .sign(jwtSignSecret);
+      .setIssuer(JWT_ISSUER)
+      .sign(JWT_SIGN_SECRET);
 
-    cookie.set(sessionCookieName, signedToken, {
+    cookie.set(SESSION_COOKIE_NAME, signedToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: "lax",

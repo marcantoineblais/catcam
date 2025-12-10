@@ -25,7 +25,8 @@ export async function proxy(request: NextRequest) {
     response.headers.set("x-pathname", requestedPath);
     return response;
   } catch (error) {
-    console.error("[PROXY] Unauthorized access to", requestedPath, error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`[PROXY] Unauthorized access to: ${requestedPath}. Error: ${errorMessage}`);
     const host =
       request.headers.get("x-forwarded-host") || request.headers.get("host");
     const proto = request.headers.get("x-forwarded-proto") || "http";
