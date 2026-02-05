@@ -26,12 +26,15 @@ export default function VideoCard({
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
+  const imageWidth = 160;
+  const imageHeight = 90;
+  const imageQuality = 75;
 
   useEffect(() => {
     const container = containerRef?.current;
 
     const root = container || null;
-    const rootMargin = "50%";
+    const rootMargin = "25%";
     const threshold = 0;
 
     setOptions({
@@ -67,18 +70,22 @@ export default function VideoCard({
           className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-zinc-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
         >
           <Skeleton isLoaded={imageLoaded}>
-            <Image
-              data-active={isSelected ? true : undefined}
-              className="w-full duration-200 data-active:saturate-0"
-              onLoad={onLoadHandle}
-              placeholder="empty"
-              loading="lazy"
-              width={160}
-              height={90}
-              src={thumbnail}
-              loader={imageLoader}
-              alt="Movement capture preview"
-            />
+            {isVisible ? (
+              <Image
+                data-active={isSelected ? true : undefined}
+                className="w-full duration-200 data-active:saturate-0"
+                onLoad={onLoadHandle}
+                placeholder="empty"
+                loading="lazy"
+                width={imageWidth}
+                height={imageHeight}
+                src={thumbnail}
+                loader={() => imageLoader({ src: thumbnail, width: imageWidth, height: imageHeight, quality: imageQuality })}
+                alt="Movement capture preview"
+              />
+            ) : (
+              <div className="w-full h-full" />
+            )}
           </Skeleton>
 
           <div className="w-full pt-1.5 px-3 flex justify-between items-center text-sm md:text-base">
