@@ -2,6 +2,9 @@ import path from "path";
 import fs from "fs";
 import { DEFAULT_SETTINGS } from "../config";
 
+const SETTINGS_DIR =
+  process.env.USER_SETTINGS_PATH || path.join(process.cwd(), "user-settings");
+
 export class SettingsService {
   static async getSettings(email?: string) {
     if (!email) {
@@ -17,11 +20,7 @@ export class SettingsService {
     }
 
     try {
-      const settingsPath = path.join(
-        process.cwd(),
-        "user-settings",
-        `${email}.json`,
-      );
+      const settingsPath = path.join(SETTINGS_DIR, `${email}.json`);
       const data = await fs.promises.readFile(settingsPath, {
         encoding: "utf-8",
       });
@@ -64,9 +63,8 @@ export class SettingsService {
       updatedAt: new Date().toISOString(),
     };
 
-    const dataDir = process.env.USER_SETTINGS_PATH || path.join(process.cwd(), "user-settings");
-    const settingsPath = path.join(dataDir, `${email}.json`);
-    await fs.promises.mkdir(dataDir, { recursive: true });
+    const settingsPath = path.join(SETTINGS_DIR, `${email}.json`);
+    await fs.promises.mkdir(SETTINGS_DIR, { recursive: true });
     await fs.promises.writeFile(
       settingsPath,
       JSON.stringify(settings, null, 2),
