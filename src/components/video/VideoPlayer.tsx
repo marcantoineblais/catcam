@@ -53,11 +53,13 @@ export default function VideoPlayer({
 
     let hls: Hls;
     if (isLiveStream && Hls.isSupported()) {
+      const videoSrc = `/api/stream?path=${encodeURIComponent(src)}`;
       hls = new Hls();
-      hls.loadSource(src);
+      hls.loadSource(videoSrc);
       hls.attachMedia(video);
     } else {
-      video.src = src;
+      const videoSrc = `/api/video?path=${encodeURIComponent(src)}`;
+      video.src = videoSrc;
     }
 
     return () => {

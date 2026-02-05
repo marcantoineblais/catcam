@@ -35,7 +35,7 @@ export class ShinobiService {
         name: monitor.name,
         id: monitor.mid,
         mode: monitor.mode,
-        streams: monitor.streams,
+        streams: monitor.streams.map((stream: string) => stream.replace(/^\//, "")),
         groupKey: monitor.ke,
       };
     });
@@ -83,11 +83,10 @@ export class ShinobiService {
       const thumbPath = `${getFullDate(thumbnailTime)}/${getDateTimeUrl(
         thumbnailTime,
       )}.jpg`;
-      const thumbUrl = `/${authToken}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
-
+      const thumbUrl = `${authToken}/timelapse/${groupKey}/${video.mid}/${thumbPath}`;
       return {
-        src: "api" + video.href,
-        thumbnail: "api" + thumbUrl,
+        src: video.href.replace(/^\//, ""),
+        thumbnail: thumbUrl,
         timestamp: videoTime,
         mid: video.mid,
       };

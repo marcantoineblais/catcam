@@ -1,5 +1,6 @@
 "use client";
 
+import { DOMAIN_NAME } from "@/src/config";
 import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
 import imageLoader from "@/src/libs/imageLoader";
@@ -26,15 +27,15 @@ export default function VideoCard({
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
-  const imageWidth = 160;
-  const imageHeight = 90;
+  const imageWidth = 240;
+  const imageHeight = 135;
   const imageQuality = 75;
 
   useEffect(() => {
     const container = containerRef?.current;
 
     const root = container || null;
-    const rootMargin = "25%";
+    const rootMargin = "50%";
     const threshold = 0;
 
     setOptions({
@@ -60,7 +61,7 @@ export default function VideoCard({
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
   }
-
+  
   return (
     <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
       {isVisible && (
@@ -70,22 +71,25 @@ export default function VideoCard({
           className="flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-zinc-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
         >
           <Skeleton isLoaded={imageLoaded}>
-            {isVisible ? (
-              <Image
-                data-active={isSelected ? true : undefined}
-                className="w-full duration-200 data-active:saturate-0"
-                onLoad={onLoadHandle}
-                placeholder="empty"
-                loading="lazy"
-                width={imageWidth}
-                height={imageHeight}
-                src={thumbnail}
-                loader={() => imageLoader({ src: thumbnail, width: imageWidth, height: imageHeight, quality: imageQuality })}
-                alt="Movement capture preview"
-              />
-            ) : (
-              <div className="w-full h-full" />
-            )}
+            <Image
+              data-active={isSelected ? true : undefined}
+              className="w-full duration-200 data-active:saturate-0"
+              onLoad={onLoadHandle}
+              placeholder="empty"
+              loading="lazy"
+              width={imageWidth}
+              height={imageHeight}
+              src={`${DOMAIN_NAME}/${thumbnail}`}
+              loader={() =>
+                imageLoader({
+                  src: thumbnail,
+                  width: imageWidth,
+                  height: imageHeight,
+                  quality: imageQuality,
+                })
+              }
+              alt="Movement capture preview"
+            />
           </Skeleton>
 
           <div className="w-full pt-1.5 px-3 flex justify-between items-center text-sm md:text-base">

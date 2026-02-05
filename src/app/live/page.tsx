@@ -36,7 +36,7 @@ export default function LiveStream() {
     if (!streams) return;
 
     const index = streams.length > 1 && !isHQ ? 1 : 0;
-    startTransition(() => setVideoSource("api" + streams[index]));
+    startTransition(() => setVideoSource(streams[index]));
   }, [selectedMonitor, isHQ]);
 
   return (
