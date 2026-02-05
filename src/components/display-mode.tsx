@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useSession } from "../hooks/useSession";
 import { AUTO_DARK_MODE_TIME } from "../config";
+import { TZDate } from "@date-fns/tz";
 
 export default function DisplayMode({
   children,
@@ -22,7 +23,8 @@ export default function DisplayMode({
       return "";
     } else {
       const { start, end } = AUTO_DARK_MODE_TIME;
-      const hour = new Date().getHours();
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const hour = new TZDate(new Date(), userTimeZone).getHours();
       return hour < end || hour >= start ? "dark" : "";
     }
   }, [settings.mode]);
