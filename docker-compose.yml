@@ -22,8 +22,8 @@ services:
     volumes:
       - /data/user-settings:/data/user-settings
 
-  volumes:
-    - /data/user-settings:
+volumes:
+  - /data/user-settings:
 
 
 
