@@ -36,6 +36,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/fscreen": "^1.0.4"
+    "@types/fscreen": "^1.0.4",
+    "baseline-browser-mapping": "^2.9.19"
   }
 }

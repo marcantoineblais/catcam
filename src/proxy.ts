@@ -27,7 +27,9 @@ export async function proxy(request: NextRequest) {
     return response;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(`[PROXY] Unauthorized access to: ${requestedPath}. Error: ${errorMessage}`);
+    console.error(
+      `[PROXY] Unauthorized access to: ${requestedPath}. Error: ${errorMessage}`,
+    );
     if (isApiRequest) {
       return NextResponse.json(
         { ok: false, message: "unauthorized" },
@@ -45,5 +47,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!_next|\\.well-known|favicon.ico|manifest.webmanifest|robots.txt).*)",
+  matcher:
+    "/((?!_next|\\.well-known|favicon.ico|manifest.webmanifest|robots.txt).*)",
 };

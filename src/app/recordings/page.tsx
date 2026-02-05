@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 import CarouselButton from "@/src/components/carousel/CarouselButton";
+import { filterNewVideos } from "@/src/libs/filter-new-videos";
 
 export default function Recordings() {
   const {
@@ -85,12 +86,12 @@ export default function Recordings() {
 
     if (response.ok) {
       const newVideos = await response.json();
-
       if (newVideos.length === 0) {
         setNothingToLoad(true);
       } else {
-        const updatedVideos = [...videos, ...newVideos];
-        updateSession({ videos: updatedVideos });
+        updateSession((prev) => ({
+          videos: filterNewVideos([...prev.videos, ...newVideos]),
+        }));
       }
     }
 

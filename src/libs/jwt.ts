@@ -1,6 +1,11 @@
 import { cookies, headers } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
-import { isProd, JWT_ISSUER, JWT_SIGN_SECRET, SESSION_COOKIE_NAME } from "../config";
+import {
+  isProd,
+  JWT_ISSUER,
+  JWT_SIGN_SECRET,
+  SESSION_COOKIE_NAME,
+} from "../config";
 
 export async function getToken({ isServerAction = false } = {}) {
   const cookie = await cookies();

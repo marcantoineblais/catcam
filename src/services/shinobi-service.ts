@@ -1,3 +1,4 @@
+import { TZDate } from "@date-fns/tz";
 import { SERVER_URL } from "../config";
 import { getDateTimeUrl, getFullDate } from "../libs/formatDate";
 import { Monitor } from "../models/monitor";
@@ -76,8 +77,8 @@ export class ShinobiService {
     }
 
     const videos: Video[] = data.videos.map((video: any) => {
-      const videoTime = new Date(video.time);
-      const thumbnailTime = new Date(video.time);
+      const videoTime = new TZDate(video.time, "UTC");
+      const thumbnailTime = new TZDate(video.time, "UTC");
       thumbnailTime.setSeconds(thumbnailTime.getSeconds() + 7);
       const thumbPath = `${getFullDate(thumbnailTime)}/${getDateTimeUrl(
         thumbnailTime,

@@ -5,12 +5,15 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useRouter } from "next/navigation";
 import { Session } from "../models/session";
 import { DEFAULT_SETTINGS } from "../config";
 import { getDateTime } from "../libs/formatDate";
+import { TZDate } from "@date-fns/tz";
+import { filterNewVideos } from "../libs/filter-new-videos";
 
 type SessionContextType = {
   session: Session;
@@ -48,24 +51,32 @@ export function SessionProvider({
 }: SessionProviderProps) {
   const [session, setSession] = useState<Session>(initialSession);
   const router = useRouter();
+  const firstVideoTime = useRef(session.videos[0]?.timestamp || null);
+  const videoRefreshRate = 30000; // 30 seconds
 
+  // Fetch newer videos every 30 seconds
   useEffect(() => {
     if (!session.authToken) return;
 
     const fetchNewVideos = async () => {
-      const firstVideoTime = session.videos[0]?.timestamp || null;
-      const searchParams = new URLSearchParams({
-        start: firstVideoTime ? getDateTime(new Date(firstVideoTime)) : "",
-        startOperator: firstVideoTime ? ">" : "",
-      });
+      const time = firstVideoTime.current;
+      let searchParams = null;
+      if (time) {
+        searchParams = new URLSearchParams({
+          start: getDateTime(new TZDate(time, "UTC")),
+          startOperator: ">",
+        });
+      }
 
       try {
         const response = await fetch(`/api/videos/?${searchParams}`);
         if (response.ok) {
           const newVideos = await response.json();
           if (newVideos.length > 0) {
-            const videos = [...newVideos, ...session.videos];
-            setSession((prev) => ({ ...prev, videos }));
+            setSession((prev) => ({
+              ...prev,
+              videos: filterNewVideos([...newVideos, ...prev.videos]),
+            }));
           }
         } else {
           console.error("Failed to fetch new videos:", response.statusText);
@@ -75,9 +86,14 @@ export function SessionProvider({
       }
     };
 
-    const timeout = setInterval(fetchNewVideos, 30000); // Fetch new videos every 30 seconds
+    const timeout = setInterval(fetchNewVideos, videoRefreshRate); // Fetch new videos every 30 seconds
     return () => clearInterval(timeout);
-  }, [session.videos, session.authToken]);
+  }, [session.authToken]);
+
+  // Update first video time when videos change
+  useEffect(() => {
+    firstVideoTime.current = session.videos[0]?.timestamp || null;
+  }, [session.videos]);
 
   // Renew token and update session data
   const getSession = useCallback(async () => {
