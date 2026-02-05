@@ -19,5 +19,11 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-    environment:
-      - TZ=America/Toronto
+    volumes:
+      - /data/user-settings:/data/user-settings
+
+  volumes:
+    - /data/user-settings:
+
+
+
