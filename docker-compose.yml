@@ -20,10 +20,10 @@ services:
       timeout: 5s
       retries: 3
     volumes:
-      - user-settings:/data/user-settings
+      - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
 
 volumes:
-  - user-settings:
+  user-settings:
 
 
 

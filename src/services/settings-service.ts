@@ -64,7 +64,7 @@ export class SettingsService {
       updatedAt: new Date().toISOString(),
     };
 
-    const dataDir = path.join(process.cwd(), "user-settings");
+    const dataDir = process.env.USER_SETTINGS_PATH || path.join(process.cwd(), "user-settings");
     const settingsPath = path.join(dataDir, `${email}.json`);
     await fs.promises.mkdir(dataDir, { recursive: true });
     await fs.promises.writeFile(
