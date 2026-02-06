@@ -41,14 +41,17 @@ export async function GET(request: NextRequest) {
     MANIFEST_TYPES.some((t) => contentType.includes(t));
 
   if (isManifest) {
-    const basePath = path.includes("/") ? path.slice(0, path.lastIndexOf("/") + 1) : "";
+    const basePath = path.includes("/")
+      ? path.slice(0, path.lastIndexOf("/") + 1)
+      : "";
     const text = await upstream.text();
     const baseUrl = `${DOMAIN_NAME}/api/stream`;
     const lines = text.split(/\r?\n/);
     const rewritten = lines.map((line) => {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("#")) return line;
-      if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return line;
+      if (trimmed.startsWith("http://") || trimmed.startsWith("https://"))
+        return line;
       const segmentPath = basePath + trimmed;
       return `${baseUrl}?path=${encodeURIComponent(segmentPath)}`;
     });

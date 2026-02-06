@@ -61,7 +61,7 @@ export default function VideoCard({
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
     setImageLoaded(e.currentTarget.complete);
   }
-  
+
   return (
     <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
       {isVisible && (

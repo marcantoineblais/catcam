@@ -35,7 +35,9 @@ export class ShinobiService {
         name: monitor.name,
         id: monitor.mid,
         mode: monitor.mode,
-        streams: monitor.streams.map((stream: string) => stream.replace(/^\//, "")),
+        streams: monitor.streams.map((stream: string) =>
+          stream.replace(/^\//, ""),
+        ),
         groupKey: monitor.ke,
       };
     });

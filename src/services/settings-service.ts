@@ -8,7 +8,10 @@ const SETTINGS_DIR =
 
 /** Predictable, filesystem-safe filename from email (same input → same hash). */
 function safeFilename(email: string): string {
-  return crypto.createHash("sha256").update(email.trim().toLowerCase()).digest("hex");
+  return crypto
+    .createHash("sha256")
+    .update(email.trim().toLowerCase())
+    .digest("hex");
 }
 
 export class SettingsService {

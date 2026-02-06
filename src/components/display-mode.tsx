@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useLayoutEffect, useCallback, startTransition, useMemo } from "react";
+import {
+  useState,
+  useLayoutEffect,
+  useCallback,
+  startTransition,
+  useMemo,
+} from "react";
 import { useSession } from "../hooks/useSession";
 import { AUTO_DARK_MODE_TIME } from "../config";
 import { TZDate } from "@date-fns/tz";
@@ -16,13 +22,18 @@ export default function DisplayMode({
     session: { settings },
   } = useSession();
 
-  const DISPLAY_MODES_CLASSES = useMemo(() => ({
-    dark: "dark",
-    light: "",
-  }), []);
+  const DISPLAY_MODES_CLASSES = useMemo(
+    () => ({
+      dark: "dark",
+      light: "",
+    }),
+    [],
+  );
 
-  const [darkModeClass, setDarkModeClass] = useState(DISPLAY_MODES_CLASSES.light);
-  
+  const [darkModeClass, setDarkModeClass] = useState(
+    DISPLAY_MODES_CLASSES.light,
+  );
+
   const getDarkModeClass = useCallback(() => {
     if (settings.mode === "dark") {
       return DISPLAY_MODES_CLASSES.dark;

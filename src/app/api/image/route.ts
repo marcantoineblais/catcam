@@ -16,25 +16,35 @@ export async function GET(request: NextRequest) {
   const height = h ? parseInt(h, 10) : undefined;
   const quality = q ? Math.min(100, Math.max(1, parseInt(q, 10))) : 80;
 
-  if (width !== undefined && (Number.isNaN(width) || width < 1 || width > 2000)) {
+  // Validate width and height
+  if (
+    width !== undefined &&
+    (Number.isNaN(width) || width < 1 || width > 2000)
+  ) {
     return NextResponse.json({ error: "Invalid width" }, { status: 400 });
   }
-  if (height !== undefined && (Number.isNaN(height) || height < 1 || height > 2000)) {
+  if (
+    height !== undefined &&
+    (Number.isNaN(height) || height < 1 || height > 2000)
+  ) {
     return NextResponse.json({ error: "Invalid height" }, { status: 400 });
   }
 
+  // Fetch the image from the shinobi server
   const upstreamUrl = `${SERVER_URL}/${path}`;
   const upstream = await fetch(upstreamUrl);
-  
+
   if (!upstream.ok) {
     return new NextResponse(null, { status: upstream.status });
   }
 
+  // Convert the response to a buffer
   const buffer = Buffer.from(await upstream.arrayBuffer());
   if (buffer.length === 0) {
     return new NextResponse(null, { status: 502 });
   }
 
+  // Resize the image if width or height is provided
   let result: Buffer;
   try {
     let pipeline = sharp(buffer);
