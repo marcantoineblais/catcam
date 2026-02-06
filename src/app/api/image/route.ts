@@ -1,4 +1,4 @@
-import { DOMAIN_NAME, SERVER_URL } from "@/src/config";
+import { SERVER_URL } from "@/src/config";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
@@ -24,11 +24,8 @@ export async function GET(request: NextRequest) {
   }
 
   const upstreamUrl = `${SERVER_URL}/${path}`;
-  const headers = new Headers();
-  const cookie = request.headers.get("cookie");
-  if (cookie) headers.set("cookie", cookie);
-
-  const upstream = await fetch(upstreamUrl, { headers });
+  const upstream = await fetch(upstreamUrl);
+  
   if (!upstream.ok) {
     return new NextResponse(null, { status: upstream.status });
   }
