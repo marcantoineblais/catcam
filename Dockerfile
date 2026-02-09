@@ -17,8 +17,9 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-COPY --from=builder /app/.next ./.next
+# Copy standalone build output
 COPY --from=builder /app/public ./public
-COPY stack.env .
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-CMD ["npm", "start"]
+CMD ["npm", "server.js"]
