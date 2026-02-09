@@ -14,12 +14,12 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-# Copy standalone build output
-COPY --from=builder /app/public ./public
+# Standalone output is self-contained; no npm ci needed
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
-CMD ["npm", "server.js"]
+# Env file for runtime (SERVER_URL, DOMAIN_NAME, etc.)
+COPY stack.env .env
+
+CMD ["node", "server.js"]
