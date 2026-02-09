@@ -3,8 +3,6 @@ services:
     image: catcam:latest
     container_name: catcam
     build: .
-    env_file:
-      - .env
     ports:
       - "${PORT}:${PORT}"
     restart: unless-stopped
