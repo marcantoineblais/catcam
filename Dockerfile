@@ -16,7 +16,6 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-
-COPY stack.env .env
+COPY --from=builder /app/stack.env .env
 
 CMD ["npm", "start"]
