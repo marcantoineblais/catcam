@@ -1,9 +1,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-ARG NEXT_PUBLIC_DOMAIN_NAME
-ENV NEXT_PUBLIC_DOMAIN_NAME=$NEXT_PUBLIC_DOMAIN_NAME
-
 COPY package*.json ./
 RUN npm ci
 
