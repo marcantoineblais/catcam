@@ -78,7 +78,7 @@ export class ShinobiService {
       throw new Error("Invalid Videos data");
     }
 
-    const serverTZ = process.env.SERVER_TZ || "UTC";
+    const serverTZ = process.env.SERVER_TIMEZONE || "UTC";
     const videos: Video[] = data.videos.map((video: any) => {
       const videoTime = new TZDate(video.time, serverTZ);
       const thumbnailTime = new TZDate(video.time, serverTZ);
