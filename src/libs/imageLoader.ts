@@ -7,15 +7,13 @@ export default function imageLoader({
   width,
   height,
   quality,
-  baseUrl = "",
 }: {
   src?: string;
   width?: number;
   height?: number;
   quality?: number;
-  baseUrl?: string;
 }) {
-  if (!src) return baseUrl;
+  if (!src) return "";
 
   const params = new URLSearchParams();
   params.set("path", src);
@@ -23,5 +21,5 @@ export default function imageLoader({
   if (height) params.set("h", height.toString());
   if (quality) params.set("q", quality.toString());
 
-  return `${baseUrl}/api/image?${params}`;
+  return `api/image?${params}`;
 }

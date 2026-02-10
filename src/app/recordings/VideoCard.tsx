@@ -1,6 +1,5 @@
 "use client";
 
-import { useConfig } from "@/src/hooks/use-config";
 import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
 import imageLoader from "@/src/libs/imageLoader";
@@ -23,7 +22,6 @@ export default function VideoCard({
   containerRef?: React.RefObject<HTMLDivElement | null>;
   onClick?: MouseEventHandler;
 }) {
-  const { domainName } = useConfig();
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
@@ -80,14 +78,13 @@ export default function VideoCard({
               loading="lazy"
               width={imageWidth}
               height={imageHeight}
-              src={`${domainName}/${thumbnail}`}
+              src={`/${thumbnail}`}
               loader={() =>
                 imageLoader({
                   src: thumbnail,
                   width: imageWidth,
                   height: imageHeight,
                   quality: imageQuality,
-                  baseUrl: domainName,
                 })
               }
               alt="Movement capture preview"

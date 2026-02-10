@@ -8,11 +8,10 @@ import Navbar from "../components/navbar/Navbar";
 import { redirect } from "next/navigation";
 import DisplayMode from "../components/display-mode";
 import { headers } from "next/headers";
-import { DEFAULT_SETTINGS, DOMAIN_NAME } from "../config";
+import { DEFAULT_SETTINGS } from "../config";
 import { SessionService } from "../services/session-service";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
-import { ConfigProvider } from "../hooks/use-config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,9 +57,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getSession();
-  const config = {
-    domainName: DOMAIN_NAME,
-  };
 
   return (
     <html lang="en">
@@ -68,14 +64,12 @@ export default async function RootLayout({
         className={`${inter.className} h-screen w-screen max-w-screen max-h-screen overflow-x-hidden`}
       >
         <SessionProvider initialSession={session}>
-          <ConfigProvider config={config}>
-            <ModalProvider>
-              <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
-                <Navbar />
-                {children}
-              </DisplayMode>
-            </ModalProvider>
-          </ConfigProvider>
+          <ModalProvider>
+            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
+              <Navbar />
+              {children}
+            </DisplayMode>
+          </ModalProvider>
         </SessionProvider>
       </body>
     </html>
