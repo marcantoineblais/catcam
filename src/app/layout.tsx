@@ -8,11 +8,11 @@ import Navbar from "../components/navbar/Navbar";
 import { redirect } from "next/navigation";
 import DisplayMode from "../components/display-mode";
 import { headers } from "next/headers";
-import { DEFAULT_SETTINGS, SERVER_URL } from "../config";
+import { DEFAULT_SETTINGS, DOMAIN_NAME } from "../config";
 import { SessionService } from "../services/session-service";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
-import { ConfigProvider } from "../hooks/use-context";
+import { ConfigProvider } from "../hooks/use-config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,7 +59,8 @@ export default async function RootLayout({
 }) {
   const session = await getSession();
   const config = {
-    domainName: SERVER_URL,
+    domainName: DOMAIN_NAME,
+    autoDarkModeTime: AUTO_DARK_MODE_TIME,
   };
 
   return (

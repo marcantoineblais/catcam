@@ -54,12 +54,12 @@ A Next.js frontend for viewing **Shinobi** camera feeds: live streams and record
 
 ### Scripts
 
-| Command        | Description              |
-|----------------|--------------------------|
-| `npm run dev`  | Start dev server         |
-| `npm run build`| Production build         |
-| `npm run start`| Run production server   |
-| `npm run lint` | Run ESLint              |
+| Command         | Description           |
+| --------------- | --------------------- |
+| `npm run dev`   | Start dev server      |
+| `npm run build` | Production build      |
+| `npm run start` | Run production server |
+| `npm run lint`  | Run ESLint            |
 
 ---
 
@@ -129,14 +129,14 @@ docker run -d \
 
 Used by the app and/or Docker.
 
-| Variable             | Required | Description |
-|----------------------|----------|-------------|
-| `DOMAIN_NAME`        | Yes      | Public URL of this app (e.g. `https://catcam.example.com` or `http://localhost:3000`). Used for cookies, redirects, and stream URLs. |
-| `SERVER_URL`         | Yes      | Base URL of the Shinobi (or compatible) API (e.g. `https://api.shinobi.example.com`). |
-| `JWT_SIGN_SECRET`    | Yes      | Secret used to sign session JWTs (e.g. base64 string). |
-| `CSRF_TOKEN_SECRET`  | Yes      | Secret used for CSRF tokens. |
-| `PORT`               | No       | Port the app listens on (default `3000`). |
-| `USER_SETTINGS_PATH` | No       | Directory for persisted user settings (e.g. `/data/user-settings`). Used with Docker volume. |
+| Variable             | Required | Description                                                                                                                                   |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DOMAIN_NAME`        | Yes      | Public URL of this app (e.g. `https://catcam.example.com` or `http://localhost:3000`). Used for cookies, redirects, and stream URLs.          |
+| `SERVER_URL`         | Yes      | Base URL of the Shinobi (or compatible) API (e.g. `https://api.shinobi.example.com`).                                                         |
+| `JWT_SIGN_SECRET`    | Yes      | Secret used to sign session JWTs (e.g. base64 string).                                                                                        |
+| `CSRF_TOKEN_SECRET`  | Yes      | Secret used for CSRF tokens.                                                                                                                  |
+| `PORT`               | No       | Port the app listens on (default `3000`).                                                                                                     |
+| `USER_SETTINGS_PATH` | No       | Directory for persisted user settings (e.g. `/data/user-settings`). Used with Docker volume.                                                  |
 | `CATCAM_IMAGE`       | No       | Docker image for docker-compose (default `catcam:latest`). Set to `ghcr.io/OWNER/catcam:latest` when using the image built by GitHub Actions. |
 
 For **client-side** code (e.g. image/stream URLs), the app uses `DOMAIN_NAME` from the **container/env at runtime** where possible; for the initial client bundle, `NEXT_PUBLIC_DOMAIN_NAME` can be passed as a **build arg** when the env file is not available during the image build (e.g. Git-only build in Portainer).
