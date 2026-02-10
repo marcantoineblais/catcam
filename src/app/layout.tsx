@@ -8,7 +8,7 @@ import Navbar from "../components/navbar/Navbar";
 import { redirect } from "next/navigation";
 import DisplayMode from "../components/display-mode";
 import { headers } from "next/headers";
-import { AUTO_DARK_MODE_TIME, DEFAULT_SETTINGS, DOMAIN_NAME } from "../config";
+import { DEFAULT_SETTINGS, DOMAIN_NAME } from "../config";
 import { SessionService } from "../services/session-service";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
@@ -60,7 +60,6 @@ export default async function RootLayout({
   const session = await getSession();
   const config = {
     domainName: DOMAIN_NAME,
-    autoDarkModeTime: AUTO_DARK_MODE_TIME,
   };
 
   return (

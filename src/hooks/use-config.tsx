@@ -4,12 +4,10 @@ import { createContext, useContext } from "react";
 
 type Config = {
   domainName: string;
-  autoDarkModeTime: { start: number; end: number };
 };
 
 const ConfigContext = createContext<Config>({
   domainName: "",
-  autoDarkModeTime: { start: 0, end: 0 },
 });
 
 export function ConfigProvider({
