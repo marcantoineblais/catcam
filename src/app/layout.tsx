@@ -12,7 +12,7 @@ import { DEFAULT_SETTINGS } from "../config";
 import { SessionService } from "../services/session-service";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
-import { ConfigProvider } from "../contexts/ConfigContext";
+import { ConfigProvider } from "../hooks/use-context";
 
 const inter = Inter({ subsets: ["latin"] });
 

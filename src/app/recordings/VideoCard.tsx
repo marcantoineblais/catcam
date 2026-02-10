@@ -1,6 +1,6 @@
 "use client";
 
-import { useConfig } from "@/src/contexts/ConfigContext";
+import { useConfig } from "@/src/hooks/use-context";
 import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
 import imageLoader from "@/src/libs/imageLoader";
