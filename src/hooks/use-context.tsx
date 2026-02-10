@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useMemo } from "react";
-import { SERVER_URL } from "../config";
+"use client";
+
+import React, { createContext, useContext } from "react";
 
 type Config = {
   domainName: string;
@@ -7,11 +8,13 @@ type Config = {
 
 const ConfigContext = createContext<Config>({ domainName: "" });
 
-export function ConfigProvider({ children }: { children: React.ReactNode }) {
-  const config = useMemo(() => ({
-    domainName: SERVER_URL,
-  }), []);
-
+export function ConfigProvider({
+  config,
+  children,
+}: {
+  config: Config;
+  children: React.ReactNode;
+}) {
   return (
     <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
   );
