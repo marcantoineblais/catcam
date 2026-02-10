@@ -1,21 +1,21 @@
-import { DOMAIN_NAME } from "../config";
-
 /**
  * Loader for Next/Image that points to our /api/image route.
- * Returns a resized/optimized image.
+ * baseUrl comes from ConfigContext (runtime) so it works per-deployment.
  */
 export default function imageLoader({
   src,
   width,
   height,
   quality,
+  baseUrl = "",
 }: {
   src?: string;
   width?: number;
   height?: number;
   quality?: number;
+  baseUrl?: string;
 }) {
-  if (!src) return DOMAIN_NAME;
+  if (!src) return baseUrl;
 
   const params = new URLSearchParams();
   params.set("path", src);
@@ -23,5 +23,5 @@ export default function imageLoader({
   if (height) params.set("h", height.toString());
   if (quality) params.set("q", quality.toString());
 
-  return `${DOMAIN_NAME}/api/image?${params}`;
+  return `${baseUrl}/api/image?${params}`;
 }

@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS = {
   quality: "HQ",
 };
 export const STREAM_EXT = "s.m3u8";
+export const SERVER_TIMEZONE = process.env.SERVER_TIMEZONE || "UTC";
 
 export const SESSION_COOKIE_NAME = isProd ? "__Secure_session" : "session";
 export const CSRF_COOKIE_NAME = isProd ? "__Secure_csrf" : "csrf";

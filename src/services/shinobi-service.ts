@@ -1,5 +1,5 @@
 import { TZDate } from "@date-fns/tz";
-import { SERVER_URL } from "../config";
+import { SERVER_TIMEZONE, SERVER_URL } from "../config";
 import { getDateTimeUrl, getFullDate } from "../libs/formatDate";
 import { Monitor } from "../models/monitor";
 import { Video } from "../models/video";
@@ -78,7 +78,7 @@ export class ShinobiService {
       throw new Error("Invalid Videos data");
     }
 
-    const serverTZ = process.env.SERVER_TIMEZONE || "UTC";
+    const serverTZ = SERVER_TIMEZONE;
     const videos: Video[] = data.videos.map((video: any) => {
       const videoTime = new TZDate(video.time, serverTZ);
       const thumbnailTime = new TZDate(video.time, serverTZ);
