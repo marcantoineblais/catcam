@@ -7,17 +7,6 @@ services:
     ports:
       - "${PORT}:${PORT}"
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://localhost:' + (process.env.PORT || 3000)).then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
 
