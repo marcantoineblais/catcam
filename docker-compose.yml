@@ -17,7 +17,7 @@ services:
     image: mariadb:10.6
     container_name: shinobi-db
     restart: unless-stopped
-    environment:
+    env_file: stack.env
     volumes:
       - shinobi_db:/var/lib/mysql
     networks:
@@ -38,8 +38,6 @@ services:
       - shinobi_plugin:/home/Shinobi/plugins
       - /dev/shm/Shinobi/streams:/dev/shm/streams
       - /mnt/catcam_videos:/mnt/cloud
-    environment:
-      PLUGIN_KEYS: ""
     networks:
       - private
       - proxy
