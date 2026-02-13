@@ -7,11 +7,18 @@ services:
     image: ${CATCAM_IMAGE:-catcam:latest}
     container_name: catcam
     env_file: stack.env
-    ports:
-      - "${PORT}:${PORT}"
     restart: unless-stopped
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
+    networks:
+      - catcam-network
+      - proxy
 
 volumes:
   user-settings:
+
+networks:
+  catcam-network:
+    external: true
+  proxy:
+    external: true
