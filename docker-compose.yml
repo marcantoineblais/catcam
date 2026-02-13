@@ -2,6 +2,8 @@
 # Set CATCAM_IMAGE in stack.env when using the CI-built image (see README).
 # All app env vars (DOMAIN_NAME, SERVER_URL, etc.) come from env_file: stack.env.
 # Do not re-list them in environment: or Compose substitutes from the host and can overwrite with empty.
+
+# POUR TEST
 services:
   catcam:
     image: ${CATCAM_IMAGE:-catcam:latest}
