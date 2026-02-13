@@ -13,11 +13,11 @@ services:
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
     networks:
-      - catcam-network
+      - shinobi-default
 
 volumes:
   user-settings:
 
 networks:
-  catcam-network:
+  shinobi-default:
     driver: bridge
