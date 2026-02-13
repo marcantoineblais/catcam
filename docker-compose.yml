@@ -12,12 +12,6 @@ services:
     restart: unless-stopped
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
-    networks:
-      - shinobi-default
 
 volumes:
   user-settings:
-
-networks:
-  shinobi-default:
-    driver: bridge
