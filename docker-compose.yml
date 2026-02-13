@@ -11,14 +11,48 @@ services:
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
     networks:
-      - catcam-network
+      - private
+      - proxy
+  db:
+    image: mariadb:10.6
+    container_name: shinobi-db
+    restart: unless-stopped
+    environment:
+    volumes:
+      - shinobi_db:/var/lib/mysql
+    networks:
+      - private
+
+  shinobi:
+    image: registry.gitlab.com/shinobi-systems/shinobi:dev
+    container_name: shinobi
+    restart: unless-stopped
+    depends_on:
+      - db
+    env_file: stack.env
+    ports:
+      - "${SHINOBI_PORT:-8080}:8080"
+    volumes:
+      - shinobi_config:/config
+      - shinobi_videos:/home/Shinobi/videos
+      - shinobi_plugin:/home/Shinobi/plugins
+      - /dev/shm/Shinobi/streams:/dev/shm/streams
+      - /mnt/catcam_videos:/mnt/cloud
+    environment:
+      PLUGIN_KEYS: ""
+    networks:
+      - private
       - proxy
 
 volumes:
   user-settings:
+  shinobi_db:
+  shinobi_config:
+  shinobi_videos:
+  shinobi_plugin:
 
 networks:
-  catcam-network:
-    external: true
+  private:
+    driver: bridge
   proxy:
     external: true
