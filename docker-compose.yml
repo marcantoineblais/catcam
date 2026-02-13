@@ -12,6 +12,12 @@ services:
     restart: unless-stopped
     volumes:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
+    networks:
+      - catcam-network
 
 volumes:
   user-settings:
+
+networks:
+  catcam-network:
+    driver: bridge
