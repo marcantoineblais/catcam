@@ -38,8 +38,9 @@ services:
       - shinobi_config:/config
       - shinobi_videos:/home/Shinobi/videos
       - shinobi_plugin:/home/Shinobi/plugins
-      - /dev/shm/streams
       - /mnt/catcam_videos:/mnt/cloud
+    tmpfs:
+      - /dev/shm/streams
     networks:
       - private
       - caddy_proxy
@@ -51,10 +52,6 @@ volumes:
   shinobi_videos:
   shinobi_plugin:
   user_settings:
-
-shinobi: 
-  tmpfs:
-    - /dev/shm/streams:
 
 networks:
   private:
