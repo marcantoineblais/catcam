@@ -52,8 +52,9 @@ volumes:
   shinobi_plugin:
   user_settings:
 
-tmpfs:
-  - /dev/shm/streams:
+shinobi: 
+  tmpfs:
+    - /dev/shm/streams:
 
 networks:
   private:
