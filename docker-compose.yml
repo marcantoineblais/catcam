@@ -35,12 +35,14 @@ services:
       - db
     env_file: stack.env
     volumes:
+      - shinobi_home:/home/Shinobi
       - shinobi_config:/config
       - shinobi_videos:/home/Shinobi/videos
       - shinobi_plugin:/home/Shinobi/plugins
       - /mnt/catcam_videos:/mnt/cloud
     tmpfs:
       - /dev/shm/streams
+      - /var/lib/mysql
     networks:
       - private
       - caddy_proxy
@@ -48,6 +50,7 @@ services:
 volumes:
   shinobi_db:
   shinobi_config:
+  shinobi_home:
   shinobi_videos:
   shinobi_plugin:
   user_settings:
