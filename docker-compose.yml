@@ -34,8 +34,6 @@ services:
     depends_on:
       - db
     env_file: stack.env
-    ports:
-      - "${SHINOBI_PORT:-8080}:8080"
     volumes:
       - shinobi_config:/config
       - shinobi_videos:/home/Shinobi/videos
