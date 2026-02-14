@@ -12,7 +12,7 @@ services:
       - user-settings:${USER_SETTINGS_PATH:-/data/user-settings}
     networks:
       - private
-      - proxy
+      - caddy_proxy
   db:
     image: mariadb:10.6
     container_name: shinobi-db
@@ -27,7 +27,6 @@ services:
       - shinobi_db:/var/lib/mysql
     networks:
       - private
-
   shinobi:
     image: registry.gitlab.com/shinobi-systems/shinobi:dev
     container_name: shinobi
@@ -45,7 +44,7 @@ services:
       - /mnt/catcam_videos:/mnt/cloud
     networks:
       - private
-      - proxy
+      - caddy_proxy
 
 volumes:
   user-settings:
@@ -57,5 +56,5 @@ volumes:
 networks:
   private:
     driver: bridge
-  proxy:
+  caddy_proxy:
     external: true
