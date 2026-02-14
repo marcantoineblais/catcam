@@ -46,7 +46,6 @@ services:
       - caddy_proxy
 
 volumes:
-  user-settings:
   shinobi_db:
   shinobi_config:
   shinobi_videos:
