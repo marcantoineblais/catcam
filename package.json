@@ -1,6 +1,6 @@
 {
   "name": "catcam",
-  "version": "2.0.3",
+  "version": "3.2.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
