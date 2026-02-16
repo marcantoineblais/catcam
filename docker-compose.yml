@@ -45,6 +45,7 @@ services:
       - /var/lib/mysql
     networks:
       - private
+      - nginx_proxy
 
 volumes:
   shinobi_db:
