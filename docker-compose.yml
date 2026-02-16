@@ -12,7 +12,7 @@ services:
       - user_settings:${USER_SETTINGS_PATH:-/data/user_settings}
     networks:
       - private
-      - caddy_proxy
+      - nginx_proxy
   db:
     image: mariadb:10.6
     container_name: shinobi-db
@@ -45,7 +45,6 @@ services:
       - /var/lib/mysql
     networks:
       - private
-      - caddy_proxy
 
 volumes:
   shinobi_db:
@@ -58,5 +57,5 @@ volumes:
 networks:
   private:
     driver: bridge
-  caddy_proxy:
+  nginx_proxy:
     external: true
