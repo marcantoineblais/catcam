@@ -4,7 +4,7 @@
 # Do not re-list them in environment: or Compose substitutes from the host and can overwrite with empty.
 services:
   catcam:
-    image: ghcr.io/marcantoineblais/catcam:3.2.3
+    image: ghcr.io/marcantoineblais/catcam:3.2.4
     container_name: catcam
     env_file: stack.env
     restart: unless-stopped
@@ -12,7 +12,7 @@ services:
       - user_settings:${USER_SETTINGS_PATH:-/data/user_settings}
     networks:
       - private
-      - nginx_proxy
+      - caddy_proxy
   db:
     image: mariadb:10.6
     container_name: shinobi-db
@@ -45,7 +45,7 @@ services:
       - /var/lib/mysql
     networks:
       - private
-      - nginx_proxy
+      - caddy_proxy
 
 volumes:
   shinobi_db:
@@ -58,5 +58,5 @@ volumes:
 networks:
   private:
     driver: bridge
-  nginx_proxy:
+  caddy_proxy:
     external: true
