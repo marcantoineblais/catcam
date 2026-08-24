@@ -96,7 +96,7 @@ export class ShinobiService {
       };
     });
 
-    videos.sort((v1, v2) => v2.timestamp.valueOf() - v1.timestamp.valueOf());
+    videos.sort((v1, v2) => v2.timestamp!.valueOf() - v1.timestamp!.valueOf());
     return videos;
   }
 }
