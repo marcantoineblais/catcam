@@ -7,11 +7,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import VideoPlayer from "../../components/video/VideoPlayer";
 import RecordingsList from "./RecordingsList";
 import { Monitor } from "@/src/models/monitor";
 import SourceSelector from "@/src/components/SourceSelector";
-import { Video } from "@/src/models/video";
 import Carousel from "@/src/components/carousel/Carousel";
 import { getDateTime } from "@/src/libs/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,6 +17,8 @@ import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "@/src/hooks/useSession";
 import CarouselButton from "@/src/components/carousel/CarouselButton";
 import { filterNewVideos } from "@/src/libs/filter-new-videos";
+import VideoPlayer from "@/src/components/video/VideoPlayer";
+import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
 
 export default function Recordings() {
   const {
@@ -26,10 +26,10 @@ export default function Recordings() {
     updateSession,
   } = useSession();
 
-  const [filteredVideosList, setFilteredVideosList] = useState<Video[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<any>();
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
-    "all",
+  const { currentVideo, setQueue } = useVideoPlayer();
+
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | null>(
+    null,
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,30 +37,30 @@ export default function Recordings() {
   const [isCarouselLocked, setIsCarouselLocked] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const monitorsList = useMemo<("all" | Monitor)[]>(
-    () => ["all", ...(monitors || [])],
+  const monitorsList = useMemo<(null | Monitor)[]>(
+    () => [null, ...(monitors || [])],
     [monitors],
   );
 
   useEffect(() => {
-    if (!selectedVideo) return;
+    if (!currentVideo) return;
 
     startTransition(() => setIsDrawerOpen(false));
-  }, [selectedVideo]);
+  }, [currentVideo]);
 
   useEffect(() => {
     startTransition(() => {
-      if (selectedMonitor === "all") {
-        setFilteredVideosList(videos);
+      if (selectedMonitor === null) {
+        setQueue(videos);
       } else {
-        setFilteredVideosList(
+        setQueue(
           videos.filter((video) => video.mid === selectedMonitor.id),
         );
       }
 
       setNothingToLoad(false);
     });
-  }, [videos, selectedMonitor]);
+  }, [videos, selectedMonitor, setQueue]);
 
   async function fetchDataOnScroll(e: React.SyntheticEvent<HTMLDivElement>) {
     if (isLoading || nothingToLoad) return;
@@ -78,7 +78,7 @@ export default function Recordings() {
 
     // This tells shinobi backend to get videos before start time (default behavior is after)
     const searchParams = new URLSearchParams({
-      start: getDateTime(lastVideoTime),
+      start: getDateTime(lastVideoTime!),
       startOperator: "<",
     });
 
@@ -102,20 +102,6 @@ export default function Recordings() {
     setIsDrawerOpen((isOpen) => !isOpen);
   }
 
-  function seekNextVideo(n: number = 1) {
-    let index =
-      filteredVideosList.findIndex((video) => video === selectedVideo) + n;
-    if (index < 0) {
-      index = 0;
-    }
-
-    if (index >= filteredVideosList.length) {
-      index = filteredVideosList.length - 1;
-    }
-
-    setSelectedVideo(filteredVideosList[index]);
-  }
-
   async function handleScroll(e: React.SyntheticEvent<HTMLDivElement>) {
     await fetchDataOnScroll(e);
     setIsCarouselLocked(true);
@@ -132,11 +118,7 @@ export default function Recordings() {
         data-close={isDrawerOpen || undefined}
         className="w-full max-h-full duration-1000 data-close:max-h-0 data-close:landscape:max-h-full data-close:lg:landscape:max-h-0 data-close:landscape:duration-0 data-close:landscape:lg:duration-1000"
       >
-        <VideoPlayer
-          title={selectedVideo?.filename}
-          src={selectedVideo?.src}
-          seekNext={seekNextVideo}
-        />
+        <VideoPlayer />
       </div>
 
       <div className="w-full text-center z-10 bg-gray-100 dark:bg-zinc-900 -mb-2">
@@ -165,7 +147,7 @@ export default function Recordings() {
               align="left"
               disabled={selectedIndex === 0}
             >
-              {selectedMonitor === "all" ? "All" : selectedMonitor.name}
+              {selectedMonitor === null ? "All" : selectedMonitor.name}
             </CarouselButton>
 
             <CarouselButton
@@ -180,9 +162,6 @@ export default function Recordings() {
       >
         <RecordingsList
           key={"0"}
-          videos={filteredVideosList}
-          selectedVideo={selectedVideo}
-          setSelectedVideo={setSelectedVideo}
           onScroll={handleScroll}
           onScrollEnd={handleScrollEnd}
           isLoading={isLoading}

@@ -1,6 +1,6 @@
 {
   "name": "catcam",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -31,7 +31,7 @@
     "next": "^16.0.8",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"

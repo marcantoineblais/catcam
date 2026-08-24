@@ -1,24 +1,18 @@
 "use client";
 
-import React, { Dispatch, useRef } from "react";
+import React, { useRef } from "react";
 import VideoCard from "./VideoCard";
-import { Video } from "@/src/models/video";
 import Loading from "@/src/components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { twMerge } from "tailwind-merge";
+import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
 
 type RecordingsListProps = {
-  videos?: Video[];
-  selectedVideo?: Video;
-  setSelectedVideo?: Dispatch<React.SetStateAction<Video | undefined>>;
   isLoading?: boolean;
   nothingToLoad?: boolean;
 } & React.ComponentProps<"div">;
 export default function RecordingsList({
-  videos = [],
-  selectedVideo,
-  setSelectedVideo = () => {},
   isLoading = false,
   nothingToLoad = false,
   className,
@@ -26,6 +20,7 @@ export default function RecordingsList({
   onScrollEnd,
   ...props
 }: RecordingsListProps) {
+  const { currentVideo, queue: videos, selectVideo } = useVideoPlayer();
   const containerRef = useRef<HTMLDivElement>(null);
 
   if (videos.length === 0 && !isLoading) {
@@ -51,7 +46,7 @@ export default function RecordingsList({
         ref={containerRef}
       >
         {videos.map((video) => {
-          const isSelected = selectedVideo === video;
+          const isSelected = video === currentVideo;
 
           return (
             <VideoCard
@@ -59,7 +54,7 @@ export default function RecordingsList({
               thumbnail={video.thumbnail}
               timestamp={video.timestamp}
               isSelected={isSelected}
-              onClick={() => setSelectedVideo(video)}
+              onClick={() => selectVideo(video)}
               containerRef={containerRef}
             />
           );

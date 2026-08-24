@@ -1,6 +1,7 @@
 import { Monitor } from "../models/monitor";
 
-export function isMonitorOnline(monitor: Monitor) {
+export function isMonitorOnline(monitor: Monitor | null) {
+  if (!monitor) return true;
   return monitor.mode === "start";
 }
 

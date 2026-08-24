@@ -1,105 +1,28 @@
 "use client";
 
-import React, { startTransition, useEffect, useRef, useState } from "react";
-import Hls from "hls.js";
-import Logo from "../Logo";
-import VideoPlayerOverlay from "./VideoPlayerOverlay";
 import Loader from "../Loader";
+import Logo from "../Logo";
+import { useVideoPlayer } from "./provider/VideoPlayerProvider";
+import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
-export default function VideoPlayer({
-  title,
-  src = "",
-  seekNext = () => {},
-  isLiveStream,
-  isStreamOnline = true,
-}: {
-  title?: string;
-  src?: string;
-  seekNext?: (n: number) => void;
-  isLiveStream?: boolean;
-  isStreamOnline?: boolean;
-}) {
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [buffer, setBuffer] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isBuffering, setIsBuffering] = useState<boolean>(true);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
+export default function VideoPlayer() {
+  const {
+    currentVideo,
+    videoRef,
+    videoEvents,
+    isBuffering,
+    isFullscreen,
+  } = useVideoPlayer();
 
-  React.useEffect(() => {
-    const toggleFullscreen = () => {
-      if (screen.orientation.type.startsWith("landscape") && !isFullscreen)
-        setIsFullscreen(true);
-
-      if (screen.orientation.type.startsWith("portrait") && isFullscreen)
-        setIsFullscreen(false);
-    };
-
-    screen.orientation.addEventListener("change", toggleFullscreen);
-
-    return () => {
-      screen.orientation.removeEventListener("change", toggleFullscreen);
-    };
-  }, [isFullscreen]);
-
-  // Use HLS plugin only when required
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video || !src) return;
-
-    let hls: Hls;
-    if (isLiveStream && Hls.isSupported()) {
-      const videoSrc = `/api/stream?path=${encodeURIComponent(src)}`;
-      hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
-    } else {
-      const videoSrc = `/api/video?path=${encodeURIComponent(src)}`;
-      video.src = videoSrc;
-    }
-
-    return () => {
-      if (hls) {
-        hls.destroy();
-      }
-    };
-  }, [src, videoRef, isLiveStream]);
-
-  useEffect(() => {
-    startTransition(() => {
-      setIsBuffering(true);
-      setIsLoaded(false);
-    });
-  }, [src]);
-
-  function setLastBuffer(e: React.SyntheticEvent<HTMLVideoElement>) {
-    const length = e.currentTarget.buffered.length;
-
-    if (length > 0) {
-      const lastBuffer = e.currentTarget.buffered.end(length - 1);
-      setBuffer(lastBuffer);
-    } else {
-      setBuffer(0);
-    }
-  }
-
-  function toggleFullscreen() {
-    setIsFullscreen(!isFullscreen);
-  }
+  const src = currentVideo?.src ?? "";
+  const isLiveStream = currentVideo?.isLiveStream ?? false;
 
   return (
     <div
       className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
-      data-fullscreen={isFullscreen ? true : undefined}
+      data-fullscreen={isFullscreen || undefined}
     >
-      <div
-        ref={videoContainerRef}
-        className="relative aspect-video w-full flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10"
-      >
+      <div className="relative aspect-video w-full max-h-dvh flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
         {!src && !isLiveStream && (
           <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />
         )}
@@ -111,45 +34,19 @@ export default function VideoPlayer({
         )}
 
         <video
-          className="w-full object-fill scale-100 bg-loading bg-no-repeat bg-center"
           ref={videoRef}
+          className="w-full h-full object-contain scale-100 bg-loading bg-no-repeat bg-center"
           autoPlay
           muted
           playsInline
           controlsList="noremoteplayback nufullscreen nodownload"
           poster=""
-          onCanPlay={(e) => {
-            setIsLoaded(true);
-            setIsBuffering(false);
-            setLastBuffer(e);
-          }}
-          onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-          onDurationChange={(e) => setDuration(e.currentTarget.duration)}
-          onProgress={setLastBuffer}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
-          onWaiting={() => setIsBuffering(true)}
+          {...videoEvents}
         >
           Your browser does not support HTML5 video.
         </video>
 
-        <VideoPlayerOverlay
-          title={title}
-          isLive={isLiveStream ? true : undefined}
-          isStreamOnline={isStreamOnline}
-          isPlaying={isPlaying}
-          isLoaded={isLoaded}
-          currentTime={currentTime}
-          setCurrentTime={setCurrentTime}
-          duration={duration}
-          buffer={buffer}
-          videoSource={src}
-          videoRef={videoRef}
-          isFullscreen={isFullscreen}
-          toggleFullscreen={toggleFullscreen}
-          seekNext={seekNext}
-        />
+        <VideoPlayerOverlay />
       </div>
     </div>
   );

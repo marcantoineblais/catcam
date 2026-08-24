@@ -92,6 +92,7 @@ export class ShinobiService {
         thumbnail: thumbUrl,
         timestamp: videoTime,
         mid: video.mid,
+        isLiveStream: video.isLiveStream,
       };
     });
 

@@ -6,9 +6,9 @@ export default function SourceSelector({
   selectedMonitor,
   setSelectedMonitor = () => {},
 }: {
-  monitors?: (Monitor | "all")[];
-  selectedMonitor?: Monitor | "all";
-  setSelectedMonitor: Dispatch<SetStateAction<Monitor | "all">>;
+  monitors?: (Monitor | null)[];
+  selectedMonitor?: Monitor | null;
+  setSelectedMonitor: Dispatch<SetStateAction<Monitor | null>>;
 }) {
   return (
     <div className="w-full h-full flex flex-wrap content-start justify-start">
@@ -27,7 +27,7 @@ export default function SourceSelector({
                 onClick={() => setSelectedMonitor(monitor)}
                 data-active={isActive}
               >
-                {monitor === "all" ? "All" : monitor.name}
+                {monitor ? monitor.name : "All"}
               </button>
             </div>
           );

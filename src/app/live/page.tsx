@@ -7,48 +7,53 @@ import React, {
   useRef,
   useState,
 } from "react";
-import VideoPlayer from "../../components/video/VideoPlayer";
 import SourceSelector from "../../components/SourceSelector";
 import { Monitor } from "@/src/models/monitor";
 import OnOffSwitch from "../../components/OnOffSwitch";
 import { useSession } from "@/src/hooks/useSession";
 import { isMonitorOnline } from "@/src/libs/monitor-status";
+import VideoPlayer from "@/src/components/video/VideoPlayer";
+import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
 
 export default function LiveStream() {
   const {
     session: { monitors, settings, permissions },
   } = useSession();
 
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | "all">(
+  const { selectVideo } = useVideoPlayer();
+
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | null>(
     monitors.find((m) => m.id === settings.camera) || monitors[0],
   );
-  const [videoSource, setVideoSource] = useState<string>();
   const [isHQ, setIsHQ] = useState<boolean>(settings.quality === "HQ");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const isOnline = useMemo(() => {
     if (permissions !== "all") return true;
-    return isMonitorOnline(selectedMonitor as Monitor);
+    return isMonitorOnline(selectedMonitor);
   }, [selectedMonitor, permissions]);
 
   useEffect(() => {
-    const streams = (selectedMonitor as Monitor).streams;
+    if (!selectedMonitor) return;
+    
+    const streams = selectedMonitor.streams;
     if (!streams) return;
 
     const index = streams.length > 1 && !isHQ ? 1 : 0;
-    startTransition(() => setVideoSource(streams[index]));
-  }, [selectedMonitor, isHQ]);
+    startTransition(() => selectVideo({ 
+      title: selectedMonitor.name,
+      src: streams[index],
+      mid: selectedMonitor.id,
+      isLiveStream: true,
+      isStreamOnline: isOnline,
+    }));
+  }, [selectedMonitor, isHQ, isOnline, selectVideo]);
 
   return (
     <div className="flex flex-col h-full">
       <main className="relative grow p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden flex flex-col">
         <div ref={containerRef} className="w-full max-h-full">
-          <VideoPlayer
-            title={(selectedMonitor as Monitor).name}
-            src={videoSource}
-            isStreamOnline={isOnline}
-            isLiveStream
-          />
+          <VideoPlayer />
         </div>
 
         <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
