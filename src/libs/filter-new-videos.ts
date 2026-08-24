@@ -10,6 +10,6 @@ export function filterNewVideos(videos: Video[]) {
     }
   });
   return uniqueVideos
-    .map((v) => ({ ...v, timestamp: new Date(v.timestamp) }))
+    .map((v) => ({ ...v, timestamp: new Date(v.timestamp!) }))
     .sort((v1, v2) => v2.timestamp.valueOf() - v1.timestamp.valueOf());
 }
