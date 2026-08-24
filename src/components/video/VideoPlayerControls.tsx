@@ -53,10 +53,7 @@ export default function VideoPlayerControls() {
   }, [next]);
 
   return (
-    <div
-      className="w-full py-1.5 flex justify-between items-center grow"
-      onClick={(event) => event.stopPropagation()}
-    >
+    <div className="w-full py-1.5 flex justify-between items-center grow">
       <div>
         {isLive ? (
           <div

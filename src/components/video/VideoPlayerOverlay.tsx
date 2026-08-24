@@ -6,12 +6,7 @@ import VideoPlayerControls from "./VideoPlayerControls";
 import VideoSeekBar from "./VideoSeekBar";
 
 export default function VideoPlayerOverlay() {
-  const {
-    currentVideo,
-    isLoaded,
-    isPlaying,
-    isFullscreen,
-  } = useVideoPlayer();
+  const { currentVideo, isLoaded, isPlaying, isFullscreen } = useVideoPlayer();
 
   const overlay = useVideoOverlay({
     isLoaded,
@@ -21,21 +16,23 @@ export default function VideoPlayerOverlay() {
   const isLive = currentVideo?.isLiveStream ?? false;
   const title = currentVideo?.title ?? "";
 
+  function handleMouseMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.pointerType === "mouse") {
+      overlay.show();
+    }
+  }
+
   return (
     <div
       className="absolute opacity-0 inset-0 duration-500 md:text-lg text-gray-50 dark:text-zinc-200 data-visible:opacity-100 data-fullscreen:fixed"
       data-visible={overlay.isVisible || undefined}
       data-fullscreen={isFullscreen || undefined}
       onClick={overlay.toggle}
-      onMouseMove={overlay.show}
+      onPointerMove={handleMouseMove}
     >
       <div
         className="invisible px-5 py-1.5 absolute top-0 left-0 duration-500 bg-gray-950/75 data-visible:visible"
-        data-visible={
-          overlay.isVisible && title
-            ? true
-            : undefined
-        }
+        data-visible={overlay.isVisible && title ? true : undefined}
       >
         <h3>{title}</h3>
       </div>
@@ -43,6 +40,7 @@ export default function VideoPlayerOverlay() {
       <div
         className="invisible px-5 py-1.5 absolute bottom-0 left-0 right-0 flex flex-col justify-between items-center duration-500 bg-gray-950/75 data-visible:visible"
         data-visible={overlay.isVisible || undefined}
+        onClick={(event) => event.stopPropagation()}
       >
         {!isLive && <VideoSeekBar />}
 
