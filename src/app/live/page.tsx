@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   startTransition,
   useEffect,
   useMemo,
