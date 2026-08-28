@@ -1,17 +1,19 @@
 export const dynamic = "force-dynamic";
 
-import React from "react";
 import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "../components/navbar/Navbar";
-import { redirect } from "next/navigation";
-import DisplayMode from "../components/display-mode";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import React from "react";
+
+import DisplayMode from "../components/display-mode";
+import Navbar from "../components/navbar/Navbar";
 import { DEFAULT_SETTINGS } from "../config";
-import { SessionService } from "../services/session-service";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
+import { SessionService } from "../services/session-service";
 
 const inter = Inter({ subsets: ["latin"] });
 

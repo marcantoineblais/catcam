@@ -1,7 +1,7 @@
 "use client";
 
-import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 import useVideoOverlay from "./hooks/useVideoOverlay";
+import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 import VideoPlayerControls from "./VideoPlayerControls";
 import VideoSeekBar from "./VideoSeekBar";
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "../hooks/useSession";
 import { useEffect, useRef } from "react";
+
+import { useSession } from "../hooks/useSession";
 
 export default function DefaultPage() {
   const router = useRouter();

@@ -1,5 +1,7 @@
 "use client";
 
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {
   startTransition,
   useEffect,
@@ -7,18 +9,18 @@ import React, {
   useRef,
   useState,
 } from "react";
-import RecordingsList from "./RecordingsList";
-import { Monitor } from "@/src/models/monitor";
-import SourceSelector from "@/src/components/SourceSelector";
+
 import Carousel from "@/src/components/carousel/Carousel";
-import { getDateTime } from "@/src/libs/formatDate";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { useSession } from "@/src/hooks/useSession";
 import CarouselButton from "@/src/components/carousel/CarouselButton";
-import { filterNewVideos } from "@/src/libs/filter-new-videos";
-import VideoPlayer from "@/src/components/video/VideoPlayer";
+import SourceSelector from "@/src/components/SourceSelector";
 import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
+import VideoPlayer from "@/src/components/video/VideoPlayer";
+import { useSession } from "@/src/hooks/useSession";
+import { filterNewVideos } from "@/src/libs/filter-new-videos";
+import { getDateTime } from "@/src/libs/formatDate";
+import { Monitor } from "@/src/models/monitor";
+
+import RecordingsList from "./RecordingsList";
 
 export default function Recordings() {
   const {

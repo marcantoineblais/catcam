@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { getToken } from "@/src/libs/jwt";
 import { SettingsService } from "@/src/services/settings-service";
 

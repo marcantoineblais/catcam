@@ -1,5 +1,6 @@
-import { SessionService } from "@/src/services/session-service";
 import { NextResponse } from "next/server";
+
+import { SessionService } from "@/src/services/session-service";
 
 export async function GET() {
   try {

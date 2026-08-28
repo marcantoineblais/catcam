@@ -1,5 +1,6 @@
-import { Monitor } from "@/src/models/monitor";
 import { Dispatch, SetStateAction } from "react";
+
+import { Monitor } from "@/src/models/monitor";
 
 export default function SourceSelector({
   monitors = [],

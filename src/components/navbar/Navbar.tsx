@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import Logo from "../Logo";
 import NavbarButton from "./NavbarButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

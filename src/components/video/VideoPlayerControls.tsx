@@ -11,8 +11,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from "react";
 
-import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 import { formatVideoTime } from "./libs/videoPlayerUtils";
+import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 
 export default function VideoPlayerControls() {
   const {

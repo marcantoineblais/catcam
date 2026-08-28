@@ -1,6 +1,7 @@
-import { SERVER_URL } from "@/src/config";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
+
+import { SERVER_URL } from "@/src/config";
 
 export async function GET(request: NextRequest) {
   const path = request.nextUrl.searchParams.get("path");

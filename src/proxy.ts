@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { getToken } from "./libs/jwt";
 
 const publicRoutes = [

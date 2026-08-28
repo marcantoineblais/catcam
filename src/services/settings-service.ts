@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+
 import { DEFAULT_SETTINGS } from "../config";
 
 const SETTINGS_DIR =

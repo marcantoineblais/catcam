@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useRef } from "react";
-import VideoCard from "./VideoCard";
-import Loading from "@/src/components/Loader";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useRef } from "react";
 import { twMerge } from "tailwind-merge";
+
+import Loading from "@/src/components/Loader";
 import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
+
+import VideoCard from "./VideoCard";
 
 type RecordingsListProps = {
   isLoading?: boolean;

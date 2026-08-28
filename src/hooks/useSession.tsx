@@ -1,5 +1,7 @@
 "use client";
 
+import { TZDate } from "@date-fns/tz";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -8,12 +10,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
-import { Session } from "../models/session";
+
 import { DEFAULT_SETTINGS } from "../config";
-import { getDateTime } from "../libs/formatDate";
-import { TZDate } from "@date-fns/tz";
 import { filterNewVideos } from "../libs/filter-new-videos";
+import { getDateTime } from "../libs/formatDate";
+import { Session } from "../models/session";
 
 type SessionContextType = {
   session: Session;

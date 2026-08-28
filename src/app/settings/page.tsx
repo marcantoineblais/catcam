@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import FormSelect from "./FormSelect";
+
 import Logo from "@/src/components/Logo";
-import { useModal } from "@/src/hooks/useModal";
 import OnOffSwitch from "@/src/components/OnOffSwitch";
-import { Monitor } from "@/src/models/monitor";
+import { useModal } from "@/src/hooks/useModal";
+import { useSession } from "@/src/hooks/useSession";
 import {
   isMonitorOnline,
   updateMonitorsStatus,
 } from "@/src/libs/monitor-status";
-import { useSession } from "@/src/hooks/useSession";
+import { Monitor } from "@/src/models/monitor";
+
+import FormSelect from "./FormSelect";
 
 export default function Settings() {
   const {

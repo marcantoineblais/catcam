@@ -1,7 +1,8 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import { SERVER_URL } from "@/src/config";
 import { getToken } from "@/src/libs/jwt";
 import { withAdminRole } from "@/src/libs/withAdmin";
-import { NextRequest, NextResponse } from "next/server";
 
 export const POST = withAdminRole(async (request: NextRequest) => {
   try {

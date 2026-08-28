@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Logo from "../../components/Logo";
-import { useSession } from "@/src/hooks/useSession";
+
 import { useModal } from "@/src/hooks/useModal";
+import { useSession } from "@/src/hooks/useSession";
+
+import Logo from "../../components/Logo";
 
 export default function Login() {
   const { signIn } = useSession();

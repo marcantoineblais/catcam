@@ -1,12 +1,13 @@
 "use client";
 
+import { Skeleton } from "@heroui/react";
+import Image from "next/image";
+import React, { startTransition, useEffect, useRef, useState } from "react";
+import { MouseEventHandler } from "react";
+
 import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
 import imageLoader from "@/src/libs/imageLoader";
-import { Skeleton } from "@heroui/react";
-import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { MouseEventHandler } from "react";
 
 export default function VideoCard({
   thumbnail = "",
@@ -54,7 +55,9 @@ export default function VideoCard({
   }, [isSelected, containerRef]);
 
   useEffect(() => {
-    if (!isVisible) setImageLoaded(false);
+    if (!isVisible) {
+      startTransition(() => setImageLoaded(false));
+    }
   }, [isVisible]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {

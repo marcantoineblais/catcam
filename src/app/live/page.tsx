@@ -7,13 +7,15 @@ import {
   useRef,
   useState,
 } from "react";
-import SourceSelector from "../../components/SourceSelector";
-import { Monitor } from "@/src/models/monitor";
-import OnOffSwitch from "../../components/OnOffSwitch";
+
+import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
+import VideoPlayer from "@/src/components/video/VideoPlayer";
 import { useSession } from "@/src/hooks/useSession";
 import { isMonitorOnline } from "@/src/libs/monitor-status";
-import VideoPlayer from "@/src/components/video/VideoPlayer";
-import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
+import { Monitor } from "@/src/models/monitor";
+
+import OnOffSwitch from "../../components/OnOffSwitch";
+import SourceSelector from "../../components/SourceSelector";
 
 export default function LiveStream() {
   const {

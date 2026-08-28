@@ -1,12 +1,13 @@
 import Tokens from "csrf";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+
 import {
   CSRF_COOKIE_NAME,
   CSRF_HEADER_NAME,
   CSRF_TOKEN_SECRET,
   isProd,
 } from "../config";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
 
 const tokens = new Tokens();
 

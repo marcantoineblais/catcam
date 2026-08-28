@@ -1,5 +1,6 @@
-import { SERVER_URL } from "@/src/config";
 import { NextRequest, NextResponse } from "next/server";
+
+import { SERVER_URL } from "@/src/config";
 
 /**
  * Proxies video requests to SERVER_URL with headers required for seeking.

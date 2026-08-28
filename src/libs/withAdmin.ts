@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "./jwt";
+
 import { SESSION_COOKIE_NAME } from "../config";
+import { getToken } from "./jwt";
 
 export function withAdminRole(
   handler: (req: NextRequest, ctx: any) => Promise<NextResponse>,

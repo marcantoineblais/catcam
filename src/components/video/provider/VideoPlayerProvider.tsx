@@ -12,9 +12,10 @@ import {
   useState,
 } from "react";
 
+import { Video } from "@/src/models/video";
+
 import useVideoFullscreen from "../hooks/useVideoFullscreen";
 import useVideoPlayback from "../hooks/useVideoPlayback";
-import { Video } from "@/src/models/video";
 
 type VideoPlayerContextValue = {
   queue: Video[];
