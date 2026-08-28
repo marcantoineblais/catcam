@@ -10,14 +10,8 @@ export default function Loader({
   className?: string;
 }) {
   return (
-    <div className={`${className}`}>
-      <Spinner
-        classNames={{
-          circle1: "text-sky-700 border-b-sky-700",
-          circle2: "text-sky-700 border-b-sky-700",
-        }}
-        size={size}
-      />
+    <div className={className}>
+      <Spinner className="text-sky-700 border-b-sky-700" size={size} />
     </div>
   );
 }
