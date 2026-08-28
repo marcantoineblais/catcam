@@ -2,6 +2,5 @@ allowBuilds:
   '@heroui/shared-utils': true
   unrs-resolver: true
 
-onlyBuiltDependencies:
-  - '@heroui/shared-utils'
-  - unrs-resolver
+minimumReleaseAgeExclude:
+  - baseline-browser-mapping@2.11.20
