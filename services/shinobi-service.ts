@@ -3,7 +3,7 @@ import { TZDate } from "@date-fns/tz";
 import { Monitor } from "@/models/monitor";
 import { Video } from "@/models/video";
 
-import { SERVER_TIMEZONE, SERVER_URL } from "../config";
+import { SERVER_TIMEZONE, SERVER_URL } from "../app/config";
 import { getDateTimeUrl, getFullDate } from "../libs/formatDate";
 
 export class ShinobiService {

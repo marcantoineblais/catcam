@@ -1,6 +1,6 @@
 "use client";
 
-import { VideoPlayerProvider } from "@/src/components/video/provider/VideoPlayerProvider";
+import { VideoPlayerProvider } from "@/components/video/provider/VideoPlayerProvider";
 
 export default function LiveLayout({
   children,

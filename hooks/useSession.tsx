@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 
-import { DEFAULT_SETTINGS } from "../config";
+import { DEFAULT_SETTINGS } from "../app/config";
 import { filterNewVideos } from "../libs/filter-new-videos";
 import { getDateTime } from "../libs/formatDate";
 import { Session } from "../models/session";

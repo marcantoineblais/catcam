@@ -1,13 +1,12 @@
 "use client";
 
-import { Skeleton } from "@heroui/react";
 import Image from "next/image";
 import React, { startTransition, useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
 
-import useIntersectionObserver from "@/src/hooks/useIntersectionObserver";
-import { getFormattedDate, getFormattedTime } from "@/src/libs/formatDate";
-import imageLoader from "@/src/libs/imageLoader";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import { getFormattedDate, getFormattedTime } from "@/libs/formatDate";
+import imageLoader from "@/libs/imageLoader";
 
 export default function VideoCard({
   thumbnail = "",
@@ -72,7 +71,7 @@ export default function VideoCard({
           data-active={isSelected ? true : undefined}
           className="relative w-full h-full flex flex-col rounded overflow-hidden bg-gray-50 dark:bg-zinc-800 shadow-md shadow-gray-950/5 dark:shadow-zinc-50/5 duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-white data-active:bg-sky-700 data-active:hover:brightness-100 hover:brightness-75"
         >
-          {!imageLoaded && <Skeleton className="absolute inset-0 bg-gray-800 dark:bg-zinc-500" />}
+          {/* {!imageLoaded && <Skeleton className="absolute inset-0 bg-gray-800 dark:bg-zinc-500" />} */}
           <Image
             data-active={isSelected ? true : undefined}
             className="w-full h-full duration-200 data-active:saturate-0"

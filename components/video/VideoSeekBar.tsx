@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 
-import useDebounce from "@/src/hooks/useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 
 import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 

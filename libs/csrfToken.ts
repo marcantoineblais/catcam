@@ -7,7 +7,7 @@ import {
   CSRF_HEADER_NAME,
   CSRF_TOKEN_SECRET,
   isProd,
-} from "../config";
+} from "../app/config";
 
 const tokens = new Tokens();
 

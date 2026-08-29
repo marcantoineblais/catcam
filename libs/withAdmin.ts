@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { SESSION_COOKIE_NAME } from "../config";
+import { SESSION_COOKIE_NAME } from "../app/config";
 import { getToken } from "./jwt";
 
 export function withAdminRole(

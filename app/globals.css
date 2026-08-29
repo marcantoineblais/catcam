@@ -1,44 +1,97 @@
 @import "tailwindcss";
-@import "@heroui/styles";
 
 /* Tailwind custom classes */
 @custom-variant dark (&:where(.dark, .dark *));
 
-* {
-  user-select: none;
-  box-sizing: border-box;
+@theme {
+  --color-primary: #005BD1;
+  --color-primary-foreground: #D6E0FF;
+
+  --color-secondary: #545677;
+  --color-secondary-foreground: #fdf6e4;
+
+  --color-surface: #E8E3E3;
+  --color-surface-foreground: #0d0e07;
+  
+  --color-surface-card: #FAF5F5;
+  --color-surface-card-foreground: #0d0e07;
+
+  --color-warning: #C79F00;
+  --color-warning-foreground: #fdf6e4;
+
+  --color-accent: #96c3ce;
+  --color-accent-foreground: #0d0e07;
+
+  --color-dark: #0d0e07;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+@layer base {
+  * {
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  video::-webkit-media-controls {
+    display: none !important;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(3, 105, 161);
+    border-radius: 0.25rem;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+  }
+  
+  .dark ::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
-video::-webkit-media-controls {
-  display: none !important;
-}
-
-::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgb(3, 105, 161);
-  border-radius: 0.25rem;
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 0.25rem;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background-color: rgba(255, 255, 255, 0.1);
-}
 
 @media screen and (orientation: landscape) {
-  body,
-  main,
-  .container {
-    overflow: auto;
+  @layer base {
+    body,
+    main,
+    .container {
+      overflow: hidden;
+    }
+  }
+}
+
+/* Catcam spinner styles (Tailwind-friendly, global) */
+@layer components {
+  .cc-spinner { display: inline-block; line-height: 0; }
+  .cc-spinner svg { display: block; }
+
+  /* size helpers */
+  .cc-spinner-sm svg { width: 24px; height: 24px; }
+  .cc-spinner-md svg { width: 40px; height: 40px; }
+  .cc-spinner-lg svg { width: 64px; height: 64px; }
+
+  .cc-seg { transform-origin: 25px 25px; }
+
+  .cc-seg-1 { animation: cc-spin 1s linear infinite; }
+  .cc-seg-2 { animation: cc-spin 1s linear infinite; animation-delay: -0.15s; }
+  .cc-seg-3 { animation: cc-spin 1s linear infinite; animation-delay: -0.3s; }
+  .cc-seg-4 { animation: cc-spin 1s linear infinite; animation-delay: -0.45s; }
+
+  @keyframes cc-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cc-seg-1, .cc-seg-2, .cc-seg-3, .cc-seg-4 { animation: none !important; }
   }
 }

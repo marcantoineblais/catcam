@@ -2,7 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import useCarousel from "@/src/hooks/useCarousel";
+import useCarousel from "@/hooks/useCarousel";
 
 type CarouselProps = {
   children: ReactNode[];

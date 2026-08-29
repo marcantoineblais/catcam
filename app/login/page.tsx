@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import Button from "@/components/ui/Button";
+import CheckboxInput from "@/components/ui/CheckboxInput";
+import TextInput from "@/components/ui/TextInput";
 import { useModal } from "@/hooks/useModal";
 import { useSession } from "@/hooks/useSession";
 
@@ -17,7 +20,7 @@ export default function Login() {
   });
   const { email, password, rememberMe } = formData;
 
-  async function submitForm(e: React.FormEvent<HTMLFormElement>) {
+  async function submitForm(e: React.SubmitEvent) {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -47,77 +50,65 @@ export default function Login() {
   }
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      <main className="z-10 h-full px-1 pt-5 max-w-(--breakpoint-md) container mx-auto overflow-auto">
+    <div className="h-full flex flex-col justify-center overflow-hidden">
+      <main className="z-10 px-2 max-w-md container mx-auto overflow-auto">
         <form
           onSubmit={submitForm}
-          className="w-full px-3 py-6 shadow bg-gray-50 rounded dark:bg-zinc-700 dark:shadow-zinc-50/10"
+          className="w-full px-3 py-6 shadow bg-surface-card rounded"
           autoComplete="on"
         >
-          <h1 className="w-full pb-10 text-center text-3xl paysage-hidden">
-            Login
-          </h1>
+          <h1 className="w-full text-center text-3xl font-bold">Login</h1>
 
-          <label className="flex pt-3">
-            <p className="basis-32 text-sm">Email</p>
-            <input
-              className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950"
+          <div className="mt-10 flex flex-col gap-4">
+            <TextInput
+              label="Email"
               name="email"
+              autoComplete="username"
               value={email}
-              onChange={(e) =>
+              onChange={(value) =>
                 setFormData((prev) => ({
                   ...prev,
-                  email: e.target.value,
+                  email: value,
                 }))
               }
             />
-          </label>
 
-          <label className="flex pt-3">
-            <p className="basis-32 text-sm">Password</p>
-            <input
-              className="px-1.5 grow bg-gray-100 rounded text-sm dark:text-zinc-950"
+            <TextInput
+              label="Password"
               name="password"
-              type="password"
+              autoComplete="password"
               value={password}
-              onChange={(e) =>
+              type="password"
+              onChange={(value) =>
                 setFormData((prev) => ({
                   ...prev,
-                  password: e.target.value,
+                  password: value,
                 }))
               }
             />
-          </label>
 
-          <label className="flex pt-3">
-            <p className="basis-32 text-sm">Remember me</p>
-            <input
-              className="bg-gray-100 rounded"
-              id="remember-me dark:text-zinc-950"
+            <CheckboxInput
+              label="Remember me"
               name="rememberMe"
-              type="checkbox"
               checked={rememberMe}
-              onChange={(e) =>
+              onChange={(checked) =>
                 setFormData((prev) => ({
                   ...prev,
-                  rememberMe: e.target.checked,
+                  rememberMe: checked,
                 }))
               }
             />
-          </label>
 
-          <div className="pt-5 flex justify-center">
-            <button
-              type="submit"
-              className="py-2 w-32 bg-sky-800 text-gray-50 rounded duration-200 hover:bg-sky-700 cursor-pointer"
-            >
-              Submit
-            </button>
+            <div className="pt-5 flex justify-center">
+              <Button type="submit" color="primary" className="w-44">
+                Submit
+              </Button>
+            </div>
           </div>
         </form>
       </main>
 
-      <Logo className="fixed -bottom-7 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-125 landscape:hidden lg:landscape:block" />
+      <Logo className="fixed -bottom-1 text-dark dark:text-zinc-200 translate-y-1/2 scale-125 landscape:hidden lg:landscape:block" />
     </div>
   );
 }

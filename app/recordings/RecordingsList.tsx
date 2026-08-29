@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Loading from "@/src/components/Loader";
-import { useVideoPlayer } from "@/src/components/video/provider/VideoPlayerProvider";
+import Loading from "@/components/Loader";
+import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
 
 import VideoCard from "./VideoCard";
 

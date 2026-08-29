@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { SessionService } from "@/services/session-service";
+
 import { getToken } from "./libs/jwt";
 
 const publicRoutes = [
@@ -23,7 +25,13 @@ export async function proxy(request: NextRequest) {
     const token = await getToken();
     if (!token?.authToken) throw new Error("No auth token");
 
-    const response = NextResponse.next();
+    let response = NextResponse.next();
+    if (requestedPath === "/") {
+      const session = await SessionService.getSession();
+      const userLandingPage = session?.settings?.home || "/live";
+      response = NextResponse.redirect(new URL(userLandingPage, request.url));
+    }
+
     if (!isApiRequest) response.headers.set("x-pathname", requestedPath);
     return response;
   } catch (error) {

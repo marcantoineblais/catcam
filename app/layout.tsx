@@ -3,19 +3,23 @@ export const dynamic = "force-dynamic";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Sora } from "next/font/google";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 import DisplayMode from "../components/display-mode";
 import Navbar from "../components/navbar/Navbar";
-import { DEFAULT_SETTINGS } from "../config";
 import { ModalProvider } from "../hooks/useModal";
 import { SessionProvider } from "../hooks/useSession";
 import { SessionService } from "../services/session-service";
+import { DEFAULT_SETTINGS } from "./config";
 
-const inter = Inter({ subsets: ["latin"] });
+export const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-nunito-sans",
+});
 
 export const metadata: Metadata = {
   title: "Catcam",
@@ -63,11 +67,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} h-screen w-screen max-w-screen max-h-screen overflow-x-hidden`}
+        className={twMerge(
+          "h-screen w-screen max-w-screen max-h-screen overflow-x-hidden",
+          sora.className,
+        )}
       >
         <SessionProvider initialSession={session}>
           <ModalProvider>
-            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-gray-100 text-gray-900 dark:bg-zinc-900 dark:text-zinc-50 overflow-hidden">
+            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-surface text-surface-foreground overflow-hidden">
               <Navbar />
               {children}
             </DisplayMode>

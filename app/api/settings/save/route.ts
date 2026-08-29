@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getToken } from "@/src/libs/jwt";
-import { SettingsService } from "@/src/services/settings-service";
+import { getToken } from "@/libs/jwt";
+import { SettingsService } from "@/services/settings-service";
 
 export async function POST(request: NextRequest) {
   try {

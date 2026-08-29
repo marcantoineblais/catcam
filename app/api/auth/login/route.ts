@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { SERVER_URL } from "@/config";
-import { createToken } from "@/src/libs/jwt";
+import { SERVER_URL } from "@/app/config";
+import { createToken } from "@/libs/jwt";
 
 async function requestLogin({
   email,

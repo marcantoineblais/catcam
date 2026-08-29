@@ -2,7 +2,7 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
-import { DEFAULT_SETTINGS } from "../config";
+import { DEFAULT_SETTINGS } from "../app/config";
 
 const SETTINGS_DIR =
   process.env.USER_SETTINGS_PATH || path.join(process.cwd(), "user-settings");

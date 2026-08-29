@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getToken } from "@/src/libs/jwt";
-import { ShinobiService } from "@/src/services/shinobi-service";
+import { getToken } from "@/libs/jwt";
+import { ShinobiService } from "@/services/shinobi-service";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();

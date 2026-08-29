@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { DOMAIN_NAME, SERVER_URL } from "@/config";
+import { DOMAIN_NAME, SERVER_URL } from "@/app/config";
 
 const MANIFEST_TYPES = [
   "application/vnd.apple.mpegurl",

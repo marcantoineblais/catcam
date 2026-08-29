@@ -6,7 +6,7 @@ import {
   JWT_ISSUER,
   JWT_SIGN_SECRET,
   SESSION_COOKIE_NAME,
-} from "../config";
+} from "../app/config";
 
 export async function getToken({ isServerAction = false } = {}) {
   const cookie = await cookies();

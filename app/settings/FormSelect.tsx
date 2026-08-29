@@ -1,5 +1,3 @@
-import { ChangeEventHandler } from "react";
-
 export default function FormSelect({
   label,
   options,
@@ -10,7 +8,7 @@ export default function FormSelect({
   label?: string;
   options?: { value: string; label: string }[];
   value?: string;
-  onChange?: ChangeEventHandler<HTMLSelectElement>;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   name?: string;
 }) {
   return (

@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { AUTO_DARK_MODE_TIME } from "../config";
+import { AUTO_DARK_MODE_TIME } from "../app/config";
 import { useSession } from "../hooks/useSession";
 
 export default function DisplayMode({

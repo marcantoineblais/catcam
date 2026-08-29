@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE_NAME } from "@/config";
+import { SESSION_COOKIE_NAME } from "@/app/config";
 
 export function GET() {
   const response = NextResponse.json({ ok: true });

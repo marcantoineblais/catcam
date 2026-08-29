@@ -9,6 +9,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
+
+import Button from "@/components/ui/Button";
 
 type OpenModalProps = {
   modalTitle: ReactNode;
@@ -64,31 +67,33 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      {isOpen && (
-        <div
-          className="z-50 fixed inset-0 flex justify-center items-start px-3 py-[10%] bg-black/50 duration-500 opacity-0 data-visible:opacity-100"
-          data-visible={isVisible || undefined}
-          role="alert"
-          aria-live="assertive"
-          aria-labelledby="warning"
-          tabIndex={-1}
-        >
-          <div className="flex flex-col bg-white dark:bg-neutral-700 rounded overflow-hidden">
-            <div className="py-1 px-3 bg-sky-700 text-lg font-bold text-white">
-              <h3>{title}</h3>
+      {isOpen &&
+        createPortal(
+          <div
+            className="z-50 fixed inset-0 flex justify-center items-start px-4 py-[10%] bg-black/50 duration-500 opacity-0 data-visible:opacity-100"
+            data-visible={isVisible || undefined}
+            role="alert"
+            aria-live="assertive"
+            aria-labelledby="warning"
+            tabIndex={-1}
+          >
+            <div className="flex flex-col bg-surface-card dark:bg-neutral-700 rounded-lg overflow-hidden">
+              <div className="py-2 px-4 text-lg font-bold">
+                <h3>{title}</h3>
+              </div>
+              <div className="p-6 flex flex-col justify-center min-h-32">{content}</div>
+              <div className="py-2 px-8 flex justify-end items-center border-t border-dark/10">
+                <Button
+                  onClick={closeModal}
+                  color="primary"
+                >
+                  Close
+                </Button>
+              </div>
             </div>
-            <div className="p-5">{content}</div>
-            <div className="py-1 px-3 flex justify-end items-center border-t">
-              <button
-                onClick={closeModal}
-                className="px-3 py-1.5 border rounded bg-sky-700 text-white text-sm duration-200 cursor-pointer hover:opacity-75"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </ModalContext.Provider>
   );
 }
