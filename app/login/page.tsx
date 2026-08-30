@@ -23,11 +23,7 @@ export default function Login() {
     rememberMe: false,
   });
   const { email, password, rememberMe } = formData;
-
-  function handleCloseModal() {
-    onClose(() => setError(null));
-  }
-
+  
   async function submitForm(e: React.SubmitEvent) {
     e.preventDefault();
 
@@ -123,10 +119,11 @@ export default function Login() {
 
       <Modal
         isOpen={isOpen}
-        onClose={handleCloseModal}
+        onClose={onClose}
+        onUnmount={() => setError(null)}
         header={error?.error}
         footer={
-          <Button color="primary" onClick={handleCloseModal}>
+          <Button color="primary" onClick={onClose}>
             Close
           </Button>
         }

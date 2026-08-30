@@ -24,7 +24,7 @@ export default function Button({
       case "danger":
         return "bg-danger text-danger-foreground";
       default:
-        return "bg-surface-card border border-surface-card-foreground/30 text-surface-card-foreground";
+        return "bg-surface-card ring ring-surface-card-foreground/30 text-surface-card-foreground";
     }
   }, [color]);
 

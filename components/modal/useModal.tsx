@@ -73,13 +73,8 @@ export function useModal() {
     setIsOpen(true);
   }, [handleNewModalOpen, modalId]);
 
-  const onClose = useCallback((cleanup?: () => void) => {
+  const onClose = useCallback(() => {
     setIsOpen(false);
-    if (cleanup) {
-      setTimeout(() => {
-        cleanup();
-      }, 500);
-    }
   }, []);
 
   useEffect(() => {

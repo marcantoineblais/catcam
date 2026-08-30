@@ -17,6 +17,7 @@ type Props = {
   children: ReactNode;
   closeOnOutsideClick?: boolean;
   onClose: () => void;
+  onUnmount?: () => void;
 };
 
 export type ModalContent = {
@@ -32,6 +33,7 @@ export default function Modal({
   children,
   closeOnOutsideClick = true,
   onClose,
+  onUnmount,
 }: Props) {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -44,8 +46,9 @@ export default function Modal({
     setIsVisible(false);
     setTimeout(() => {
       setIsMounted(false);
+      onUnmount?.();
     }, 500);
-  }, []);
+  }, [onUnmount]);
 
   useEffect(() => {
     startTransition(() => mountModal(isOpen));
@@ -93,7 +96,7 @@ export default function Modal({
           <div className="p-4 flex flex-col justify-center min-h-32">
             {children}
           </div>
-          <div className="py-2 px-4 flex justify-end items-center border-t border-text/10">
+          <div className="py-2 px-4 flex justify-end gap-2 items-center border-t border-text/10">
             {footer}
           </div>
         </div>

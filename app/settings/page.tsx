@@ -75,10 +75,6 @@ export default function Settings() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleClose() {
-    onClose(() => setError(null));
-  }
-
   async function toggleMonitor(monitor: Monitor, isOn: boolean) {
     if (isMonitorOnline(monitor) === isOn) return;
 
@@ -218,8 +214,9 @@ export default function Settings() {
         header={error?.error}
         isOpen={isOpen}
         onClose={onClose}
+        onUnmount={() => setError(null)}
         footer={
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={onClose} color="primary">
             Close
           </Button>
         }
