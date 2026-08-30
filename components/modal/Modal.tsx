@@ -38,10 +38,6 @@ export default function Modal({
   const mountModal = useCallback((isOpen: boolean) => {
     if (isOpen) {
       setIsMounted(true);
-      requestAnimationFrame(() => {
-        setIsVisible(true);
-      });
-
       return;
     }
 
@@ -55,6 +51,16 @@ export default function Modal({
     startTransition(() => mountModal(isOpen));
   }, [isOpen, mountModal]);
 
+  useEffect(() => {
+  if (!isMounted) return;
+
+  const frame = requestAnimationFrame(() => {
+    setIsVisible(true);
+  });
+
+  return () => cancelAnimationFrame(frame);
+}, [isMounted]);
+
   function handleOutsideClick() {
     if (closeOnOutsideClick) {
       onClose();
@@ -65,7 +71,7 @@ export default function Modal({
     isMounted &&
     createPortal(
       <div
-        className="z-50 fixed inset-0 flex justify-center items-start px-4 py-[10%] bg-black/50 duration-200 opacity-0 data-visible:opacity-100"
+        className="z-50 fixed inset-0 flex justify-center items-start px-4 py-[10%] bg-black/50 duration-500 opacity-0 data-visible:opacity-100"
         data-visible={isVisible || undefined}
         role="alert"
         aria-live="assertive"

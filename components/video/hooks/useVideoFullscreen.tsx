@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export default function useVideoFullscreen() {
+export default function useVideoFullscreen({ isReady = true } = {}) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const toggleFullscreen = useCallback(() => {
@@ -8,7 +8,7 @@ export default function useVideoFullscreen() {
   }, []);
 
   useEffect(() => {
-    if (!screen.orientation) return;
+    if (!screen.orientation || !isReady) return;
 
     function handleOrientationChange() {
       if (screen.orientation.type.startsWith("landscape")) {
@@ -23,7 +23,7 @@ export default function useVideoFullscreen() {
     return () => {
       screen.orientation.removeEventListener("change", handleOrientationChange);
     };
-  }, []);
+  }, [isReady]);
 
   return {
     isFullscreen,

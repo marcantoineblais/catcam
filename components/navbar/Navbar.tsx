@@ -38,7 +38,7 @@ export default function Navbar() {
   if (noNavbarPaths.includes(currentPage)) return null;
 
   return (
-    <div className="z-40 w-full bg-surface-card shadow">
+    <div className="z-40 sticky top-0 w-full bg-surface-card shadow">
       <div className="relative px-4 h-14 container max-w-4xl flex justify-between items-center mx-auto bg-inherit">
         <div className="-my-1 h-full flex items-center bg-inherit">
           <Logo />

@@ -75,7 +75,7 @@ export function VideoPlayerProvider({
     isLiveStream: currentVideo?.isLiveStream ?? false,
   });
 
-  const fullscreen = useVideoFullscreen();
+  const fullscreen = useVideoFullscreen({ isReady: currentVideo !== null });
 
   const selectVideo = useCallback(
     (video: Video) => setCurrentVideo(video),

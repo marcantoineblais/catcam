@@ -1,6 +1,5 @@
 "use client";
 
-import { TZDate } from "@date-fns/tz";
 import {
   startTransition,
   useCallback,
@@ -8,6 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { twJoin } from "tailwind-merge";
 
 import { AUTO_DARK_MODE_TIME } from "../app/config";
 import { useSession } from "../hooks/useSession";
@@ -42,8 +42,7 @@ export default function DisplayMode({
 
     if (settings.mode === "auto") {
       const { start, end } = AUTO_DARK_MODE_TIME;
-      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const hour = new TZDate(new Date(), userTimeZone).getHours();
+      const hour = new Date().getHours();
       const isDarkMode = hour < end || hour >= start;
       if (isDarkMode) return DISPLAY_MODES_CLASSES.dark;
     }
@@ -57,5 +56,5 @@ export default function DisplayMode({
     });
   }, [settings.mode, getDarkModeClass]);
 
-  return <div className={`${darkModeClass} ${className}`}>{children}</div>;
+  return <div className={twJoin(darkModeClass, className)}>{children}</div>;
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import Container from "@/components/Container";
 import Modal from "@/components/modal/Modal";
 import { useModal } from "@/components/modal/useModal";
 import Button from "@/components/ui/Button";
@@ -61,66 +62,64 @@ export default function Login() {
 
   return (
     <>
-      <div className="h-full flex flex-col justify-center overflow-hidden">
-        <main className="z-10 px-2 max-w-md container mx-auto overflow-auto">
-          <form
-            onSubmit={submitForm}
-            className="w-full px-3 py-6 shadow bg-surface-card rounded-lg"
-            autoComplete="on"
-          >
-            <h1 className="w-full text-center text-3xl font-bold">Login</h1>
+      <Container className="flex flex-col justify-center">
+        <form
+          onSubmit={submitForm}
+          className="w-full px-3 py-6 shadow bg-surface-card rounded-lg"
+          autoComplete="on"
+        >
+          <h1 className="w-full text-center text-3xl font-bold">Login</h1>
 
-            <div className="mt-10 flex flex-col gap-4">
-              <TextInput
-                label="Email"
-                name="email"
-                autoComplete="username"
-                value={email}
-                onChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    email: value,
-                  }))
-                }
-              />
+          <div className="mt-10 flex flex-col gap-4">
+            <TextInput
+              label="Email"
+              name="email"
+              autoComplete="username"
+              value={email}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  email: value,
+                }))
+              }
+            />
 
-              <TextInput
-                label="Password"
-                name="password"
-                autoComplete="password"
-                value={password}
-                type="password"
-                onChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    password: value,
-                  }))
-                }
-              />
+            <TextInput
+              label="Password"
+              name="password"
+              autoComplete="password"
+              value={password}
+              type="password"
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  password: value,
+                }))
+              }
+            />
 
-              <CheckboxInput
-                label="Remember me"
-                name="rememberMe"
-                checked={rememberMe}
-                onChange={(checked) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    rememberMe: checked,
-                  }))
-                }
-              />
+            <CheckboxInput
+              label="Remember me"
+              name="rememberMe"
+              checked={rememberMe}
+              onChange={(checked) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  rememberMe: checked,
+                }))
+              }
+            />
 
-              <div className="pt-5 flex justify-center">
-                <Button type="submit" color="primary" className="w-44">
-                  Submit
-                </Button>
-              </div>
+            <div className="pt-5 flex justify-center">
+              <Button type="submit" color="primary" className="w-44">
+                Submit
+              </Button>
             </div>
-          </form>
-        </main>
+          </div>
+        </form>
+      </Container>
 
-        <Logo className="fixed -bottom-1 text-text translate-y-1/2 scale-125 landscape:hidden lg:landscape:block" />
-      </div>
+      <Logo className="-z-10 fixed -bottom-1 text-text translate-y-1/2 scale-125" />
 
       <Modal
         isOpen={isOpen}

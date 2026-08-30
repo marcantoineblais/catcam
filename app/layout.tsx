@@ -9,9 +9,9 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-import DisplayMode from "../components/display-mode";
-import Navbar from "../components/navbar/Navbar";
+import DisplayMode from "../components/DisplayMode";
 import { ModalProvider } from "../components/modal/useModal";
+import Navbar from "../components/navbar/Navbar";
 import { SessionProvider } from "../hooks/useSession";
 import { SessionService } from "../services/session-service";
 import { DEFAULT_SETTINGS } from "./config";
@@ -68,18 +68,20 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={twMerge(
-          "h-screen w-screen max-w-screen max-h-screen overflow-x-hidden",
+          "h-lvh w-lvw bg-surface text-text overflow-y-auto overflow-x-hidden",
           sora.className,
         )}
       >
+        <div className="w-dvw h-lvh">
         <SessionProvider initialSession={session}>
           <ModalProvider>
-            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-surface text-text overflow-hidden">
+            <DisplayMode className="flex flex-col h-full w-full">
               <Navbar />
               {children}
             </DisplayMode>
           </ModalProvider>
         </SessionProvider>
+        </div>
       </body>
     </html>
   );

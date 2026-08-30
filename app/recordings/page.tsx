@@ -11,6 +11,7 @@ import React, {
 
 import Carousel from "@/components/carousel/Carousel";
 import CarouselButton from "@/components/carousel/CarouselButton";
+import Container from "@/components/Container";
 import SourceSelector from "@/components/SourceSelector";
 import IconButton from "@/components/ui/IconButton";
 import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
@@ -114,16 +115,16 @@ export default function Recordings() {
   }
 
   return (
-    <main className="grow p-1 container mx-auto max-w-4xl flex flex-col overflow-hidden">
+    <Container className="min-h-192">
       <div
         ref={containerRef}
         data-close={isDrawerOpen || undefined}
-        className="w-full max-h-full duration-1000 data-close:max-h-0" 
+        className="w-full h-max max-h-full duration-1000 data-close:max-h-0" 
       >
         <VideoPlayer />
       </div>
 
-      <div className="z-10 w-full -mb-2 bg-surface-card flex justify-center items-center rounded-t-lg">
+      <div className="w-full -mb-2 bg-surface-card flex justify-center items-center rounded-t-lg">
         <IconButton
           onClick={() => toggleCarouselDrawer()}
           icon={faAngleUp}
@@ -177,6 +178,6 @@ export default function Recordings() {
           setSelectedMonitor={setSelectedMonitor}
         />
       </Carousel>
-    </main>
+    </Container>
   );
 }

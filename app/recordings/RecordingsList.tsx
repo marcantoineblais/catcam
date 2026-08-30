@@ -36,7 +36,7 @@ export default function RecordingsList({
   return (
     <div
       className={twMerge(
-        "pt-1 pb-3 w-full h-full flex flex-col items-center overflow-hidden",
+        "pt-1 pb-3 w-full h-full flex flex-col items-center overflow-hidden bg-surface-card",
         className,
       )}
       {...props}

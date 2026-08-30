@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  startTransition,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { startTransition, useEffect, useMemo, useRef, useState } from "react";
 
+import Container from "@/components/Container";
 import SourceSelector from "@/components/SourceSelector";
 import OnOffSwitch from "@/components/ui/OnOffSwitch";
 import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
@@ -36,49 +31,49 @@ export default function LiveStream() {
 
   useEffect(() => {
     if (!selectedMonitor) return;
-    
+
     const streams = selectedMonitor.streams;
     if (!streams) return;
 
     const index = streams.length > 1 && !isHQ ? 1 : 0;
-    startTransition(() => selectVideo({ 
-      title: selectedMonitor.name,
-      src: streams[index],
-      mid: selectedMonitor.id,
-      isLiveStream: true,
-      isStreamOnline: isOnline,
-    }));
+    startTransition(() =>
+      selectVideo({
+        title: selectedMonitor.name,
+        src: streams[index],
+        mid: selectedMonitor.id,
+        isLiveStream: true,
+        isStreamOnline: isOnline,
+      }),
+    );
   }, [selectedMonitor, isHQ, isOnline, selectVideo]);
 
   return (
-    <div className="flex flex-col h-full">
-      <main className="relative grow p-1 container mx-auto max-w-lg overflow-hidden flex flex-col">
-        <div ref={containerRef} className="w-full max-h-full">
-          <VideoPlayer />
-        </div>
+    <Container className="flex flex-col gap-2">
+      <div ref={containerRef} className="w-full max-h-full">
+        <VideoPlayer />
+      </div>
 
-        <div className="min-h-9 h-12 pt-1 flex justify-end">
-          <OnOffSwitch
-            onLabel="HQ"
-            offLabel="SQ"
-            isOn={isHQ}
-            onClick={() => setIsHQ(!isHQ)}
-            disabled={!(selectedMonitor as Monitor)?.streams?.length}
-          />
-        </div>
+      <div className="pt-1 flex justify-end">
+        <OnOffSwitch
+          onLabel="HQ"
+          offLabel="SQ"
+          isOn={isHQ}
+          onClick={() => setIsHQ(!isHQ)}
+          disabled={!(selectedMonitor as Monitor)?.streams?.length}
+        />
+      </div>
 
-        <div className="flex flex-col">
-          <h2 className="pl-3 border-b-2 border-text/30 text-text cursor-default text-xl text-left duration-200">
-            {(selectedMonitor as Monitor)?.name || ""}
-          </h2>
+      <div className="flex flex-col">
+        <h2 className="pl-3 border-b-2 border-text/30 text-text cursor-default text-xl text-left duration-200">
+          {(selectedMonitor as Monitor)?.name || ""}
+        </h2>
 
-          <SourceSelector
-            monitors={monitors}
-            selectedMonitor={selectedMonitor}
-            setSelectedMonitor={setSelectedMonitor}
-          />
-        </div>
-      </main>
-    </div>
+        <SourceSelector
+          monitors={monitors}
+          selectedMonitor={selectedMonitor}
+          setSelectedMonitor={setSelectedMonitor}
+        />
+      </div>
+    </Container>
   );
 }

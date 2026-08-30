@@ -1,28 +1,30 @@
 "use client";
 
+import { twJoin } from "tailwind-merge";
+
 import Loader from "../Loader";
 import Logo from "../Logo";
 import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 import VideoPlayerOverlay from "./VideoPlayerOverlay";
 
 export default function VideoPlayer() {
-  const {
-    currentVideo,
-    videoRef,
-    videoEvents,
-    isBuffering,
-    isFullscreen,
-  } = useVideoPlayer();
+  const { currentVideo, videoRef, videoEvents, isBuffering, isFullscreen } =
+    useVideoPlayer();
 
   const src = currentVideo?.src ?? "";
   const isLiveStream = currentVideo?.isLiveStream ?? false;
 
   return (
     <div
-      className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
+      className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 group/video-player"
       data-fullscreen={isFullscreen || undefined}
     >
-      <div className="relative aspect-video w-full max-h-dvh flex items-center justify-center rounded-lg overflow-hidden shadow bg-surface-card">
+      <div
+        className={twJoin(
+          "relative aspect-video w-full h-full flex items-center justify-center rounded-lg overflow-hidden shadow bg-surface-card",
+          "group-data-fullscreen/video-player:bg-black group-data-fullscreen/video-player:rounded-none",
+        )}
+      >
         {!src && !isLiveStream && (
           <Logo className="absolute inset-0 translate-y-1/2 scale-150" />
         )}

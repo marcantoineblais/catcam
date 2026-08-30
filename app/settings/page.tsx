@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Container from "@/components/Container";
 import Logo from "@/components/Logo";
 import Modal from "@/components/modal/Modal";
 import { useModal } from "@/components/modal/useModal";
@@ -26,6 +27,14 @@ export default function Settings() {
     monitors.map(() => false),
   );
   const isAdmin = useMemo(() => permissions === "all", [permissions]);
+  const areAllMonitorsOn = useMemo(
+    () => monitors.every((monitor) => isMonitorOnline(monitor)),
+    [monitors],
+  );
+  const allSwitchesDisabled = useMemo(
+    () => switchesDisabled.every((disabled) => disabled),
+    [switchesDisabled],
+  );
 
   useEffect(() => {
     if (
@@ -114,84 +123,96 @@ export default function Settings() {
     );
   }
 
+  async function toggleAllMonitors(isOn: boolean) {
+    if (monitors.every((monitor) => isMonitorOnline(monitor) === isOn)) return;
+    await Promise.all(monitors.map((monitor) => toggleMonitor(monitor, isOn)));
+  }
+
   return (
     <>
-      <div className="h-full overflow-hidden">
-        <main className="h-full pt-3 p-1 container mx-auto max-w-lg overflow-y-auto">
-          <form className="w-full px-3 py-6 shadow bg-surface-card rounded-lg space-y-4">
-            <h1 className="w-full pb-3 text-center text-3xl">Settings</h1>
+      <Container>
+        <form className="w-full px-3 py-6 shadow bg-surface-card rounded-lg space-y-4">
+          <h1 className="w-full pb-3 text-center text-3xl">Settings</h1>
 
-            <SelectInput
-              label="Appearance"
-              value={formData.mode}
-              onChange={(value) => handleChange("mode", value)}
-              options={[
-                { value: "light", label: "Light" },
-                { value: "dark", label: "Dark" },
-                { value: "auto", label: "Auto" },
-              ]}
-            />
+          <SelectInput
+            label="Appearance"
+            value={formData.mode}
+            onChange={(value) => handleChange("mode", value)}
+            options={[
+              { value: "light", label: "Light" },
+              { value: "dark", label: "Dark" },
+              { value: "auto", label: "Auto" },
+            ]}
+          />
 
-            <SelectInput
-              label="Home page"
-              value={formData.home}
-              onChange={(value) => handleChange("home", value)}
-              options={[
-                { value: "/live", label: "Livestream" },
-                { value: "/recordings", label: "Recordings" },
-              ]}
-            />
+          <SelectInput
+            label="Home page"
+            value={formData.home}
+            onChange={(value) => handleChange("home", value)}
+            options={[
+              { value: "/live", label: "Livestream" },
+              { value: "/recordings", label: "Recordings" },
+            ]}
+          />
 
-            <SelectInput
-              label="Default camera"
-              value={formData.camera}
-              onChange={(value) => handleChange("camera", value)}
-              options={monitors.map((monitor) => {
-                return { label: monitor.name, value: monitor.id };
-              })}
-            />
+          <SelectInput
+            label="Default camera"
+            value={formData.camera}
+            onChange={(value) => handleChange("camera", value)}
+            options={monitors.map((monitor) => {
+              return { label: monitor.name, value: monitor.id };
+            })}
+          />
 
-            <SelectInput
-              label="Default quality"
-              value={formData.quality}
-              onChange={(value) => handleChange("quality", value)}
-              options={[
-                { label: "High", value: "HQ" },
-                { label: "Low", value: "SQ" },
-              ]}
-            />
-          </form>
+          <SelectInput
+            label="Default quality"
+            value={formData.quality}
+            onChange={(value) => handleChange("quality", value)}
+            options={[
+              { label: "High", value: "HQ" },
+              { label: "Low", value: "SQ" },
+            ]}
+          />
+        </form>
 
-          {isAdmin && (
-            <div className="w-full mt-3 px-3 py-6 shadow bg-surface-card rounded-lg">
-              <h2 className="w-full pb-3 text-center text-3xl">Monitors</h2>
-              <div className="w-full md:w-fit flex flex-col items-start gap-3">
-                {monitors.map((monitor, i) => {
-                  const isDisabled = switchesDisabled[i];
-                  const isOn = isMonitorOnline(monitor);
-
-                  return (
-                    <div
-                      className="w-full flex justify-between items-center gap-10"
-                      key={monitor.id}
-                    >
-                      <div className="grow text-sm">{monitor.name}</div>
-                      <OnOffSwitch
-                        isOn={isMonitorOnline(monitor)}
-                        onClick={() => toggleMonitor(monitor, !isOn)}
-                        disabled={isDisabled}
-                        width={72}
-                      />
-                    </div>
-                  );
-                })}
+        {isAdmin && (
+          <div className="w-full mt-4 px-4 py-6 shadow bg-surface-card rounded-lg">
+            <h2 className="w-full pb-4 text-center text-3xl">Monitors</h2>
+            <div className="w-full max-w-lg mx-auto flex flex-col items-start gap-3">
+              <div className="w-full flex justify-between items-center gap-10">
+                <div className="grow text-sm">All</div>
+                <OnOffSwitch
+                  isOn={areAllMonitorsOn}
+                  onClick={() => toggleAllMonitors(!areAllMonitorsOn)}
+                  disabled={allSwitchesDisabled}
+                  width={72}
+                />
               </div>
-            </div>
-          )}
-        </main>
+              {monitors.map((monitor, i) => {
+                const isDisabled = switchesDisabled[i];
+                const isOn = isMonitorOnline(monitor);
 
-        <Logo className="fixed -bottom-7 text-text translate-y-1/2 scale-125" />
-      </div>
+                return (
+                  <div
+                    className="w-full flex justify-between items-center gap-10"
+                    key={monitor.id}
+                  >
+                    <div className="grow text-sm">{monitor.name}</div>
+                    <OnOffSwitch
+                      isOn={isMonitorOnline(monitor)}
+                      onClick={() => toggleMonitor(monitor, !isOn)}
+                      disabled={isDisabled}
+                      width={72}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </Container>
+
+      <Logo className="-z-10 fixed -bottom-7 text-text translate-y-1/2 scale-125" />
 
       <Modal
         header={error?.error}
