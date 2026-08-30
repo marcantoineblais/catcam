@@ -72,7 +72,7 @@ export default function SelectInput({
             // Gloss
             "before:pointer-events-none",
             "before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-            "before:bg-linear-to-b before:from-white/20 before:to-transparent",
+            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
           )}
         >
           <span className="relative z-10 flex items-center justify-between">

@@ -36,7 +36,7 @@ export default function CheckboxInput({
             "border border-surface-card-foreground/30 bg-surface-card shadow-sm",
             "transition-all duration-200",
             "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-            "before:bg-linear-to-b before:from-white/30 before:to-transparent",
+            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
             "group-has-checked:border-surface-foreground/60",
             "group-has-focus-visible:ring-2 group-has-focus-visible:ring-surface-foreground/30",
             className,

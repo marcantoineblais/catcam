@@ -60,7 +60,7 @@ export default function OnOffSwitch({
             "before:absolute before:top-[8%] before:left-[15%]",
             "before:w-[70%] before:h-[42%]",
             "before:rounded-full",
-            "before:bg-linear-to-b before:from-white/35 before:to-transparent",
+            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
           )}
         />
       </div>
