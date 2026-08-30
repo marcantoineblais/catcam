@@ -3,7 +3,6 @@ import {
   startTransition,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -61,7 +60,6 @@ export default function useVideoPlayback({ src, isLiveStream }: Options) {
 
   const play = useCallback(async () => {
     const video = videoRef.current;
-
     if (!video) return;
 
     await video.play();
@@ -92,13 +90,13 @@ export default function useVideoPlayback({ src, isLiveStream }: Options) {
     setBuffer(length > 0 ? video.buffered.end(length - 1) : 0);
   }, []);
 
-  const handleCanPlay = useCallback(() => {
+  const onCanPlay = useCallback(() => {
     setIsLoaded(true);
     setIsBuffering(false);
     updateBuffer();
   }, [updateBuffer]);
 
-  const handleTimeUpdate = useCallback(() => {
+  const onTimeUpdate = useCallback(() => {
     const video = videoRef.current;
 
     if (video) {
@@ -106,7 +104,7 @@ export default function useVideoPlayback({ src, isLiveStream }: Options) {
     }
   }, []);
 
-  const handleDurationChange = useCallback(() => {
+  const onDurationChange = useCallback(() => {
     const video = videoRef.current;
 
     if (video) {
@@ -114,44 +112,21 @@ export default function useVideoPlayback({ src, isLiveStream }: Options) {
     }
   }, []);
 
-  const handlePlay = useCallback(() => {
+  const onPlay = useCallback(() => {
     setIsPlaying(true);
   }, []);
 
-  const handlePause = useCallback(() => {
+  const onPause = useCallback(() => {
     setIsPlaying(false);
   }, []);
 
-  const handleEnded = useCallback(() => {
+  const onEnded = useCallback(() => {
     setIsPlaying(false);
   }, []);
 
-  const handleWaiting = useCallback(() => {
+  const onWaiting = useCallback(() => {
     setIsBuffering(true);
   }, []);
-
-  const videoEvents = useMemo(
-    () => ({
-      onCanPlay: handleCanPlay,
-      onTimeUpdate: handleTimeUpdate,
-      onDurationChange: handleDurationChange,
-      onProgress: updateBuffer,
-      onPlay: handlePlay,
-      onPause: handlePause,
-      onEnded: handleEnded,
-      onWaiting: handleWaiting,
-    }),
-    [
-      handleCanPlay,
-      handleDurationChange,
-      handleEnded,
-      handlePause,
-      handlePlay,
-      handleTimeUpdate,
-      handleWaiting,
-      updateBuffer,
-    ],
-  );
 
   return {
     videoRef,
@@ -164,6 +139,15 @@ export default function useVideoPlayback({ src, isLiveStream }: Options) {
     play,
     pause,
     seek,
-    videoEvents,
+    videoEvents: {
+      onCanPlay,
+      onTimeUpdate,
+      onDurationChange,
+      onProgress: updateBuffer,
+      onPlay,
+      onPause,
+      onEnded,
+      onWaiting,
+    },
   };
 }

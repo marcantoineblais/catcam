@@ -120,8 +120,8 @@ export default function Recordings() {
         <VideoPlayer />
       </div>
 
-      <div className="z-10 min-h-0 flex-1 w-full overflow-hidden bg-surface-card rounded-lg">
-        <div className="pt-2 w-full flex justify-center items-center">
+      <div className="z-10 min-h-0 flex-1 flex flex-col w-full overflow-hidden bg-surface-card rounded-lg">
+        <div className="pt-2 shrink-0 w-full flex justify-center items-center">
           <IconButton
             onClick={() => toggleCarouselDrawer()}
             icon={faAngleUp}
@@ -132,7 +132,8 @@ export default function Recordings() {
           />
         </div>
 
-        <Carousel          
+        <Carousel
+          className="min-h-0 grow"
           isLocked={isCarouselLocked}
           selectors={({
             selectedIndex,

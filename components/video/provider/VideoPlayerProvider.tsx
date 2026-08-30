@@ -8,7 +8,6 @@ import {
   SetStateAction,
   useCallback,
   useContext,
-  useMemo,
   useState,
 } from "react";
 
@@ -98,49 +97,17 @@ export function VideoPlayerProvider({
     }
   }, [currentVideo, queue]);
 
-  const value = useMemo<VideoPlayerContextValue>(
-    () => ({
+  return (
+    <VideoPlayerContext.Provider value={{
+      ...playback,
+      ...fullscreen,
       queue,
       setQueue,
-
       currentVideo,
       selectVideo,
       next,
       previous,
-
-      videoRef: playback.videoRef,
-
-      currentTime: playback.currentTime,
-      buffer: playback.buffer,
-      duration: playback.duration,
-
-      isPlaying: playback.isPlaying,
-      isLoaded: playback.isLoaded,
-      isBuffering: playback.isBuffering,
-
-      play: playback.play,
-      pause: playback.pause,
-      seek: playback.seek,
-
-      videoEvents: playback.videoEvents,
-
-      isFullscreen: fullscreen.isFullscreen,
-      toggleFullscreen: fullscreen.toggleFullscreen,
-    }),
-    [
-      queue,
-      currentVideo,
-      selectVideo,
-      next,
-      previous,
-      playback,
-      fullscreen.isFullscreen,
-      fullscreen.toggleFullscreen,
-    ],
-  );
-
-  return (
-    <VideoPlayerContext.Provider value={value}>
+    }}>
       {children}
     </VideoPlayerContext.Provider>
   );

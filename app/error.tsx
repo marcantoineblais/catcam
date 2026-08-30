@@ -1,10 +1,13 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import Logo from "@/components/Logo";
+import Button from "@/components/ui/Button";
 
 export default function NotFound() {
+  const router = useRouter();
+  
   return (
     <div className="py-7 mx-auto w-full max-w-sm flex flex-col justify-center gap-7 text-center">
       <div className="flex flex-col gap-3">
@@ -13,12 +16,12 @@ export default function NotFound() {
       </div>
 
       <div className="">
-        <Link
-          href="/login"
-          className="px-3 py-1.5 bg-sky-700 text-white cursor-pointer duration-200 rounded-sm hover:opacity-75"
+        <Button
+          onClick={() => router.push("/")}
+          color="primary"
         >
-          Login page
-        </Link>
+          Home page
+        </Button>
         <Logo />
       </div>
     </div>

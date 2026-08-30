@@ -1,33 +1,28 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import useDebounce from "@/hooks/useDebounce";
 
 import { useVideoPlayer } from "./provider/VideoPlayerProvider";
 
 export default function VideoSeekBar() {
-  const {
-    currentTime,
-    buffer,
-    duration,
-    isPlaying,
-    play,
-    pause,
-    seek,
-  } = useVideoPlayer();
+  const { currentTime, buffer, duration, isPlaying, play, pause, seek } =
+    useVideoPlayer();
 
   const seekingBarRef = useRef<HTMLDivElement>(null);
   const wasPlayingRef = useRef(false);
   const debounce = useDebounce();
 
-  const seekingPosition = duration
-    ? Math.min((currentTime / duration) * 100, 100)
-    : 0;
+  const seekingPosition = useMemo(() => {
+    if (!duration) return 0;
+    return Math.min((currentTime / duration) * 100, 100);
+  }, [currentTime, duration]);
 
-  const bufferPosition = duration
-    ? Math.min((buffer / duration) * 100, 100)
-    : 0;
+  const bufferPosition = useMemo(() => {
+    if (!duration) return 0;
+    return Math.min((buffer / duration) * 100, 100);
+  }, [buffer, duration]);
 
   const updateCurrentTime = useCallback(
     (pageX: number) => {
@@ -35,16 +30,10 @@ export default function VideoSeekBar() {
         const seekingBar = seekingBarRef.current;
 
         if (!seekingBar || !duration) return;
-
         const bounds = seekingBar.getBoundingClientRect();
-
-        const position = Math.max(
-          bounds.left,
-          Math.min(pageX, bounds.right),
-        );
-
+        const position = Math.max(bounds.left, Math.min(pageX, bounds.right));
         const ratio = (position - bounds.left) / bounds.width;
-
+        
         seek(ratio * duration);
       }, 20);
     },
