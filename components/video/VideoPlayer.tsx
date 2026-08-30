@@ -22,9 +22,9 @@ export default function VideoPlayer() {
       className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black"
       data-fullscreen={isFullscreen || undefined}
     >
-      <div className="relative aspect-video w-full max-h-dvh flex items-center justify-center rounded overflow-hidden shadow dark:shadow-zinc-50/10">
+      <div className="relative aspect-video w-full max-h-dvh flex items-center justify-center rounded-lg overflow-hidden shadow bg-surface-card">
         {!src && !isLiveStream && (
-          <Logo className="absolute inset-0 text-gray-950 dark:text-zinc-200 translate-y-1/2 scale-150" />
+          <Logo className="absolute inset-0 translate-y-1/2 scale-150" />
         )}
 
         {src && isBuffering && (

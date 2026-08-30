@@ -8,8 +8,8 @@ import {
   useState,
 } from "react";
 
-import OnOffSwitch from "@/components/OnOffSwitch";
 import SourceSelector from "@/components/SourceSelector";
+import OnOffSwitch from "@/components/ui/OnOffSwitch";
 import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
 import VideoPlayer from "@/components/video/VideoPlayer";
 import { useSession } from "@/hooks/useSession";
@@ -52,12 +52,12 @@ export default function LiveStream() {
 
   return (
     <div className="flex flex-col h-full">
-      <main className="relative grow p-1 container mx-auto max-w-(--breakpoint-lg) overflow-hidden flex flex-col">
+      <main className="relative grow p-1 container mx-auto max-w-lg overflow-hidden flex flex-col">
         <div ref={containerRef} className="w-full max-h-full">
           <VideoPlayer />
         </div>
 
-        <div className="min-h-9 h-12 pt-1 flex justify-end landscape:hidden lg:landscape:flex">
+        <div className="min-h-9 h-12 pt-1 flex justify-end">
           <OnOffSwitch
             onLabel="HQ"
             offLabel="SQ"
@@ -67,8 +67,8 @@ export default function LiveStream() {
           />
         </div>
 
-        <div className="flex flex-col landscape:hidden lg:landscape:flex">
-          <h2 className="pl-3 border-b-4 border-sky-700 text-gray-700 cursor-default text-xl text-left duration-200 dark:text-zinc-300">
+        <div className="flex flex-col">
+          <h2 className="pl-3 border-b-2 border-text/30 text-text cursor-default text-xl text-left duration-200">
             {(selectedMonitor as Monitor)?.name || ""}
           </h2>
 

@@ -33,7 +33,6 @@ export default function Button({
       type={type}
       className={twMerge(
         colorClasses,
-        colorClasses,
         "relative overflow-hidden py-2 w-32 rounded-lg font-medium cursor-pointer shadow-sm",
         "before:absolute before:inset-x-0 before:top-0 before:h-1/2",
         "before:bg-linear-to-b before:from-white/30 before:to-transparent",

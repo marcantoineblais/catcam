@@ -41,7 +41,7 @@ export default function Carousel({
   return (
     <div
       className={twMerge(
-        "z-10 h-full flex flex-col bg-gray-100 dark:bg-zinc-900 landscape:hidden lg:landscape:flex",
+        "z-10 h-full flex flex-col bg-surface-card",
         className,
       )}
       {...props}

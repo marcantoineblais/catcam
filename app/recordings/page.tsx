@@ -1,7 +1,6 @@
 "use client";
 
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {
   startTransition,
   useEffect,
@@ -13,6 +12,7 @@ import React, {
 import Carousel from "@/components/carousel/Carousel";
 import CarouselButton from "@/components/carousel/CarouselButton";
 import SourceSelector from "@/components/SourceSelector";
+import IconButton from "@/components/ui/IconButton";
 import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
 import VideoPlayer from "@/components/video/VideoPlayer";
 import { useSession } from "@/hooks/useSession";
@@ -118,15 +118,16 @@ export default function Recordings() {
       <div
         ref={containerRef}
         data-close={isDrawerOpen || undefined}
-        className="w-full max-h-full duration-1000 data-close:max-h-0 data-close:landscape:max-h-full data-close:lg:landscape:max-h-0 data-close:landscape:duration-0 data-close:landscape:lg:duration-1000"
+        className="w-full max-h-full duration-1000 data-close:max-h-0" 
       >
         <VideoPlayer />
       </div>
 
-      <div className="w-full text-center z-10 bg-gray-100 dark:bg-zinc-900 -mb-2">
-        <FontAwesomeIcon
+      <div className="z-10 w-full -mb-2 bg-surface-card flex justify-center items-center rounded-t-lg">
+        <IconButton
           onClick={() => toggleCarouselDrawer()}
           icon={faAngleUp}
+          ariaLabel="Open videos"
           className="duration-500 cursor-pointer data-active:rotate-180"
           data-active={isDrawerOpen || undefined}
           size="2x"
@@ -134,7 +135,7 @@ export default function Recordings() {
       </div>
 
       <Carousel
-        className="flex w-full h-full overflow-hidden"
+        className="flex w-full h-full overflow-hidden bg-surface-card"
         isLocked={isCarouselLocked}
         selectors={({
           selectedIndex,

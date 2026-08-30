@@ -1,7 +1,9 @@
+import { twMerge } from "tailwind-merge";
+
 export default function Logo({ className }: { className?: string }) {
   return (
     <svg
-      className={`max-h-full w-full ${className || ""}`}
+      className={twMerge("max-h-full w-full", className)}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1600 1600"
     >

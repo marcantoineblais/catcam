@@ -57,7 +57,7 @@ export default function VideoPlayerControls() {
       <div>
         {isLive ? (
           <div
-            className="relative grow animate-pulse data-[online=false]:text-red-700"
+            className="relative grow animate-pulse data-[online=false]:text-danger"
             data-online={isStreamOnline}
           >
             <FontAwesomeIcon icon={faVideo} className="pe-1" size="xl" />
@@ -69,7 +69,7 @@ export default function VideoPlayerControls() {
               <button
                 type="button"
                 onClick={handlePrevious}
-                className="cursor-pointer hover:brightness-75"
+                className="cursor-pointer hover:opacity-80"
               >
                 <FontAwesomeIcon icon={faBackwardStep} size="xl" />
               </button>
@@ -78,7 +78,7 @@ export default function VideoPlayerControls() {
                 <button
                   type="button"
                   onClick={handlePause}
-                  className="cursor-pointer hover:brightness-75 px-[1.7px]"
+                  className="cursor-pointer hover:opacity-80 px-[1.7px]"
                 >
                   <FontAwesomeIcon icon={faPause} size="xl" />
                 </button>
@@ -86,7 +86,7 @@ export default function VideoPlayerControls() {
                 <button
                   type="button"
                   onClick={handlePlay}
-                  className="cursor-pointer hover:brightness-75"
+                  className="cursor-pointer hover:opacity-80"
                 >
                   <FontAwesomeIcon icon={faPlay} size="xl" />
                 </button>
@@ -95,7 +95,7 @@ export default function VideoPlayerControls() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="cursor-pointer hover:brightness-75"
+                className="cursor-pointer hover:opacity-80"
               >
                 <FontAwesomeIcon icon={faForwardStep} size="xl" />
               </button>
@@ -113,7 +113,7 @@ export default function VideoPlayerControls() {
       <button
         type="button"
         onClick={toggleFullscreen}
-        className="cursor-pointer hover:brightness-75"
+        className="cursor-pointer hover:opacity-80"
       >
         <FontAwesomeIcon icon={faExpand} size="xl" />
       </button>

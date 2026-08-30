@@ -120,24 +120,24 @@ export default function VideoSeekBar() {
     <div className="pt-5 pb-3 w-full flex justify-center">
       <div
         ref={seekingBarRef}
-        className="h-1.5 w-full relative bg-gray-800 rounded cursor-pointer dark:bg-zinc-800"
+        className="h-1.5 w-full relative bg-secondary rounded-lg cursor-pointer"
         onMouseDown={handleStartSeeking}
         onTouchStart={handleStartSeeking}
         onClick={(event) => event.stopPropagation()}
       >
         <div
-          className="absolute inset-y-0 left-0 bg-gray-500 rounded dark:bg-zinc-500"
+          className="absolute inset-y-0 left-0 bg-primary-foreground/25 rounded-lg"
           style={{ width: `${bufferPosition}%` }}
         />
 
         <div
-          className="absolute inset-y-0 left-0 bg-sky-700 rounded"
+          className="absolute inset-y-0 left-0 bg-primary rounded-lg"
           style={{ width: `${seekingPosition}%` }}
         />
 
-        {!!duration && (
+        {duration && (
           <div
-            className="absolute size-7 -ms-1.5 -top-2.75 -translate-x-2 bg-gray-100 rounded-full dark:bg-zinc-200"
+            className="absolute size-7 -ms-1.5 -top-2.75 -translate-x-2 bg-primary-foreground rounded-full"
             style={{ left: `${seekingPosition}%` }}
           />
         )}

@@ -11,7 +11,7 @@ import { twMerge } from "tailwind-merge";
 
 import DisplayMode from "../components/display-mode";
 import Navbar from "../components/navbar/Navbar";
-import { ModalProvider } from "../hooks/useModal";
+import { ModalProvider } from "../components/modal/useModal";
 import { SessionProvider } from "../hooks/useSession";
 import { SessionService } from "../services/session-service";
 import { DEFAULT_SETTINGS } from "./config";
@@ -74,7 +74,7 @@ export default async function RootLayout({
       >
         <SessionProvider initialSession={session}>
           <ModalProvider>
-            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-surface text-surface-foreground overflow-hidden">
+            <DisplayMode className="flex flex-col h-dvh w-dvw max-w-dvw max-h-dvh bg-surface text-text overflow-hidden">
               <Navbar />
               {children}
             </DisplayMode>
