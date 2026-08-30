@@ -54,7 +54,7 @@ export default function Carousel({
 
       <div
         ref={containerRef}
-        className="flex pt-3 w-full h-full overflow-x-hidden"
+        className="flex min-h-0 flex-1 pt-3 w-full overflow-x-hidden"
       >
         <div
           className="relative h-full flex duration-500 data-scrolling:duration-0"

@@ -31,9 +31,7 @@ export default function Recordings() {
 
   const { currentVideo, setQueue } = useVideoPlayer();
 
-  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | null>(
-    null,
-  );
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);
@@ -56,9 +54,7 @@ export default function Recordings() {
       if (selectedMonitor === null) {
         setQueue(videos);
       } else {
-        setQueue(
-          videos.filter((video) => video.mid === selectedMonitor.id),
-        );
+        setQueue(videos.filter((video) => video.mid === selectedMonitor.id));
       }
 
       setNothingToLoad(false);
@@ -115,69 +111,70 @@ export default function Recordings() {
   }
 
   return (
-    <Container className="min-h-192">
+    <Container className="flex min-h-0 flex-1 flex-col">
       <div
         ref={containerRef}
         data-close={isDrawerOpen || undefined}
-        className="w-full h-max max-h-full duration-1000 data-close:max-h-0" 
+        className="w-full h-max max-h-full duration-1000 data-close:max-h-0"
       >
         <VideoPlayer />
       </div>
 
-      <div className="w-full -mb-2 bg-surface-card flex justify-center items-center rounded-t-lg">
-        <IconButton
-          onClick={() => toggleCarouselDrawer()}
-          icon={faAngleUp}
-          ariaLabel="Open videos"
-          className="duration-200 cursor-pointer data-active:rotate-180"
-          data-active={isDrawerOpen || undefined}
-          size="2x"
-        />
+      <div className="z-10 min-h-0 flex-1 w-full overflow-hidden bg-surface-card landscape:min-h-48 rounded-lg">
+        <div className="w-full -mb-2 flex justify-center items-center">
+          <IconButton
+            onClick={() => toggleCarouselDrawer()}
+            icon={faAngleUp}
+            ariaLabel="Open videos"
+            className="duration-200 cursor-pointer data-active:rotate-180"
+            data-active={isDrawerOpen || undefined}
+            size="2x"
+          />
+        </div>
+
+        <Carousel          
+          isLocked={isCarouselLocked}
+          selectors={({
+            selectedIndex,
+            selectIndex,
+          }: {
+            selectedIndex: number;
+            selectIndex: (index: number) => void;
+          }) => (
+            <>
+              <CarouselButton
+                onClick={() => selectIndex(0)}
+                align="left"
+                disabled={selectedIndex === 0}
+              >
+                {selectedMonitor === null ? "All" : selectedMonitor.name}
+              </CarouselButton>
+
+              <CarouselButton
+                onClick={() => selectIndex(1)}
+                align="right"
+                disabled={selectedIndex === 1}
+              >
+                Filters
+              </CarouselButton>
+            </>
+          )}
+        >
+          <RecordingsList
+            key={"0"}
+            onScroll={handleScroll}
+            onScrollEnd={handleScrollEnd}
+            isLoading={isLoading}
+            nothingToLoad={nothingToLoad}
+          />
+          <SourceSelector
+            key={"1"}
+            monitors={monitorsList}
+            selectedMonitor={selectedMonitor}
+            setSelectedMonitor={setSelectedMonitor}
+          />
+        </Carousel>
       </div>
-
-      <Carousel
-        className="flex w-full h-full overflow-hidden bg-surface-card"
-        isLocked={isCarouselLocked}
-        selectors={({
-          selectedIndex,
-          selectIndex,
-        }: {
-          selectedIndex: number;
-          selectIndex: (index: number) => void;
-        }) => (
-          <>
-            <CarouselButton
-              onClick={() => selectIndex(0)}
-              align="left"
-              disabled={selectedIndex === 0}
-            >
-              {selectedMonitor === null ? "All" : selectedMonitor.name}
-            </CarouselButton>
-
-            <CarouselButton
-              onClick={() => selectIndex(1)}
-              align="right"
-              disabled={selectedIndex === 1}
-            >
-              Filters
-            </CarouselButton>
-          </>
-        )}
-      >
-        <RecordingsList
-          key={"0"}
-          onScroll={handleScroll}
-          onScrollEnd={handleScrollEnd}
-          isLoading={isLoading}
-          nothingToLoad={nothingToLoad}
-        />
-        <SourceSelector
-          key={"1"}
-          monitors={monitorsList}
-          selectedMonitor={selectedMonitor}
-          setSelectedMonitor={setSelectedMonitor}
-        />
-      </Carousel>
     </Container>
   );
 }
