@@ -111,7 +111,7 @@ export default function Recordings() {
   }
 
   return (
-    <Container className="flex min-h-0 flex-1 flex-col">
+    <Container className="flex min-h-192 flex-1 flex-col">
       <div
         ref={containerRef}
         data-close={isDrawerOpen || undefined}
@@ -120,7 +120,7 @@ export default function Recordings() {
         <VideoPlayer />
       </div>
 
-      <div className="z-10 min-h-0 flex-1 w-full overflow-hidden bg-surface-card landscape:min-h-48 rounded-lg">
+      <div className="z-10 min-h-0 flex-1 w-full overflow-hidden bg-surface-card rounded-lg">
         <div className="w-full -mb-2 flex justify-center items-center">
           <IconButton
             onClick={() => toggleCarouselDrawer()}

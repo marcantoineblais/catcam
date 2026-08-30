@@ -39,7 +39,7 @@ export default function Navbar() {
 
   return (
     <div className="z-40 sticky top-0 w-full bg-surface-card shadow">
-      <div className="relative px-4 h-14 container max-w-4xl flex justify-between items-center mx-auto bg-inherit">
+      <div className="relative px-4 h-14 w-full max-w-4xl flex justify-between items-center mx-auto bg-inherit">
         <div className="-my-1 h-full flex items-center bg-inherit">
           <Logo />
           <h1 className="-m-3 pt-3.5 text-xl italic self-start underline">
@@ -47,22 +47,15 @@ export default function Navbar() {
           </h1>
         </div>
 
-        <menu className="h-full py-1 flex justify-end items-end md:py-0">
-          <div
-            className="py-1 h-full flex items-center"
-            onClick={toggleMenu}
-          >
-            <IconButton
-              ariaLabel="Open navigation"
-              icon={faBars}
-              size="2x"
-            />
+        <menu className="h-full py-1 flex justify-end items-end">
+          <div className="py-1 h-full flex items-center" onClick={toggleMenu}>
+            <IconButton ariaLabel="Open navigation" icon={faBars} size="2x" />
           </div>
-          <div className="absolute -z-10 inset-0 bg-surface-card">
+          <div className="pointer-events-none absolute top-full left-0 right-0 overflow-hidden">
             <div
               className={twJoin(
-                "-z-10 absolute px-4 py-2 flex flex-col gap-2 justify-end items-end top-full left-0 right-0 bg-inherit",
-                "-translate-y-full transition-transform duration-500 data-active:translate-y-0",
+                "px-4 py-2 flex flex-col gap-2 justify-end items-end bg-surface-card shadow pointer-events-none",
+                "-translate-y-full transition-transform duration-500 data-active:translate-y-0 data-active:pointer-events-auto",
               )}
               data-active={isMenuOpen ? true : undefined}
             >

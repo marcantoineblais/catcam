@@ -89,7 +89,7 @@ export default function VideoCard({
             />
           </Skeleton>
 
-          <div className="w-full pt-1.5 px-3 flex justify-between items-center text-sm md:text-base">
+          <div className="w-full py-1 px-2 flex justify-between items-center text-sm md:text-base">
             <span>{getFormattedDate(timestamp)}</span>
             <span>{getFormattedTime(timestamp)}</span>
           </div>

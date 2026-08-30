@@ -25,6 +25,15 @@ export default function useVideoFullscreen({ isReady = true } = {}) {
     };
   }, [isReady]);
 
+  useEffect(() => {
+    const overflow = isFullscreen ? "hidden" : "";
+    document.body.style.overflow = overflow;
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFullscreen]);
+
   return {
     isFullscreen,
     toggleFullscreen,

@@ -31,7 +31,7 @@ export default function VideoPlayerOverlay() {
       onPointerMove={handleMouseMove}
     >
       <div
-        className="invisible px-5 py-1.5 absolute top-0 left-0 duration-500 bg-black/75 data-visible:visible"
+        className="invisible px-5 py-1.5 absolute top-0 left-0 right-0 duration-500 bg-black/75 data-visible:visible"
         data-visible={overlay.isVisible && title ? true : undefined}
       >
         <h3>{title}</h3>

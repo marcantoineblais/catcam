@@ -72,13 +72,12 @@ export default async function RootLayout({
           sora.className,
         )}
       >
-        <div className="w-dvw h-lvh">
+        <div className="w-dvw h-lvh flex flex-col">
         <SessionProvider initialSession={session}>
           <ModalProvider>
-            <DisplayMode className="flex flex-col h-full w-full">
+            <DisplayMode />
               <Navbar />
               {children}
-            </DisplayMode>
           </ModalProvider>
         </SessionProvider>
         </div>

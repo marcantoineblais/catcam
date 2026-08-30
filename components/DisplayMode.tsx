@@ -1,24 +1,11 @@
 "use client";
 
-import {
-  startTransition,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
-import { twJoin } from "tailwind-merge";
+import { useCallback, useLayoutEffect, useMemo } from "react";
 
 import { AUTO_DARK_MODE_TIME } from "../app/config";
 import { useSession } from "../hooks/useSession";
 
-export default function DisplayMode({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export default function DisplayMode() {
   const {
     session: { settings },
   } = useSession();
@@ -26,13 +13,9 @@ export default function DisplayMode({
   const DISPLAY_MODES_CLASSES = useMemo(
     () => ({
       dark: "dark",
-      light: "",
+      light: "light",
     }),
     [],
-  );
-
-  const [darkModeClass, setDarkModeClass] = useState(
-    DISPLAY_MODES_CLASSES.light,
   );
 
   const getDarkModeClass = useCallback(() => {
@@ -51,10 +34,13 @@ export default function DisplayMode({
   }, [settings.mode, DISPLAY_MODES_CLASSES]);
 
   useLayoutEffect(() => {
-    startTransition(() => {
-      setDarkModeClass(getDarkModeClass());
-    });
+    const darkModeClass = getDarkModeClass();
+    document.body.classList.add(darkModeClass);
+
+    return () => {
+      document.body.classList.remove(darkModeClass);
+    };
   }, [settings.mode, getDarkModeClass]);
 
-  return <div className={twJoin(darkModeClass, className)}>{children}</div>;
+  return null;
 }
