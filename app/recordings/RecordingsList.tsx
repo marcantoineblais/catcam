@@ -48,7 +48,7 @@ export default function RecordingsList({
         ref={containerRef}
       >
         {videos.map((video) => {
-          const isSelected = video === currentVideo;
+          const isSelected = video.src === currentVideo?.src;
 
           return (
             <VideoCard

@@ -83,7 +83,7 @@ export function VideoPlayerProvider({
   );
 
   const next = useCallback(() => {
-    const currentIndex = queue.findIndex((video) => video === currentVideo);
+    const currentIndex = queue.findIndex((video) => video.src === currentVideo?.src);
     const nextIndex = currentIndex + 1;
     if (nextIndex < queue.length) {
       setCurrentVideo(queue[nextIndex]);
@@ -91,7 +91,7 @@ export function VideoPlayerProvider({
   }, [currentVideo, queue]);
 
   const previous = useCallback(() => {
-    const currentIndex = queue.findIndex((video) => video === currentVideo);
+    const currentIndex = queue.findIndex((video) => video.src === currentVideo?.src);
     const previousIndex = currentIndex - 1;
     if (previousIndex >= 0) {
       setCurrentVideo(queue[previousIndex]);
