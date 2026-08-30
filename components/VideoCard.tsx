@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import React, { startTransition, useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
 
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/libs/formatDate";
-import imageLoader from "@/libs/imageLoader";
+import toImageUrl from "@/libs/toImageUrl";
+
+import Skeleton from "./Skeleton";
 
 export default function VideoCard({
   thumbnail = "",
@@ -22,13 +23,12 @@ export default function VideoCard({
   containerRef?: React.RefObject<HTMLDivElement | null>;
   onClick?: MouseEventHandler;
 }) {
-  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+  const [imageLoading, setImageLoading] = useState<boolean>(true);
   const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
   const imageWidth = 240;
   const imageHeight = 135;
-  const imageQuality = 75;
 
   useEffect(() => {
     const container = containerRef?.current;
@@ -55,12 +55,12 @@ export default function VideoCard({
 
   useEffect(() => {
     if (!isVisible) {
-      startTransition(() => setImageLoaded(false));
+      startTransition(() => setImageLoading(true));
     }
   }, [isVisible]);
 
   function onLoadHandle(e: React.SyntheticEvent<HTMLImageElement>) {
-    setImageLoaded(e.currentTarget.complete);
+    setImageLoading(!e.currentTarget.complete);
   }
 
   return (
@@ -71,26 +71,23 @@ export default function VideoCard({
           data-active={isSelected ? true : undefined}
           className="relative w-full h-full flex flex-col rounded overflow-hidden bg-surface-card shadow duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:hover:opacity-100 hover:opacity-75"
         >
-          {/* {!imageLoaded && <Skeleton className="absolute inset-0 bg-gray-800 dark:bg-zinc-500" />} */}
-          <Image
-            data-active={isSelected ? true : undefined}
-            className="w-full h-full duration-200 data-active:saturate-0"
-            onLoad={onLoadHandle}
-            placeholder="empty"
-            loading="lazy"
-            width={imageWidth}
-            height={imageHeight}
-            src={`/${thumbnail}`}
-            loader={() =>
-              imageLoader({
+          <Skeleton isLoading={imageLoading} className="w-full h-full">
+            <img
+              data-active={isSelected ? true : undefined}
+              className="w-full h-full duration-200 data-active:saturate-0"
+              onLoad={onLoadHandle}
+              loading="lazy"
+              width={imageWidth}
+              height={imageHeight}
+              src={toImageUrl({
                 src: thumbnail,
                 width: imageWidth,
                 height: imageHeight,
-                quality: imageQuality,
-              })
-            }
-            alt="Movement capture preview"
-          />
+                quality: 80,
+              })}
+              alt="Movement capture preview"
+            />
+          </Skeleton>
 
           <div className="w-full pt-1.5 px-3 flex justify-between items-center text-sm md:text-base">
             <span>{getFormattedDate(timestamp)}</span>

@@ -2,7 +2,7 @@
  * Loader for Next/Image that points to our /api/image route.
  * baseUrl comes from ConfigContext (runtime) so it works per-deployment.
  */
-export default function imageLoader({
+export default function toImageUrl({
   src,
   width,
   height,
@@ -21,5 +21,5 @@ export default function imageLoader({
   if (height) params.set("h", height.toString());
   if (quality) params.set("q", quality.toString());
 
-  return `api/image?${params}`;
+  return `/api/images?${params}`;
 }

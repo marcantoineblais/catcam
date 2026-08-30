@@ -3,30 +3,29 @@
 /* Tailwind custom classes */
 @custom-variant dark (&:where(.dark, .dark *));
 
-
 @theme {
-  --color-primary: #005BD1;
-  --color-primary-foreground: #FFFEFC;
+  --color-primary: #005bd1;
+  --color-primary-foreground: #fffefc;
 
-  --color-secondary: #222E39;
-  --color-secondary-foreground: #FFFEFC;
+  --color-secondary: #222e39;
+  --color-secondary-foreground: #fffefc;
 
-  --color-surface: #E8E3E3;
-  --color-surface-foreground: #0D0E07;
-  
-  --color-surface-card: #FAF5F5;
-  --color-surface-card-foreground: #0D0E07;
+  --color-surface: #e8e3e3;
+  --color-surface-foreground: #0d0e07;
 
-  --color-warning: #C79F00;
-  --color-warning-foreground: #FFFEFC;
+  --color-surface-card: #faf5f5;
+  --color-surface-card-foreground: #0d0e07;
 
-  --color-danger: #D10000;
-  --color-danger-foreground: #FFFEFC;
+  --color-warning: #c79f00;
+  --color-warning-foreground: #fffefc;
 
-  --color-accent: #96C3CE;
-  --color-accent-foreground: #0D0E07;
+  --color-danger: #d10000;
+  --color-danger-foreground: #fffefc;
 
-  --color-text: #0D0E07;
+  --color-accent: #96c3ce;
+  --color-accent-foreground: #0d0e07;
+
+  --color-text: #0d0e07;
 }
 
 @layer base {
@@ -38,26 +37,25 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  
+
   video::-webkit-media-controls {
     display: none !important;
   }
-  
+
   ::-webkit-scrollbar {
     width: 0.5rem;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background-color: var(--color-primary);
     border-radius: var(--radius-lg);
   }
-  
+
   ::-webkit-scrollbar-track {
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
   }
 }
-
 
 @media screen and (orientation: landscape) {
   @layer base {
@@ -71,27 +69,84 @@
 
 /* Catcam spinner styles (Tailwind-friendly, global) */
 @layer components {
-  .cc-spinner { display: inline-block; line-height: 0; }
-  .cc-spinner svg { display: block; }
+  .cc-spinner {
+    display: inline-block;
+    line-height: 0;
+  }
+  .cc-spinner svg {
+    display: block;
+  }
 
   /* size helpers */
-  .cc-spinner-sm svg { width: 24px; height: 24px; }
-  .cc-spinner-md svg { width: 40px; height: 40px; }
-  .cc-spinner-lg svg { width: 64px; height: 64px; }
+  .cc-spinner-sm svg {
+    width: 24px;
+    height: 24px;
+  }
+  .cc-spinner-md svg {
+    width: 40px;
+    height: 40px;
+  }
+  .cc-spinner-lg svg {
+    width: 64px;
+    height: 64px;
+  }
 
-  .cc-seg { transform-origin: 25px 25px; }
+  .cc-seg {
+    transform-origin: 25px 25px;
+  }
 
-  .cc-seg-1 { animation: cc-spin 1s linear infinite; }
-  .cc-seg-2 { animation: cc-spin 1s linear infinite; animation-delay: -0.15s; }
-  .cc-seg-3 { animation: cc-spin 1s linear infinite; animation-delay: -0.3s; }
-  .cc-seg-4 { animation: cc-spin 1s linear infinite; animation-delay: -0.45s; }
+  .cc-seg-1 {
+    animation: cc-spin 1s linear infinite;
+  }
+  .cc-seg-2 {
+    animation: cc-spin 1s linear infinite;
+    animation-delay: -0.15s;
+  }
+  .cc-seg-3 {
+    animation: cc-spin 1s linear infinite;
+    animation-delay: -0.3s;
+  }
+  .cc-seg-4 {
+    animation: cc-spin 1s linear infinite;
+    animation-delay: -0.45s;
+  }
+
+  .cc-skeleton::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgb(255 255 255 / 0.38) 50%,
+      transparent 65%
+    );
+    animation: cc-skeleton-scan 1.5s ease-in-out infinite;
+    transform: translateX(-100%);
+  }
 
   @keyframes cc-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes cc-skeleton-scan {
+    to {
+      transform: translateX(100%);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cc-seg-1, .cc-seg-2, .cc-seg-3, .cc-seg-4 { animation: none !important; }
+    .cc-seg-1,
+    .cc-seg-2,
+    .cc-seg-3,
+    .cc-seg-4,
+    .cc-skeleton::after {
+      animation: none !important;
+    }
   }
 }

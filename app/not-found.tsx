@@ -1,10 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/dist/client/components/navigation";
 
 import Logo from "@/components/Logo";
+import Button from "@/components/ui/Button";
 
 export default function NotFound() {
+  const router = useRouter();
   return (
     <div className="py-7 mx-auto w-full max-w-sm flex flex-col justify-center gap-7 text-center">
       <div className="flex flex-col gap-3">
@@ -12,13 +14,10 @@ export default function NotFound() {
         <h2 className="text-3xl">This page does not exist</h2>
       </div>
 
-      <div className="">
-        <Link
-          href="/login"
-          className="px-3 py-1.5 bg-sky-700 text-white cursor-pointer duration-200 rounded-sm hover:opacity-75"
-        >
-          Login page
-        </Link>
+      <div>
+        <Button className="w-44" color="primary" onClick={() => router.push("/")}>
+          Return to home
+        </Button>
         <Logo />
       </div>
     </div>

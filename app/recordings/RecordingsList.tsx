@@ -8,7 +8,7 @@ import { twMerge } from "tailwind-merge";
 import Loading from "@/components/Loader";
 import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider";
 
-import VideoCard from "./VideoCard";
+import VideoCard from "../../components/VideoCard";
 
 type RecordingsListProps = {
   isLoading?: boolean;
