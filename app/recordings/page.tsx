@@ -121,12 +121,12 @@ export default function Recordings() {
       </div>
 
       <div className="z-10 min-h-0 flex-1 w-full overflow-hidden bg-surface-card rounded-lg">
-        <div className="w-full -mb-2 flex justify-center items-center">
+        <div className="pt-2 w-full flex justify-center items-center">
           <IconButton
             onClick={() => toggleCarouselDrawer()}
             icon={faAngleUp}
             ariaLabel="Open videos"
-            className="duration-200 cursor-pointer data-active:rotate-180"
+            className="cursor-pointer data-active:rotate-180"
             data-active={isDrawerOpen || undefined}
             size="2x"
           />

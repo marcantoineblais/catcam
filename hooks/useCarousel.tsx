@@ -30,7 +30,7 @@ export default function useCarousel({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const timer = useRef<NodeJS.Timeout | number>(0);
-  const itemsNumber = useMemo(() => children.length, [children]);
+  const itemsNumber = useMemo(() => children.length, [children.length]);
 
   const resetTimer = () => {
     clearTimeout(timer.current);
@@ -142,23 +142,25 @@ export default function useCarousel({
   }, [snapToSelection]);
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     const resize = () => {
       const container = containerRef.current;
       if (!container) return;
 
       setIsResizing(true);
-      setWidth(container.clientWidth * children.length);
-      setTimeout(() => setIsResizing(false), 500);
+      setWidth(container.clientWidth * itemsNumber);
+      timeout = setTimeout(() => setIsResizing(false), 500);
     };
 
     window.addEventListener("resize", resize);
     resize();
 
     return () => {
+      clearTimeout(timeout);
       window.removeEventListener("resize", resize);
     };
-  }, [containerRef, children]);
-
+  }, [containerRef, itemsNumber]);
+  
   return {
     width,
     position,
