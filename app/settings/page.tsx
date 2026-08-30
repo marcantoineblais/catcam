@@ -12,7 +12,7 @@ import { isMonitorOnline, updateMonitorsStatus } from "@/libs/monitor-status";
 import { Monitor } from "@/models/monitor";
 import { ErrorMessage } from "@/types/types";
 
-import FormSelect from "./FormSelect";
+import SelectInput from "../../components/ui/SelectInput";
 
 export default function Settings() {
   const {
@@ -121,7 +121,7 @@ export default function Settings() {
           <form className="w-full px-3 py-6 shadow bg-surface-card rounded-lg space-y-4">
             <h1 className="w-full pb-3 text-center text-3xl">Settings</h1>
 
-            <FormSelect
+            <SelectInput
               label="Appearance"
               value={formData.mode}
               onChange={(value) => handleChange("mode", value)}
@@ -132,7 +132,7 @@ export default function Settings() {
               ]}
             />
 
-            <FormSelect
+            <SelectInput
               label="Home page"
               value={formData.home}
               onChange={(value) => handleChange("home", value)}
@@ -142,7 +142,7 @@ export default function Settings() {
               ]}
             />
 
-            <FormSelect
+            <SelectInput
               label="Default camera"
               value={formData.camera}
               onChange={(value) => handleChange("camera", value)}
@@ -151,7 +151,7 @@ export default function Settings() {
               })}
             />
 
-            <FormSelect
+            <SelectInput
               label="Default quality"
               value={formData.quality}
               onChange={(value) => handleChange("quality", value)}

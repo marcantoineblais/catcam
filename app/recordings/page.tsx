@@ -128,7 +128,7 @@ export default function Recordings() {
           onClick={() => toggleCarouselDrawer()}
           icon={faAngleUp}
           ariaLabel="Open videos"
-          className="duration-500 cursor-pointer data-active:rotate-180"
+          className="duration-200 cursor-pointer data-active:rotate-180"
           data-active={isDrawerOpen || undefined}
           size="2x"
         />

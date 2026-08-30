@@ -1,10 +1,9 @@
 "use client";
 
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { twJoin } from "tailwind-merge";
-
-import IconButton from "@/components/ui/IconButton";
 
 type Option = {
   value: string;
@@ -18,7 +17,7 @@ type Props = {
   onChange?: (value: string) => void;
 };
 
-export default function FormSelect({
+export default function SelectInput({
   label,
   options = [],
   value = "",
@@ -46,7 +45,7 @@ export default function FormSelect({
   }, []);
 
   return (
-    <div className="flex w-full flex-col gap-1.5" ref={ref}>
+    <div className="flex w-full flex-col gap-1" ref={ref}>
       {label && (
         <label
           htmlFor={id}
@@ -64,7 +63,7 @@ export default function FormSelect({
           className={twJoin(
             "relative w-full overflow-hidden rounded-lg",
             "border border-surface-foreground/30 bg-surface-card shadow",
-            "px-3 py-2 text-left text-surface-foreground",
+            "px-4 py-2 text-left text-surface-foreground",
             "outline-none cursor-pointer",
             "transition-[border-color,box-shadow] duration-200",
             "focus:border-surface-foreground/50",
@@ -78,11 +77,10 @@ export default function FormSelect({
         >
           <span className="relative z-10 flex items-center justify-between">
             <span>{selected?.label ?? ""}</span>
-            <IconButton
+            <FontAwesomeIcon
               icon={faChevronDown}
               data-open={isOpen || undefined}
-              className="data-open:rotate-180 duration-500"
-              ariaLabel="Open options"
+              className="data-open:rotate-180 duration-200"
             />
           </span>
         </button>
