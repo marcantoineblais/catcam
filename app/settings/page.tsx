@@ -127,8 +127,8 @@ export default function Settings() {
   return (
     <>
       <Container>
-        <form className="w-full px-3 py-6 shadow bg-surface-card rounded-lg space-y-4">
-          <h1 className="w-full pb-3 text-center text-3xl">Settings</h1>
+        <form className="w-full px-4 py-6 shadow bg-surface-card rounded-lg space-y-4">
+          <h1 className="w-full pb-4 text-center text-3xl">Settings</h1>
 
           <SelectInput
             label="Appearance"

@@ -40,27 +40,31 @@ export default function OnOffSwitch({
           left: isOn ? 0 : -(totalWidth / 2) + radius,
         }}
       >
-        <div className="px-1.5 w-full h-full flex justify-start items-center rounded-l-full bg-primary">
+        <div
+          className={twJoin(
+            "relative px-1.5 w-full h-full flex justify-start items-center rounded-l-full bg-primary",
+            "shine-effect",
+          )}
+        >
           {onLabel}
         </div>
 
-        <div className="px-1.5 w-full h-full flex justify-end items-center rounded-r-full bg-secondary">
+        <div
+          className={twJoin(
+            "relative px-1.5 w-full h-full flex justify-end items-center rounded-r-full bg-secondary",
+            "shine-effect",
+          )}
+        >
           {offLabel}
         </div>
 
         <div
           className={twJoin(
-            "absolute z-10 -top-0.5 -bottom-0.5 left-1/2",
+            "absolute! z-10 -top-0.5 -bottom-0.5 left-1/2",
             "-translate-x-1/2 origin-center aspect-square rounded-full",
             "bg-surface-card inset-ring-2 inset-ring-text/50 cursor-pointer",
             "overflow-hidden",
-
-            // Permanent gloss
-            "before:pointer-events-none",
-            "before:absolute before:top-[8%] before:left-[15%]",
-            "before:w-[70%] before:h-[42%]",
-            "before:rounded-full",
-            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
+            "before:rounded-full shadow-effect dark:shine-effect",
           )}
         />
       </div>

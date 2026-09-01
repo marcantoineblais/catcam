@@ -5,29 +5,30 @@
 
 @theme {
   --color-primary: #005bd1;
-  --color-primary-foreground: #fffefc;
+  --color-primary-foreground: #fcfbf8;
 
   --color-secondary: #222e39;
-  --color-secondary-foreground: #fffefc;
+  --color-secondary-foreground: #fcfbf8;
 
-  --color-surface: #e8e3e3;
+  --color-surface: #f7f6f3;
   --color-surface-foreground: #0d0e07;
 
-  --color-surface-card: #faf5f5;
+  --color-surface-card: #fcfbf8;
   --color-surface-card-foreground: #0d0e07;
 
   --color-warning: #c79f00;
-  --color-warning-foreground: #fffefc;
+  --color-warning-foreground: #fcfbf8;
 
   --color-danger: #d10000;
-  --color-danger-foreground: #fffefc;
+  --color-danger-foreground: #fcfbf8;
 
   --color-accent: #96c3ce;
   --color-accent-foreground: #0d0e07;
 
   --color-text: #0d0e07;
 
-  --color-shine: #e8e3e3;
+  --color-shadow: #222e39;
+  --color-shine: #fcfbf8;
 }
 
 @layer base {
@@ -57,20 +58,24 @@
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
   }
-}
 
-@layer base {
   .dark {
     --color-surface: #0d0e07;
     --color-surface-foreground: #faf5f5;
 
     --color-surface-card: #1b1b18;
     --color-surface-card-foreground: #faf5f5;
-    
-    --color-text: #faf5f5;
 
-    --color-shine: #0d0e07;
+    --color-text: #faf5f5;
   }
+}
+
+@utility shine-effect {
+  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-4/5 before:bg-linear-to-b before:from-shine/10 before:to-transparent before:pointer-events-none;
+}
+
+@utility shadow-effect {
+  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-4/5 before:bg-linear-to-t before:from-shadow/5 before:to-transparent before:pointer-events-none;
 }
 
 /* Catcam spinner styles */

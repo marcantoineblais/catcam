@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import { twJoin, twMerge } from "tailwind-merge";
 
 type Props = {
   children: React.ReactNode;
@@ -16,15 +16,15 @@ export default function Button({
   const colorClasses = useMemo(() => {
     switch (color) {
       case "primary":
-        return "bg-primary text-primary-foreground";
+        return "bg-primary text-primary-foreground shine-effect";
       case "secondary":
-        return "bg-secondary text-secondary-foreground";
+        return "bg-secondary text-secondary-foreground shine-effect";
       case "warning":
-        return "bg-warning text-warning-foreground";
+        return "bg-warning text-warning-foreground shine-effect";
       case "danger":
-        return "bg-danger text-danger-foreground";
+        return "bg-danger text-danger-foreground shine-effect";
       default:
-        return "bg-surface-card ring ring-surface-card-foreground/30 text-surface-card-foreground";
+        return "bg-surface-card ring ring-surface-card-foreground/30 text-surface-card-foreground shadow-effect dark:shine-effect";
     }
   }, [color]);
 
@@ -34,14 +34,7 @@ export default function Button({
       className={twMerge(
         colorClasses,
         "relative overflow-hidden py-2 w-32 rounded-lg font-medium cursor-pointer shadow-sm",
-        "before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-        "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
-        "before:pointer-events-none",
-        "after:absolute after:inset-y-0 after:-left-1/2 after:w-1/3",
-        "after:skew-x-[-20deg]",
-        "after:bg-linear-to-r after:from-transparent after:via-shine/40 after:to-transparent",
-        "after:transition-[left] after:duration-500",
-        "hover:after:left-[120%]",
+        "hover:opacity-50",
         className,
       )}
       {...props}

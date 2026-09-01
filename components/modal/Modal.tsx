@@ -31,7 +31,7 @@ export default function Modal({
   header,
   footer,
   children,
-  closeOnOutsideClick = true,
+  closeOnOutsideClick = false,
   onClose,
   onUnmount,
 }: Props) {
@@ -47,7 +47,7 @@ export default function Modal({
     setTimeout(() => {
       setIsMounted(false);
       onUnmount?.();
-    }, 500);
+    }, 300);
   }, [onUnmount]);
 
   useEffect(() => {

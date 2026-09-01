@@ -115,7 +115,7 @@ export default function Recordings() {
       <div
         ref={containerRef}
         data-close={isDrawerOpen || undefined}
-        className="w-full h-max max-h-full duration-1000 data-close:max-h-0"
+        className="pb-2 w-full h-max max-h-full duration-1000 data-close:max-h-0"
       >
         <VideoPlayer />
       </div>

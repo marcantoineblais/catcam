@@ -16,7 +16,7 @@ export default function VideoPlayer() {
 
   return (
     <div
-      className="py-1.5 flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 group/video-player"
+      className="flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 group/video-player"
       data-fullscreen={isFullscreen || undefined}
     >
       <div

@@ -61,18 +61,14 @@ export default function SelectInput({
           type="button"
           onClick={() => setIsOpen((open) => !open)}
           className={twJoin(
-            "relative w-full overflow-hidden rounded-lg",
+            "w-full overflow-hidden rounded-lg",
             "border border-surface-foreground/30 bg-surface-card shadow",
             "px-4 py-2 text-left text-surface-foreground",
             "outline-none cursor-pointer",
             "transition-[border-color,box-shadow] duration-200",
             "focus:border-surface-foreground/50",
             "focus:ring-2 focus:ring-surface-foreground/15",
-
-            // Gloss
-            "before:pointer-events-none",
-            "before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
+            "shadow-effect dark:light-effect",
           )}
         >
           <span className="relative z-10 flex items-center justify-between">

@@ -25,8 +25,7 @@ export default function TextInput({ className, label, onChange, ...props }: Prop
           "transition-[border-color,box-shadow] duration-200",
           "focus-within:border-surface-foreground/50",
           "focus-within:ring-2 focus-within:ring-surface-foreground/15",
-          "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-          "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
+          "shadow-effect dark:light-effect",
         )}
       >
         <input
