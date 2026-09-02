@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { twJoin, twMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
 type Props = {
   children: React.ReactNode;

@@ -11,8 +11,6 @@ import TextInput from "@/components/ui/TextInput";
 import { useSession } from "@/hooks/useSession";
 import { ErrorMessage } from "@/types/types";
 
-import Logo from "../../components/Logo";
-
 export default function Login() {
   const { signIn } = useSession();
   const { isOpen, onOpen, onClose } = useModal();

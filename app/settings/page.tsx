@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import Container from "@/components/Container";
-import Logo from "@/components/Logo";
 import Modal from "@/components/modal/Modal";
 import { useModal } from "@/components/modal/useModal";
 import Button from "@/components/ui/Button";
