@@ -53,20 +53,20 @@ export default function LiveStream() {
         <VideoPlayer />
       </div>
 
-      <div className="pt-1 flex justify-end">
-        <OnOffSwitch
-          onLabel="HQ"
-          offLabel="SQ"
-          isOn={isHQ}
-          onClick={() => setIsHQ(!isHQ)}
-          disabled={!(selectedMonitor as Monitor)?.streams?.length}
-        />
-      </div>
+      <div className="pt-4 pb-8 px-2 flex flex-col bg-surface-card rounded-lg shadow-sm">
+        <div className="mb-2 flex justify-between items-end border-b-2 pb-2 border-text/30">
+          <h2 className="-mb-1 pl-2 text-xl text-left">
+            {(selectedMonitor as Monitor)?.name || ""}
+          </h2>
 
-      <div className="flex flex-col">
-        <h2 className="pl-3 border-b-2 border-text/30 text-text cursor-default text-xl text-left duration-200">
-          {(selectedMonitor as Monitor)?.name || ""}
-        </h2>
+          <OnOffSwitch
+            onLabel="HQ"
+            offLabel="SQ"
+            isOn={isHQ}
+            onClick={() => setIsHQ(!isHQ)}
+            disabled={!(selectedMonitor as Monitor)?.streams?.length}
+          />
+        </div>
 
         <SourceSelector
           monitors={monitors}

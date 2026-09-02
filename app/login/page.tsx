@@ -115,8 +115,6 @@ export default function Login() {
         </form>
       </Container>
 
-      <Logo className="-z-10 fixed -bottom-1 text-text translate-y-1/2 scale-125" />
-
       <Modal
         isOpen={isOpen}
         onClose={onClose}

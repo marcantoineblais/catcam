@@ -5,22 +5,22 @@
 
 @theme {
   --color-primary: #005bd1;
-  --color-primary-foreground: #fcfbf8;
+  --color-primary-foreground: #fffffd;
 
   --color-secondary: #222e39;
-  --color-secondary-foreground: #fcfbf8;
+  --color-secondary-foreground: #fffffd;
 
-  --color-surface: #f7f6f3;
+  --color-surface: #f3f3f0;
   --color-surface-foreground: #0d0e07;
 
-  --color-surface-card: #fcfbf8;
+  --color-surface-card: #fffffd;
   --color-surface-card-foreground: #0d0e07;
 
   --color-warning: #c79f00;
-  --color-warning-foreground: #fcfbf8;
+  --color-warning-foreground: #fffffd;
 
   --color-danger: #d10000;
-  --color-danger-foreground: #fcfbf8;
+  --color-danger-foreground: #fffffd;
 
   --color-accent: #96c3ce;
   --color-accent-foreground: #0d0e07;
@@ -28,7 +28,7 @@
   --color-text: #0d0e07;
 
   --color-shadow: #222e39;
-  --color-shine: #fcfbf8;
+  --color-shine: #fffffd;
 }
 
 @layer base {
@@ -55,18 +55,18 @@
   }
 
   ::-webkit-scrollbar-track {
-    background-color: var(--color-surface);
+    background-color: rgb(from var(--color-text) r g b / 0.1);
     border-radius: var(--radius-lg);
   }
 
   .dark {
     --color-surface: #0d0e07;
-    --color-surface-foreground: #faf5f5;
+    --color-surface-foreground: #fffffd;
 
     --color-surface-card: #1b1b18;
-    --color-surface-card-foreground: #faf5f5;
+    --color-surface-card-foreground: #fffffd;
 
-    --color-text: #faf5f5;
+    --color-text: #fffffd;
   }
 }
 

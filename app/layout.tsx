@@ -9,6 +9,8 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
+import Footer from "@/components/Footer";
+
 import DisplayMode from "../components/DisplayMode";
 import { ModalProvider } from "../components/modal/useModal";
 import Navbar from "../components/navbar/Navbar";
@@ -78,6 +80,8 @@ export default async function RootLayout({
             <DisplayMode />
               <Navbar />
               {children}
+              
+              <Footer />
           </ModalProvider>
         </SessionProvider>
         </div>

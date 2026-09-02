@@ -208,8 +208,6 @@ export default function Settings() {
         )}
       </Container>
 
-      <Logo className="-z-10 fixed -bottom-7 text-text translate-y-1/2 scale-125" />
-
       <Modal
         header={error?.error}
         isOpen={isOpen}
