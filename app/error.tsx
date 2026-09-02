@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 
-import Logo from "@/components/Logo";
 import Button from "@/components/ui/Button";
 
 export default function NotFound() {
@@ -22,7 +21,6 @@ export default function NotFound() {
         >
           Home page
         </Button>
-        <Logo />
       </div>
     </div>
   );

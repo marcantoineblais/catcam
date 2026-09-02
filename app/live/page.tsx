@@ -54,8 +54,8 @@ export default function LiveStream() {
       </div>
 
       <div className="pt-4 pb-8 px-2 flex flex-col bg-surface-card rounded-lg shadow-sm">
-        <div className="mb-2 flex justify-between items-end border-b-2 pb-2 border-text/30">
-          <h2 className="-mb-1 pl-2 text-xl text-left">
+        <div className="mb-2 flex justify-between items-center border-b-2 pb-1 border-text/30">
+          <h2 className="pl-2 text-2xl text-left">
             {(selectedMonitor as Monitor)?.name || ""}
           </h2>
 
@@ -63,6 +63,8 @@ export default function LiveStream() {
             onLabel="HQ"
             offLabel="SQ"
             isOn={isHQ}
+            height={22}
+            width={48}
             onClick={() => setIsHQ(!isHQ)}
             disabled={!(selectedMonitor as Monitor)?.streams?.length}
           />

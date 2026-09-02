@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/dist/client/components/navigation";
 
-import Logo from "@/components/Logo";
 import Button from "@/components/ui/Button";
 
 export default function NotFound() {
@@ -18,7 +17,6 @@ export default function NotFound() {
         <Button className="w-44" color="primary" onClick={() => router.push("/")}>
           Return to home
         </Button>
-        <Logo />
       </div>
     </div>
   );

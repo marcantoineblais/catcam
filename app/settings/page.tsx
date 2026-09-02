@@ -180,7 +180,6 @@ export default function Settings() {
                   isOn={areAllMonitorsOn}
                   onClick={() => toggleAllMonitors(!areAllMonitorsOn)}
                   disabled={allSwitchesDisabled}
-                  width={72}
                 />
               </div>
               {monitors.map((monitor, i) => {
@@ -197,7 +196,6 @@ export default function Settings() {
                       isOn={isMonitorOnline(monitor)}
                       onClick={() => toggleMonitor(monitor, !isOn)}
                       disabled={isDisabled}
-                      width={72}
                     />
                   </div>
                 );

@@ -14,15 +14,15 @@ export default function OnOffSwitch({
   isOn = true,
   onLabel = "ON",
   offLabel = "OFF",
-  height = 28,
-  width = 64,
+  height = 24,
+  width = 56,
   className,
   style,
   ...props
 }: OnOffSwitchProps) {
   const radius = height / 2;
   const totalWidth = (width - radius) * 2;
-
+  const fontSize = Math.min(height / 2, width / 6);
   return (
     <button
       className={twMerge(
@@ -38,11 +38,12 @@ export default function OnOffSwitch({
         style={{
           width: totalWidth,
           left: isOn ? 0 : -(totalWidth / 2) + radius,
+          fontSize,
         }}
       >
         <div
           className={twJoin(
-            "relative px-1.5 w-full h-full flex justify-start items-center rounded-l-full bg-primary",
+            "relative px-1.5 w-full h-full flex justify-start items-center leading-0 rounded-l-full bg-primary",
             "shine-effect",
           )}
         >
@@ -51,7 +52,7 @@ export default function OnOffSwitch({
 
         <div
           className={twJoin(
-            "relative px-1.5 w-full h-full flex justify-end items-center rounded-r-full bg-secondary",
+            "relative px-1.5 w-full h-full flex justify-end items-center rounded-r-full bg-secondary leading-0",
             "shine-effect",
           )}
         >
