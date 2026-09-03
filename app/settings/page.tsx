@@ -126,7 +126,7 @@ export default function Settings() {
   return (
     <>
       <Container>
-        <form className="w-full px-4 py-6 shadow bg-surface-card rounded-lg space-y-4">
+        <form className="w-full px-4 py-6 shadow-shadow bg-surface-card rounded-soft space-y-4">
           <h1 className="w-full pb-4 text-center text-3xl">Settings</h1>
 
           <SelectInput
@@ -171,7 +171,7 @@ export default function Settings() {
         </form>
 
         {isAdmin && (
-          <div className="w-full mt-4 px-4 py-6 shadow bg-surface-card rounded-lg">
+          <div className="w-full mt-4 px-4 py-6 shadow-shadow bg-surface-card rounded-soft">
             <h2 className="w-full pb-4 text-center text-3xl">Monitors</h2>
             <div className="w-full max-w-lg mx-auto flex flex-col items-start gap-3">
               <div className="w-full flex justify-between items-center gap-10">

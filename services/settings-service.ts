@@ -15,76 +15,73 @@ function safeFilename(email: string): string {
     .digest("hex");
 }
 
-export class SettingsService {
-  static async getSettings(email?: string) {
-    if (!email) {
-      return DEFAULT_SETTINGS;
-    }
-
-    return await this.readSettings(email);
+export async function getSettings(email?: string) {
+  if (!email) {
+    return DEFAULT_SETTINGS;
   }
 
-  static async readSettings(email: string) {
-    if (!email) {
-      throw new Error("Email is required to read settings");
-    }
+  return await readSettings(email);
+}
 
-    try {
-      const filename = safeFilename(email);
-      const settingsPath = path.join(SETTINGS_DIR, `${filename}.json`);
-      const data = await fs.promises.readFile(settingsPath, {
-        encoding: "utf-8",
-      });
-      return JSON.parse(data);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-        // File does not exist, return default settings
-        return {
-          ...DEFAULT_SETTINGS,
-          updatedAt: null,
-        };
-      }
-      console.error("Error reading settings:", error);
-      throw error;
-    }
+export async function readSettings(email: string) {
+  if (!email) {
+    throw new Error("Email is required to read settings");
   }
 
-  static async writeSettings({
-    home,
-    camera,
-    quality,
-    mode,
-    email,
-  }: {
-    home: string;
-    camera: string;
-    quality: string;
-    mode: string;
-    email: string;
-  }) {
-    if (!email) {
-      throw new Error("Email is required to save settings");
-    }
-
-    const settings = {
-      home: typeof home === "string" ? home : "",
-      camera: typeof camera === "string" ? camera : "",
-      quality: typeof quality === "string" ? quality : "HQ",
-      mode: typeof mode === "string" ? mode : "light",
-      updatedAt: new Date().toISOString(),
-    };
-
+  try {
     const filename = safeFilename(email);
     const settingsPath = path.join(SETTINGS_DIR, `${filename}.json`);
-    await fs.promises.mkdir(SETTINGS_DIR, { recursive: true });
-    await fs.promises.writeFile(
-      settingsPath,
-      JSON.stringify(settings, null, 2),
-      {
-        encoding: "utf-8",
-      },
+    const data = await fs.promises.readFile(settingsPath, {
+      encoding: "utf-8",
+    });
+    return JSON.parse(data);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      // File does not exist, return default settings
+      return {
+        ...DEFAULT_SETTINGS,
+        updatedAt: null,
+      };
+    }
+    throw (
+      new Error(
+        "[GetSettings] Failed to read settings: " + (error as Error).message,
+      ) ?? "Unknown error"
     );
-
-    return settings;
   }
+}
+
+export async function writeSettings({
+  home,
+  camera,
+  quality,
+  mode,
+  email,
+}: {
+  home: string;
+  camera: string;
+  quality: string;
+  mode: string;
+  email: string;
+}) {
+  if (!email) {
+    throw new Error("Email is required to save settings");
+  }
+
+  const settings = {
+    home: typeof home === "string" ? home : "",
+    camera: typeof camera === "string" ? camera : "",
+    quality: typeof quality === "string" ? quality : "HQ",
+    mode: typeof mode === "string" ? mode : "light",
+    updatedAt: new Date().toISOString(),
+  };
+
+  const filename = safeFilename(email);
+  const settingsPath = path.join(SETTINGS_DIR, `${filename}.json`);
+  await fs.promises.mkdir(SETTINGS_DIR, { recursive: true });
+  await fs.promises.writeFile(settingsPath, JSON.stringify(settings, null, 2), {
+    encoding: "utf-8",
+  });
+
+  return settings;
 }

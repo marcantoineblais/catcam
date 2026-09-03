@@ -54,18 +54,14 @@ type VideoPlayerContextValue = {
   toggleFullscreen: () => void;
 };
 
-const VideoPlayerContext =
-  createContext<VideoPlayerContextValue | null>(null);
+const VideoPlayerContext = createContext<VideoPlayerContextValue | null>(null);
 
 type Props = {
   initialQueue?: Video[];
   children: ReactNode;
 };
 
-export function VideoPlayerProvider({
-  initialQueue = [],
-  children,
-}: Props) {
+export function VideoPlayerProvider({ initialQueue = [], children }: Props) {
   const [queue, setQueue] = useState(initialQueue);
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
 
@@ -76,13 +72,12 @@ export function VideoPlayerProvider({
 
   const fullscreen = useVideoFullscreen({ isReady: currentVideo !== null });
 
-  const selectVideo = useCallback(
-    (video: Video) => setCurrentVideo(video),
-    [],
-  );
+  const selectVideo = useCallback((video: Video) => setCurrentVideo(video), []);
 
   const next = useCallback(() => {
-    const currentIndex = queue.findIndex((video) => video.src === currentVideo?.src);
+    const currentIndex = queue.findIndex(
+      (video) => video.src === currentVideo?.src,
+    );
     const nextIndex = currentIndex + 1;
     if (nextIndex < queue.length) {
       setCurrentVideo(queue[nextIndex]);
@@ -90,7 +85,9 @@ export function VideoPlayerProvider({
   }, [currentVideo, queue]);
 
   const previous = useCallback(() => {
-    const currentIndex = queue.findIndex((video) => video.src === currentVideo?.src);
+    const currentIndex = queue.findIndex(
+      (video) => video.src === currentVideo?.src,
+    );
     const previousIndex = currentIndex - 1;
     if (previousIndex >= 0) {
       setCurrentVideo(queue[previousIndex]);
@@ -98,16 +95,18 @@ export function VideoPlayerProvider({
   }, [currentVideo, queue]);
 
   return (
-    <VideoPlayerContext.Provider value={{
-      ...playback,
-      ...fullscreen,
-      queue,
-      setQueue,
-      currentVideo,
-      selectVideo,
-      next,
-      previous,
-    }}>
+    <VideoPlayerContext.Provider
+      value={{
+        ...playback,
+        ...fullscreen,
+        queue,
+        setQueue,
+        currentVideo,
+        selectVideo,
+        next,
+        previous,
+      }}
+    >
       {children}
     </VideoPlayerContext.Provider>
   );
@@ -117,9 +116,7 @@ export function useVideoPlayer() {
   const context = useContext(VideoPlayerContext);
 
   if (!context) {
-    throw new Error(
-      "useVideoPlayer must be used inside VideoPlayerProvider",
-    );
+    throw new Error("useVideoPlayer must be used inside VideoPlayerProvider");
   }
 
   return context;

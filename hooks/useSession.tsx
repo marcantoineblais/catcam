@@ -27,30 +27,24 @@ type SessionContextType = {
 };
 
 type SessionProviderProps = React.PropsWithChildren<{
-  initialSession: Session;
+  initialSession: Session | null;
 }>;
 
-const SessionContext = createContext<SessionContextType>({
-  session: {
-    monitors: [],
-    videos: [],
-    settings: DEFAULT_SETTINGS,
-  },
-  getSession: async () => {},
-  updateSession: () => {},
-  signIn: async () => ({ ok: false }),
-  signOut: async () => {},
-});
+const DEFAULT_SESSION = {
+  monitors: [],
+  videos: [],
+  settings: DEFAULT_SETTINGS,
+};
+
+const SessionContext = createContext<SessionContextType | null>(null);
 
 export function SessionProvider({
   children,
-  initialSession = {
-    monitors: [],
-    videos: [],
-    settings: DEFAULT_SETTINGS,
-  },
+  initialSession,
 }: SessionProviderProps) {
-  const [session, setSession] = useState<Session>(initialSession);
+  const [session, setSession] = useState<Session>(
+    initialSession ?? DEFAULT_SESSION,
+  );
   const router = useRouter();
   const firstVideoTime = useRef(session.videos[0]?.timestamp || null);
   const videoRefreshRate = 30000; // 30 seconds
@@ -114,11 +108,7 @@ export function SessionProvider({
       setSession(data.session);
       return data.session;
     } catch (error) {
-      setSession({
-        monitors: [],
-        videos: [],
-        settings: DEFAULT_SETTINGS,
-      });
+      setSession(DEFAULT_SESSION);
       console.error("[GetSession] Error while fetching session:", error);
       throw error;
     }
@@ -173,11 +163,7 @@ export function SessionProvider({
       const response = await fetch("/api/auth/logout");
 
       if (response.ok) {
-        setSession({
-          monitors: [],
-          videos: [],
-          settings: DEFAULT_SETTINGS,
-        });
+        setSession(DEFAULT_SESSION);
         router.replace("/login");
       } else {
         throw new Error("Logout failed");

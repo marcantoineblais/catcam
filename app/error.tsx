@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 
 export default function NotFound() {
   const router = useRouter();
-  
+
   return (
     <div className="py-7 mx-auto w-full max-w-sm flex flex-col justify-center gap-7 text-center">
       <div className="flex flex-col gap-3">
@@ -15,10 +15,7 @@ export default function NotFound() {
       </div>
 
       <div className="">
-        <Button
-          onClick={() => router.push("/")}
-          color="primary"
-        >
+        <Button onClick={() => router.push("/")} color="primary">
           Home page
         </Button>
       </div>

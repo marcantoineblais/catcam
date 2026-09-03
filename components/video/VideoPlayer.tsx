@@ -21,7 +21,7 @@ export default function VideoPlayer() {
     >
       <div
         className={twJoin(
-          "relative aspect-video w-full h-full flex items-center justify-center rounded-lg overflow-hidden shadow bg-surface-card",
+          "relative aspect-video w-full h-full flex items-center justify-center rounded-soft overflow-hidden bg-surface-card",
           "group-data-fullscreen/video-player:bg-black group-data-fullscreen/video-player:rounded-none",
         )}
       >

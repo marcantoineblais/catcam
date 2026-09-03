@@ -21,7 +21,7 @@ export default function Login() {
     rememberMe: false,
   });
   const { email, password, rememberMe } = formData;
-  
+
   async function submitForm(e: React.SubmitEvent) {
     e.preventDefault();
 
@@ -59,7 +59,7 @@ export default function Login() {
       <Container className="flex flex-col justify-center">
         <form
           onSubmit={submitForm}
-          className="w-full px-3 py-6 shadow bg-surface-card rounded-lg"
+          className="w-full px-3 py-6 shadow-shadow bg-surface-card rounded-soft"
           autoComplete="on"
         >
           <h1 className="w-full text-center text-3xl font-bold">Login</h1>

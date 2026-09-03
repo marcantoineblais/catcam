@@ -48,7 +48,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="z-40 sticky top-0 w-full bg-surface-card shadow">
+      <div className="z-40 sticky top-0 w-full bg-surface-card shadow-shadow">
         <div className="relative px-4 h-14 w-full max-w-4xl flex justify-between items-center mx-auto bg-inherit">
           <div className="-my-1 h-full flex items-center bg-inherit">
             <Logo />
@@ -64,7 +64,7 @@ export default function Navbar() {
             <div className="pointer-events-none absolute top-full left-0 right-0 overflow-hidden">
               <div
                 className={twJoin(
-                  "px-4 py-2 flex flex-col gap-2 justify-end items-end bg-surface-card shadow pointer-events-none",
+                  "px-4 py-2 flex flex-col gap-2 justify-end items-end bg-surface-card pointer-events-none",
                   "-translate-y-full transition-transform duration-500 data-active:translate-y-0 data-active:pointer-events-auto",
                 )}
                 data-active={isMenuOpen ? true : undefined}

@@ -24,7 +24,7 @@ export default function Button({
       case "danger":
         return "bg-danger text-danger-foreground shine-effect";
       default:
-        return "bg-surface-card ring ring-surface-card-foreground/30 text-surface-card-foreground shadow-effect dark:shine-effect";
+        return "bg-surface-card text-surface-card-foreground shadow-shadow dark:shine-effect";
     }
   }, [color]);
 
@@ -33,8 +33,10 @@ export default function Button({
       type={type}
       className={twMerge(
         colorClasses,
-        "relative overflow-hidden py-2 w-32 rounded-lg font-medium cursor-pointer shadow-sm",
-        "hover:opacity-50 duration-300 transition-opacity",
+        "relative overflow-hidden py-2 w-32 rounded-soft font-medium cursor-pointer",
+        "ring shadow-shadow ring-surface-card-foreground/10",
+        "hover:shadow-none duration-500 transition-shadow ease-in-out",
+        "disabled:cursor-default disabled:shadow-none",
         className,
       )}
       {...props}

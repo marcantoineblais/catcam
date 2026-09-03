@@ -30,6 +30,7 @@ export default function SourceSelector({
                 className="w-full"
                 color={color}
                 onClick={() => setSelectedMonitor(monitor)}
+                disabled={isActive}
               >
                 {monitor ? monitor.name : "All"}
               </Button>

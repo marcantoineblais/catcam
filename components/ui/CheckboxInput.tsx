@@ -32,8 +32,8 @@ export default function CheckboxInput({
 
         <span
           className={twMerge(
-            "relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-md",
-            "border border-surface-card-foreground/30 bg-surface-card shadow-sm",
+            "relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-soft",
+            "border border-surface-card-foreground/30 bg-surface-card shadow-shadow",
             "transition-all duration-200",
             "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-1/2",
             "before:bg-linear-to-b before:from-shine/30 before:to-transparent",

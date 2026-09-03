@@ -6,7 +6,12 @@ type Props = {
   onChange?: (value: string) => void;
 } & Omit<React.ComponentProps<"input">, "onChange">;
 
-export default function TextInput({ className, label, onChange, ...props }: Props) {
+export default function TextInput({
+  className,
+  label,
+  onChange,
+  ...props
+}: Props) {
   const genId = useId();
   const inputId = useMemo(() => props.id || genId, [props.id, genId]);
 
@@ -20,12 +25,12 @@ export default function TextInput({ className, label, onChange, ...props }: Prop
 
       <div
         className={twMerge(
-          "relative overflow-hidden rounded-lg",
-          "bg-surface-card border border-surface-foreground/30 shadow-sm",
+          "relative overflow-hidden rounded-soft",
+          "bg-surface-card border border-surface-foreground/30 shadow-shadow",
           "transition-[border-color,box-shadow] duration-200",
           "focus-within:border-surface-foreground/50",
           "focus-within:ring-2 focus-within:ring-surface-foreground/15",
-          "shadow-effect dark:light-effect",
+          "shadow-shadow dark:shine-effect",
         )}
       >
         <input

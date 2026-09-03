@@ -37,32 +37,35 @@ export default function Modal({
 }: Props) {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const mountModal = useCallback((isOpen: boolean) => {
-    if (isOpen) {
-      setIsMounted(true);
-      return;
-    }
+  const mountModal = useCallback(
+    (isOpen: boolean) => {
+      if (isOpen) {
+        setIsMounted(true);
+        return;
+      }
 
-    setIsVisible(false);
-    setTimeout(() => {
-      setIsMounted(false);
-      onUnmount?.();
-    }, 300);
-  }, [onUnmount]);
+      setIsVisible(false);
+      setTimeout(() => {
+        setIsMounted(false);
+        onUnmount?.();
+      }, 300);
+    },
+    [onUnmount],
+  );
 
   useEffect(() => {
     startTransition(() => mountModal(isOpen));
   }, [isOpen, mountModal]);
 
   useEffect(() => {
-  if (!isMounted) return;
+    if (!isMounted) return;
 
-  const frame = requestAnimationFrame(() => {
-    setIsVisible(true);
-  });
+    const frame = requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
 
-  return () => cancelAnimationFrame(frame);
-}, [isMounted]);
+    return () => cancelAnimationFrame(frame);
+  }, [isMounted]);
 
   function handleOutsideClick() {
     if (closeOnOutsideClick) {
@@ -82,15 +85,11 @@ export default function Modal({
         tabIndex={-1}
         onClick={handleOutsideClick}
       >
-        <div className="w-full md:w-md flex flex-col bg-surface-card dark:bg-neutral-700 rounded-lg overflow-hidden">
+        <div className="w-full md:w-md flex flex-col bg-surface-card dark:bg-neutral-700 rounded-soft overflow-hidden">
           <div className="py-2 px-4 text-lg font-bold flex justify-between items-center gap-4">
             <div>{header}</div>
             <div className="self-end">
-              <IconButton
-                icon={faXmark}
-                ariaLabel="Close"
-                onClick={onClose}
-              />
+              <IconButton icon={faXmark} ariaLabel="Close" onClick={onClose} />
             </div>
           </div>
           <div className="p-4 flex flex-col justify-center min-h-32">

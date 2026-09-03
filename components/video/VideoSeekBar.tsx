@@ -33,7 +33,7 @@ export default function VideoSeekBar() {
         const bounds = seekingBar.getBoundingClientRect();
         const position = Math.max(bounds.left, Math.min(pageX, bounds.right));
         const ratio = (position - bounds.left) / bounds.width;
-        
+
         seek(ratio * duration);
       }, 20);
     },
@@ -109,18 +109,18 @@ export default function VideoSeekBar() {
     <div className="pt-5 pb-3 w-full flex justify-center">
       <div
         ref={seekingBarRef}
-        className="h-1.5 w-full relative bg-secondary rounded-lg cursor-pointer"
+        className="h-1.5 w-full relative bg-secondary rounded-soft cursor-pointer"
         onMouseDown={handleStartSeeking}
         onTouchStart={handleStartSeeking}
         onClick={(event) => event.stopPropagation()}
       >
         <div
-          className="absolute inset-y-0 left-0 bg-primary-foreground/25 rounded-lg"
+          className="absolute inset-y-0 left-0 bg-primary-foreground/25 rounded-soft"
           style={{ width: `${bufferPosition}%` }}
         />
 
         <div
-          className="absolute inset-y-0 left-0 bg-primary rounded-lg"
+          className="absolute inset-y-0 left-0 bg-primary rounded-soft"
           style={{ width: `${seekingPosition}%` }}
         />
 

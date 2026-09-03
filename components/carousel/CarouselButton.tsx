@@ -16,8 +16,8 @@ export default function CarouselButton({
       data-right={align === "right" || undefined}
       data-center={align === "center" || undefined}
       className={twMerge(
-        "px-3 basis-5/12 border-b-2 border-text/50 text-xl text-left duration-200 cursor-pointer", 
-        "hover:opacity-80", 
+        "px-3 basis-5/12 border-b-2 border-text/50 text-xl text-left duration-200 cursor-pointer",
+        "hover:opacity-80",
         "disabled:border-primary disabled:cursor-default disabled:hover:opacity-100",
         "data-right:text-right data-center:text-center",
         className,

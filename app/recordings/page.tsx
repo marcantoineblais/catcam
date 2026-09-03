@@ -36,6 +36,7 @@ export default function Recordings() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [nothingToLoad, setNothingToLoad] = useState<boolean>(false);
   const [isCarouselLocked, setIsCarouselLocked] = useState<boolean>(false);
+  const [containerHeight, setContainerHeight] = useState<number>();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const monitorsList = useMemo<(null | Monitor)[]>(
@@ -43,11 +44,31 @@ export default function Recordings() {
     [monitors],
   );
 
+  // Close the drawer when a video is selected
   useEffect(() => {
     if (!currentVideo) return;
 
     startTransition(() => setIsDrawerOpen(false));
   }, [currentVideo]);
+
+  // Calculate the height of the container to manage drawer animation
+  useEffect(() => {
+    if (isDrawerOpen) {
+      startTransition(() => setContainerHeight(0));
+      return;
+    }
+
+    const resize = () => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = (width * 9) / 16; // Maintain a 16:9 aspect ratio
+      startTransition(() => setContainerHeight(height));
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, [isDrawerOpen]);
 
   useEffect(() => {
     startTransition(() => {
@@ -114,19 +135,20 @@ export default function Recordings() {
     <Container className="flex min-h-192 flex-1 flex-col">
       <div
         ref={containerRef}
-        data-close={isDrawerOpen || undefined}
-        className="pb-2 w-full h-max max-h-full duration-1000 data-close:max-h-0 data-close:pb-0"
+        data-hidden={isDrawerOpen || undefined}
+        className="mb-2 w-full duration-500 rounded-soft shadow-shadow ease-in-out data-hidden:mb-0"
+        style={{ height: containerHeight }}
       >
         <VideoPlayer />
       </div>
 
-      <div className="z-10 min-h-0 flex-1 flex flex-col w-full overflow-hidden bg-surface-card rounded-lg">
+      <div className="z-10 min-h-0 flex-1 flex flex-col w-full overflow-hidden bg-surface-card rounded-soft shadow-shadow">
         <div className="pt-2 shrink-0 w-full flex justify-center items-center">
           <IconButton
             onClick={() => toggleCarouselDrawer()}
             icon={faAngleUp}
             ariaLabel="Open videos"
-            className="cursor-pointer data-active:rotate-180"
+            className="cursor-pointer data-active:rotate-180 delay-300"
             data-active={isDrawerOpen || undefined}
             size="2x"
           />

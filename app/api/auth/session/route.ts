@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 
-import { SessionService } from "@/services/session-service";
+import { getSession } from "@/services/session-service";
 
 export async function GET() {
   try {
-    const session = await SessionService.getSession();
+    const { session, error } = await getSession();
+    if (error) {
+      throw new Error("Token is invalid or expired");
+    }
 
     return NextResponse.json({ ok: true, session });
   } catch (error) {
     console.error("Error fetching session:", error);
-    return NextResponse.json({ ok: false, session: null });
+    return NextResponse.redirect("/api/auth/logout");
   }
 }

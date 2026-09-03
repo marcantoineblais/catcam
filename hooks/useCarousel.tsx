@@ -160,7 +160,7 @@ export default function useCarousel({
       window.removeEventListener("resize", resize);
     };
   }, [containerRef, itemsNumber]);
-  
+
   return {
     width,
     position,

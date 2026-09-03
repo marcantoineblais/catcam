@@ -1,25 +1,37 @@
 import { getToken } from "../libs/jwt";
-import { SettingsService } from "./settings-service";
-import { ShinobiService } from "./shinobi-service";
+import { getSettings } from "./settings-service";
+import { getMonitors, getVideos } from "./shinobi-service";
 
-export class SessionService {
-  static async getSession() {
+export async function getSession() {
+  try {
     const token = await getToken({ isServerAction: true });
+    if (!token) {
+      return { session: null };
+    }
+
     const authToken = token?.authToken;
     const groupKey = token?.groupKey;
     const email = token?.email;
     const permissions = token?.permissions;
 
-    const monitors = await ShinobiService.getMonitors({ authToken, groupKey });
-    const videos = await ShinobiService.getVideos({ authToken, groupKey });
-    const settings = await SettingsService.getSettings(email);
+    const [monitors, videos, settings] = await Promise.all([
+      getMonitors({ authToken, groupKey }),
+      getVideos({ authToken, groupKey }),
+      getSettings(email),
+    ]);
+
     return {
-      authToken,
-      groupKey,
-      permissions,
-      monitors,
-      videos,
-      settings,
+      session: {
+        authToken,
+        groupKey,
+        permissions,
+        monitors,
+        videos,
+        settings,
+      },
     };
+  } catch (error) {
+    console.error((error as Error)?.message ?? "Unknown error");
+    return { session: null, error: true };
   }
 }

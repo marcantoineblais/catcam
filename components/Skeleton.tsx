@@ -16,21 +16,18 @@ export default function Skeleton({
 }: Props) {
   return (
     <div
-      className={twMerge(
-        "relative",
-        isLoading && "overflow-hidden rounded-inherit",
-        className,
-      )}
+      className={twMerge("relative group/skeleton", className)}
+      data-loading={isLoading || undefined}
       aria-busy={isLoading || undefined}
       {...props}
     >
-      <div className={isLoading ? "opacity-0" : undefined}>{children}</div>
-      {isLoading && (
-        <div
-          aria-hidden="true"
-          className="cc-skeleton absolute inset-0 bg-surface/80 dark:bg-secondary/80"
-        />
-      )}
+      <div
+        aria-hidden={isLoading || undefined}
+        className="group-data-loading/skeleton:cc-skeleton absolute inset-0 bg-secondary/10"
+      />
+      <div className="w-full h-full group-data-loading/skeleton:invisible">
+        {children}
+      </div>
     </div>
   );
 }

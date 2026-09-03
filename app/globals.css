@@ -29,6 +29,11 @@
 
   --color-shadow: #222e39;
   --color-shine: #ffffff;
+
+  --color-shadow: rgb(0 0 0 / 0.3);
+  --shadow-shadow: 0 1px 4px var(--color-shadow);
+
+  --radius-soft: 0.5rem;
 }
 
 @layer base {
@@ -68,7 +73,9 @@
 
     --color-text: #ffffff;
 
-    --tw-shadow-color: rgb(255 255 255 / 0.1);
+    --color-shine: #777777;
+
+    --color-shadow: rgb(0 0 0 / 0.5);
   }
 }
 
@@ -81,69 +88,77 @@
 }
 
 /* Catcam spinner styles */
-@layer components {
-  .cc-spinner {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-    color: var(--color-primary);
-  }
+@utility cc-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: var(--color-primary);
+}
 
-  .cc-spinner-ring {
-    display: block;
-    border: 3px solid color-mix(in srgb, currentColor 22%, transparent);
-    border-top-color: currentColor;
-    border-radius: 9999px;
-    animation: cc-spin 0.8s linear infinite;
-  }
+@utility cc-spinner-ring {
+  display: block;
+  border: 3px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-top-color: currentColor;
+  border-radius: 9999px;
+  animation: cc-spin 0.8s linear infinite;
+}
 
-  .cc-spinner-sm .cc-spinner-ring {
+@utility cc-spinner-sm {
+  & .cc-spinner-ring {
     width: 24px;
     height: 24px;
   }
-  .cc-spinner-md .cc-spinner-ring {
+}
+
+@utility cc-spinner-md {
+  & .cc-spinner-ring {
     width: 40px;
     height: 40px;
   }
-  .cc-spinner-lg .cc-spinner-ring {
+}
+
+@utility cc-spinner-lg {
+  & .cc-spinner-ring {
     width: 64px;
     height: 64px;
   }
+}
 
-  .cc-skeleton::after {
+@utility cc-skeleton {
+  &::after {
     position: absolute;
     inset: 0;
     content: "";
     background: linear-gradient(
       105deg,
       transparent 35%,
-      rgb(255 255 255 / 0.38) 50%,
+      rgb(255 255 255 / 0.7) 50%,
       transparent 65%
     );
     animation: cc-skeleton-scan 1.5s ease-in-out infinite;
     transform: translateX(-100%);
   }
+}
 
-  @keyframes cc-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+@keyframes cc-spin {
+  from {
+    transform: rotate(0deg);
   }
-
-  @keyframes cc-skeleton-scan {
-    to {
-      transform: translateX(100%);
-    }
+  to {
+    transform: rotate(360deg);
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    .cc-spinner-ring,
-    .cc-skeleton::after {
-      animation: none !important;
-    }
+@keyframes cc-skeleton-scan {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-spinner-ring,
+  .cc-skeleton::after {
+    animation: none !important;
   }
 }

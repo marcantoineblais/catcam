@@ -61,14 +61,14 @@ export default function SelectInput({
           type="button"
           onClick={() => setIsOpen((open) => !open)}
           className={twJoin(
-            "w-full overflow-hidden rounded-lg",
-            "border border-surface-foreground/30 bg-surface-card shadow",
+            "w-full overflow-hidden rounded-soft",
+            "border border-surface-foreground/30 bg-surface-card shadow-shadow",
             "px-4 py-2 text-left text-surface-foreground",
             "outline-none cursor-pointer",
             "transition-[border-color,box-shadow] duration-200",
             "focus:border-surface-foreground/50",
             "focus:ring-2 focus:ring-surface-foreground/15",
-            "shadow-effect dark:light-effect",
+            "shadow-shadow dark:shine-effect",
           )}
         >
           <span className="relative z-10 flex items-center justify-between">
@@ -84,8 +84,8 @@ export default function SelectInput({
         {isOpen && (
           <div
             className={twJoin(
-              "absolute z-40 mt-1 w-full overflow-hidden rounded-lg space-y-0.5",
-              "border border-surface-foreground/30 bg-surface-card shadow",
+              "absolute z-40 mt-1 w-full overflow-hidden rounded-soft space-y-0.5",
+              "border border-surface-foreground/30 bg-surface-card shadow-shadow",
               "p-1",
             )}
           >
@@ -99,7 +99,7 @@ export default function SelectInput({
                   setIsOpen(false);
                 }}
                 className={twJoin(
-                  "w-full rounded-md px-3 py-2 text-left text-sm cursor-pointer",
+                  "w-full rounded-soft px-3 py-2 text-left text-sm cursor-pointer",
                   "text-surface-foreground",
                   "transition-colors duration-200",
                   "hover:bg-surface-foreground/10",

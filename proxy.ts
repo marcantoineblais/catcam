@@ -1,40 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { SessionService } from "@/services/session-service";
-
 import { getToken } from "./libs/jwt";
+import { getSettings } from "./services/settings-service";
 
-const publicRoutes = [
-  "/login",
-  "/logout",
-  "/api/auth/login",
-  "/api/auth/logout",
-  "/api/auth/session",
-];
+const publicRoutes = ["/login", "/api/auth/login", "/api/auth/session"];
 
 export async function proxy(request: NextRequest) {
   const requestedPath = request.nextUrl.pathname;
-  const isApiRequest = requestedPath.startsWith("/api/");
   if (publicRoutes.includes(requestedPath)) {
-    const response = NextResponse.next();
-    if (!isApiRequest) response.headers.set("x-pathname", requestedPath);
-    return response;
+    return NextResponse.next();
   }
 
   try {
     const token = await getToken();
-    if (!token?.authToken) throw new Error("No auth token");
+    if (!token) throw new Error("No token found");
 
-    let response = NextResponse.next();
     if (requestedPath === "/") {
-      const session = await SessionService.getSession();
-      const userLandingPage = session?.settings?.home || "/live";
-      response = NextResponse.redirect(new URL(userLandingPage, request.url));
+      const settings = await getSettings(token.email);
+      const userLandingPage = settings?.home || "/live";
+      const redirectUrl = new URL(request.url);
+      redirectUrl.pathname = userLandingPage;
+      return NextResponse.redirect(redirectUrl);
     }
 
-    if (!isApiRequest) response.headers.set("x-pathname", requestedPath);
-    return response;
+    return NextResponse.next();
   } catch (error) {
+    const isApiRequest = requestedPath.startsWith("/api/");
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(
       `[PROXY] Unauthorized access to: ${requestedPath}. Error: ${errorMessage}`,
@@ -46,12 +37,9 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    const host =
-      request.headers.get("x-forwarded-host") || request.headers.get("host");
-    const proto = request.headers.get("x-forwarded-proto") || "http";
-    const origin = `${proto}://${host}`;
-
-    return NextResponse.redirect(new URL("/login", origin));
+    const redirectUrl = new URL(request.url);
+    redirectUrl.pathname = "/login";
+    return NextResponse.redirect(redirectUrl);
   }
 }
 

@@ -49,11 +49,14 @@ export default function LiveStream() {
 
   return (
     <Container className="flex flex-col gap-2">
-      <div ref={containerRef} className="w-full max-h-full">
+      <div
+        ref={containerRef}
+        className="w-full shadow-shadow rounded-soft bg-surface-card"
+      >
         <VideoPlayer />
       </div>
 
-      <div className="pt-4 pb-8 px-2 flex flex-col bg-surface-card rounded-lg shadow-sm">
+      <div className="pt-4 pb-8 px-2 flex flex-col bg-surface-card rounded-soft shadow-shadow">
         <div className="mb-2 flex justify-between items-center border-b-2 pb-1 border-text/30">
           <h2 className="pl-2 text-2xl text-left">
             {(selectedMonitor as Monitor)?.name || ""}

@@ -2,6 +2,7 @@
 
 import React, { startTransition, useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
+import { twJoin } from "tailwind-merge";
 
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/libs/formatDate";
@@ -69,12 +70,20 @@ export default function VideoCard({
         <div
           onClick={onClick}
           data-active={isSelected ? true : undefined}
-          className="relative w-full h-full flex flex-col rounded-lg overflow-hidden bg-surface-card shadow duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:hover:opacity-100 hover:opacity-75"
+          className={twJoin(
+            "relative w-full h-full flex flex-col rounded-soft overflow-hidden bg-surface-card shadow-shadow group/video-card",
+            "duration-200 ease-in-out cursor-pointer",
+            "data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:shadow-none",
+            "hover:shadow-none",
+            "transition-[box-shadow,transform]",
+          )}
         >
-          <Skeleton isLoading={imageLoading} className="w-full h-full">
+          <Skeleton
+            isLoading={imageLoading}
+            className="w-full h-full aspect-video overflow-hidden"
+          >
             <img
-              data-active={isSelected ? true : undefined}
-              className="w-full h-full duration-200 data-active:saturate-0"
+              className="w-full h-full duration-200 group-data-active/video-card:blur-xs group-data-active/video-card:scale-110"
               onLoad={onLoadHandle}
               loading="lazy"
               width={imageWidth}
@@ -89,7 +98,7 @@ export default function VideoCard({
             />
           </Skeleton>
 
-          <div className="w-full py-1 px-2 flex justify-between items-center text-sm md:text-base">
+          <div className="w-full p-2 pb-1 flex justify-between items-center text-xs md:text-sm xl:text-base">
             <span>{getFormattedDate(timestamp)}</span>
             <span>{getFormattedTime(timestamp)}</span>
           </div>

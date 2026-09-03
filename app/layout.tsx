@@ -1,22 +1,18 @@
-export const dynamic = "force-dynamic";
-
 import "./globals.css";
 
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
 import Footer from "@/components/Footer";
+import { getSession } from "@/services/session-service";
 
 import DisplayMode from "../components/DisplayMode";
 import { ModalProvider } from "../components/modal/useModal";
 import Navbar from "../components/navbar/Navbar";
 import { SessionProvider } from "../hooks/useSession";
-import { SessionService } from "../services/session-service";
-import { DEFAULT_SETTINGS } from "./config";
 
 export const sora = Sora({
   subsets: ["latin"],
@@ -37,34 +33,15 @@ export const metadata: Metadata = {
   applicationName: "Catcam",
 };
 
-async function getSession() {
-  try {
-    return await SessionService.getSession();
-  } catch (error) {
-    console.error("[GetSession] Error while fetching session:", error);
-
-    const headersStore = await headers();
-    const currentPath = headersStore.get("x-pathname") || "";
-
-    // Prevent redirect loop on token revocation
-    if (currentPath === "/logout") {
-      return {
-        monitors: [],
-        videos: [],
-        settings: DEFAULT_SETTINGS,
-      };
-    }
-
-    redirect("/logout");
-  }
-}
-
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const { session, error } = await getSession();
+  if (error) {
+    redirect("/api/auth/logout");
+  }
 
   return (
     <html lang="en">
@@ -75,15 +52,14 @@ export default async function RootLayout({
         )}
       >
         <div className="w-dvw h-lvh flex flex-col">
-        <SessionProvider initialSession={session}>
-          <ModalProvider>
-            <DisplayMode />
+          <SessionProvider initialSession={session}>
+            <ModalProvider>
+              <DisplayMode />
               <Navbar />
               {children}
-              
               <Footer />
-          </ModalProvider>
-        </SessionProvider>
+            </ModalProvider>
+          </SessionProvider>
         </div>
       </body>
     </html>

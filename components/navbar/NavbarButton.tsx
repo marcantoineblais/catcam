@@ -22,7 +22,12 @@ export default function NavbarButton({
   }, [active, warning]);
 
   return (
-    <Button onClick={onClick} color={color} className="w-full">
+    <Button
+      onClick={onClick}
+      color={color}
+      className="w-full"
+      disabled={active}
+    >
       {label}
     </Button>
   );
