@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getToken } from "./libs/jwt";
+import { getRedirectUrl } from "./libs/redirect";
 import { getSettings } from "./services/settings-service";
 
 const publicRoutes = ["/login", "/api/auth/login", "/api/auth/session"];
@@ -18,9 +19,7 @@ export async function proxy(request: NextRequest) {
     if (requestedPath === "/") {
       const settings = await getSettings(token.email);
       const userLandingPage = settings?.home || "/live";
-      const redirectUrl = new URL(request.url);
-      redirectUrl.pathname = userLandingPage;
-      return NextResponse.redirect(redirectUrl);
+      return NextResponse.redirect(getRedirectUrl(userLandingPage));
     }
 
     return NextResponse.next();
@@ -37,9 +36,7 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    const redirectUrl = new URL(request.url);
-    redirectUrl.pathname = "/login";
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.redirect(getRedirectUrl("/login"));
   }
 }
 

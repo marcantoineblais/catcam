@@ -24,7 +24,7 @@ export default function Button({
       case "danger":
         return "bg-danger text-danger-foreground shine-effect";
       default:
-        return "bg-surface-card text-surface-card-foreground shadow-shadow dark:shine-effect";
+        return "bg-surface-card text-surface-card-foreground shadow-shadow shadow-effect dark:shine-effect";
     }
   }, [color]);
 
