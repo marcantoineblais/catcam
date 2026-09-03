@@ -67,6 +67,8 @@
     --color-surface-card-foreground: #ffffff;
 
     --color-text: #ffffff;
+
+    --tw-shadow-color: rgb(255 255 255 / 0.1);
   }
 }
 
