@@ -63,8 +63,8 @@ export default function LiveStream() {
             onLabel="HQ"
             offLabel="SQ"
             isOn={isHQ}
-            height={22}
-            width={48}
+            height={24}
+            width={52}
             onClick={() => setIsHQ(!isHQ)}
             disabled={!(selectedMonitor as Monitor)?.streams?.length}
           />

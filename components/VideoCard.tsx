@@ -28,7 +28,7 @@ export default function VideoCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(cardRef, options);
   const imageWidth = 240;
-  const imageHeight = 135;
+  const imageHeight = 136;
 
   useEffect(() => {
     const container = containerRef?.current;
@@ -64,12 +64,12 @@ export default function VideoCard({
   }
 
   return (
-    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
+    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-17/12">
       {isVisible && (
         <div
           onClick={onClick}
           data-active={isSelected ? true : undefined}
-          className="relative w-full h-full flex flex-col rounded overflow-hidden bg-surface-card shadow duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:hover:opacity-100 hover:opacity-75"
+          className="relative w-full h-full flex flex-col rounded-lg overflow-hidden bg-surface-card shadow duration-200 ease-in-out cursor-pointer data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:hover:opacity-100 hover:opacity-75"
         >
           <Skeleton isLoading={imageLoading} className="w-full h-full">
             <img

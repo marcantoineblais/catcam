@@ -34,7 +34,7 @@ export default function Button({
       className={twMerge(
         colorClasses,
         "relative overflow-hidden py-2 w-32 rounded-lg font-medium cursor-pointer shadow-sm",
-        "hover:opacity-50",
+        "hover:opacity-50 duration-300 transition-opacity",
         className,
       )}
       {...props}
