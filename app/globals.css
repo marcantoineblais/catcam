@@ -60,6 +60,7 @@
   }
 
   .dark {
+    --tw-shadow-color: rgb(0 0 0 / 0.1);
     --color-surface: #0d0e07;
     --color-surface-foreground: #ffffff;
 
