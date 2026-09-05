@@ -32,7 +32,7 @@ export default function OnOffSwitch({
   return (
     <button
       className={twMerge(
-        "relative text-sm font-bold rounded-full text-primary-foreground box-content! border-2 border-text/50 ease-in-out cursor-pointer shadow-shadow",
+        "relative text-sm font-bold rounded-full text-primary-foreground box-content! border-2 border-primary/50 ease-in-out cursor-pointer shadow-shadow",
         "disabled:opacity-50 focus:outline-none disabled:cursor-default",
         "dark:border-text/30",
         className,

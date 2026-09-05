@@ -4,33 +4,30 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #005bd1;
-  --color-primary-foreground: #ffffff;
+  --color-primary: #C08552;
+  --color-primary-foreground: #fffdfb;
 
-  --color-secondary: #222e39;
-  --color-secondary-foreground: #ffffff;
+  --color-secondary: #221513;
+  --color-secondary-foreground: #fffdfb;
 
-  --color-surface: #fafafa;
+  --color-surface: #FFF8F0;
   --color-surface-foreground: #0d0e07;
 
-  --color-surface-card: #ffffff;
+  --color-surface-card: #fffdfb;
   --color-surface-card-foreground: #0d0e07;
 
-  --color-warning: #c79f00;
-  --color-warning-foreground: #ffffff;
+  --color-warning: #fdeed0;
+  --color-warning-foreground: #4B2E2B;
 
   --color-danger: #d10000;
-  --color-danger-foreground: #ffffff;
+  --color-danger-foreground: #fffdfb;
 
-  --color-accent: #96c3ce;
-  --color-accent-foreground: #0d0e07;
+  --color-text: #4B2E2B;
 
-  --color-text: #0d0e07;
+  --color-shadow: #4B2E2B;
+  --color-shine: #fffdfb;
 
-  --color-shadow: #222e39;
-  --color-shine: #ffffff;
-
-  --color-shadow: rgb(0 0 0 / 0.3);
+  --color-shadow: rgb(0 0 0 / 0.1);
   --shadow-shadow: 0 1px 4px var(--color-shadow);
 
   --radius-soft: 0.5rem;
@@ -65,17 +62,16 @@
   }
 
   .dark {
-    --color-surface: #0d0e07;
-    --color-surface-foreground: #ffffff;
+    --color-surface: #0a0705;
+    --color-surface-foreground: #FFF8F0;
 
-    --color-surface-card: #1b1b18;
-    --color-surface-card-foreground: #ffffff;
+    --color-surface-card: #160e0c;
+    --color-surface-card-foreground: #FFF8F0;
 
-    --color-text: #ffffff;
+    --color-text: #FFF8F0;
+    --color-shine: #FFF8F0;
 
-    --color-shine: #777777;
-
-    --color-shadow: rgb(0 0 0 / 0.6);
+    --color-shadow: rgb(from var(--color-text) r g b / 0.1);
   }
 }
 
