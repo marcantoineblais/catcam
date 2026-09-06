@@ -4,28 +4,28 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #C08552;
-  --color-primary-foreground: #fffdfb;
+  --color-primary: #c46b1e;
+  --color-primary-foreground: #ffffff;
 
   --color-secondary: #221513;
-  --color-secondary-foreground: #fffdfb;
+  --color-secondary-foreground: #ffffff;
 
-  --color-surface: #fffcfa;
+  --color-surface: #fafafa;
   --color-surface-foreground: #0d0e07;
 
-  --color-surface-card: #fffdfb;
+  --color-surface-card: #ffffff;
   --color-surface-card-foreground: #0d0e07;
 
   --color-warning: #fdeed0;
-  --color-warning-foreground: #4B2E2B;
+  --color-warning-foreground: #0d0e07;
 
   --color-danger: #d10000;
   --color-danger-foreground: #fffdfb;
 
-  --color-text: #4B2E2B;
+  --color-text: #0d0e07;
 
-  --color-shadow: #4B2E2B;
-  --color-shine: #fffdfb;
+  --color-fade: #4B2E2B;
+  --color-shine: #ffffff;
 
   --color-shadow: rgb(0 0 0 / 0.2);
   --shadow-shadow: 0 1px 4px var(--color-shadow);
@@ -62,27 +62,27 @@
   }
 
   .dark {
-    --color-primary: #5a3a1f;
-
-    --color-surface: #0a0705;
+    --color-surface: #0d0e07;
     --color-surface-foreground: #FFF8F0;
 
-    --color-surface-card: #160e0c;
+    --color-surface-card: #101109;
     --color-surface-card-foreground: #FFF8F0;
 
     --color-text: #FFF8F0;
+
+    --color-fade: #707070;
     --color-shine: #FFF8F0;
 
-    --color-shadow: rgb(from var(--color-text) r g b / 0.2);
+    --color-shadow: rgb(from var(--color-text) r g b / 0.1);
   }
 }
 
 @utility shine-effect {
-  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-4/5 before:bg-linear-to-b before:from-shine/10 before:to-transparent before:pointer-events-none;
+  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-4/5 before:bg-linear-to-b before:from-shine/30 before:to-transparent before:pointer-events-none;
 }
 
-@utility shadow-effect {
-  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-4/5 before:bg-linear-to-t before:from-shadow/5 before:to-transparent before:pointer-events-none;
+@utility fade-effect {
+  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-4/5 before:bg-linear-to-t before:from-fade/5 before:to-transparent before:pointer-events-none;
 }
 
 /* Catcam spinner styles */

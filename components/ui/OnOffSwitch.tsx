@@ -64,8 +64,8 @@ export default function OnOffSwitch({
         className={twJoin(
           "absolute! z-10 inset-y-0 duration-300 scale-125",
           "origin-center aspect-square rounded-full",
-          "bg-radial from-surface-card to-shadow dark:to-shine from-50% cursor-pointer",
-          "before:rounded-full dark:shine-effect",
+          "bg-radial from-surface-card to-shadow from-50% cursor-pointer",
+          "before:rounded-full",
         )}
         style={{ right: isOn ? 0 : knobPosition }}
       />
