@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -22,39 +23,47 @@ const IntersectionObserverContext =
 
 type Props = {
   children: ReactNode;
-  root?: Element | null;
+  root: RefObject<Element | null>;
   rootMargin?: string;
   threshold?: number | number[];
 };
 
 export default function IntersectionObserverProvider({
   children,
-  root = null,
+  root,
   rootMargin = "100%",
   threshold = 0,
 }: Props) {
   const callbacksRef = useRef(new Map<Element, IntersectionCallback>());
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const rootElementRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    rootElementRef.current = root?.current ?? null;
+  }, [root]);
 
   const getObserver = useCallback(() => {
-    const oberver = observerRef.current;
-    if (oberver) {
-      return oberver;
+    if (observerRef.current) {
+      return observerRef.current;
     }
-    
-    return new IntersectionObserver(
+
+    const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           callbacksRef.current.get(entry.target)?.(entry);
         }
       },
       {
-        root,
+        root: rootElementRef.current,
         rootMargin,
         threshold,
       },
     );
-  }, [root, rootMargin, threshold]);
+
+    observerRef.current = observer;
+
+    return observer;
+  }, [rootMargin, threshold]);
 
   const observe = useCallback(
     (element: Element, callback: IntersectionCallback) => {
