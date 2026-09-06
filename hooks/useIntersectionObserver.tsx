@@ -30,7 +30,7 @@ type Props = {
 export default function IntersectionObserverProvider({
   children,
   root = null,
-  rootMargin = "50%",
+  rootMargin = "100%",
   threshold = 0,
 }: Props) {
   const callbacksRef = useRef(new Map<Element, IntersectionCallback>());
