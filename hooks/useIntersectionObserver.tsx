@@ -1,24 +1,115 @@
-import React, { useEffect, useState } from "react";
+"use client";
 
-export default function useIntersectionObserver(
-  ref: React.RefObject<Element | null>,
-  options: IntersectionObserverInit,
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+type IntersectionCallback = (entry: IntersectionObserverEntry) => void;
+
+type IntersectionObserverContextValue = {
+  observe: (element: Element, callback: IntersectionCallback) => void;
+  unobserve: (element: Element) => void;
+};
+
+const IntersectionObserverContext =
+  createContext<IntersectionObserverContextValue | null>(null);
+
+type Props = {
+  children: ReactNode;
+  root?: Element | null;
+  rootMargin?: string;
+  threshold?: number | number[];
+};
+
+export default function IntersectionObserverProvider({
+  children,
+  root = null,
+  rootMargin = "50%",
+  threshold = 0,
+}: Props) {
+  const callbacksRef = useRef(new Map<Element, IntersectionCallback>());
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const getObserver = useCallback(() => {
+    const oberver = observerRef.current;
+    if (oberver) {
+      return oberver;
+    }
+    
+    return new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          callbacksRef.current.get(entry.target)?.(entry);
+        }
+      },
+      {
+        root,
+        rootMargin,
+        threshold,
+      },
+    );
+  }, [root, rootMargin, threshold]);
+
+  const observe = useCallback(
+    (element: Element, callback: IntersectionCallback) => {
+      callbacksRef.current.set(element, callback);
+      getObserver().observe(element);
+    },
+    [getObserver],
+  );
+
+  const unobserve = useCallback((element: Element) => {
+    callbacksRef.current.delete(element);
+    observerRef.current?.unobserve(element);
+  }, []);
+
+  // Clean up the observer when the component unmounts
+  useEffect(() => {
+    return () => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+    };
+  }, []);
+
+  return (
+    <IntersectionObserverContext.Provider value={{ observe, unobserve }}>
+      {children}
+    </IntersectionObserverContext.Provider>
+  );
+}
+
+export function useIntersectionObserver(
+  ref: React.RefObject<HTMLElement | null>,
 ) {
+  const context = useContext(IntersectionObserverContext);
+
+  if (!context) {
+    throw new Error(
+      "useIntersectionObserver must be used inside IntersectionObserverProvider",
+    );
+  }
+
+  const { observe, unobserve } = context;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = ref.current;
+    if (!element) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
+    observe(element, (entry) => {
       setIsVisible(entry.isIntersecting);
-    }, options);
-
-    observer.observe(ref.current);
+    });
 
     return () => {
-      observer.disconnect();
+      unobserve(element);
     };
-  }, [ref, options]);
+  }, [ref, observe, unobserve]);
 
   return isVisible;
 }

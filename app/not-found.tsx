@@ -19,7 +19,7 @@ export default function NotFound() {
           color="primary"
           onClick={() => router.push("/")}
         >
-          Return to home
+          Home page
         </Button>
       </div>
     </div>

@@ -62,16 +62,16 @@
   }
 
   .dark {
-    --color-surface: #0d0e07;
-    --color-surface-foreground: #FFF8F0;
+    --color-surface: #0a0804;
+    --color-surface-foreground: #ffffff;
 
     --color-surface-card: #1a1514;
-    --color-surface-card-foreground: #FFF8F0;
+    --color-surface-card-foreground: #ffffff;
 
-    --color-text: #FFF8F0;
+    --color-text: #ffffff;
 
-    --color-fade: #4b4b4b;
-    --color-shine: #FFF8F0;
+    --color-fade: #3a3a3a;
+    --color-shine: #ffffff;
 
     --color-shadow: rgb(from var(--color-text) r g b / 0.1);
   }

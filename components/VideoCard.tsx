@@ -1,10 +1,10 @@
 "use client";
 
-import React, { startTransition, useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import { MouseEventHandler } from "react";
 import { twJoin } from "tailwind-merge";
 
-import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { getFormattedDate, getFormattedTime } from "@/libs/formatDate";
 import toImageUrl from "@/libs/toImageUrl";
 
@@ -25,25 +25,10 @@ export default function VideoCard({
   onClick?: MouseEventHandler;
 }) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
-  const [options, setOptions] = useState<IntersectionObserverInit>({});
   const cardRef = useRef<HTMLDivElement>(null);
-  const isVisible = useIntersectionObserver(cardRef, options);
+  const isVisible = useIntersectionObserver(cardRef);
   const imageWidth = 240;
   const imageHeight = 136;
-
-  useEffect(() => {
-    const container = containerRef?.current;
-
-    const root = container || null;
-    const rootMargin = "50%";
-    const threshold = 0;
-
-    setOptions({
-      root,
-      rootMargin,
-      threshold,
-    });
-  }, [containerRef]);
 
   useEffect(() => {
     const card = cardRef.current;

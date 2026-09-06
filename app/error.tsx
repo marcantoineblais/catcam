@@ -15,7 +15,7 @@ export default function NotFound() {
       </div>
 
       <div className="">
-        <Button onClick={() => router.push("/")} color="primary">
+        <Button onClick={() => router.push("/")} color="primary" className="w-44">
           Home page
         </Button>
       </div>
