@@ -16,12 +16,12 @@ export default function VideoPlayer() {
 
   return (
     <div
-      className="flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 group/video-player"
+      className="w-full h-fit flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 group/video-player"
       data-fullscreen={isFullscreen || undefined}
     >
       <div
         className={twJoin(
-          "relative aspect-video w-full h-full flex items-center justify-center rounded-soft overflow-hidden bg-surface-card",
+          "relative aspect-video w-full flex shrink-0 items-center justify-center rounded-soft overflow-hidden bg-surface-card",
           "group-data-fullscreen/video-player:bg-black group-data-fullscreen/video-player:rounded-none",
         )}
       >
@@ -34,7 +34,7 @@ export default function VideoPlayer() {
             <Loader />
           </div>
         )}
-
+        
         <video
           ref={videoRef}
           className="w-full h-full object-contain scale-100 bg-loading bg-no-repeat bg-center"

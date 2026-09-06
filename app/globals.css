@@ -24,7 +24,7 @@
 
   --color-text: #0d0e07;
 
-  --color-fade: #4B2E2B;
+  --color-fade: #acacac;
   --color-shine: #ffffff;
 
   --color-shadow: rgb(0 0 0 / 0.2);
@@ -65,12 +65,12 @@
     --color-surface: #0d0e07;
     --color-surface-foreground: #FFF8F0;
 
-    --color-surface-card: #101109;
+    --color-surface-card: #1a1514;
     --color-surface-card-foreground: #FFF8F0;
 
     --color-text: #FFF8F0;
 
-    --color-fade: #707070;
+    --color-fade: #4b4b4b;
     --color-shine: #FFF8F0;
 
     --color-shadow: rgb(from var(--color-text) r g b / 0.1);
@@ -78,11 +78,11 @@
 }
 
 @utility shine-effect {
-  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-4/5 before:bg-linear-to-b before:from-shine/30 before:to-transparent before:pointer-events-none;
+  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-linear-to-b before:from-shine/30 before:to-transparent before:pointer-events-none;
 }
 
 @utility fade-effect {
-  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-4/5 before:bg-linear-to-t before:from-fade/5 before:to-transparent before:pointer-events-none;
+  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-1/2 before:bg-linear-to-t before:from-fade/30 dark:before:top-0 dark:before:bg-linear-to-b dark:before:bottom-auto before:to-transparent before:pointer-events-none;
 }
 
 /* Catcam spinner styles */
