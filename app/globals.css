@@ -10,7 +10,7 @@
   --color-secondary: #221513;
   --color-secondary-foreground: #fffdfb;
 
-  --color-surface: #FFF8F0;
+  --color-surface: #fffcfa;
   --color-surface-foreground: #0d0e07;
 
   --color-surface-card: #fffdfb;
@@ -27,7 +27,7 @@
   --color-shadow: #4B2E2B;
   --color-shine: #fffdfb;
 
-  --color-shadow: rgb(0 0 0 / 0.1);
+  --color-shadow: rgb(0 0 0 / 0.2);
   --shadow-shadow: 0 1px 4px var(--color-shadow);
 
   --radius-soft: 0.5rem;
@@ -62,6 +62,8 @@
   }
 
   .dark {
+    --color-primary: #5a3a1f;
+
     --color-surface: #0a0705;
     --color-surface-foreground: #FFF8F0;
 
@@ -71,7 +73,7 @@
     --color-text: #FFF8F0;
     --color-shine: #FFF8F0;
 
-    --color-shadow: rgb(from var(--color-text) r g b / 0.1);
+    --color-shadow: rgb(from var(--color-text) r g b / 0.2);
   }
 }
 
