@@ -16,7 +16,7 @@ export default function VideoPlayer() {
 
   return (
     <div
-      className="w-full h-fit flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:h-auto data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black group/video-player"
+      className="w-full h-fit flex justify-center items-center overflow-hidden data-fullscreen:fixed data-fullscreen:h-full data-fullscreen:inset-0 data-fullscreen:z-50 data-fullscreen:p-0 data-fullscreen:bg-black group/video-player"
       data-fullscreen={isFullscreen || undefined}
     >
       <div
