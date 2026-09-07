@@ -78,7 +78,7 @@ export default function VideoPlayerControls() {
                 <button
                   type="button"
                   onClick={handlePause}
-                  className="cursor-pointer hover:opacity-80 px-[1.7px]"
+                  className="w-8 cursor-pointer hover:opacity-80 text-center"
                 >
                   <FontAwesomeIcon icon={faPause} size="xl" />
                 </button>
@@ -86,7 +86,7 @@ export default function VideoPlayerControls() {
                 <button
                   type="button"
                   onClick={handlePlay}
-                  className="cursor-pointer hover:opacity-80"
+                  className="w-8 cursor-pointer hover:opacity-80 text-center"
                 >
                   <FontAwesomeIcon icon={faPlay} size="xl" />
                 </button>

@@ -68,7 +68,7 @@ export default function SelectInput({
             "transition-[border-color,box-shadow] duration-200",
             "focus:border-surface-foreground/50",
             "focus:ring-2 focus:ring-surface-foreground/15",
-            "shadow-shadow",
+            "shadow-shadow reflect reflect-fade dark:reflect-light",
           )}
         >
           <span className="relative z-10 flex items-center justify-between">

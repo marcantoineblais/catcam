@@ -3,7 +3,6 @@
 import {
   createContext,
   ReactNode,
-  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -23,18 +22,10 @@ const IntersectionObserverContext =
 
 type Props = {
   children: ReactNode;
-  root?: RefObject<Element | null> | Element | null;
+  root: Element | null;
   rootMargin?: string;
   threshold?: number | number[];
 };
-
-function getRootElement(
-  root?: RefObject<Element | null> | Element | null,
-): Element | null {
-  if (!root) return null;
-  if ("current" in root) return root.current;
-  return root;
-}
 
 export default function IntersectionObserverProvider({
   children,
@@ -42,69 +33,44 @@ export default function IntersectionObserverProvider({
   rootMargin = "100%",
   threshold = 0,
 }: Props) {
-  const callbacksRef = useRef(new Map<Element, IntersectionCallback>());
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const optionsRef = useRef({ rootMargin, threshold });
+  const subscribersRef = useRef<Map<Element, IntersectionCallback>>(new Map());
+  const [observer, setObserver] = useState<IntersectionObserver | null>(null);
 
-  const getObserver = useCallback(() => {
-    const rootElement = getRootElement(root);
-    const optionsChanged =
-      optionsRef.current.rootMargin !== rootMargin ||
-      optionsRef.current.threshold !== threshold;
-
-    if (observerRef.current) {
-      if (!optionsChanged && observerRef.current.root === rootElement) {
-        return observerRef.current;
-      }
-      observerRef.current.disconnect();
-    }
-
-    optionsRef.current = { rootMargin, threshold };
-
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          callbacksRef.current.get(entry.target)?.(entry);
+          subscribersRef.current.get(entry.target)?.(entry);
         }
       },
       {
-        root: rootElement,
+        root,
         rootMargin,
         threshold,
       },
     );
 
-    observerRef.current = observer;
-
-    callbacksRef.current.forEach((_, element) => {
-      observer.observe(element);
-    });
-
-    return observer;
+    setObserver(observer);  
+    return () => {
+      observer.disconnect();
+    };
   }, [root, rootMargin, threshold]);
 
   const observe = useCallback(
     (element: Element, callback: IntersectionCallback) => {
-      callbacksRef.current.set(element, callback);
-      getObserver().observe(element);
+      subscribersRef.current.set(element, callback);
+      observer?.observe(element);
     },
-    [getObserver],
+    [observer],
   );
 
-  const unobserve = useCallback((element: Element) => {
-    callbacksRef.current.delete(element);
-    observerRef.current?.unobserve(element);
-  }, []);
-
-  // Update observer when root/options change and clean up when unmounting
-  useEffect(() => {
-    getObserver();
-
-    return () => {
-      observerRef.current?.disconnect();
-      observerRef.current = null;
-    };
-  }, [getObserver]);
+  const unobserve = useCallback(
+    (element: Element) => {
+      subscribersRef.current.delete(element);
+      observer?.unobserve(element);
+    },
+    [observer],
+  );
 
   return (
     <IntersectionObserverContext.Provider value={{ observe, unobserve }}>
@@ -113,9 +79,7 @@ export default function IntersectionObserverProvider({
   );
 }
 
-export function useIntersectionObserver(
-  ref: React.RefObject<Element | null>,
-) {
+export function useIntersectionObserver() {
   const context = useContext(IntersectionObserverContext);
 
   if (!context) {
@@ -125,10 +89,10 @@ export function useIntersectionObserver(
   }
 
   const { observe, unobserve } = context;
+  const [element, setElement] = useState<Element | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
     if (!element) return;
 
     observe(element, (entry) => {
@@ -138,7 +102,7 @@ export function useIntersectionObserver(
     return () => {
       unobserve(element);
     };
-  }, [ref, observe, unobserve]);
+  }, [element, observe, unobserve]);
 
-  return isVisible;
+  return { isVisible, setElement, element };
 }

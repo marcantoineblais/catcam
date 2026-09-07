@@ -77,12 +77,58 @@
   }
 }
 
-@utility shine-effect {
-  @apply relative before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-linear-to-b before:from-shine/30 before:to-transparent before:pointer-events-none;
+@utility reflect {
+  @apply relative before:absolute before:bg-(image:--reflect-gradient) before:inset-x-0 before:bottom-(--reflect-bottom) before:top-(--reflect-top) before:pointer-events-none;
 }
 
-@utility fade-effect {
-  @apply relative before:absolute before:inset-x-0 before:bottom-0 before:h-1/2 before:bg-linear-to-t before:from-fade/30 dark:before:top-0 dark:before:bg-linear-to-b dark:before:bottom-auto before:to-transparent before:pointer-events-none;
+@utility reflect-bright {
+  --reflect-top: 0;
+  --reflect-bottom: 20%;
+  --reflect-gradient: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-shine) 30%, transparent),
+    transparent
+  );
+}
+
+@utility reflect-shine {
+  --reflect-top: 0;
+  --reflect-bottom: 20%;
+  --reflect-gradient: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-shine) 15%, transparent),
+    transparent
+  );
+}
+
+@utility reflect-light {
+  --reflect-top: 0;
+  --reflect-bottom: 20%;
+  --reflect-gradient: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-shine) 7%, transparent),
+    transparent
+  );
+}
+
+@utility reflect-fade {
+  --reflect-top: 20%;
+  --reflect-bottom: 0;
+  --reflect-gradient: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--color-fade) 15%, transparent),
+    transparent
+  );
+}
+
+@utility reflect-dark {
+  --reflect-top: 20%;
+  --reflect-bottom: 0;
+  --reflect-gradient: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--color-fade) 30%, transparent),
+    transparent
+  );
 }
 
 /* Catcam spinner styles */

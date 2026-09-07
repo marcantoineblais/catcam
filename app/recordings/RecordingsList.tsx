@@ -2,7 +2,7 @@
 
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef } from "react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Loading from "@/components/Loader";
@@ -24,7 +24,7 @@ export default function RecordingsList({
   ...props
 }: RecordingsListProps) {
   const { currentVideo, queue: videos, selectVideo } = useVideoPlayer();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [container, setContainer] = useState<Element | null>(null);
 
   if (videos.length === 0 && !isLoading) {
     return (
@@ -35,7 +35,7 @@ export default function RecordingsList({
   }
 
   return (
-    <IntersectionObserverProvider root={containerRef}>
+    <IntersectionObserverProvider root={container}>
       <div
         className={twMerge(
           "pt-1 pb-3 w-full h-full flex flex-col items-center overflow-hidden bg-surface-card",
@@ -47,7 +47,7 @@ export default function RecordingsList({
           className="relative w-full h-full flex justify-start content-start flex-wrap overflow-y-auto"
           onScroll={onScroll}
           onScrollEnd={onScrollEnd}
-          ref={containerRef}
+          ref={setContainer}
         >
           {videos.map((video) => {
             const isSelected = video.src === currentVideo?.src;
@@ -59,18 +59,16 @@ export default function RecordingsList({
                 timestamp={video.timestamp}
                 isSelected={isSelected}
                 onClick={() => selectVideo(video)}
-                containerRef={containerRef}
               />
             );
           })}
 
           {nothingToLoad && (
-            <div className="w-full flex justify-center items-center gap-1 text-sky-700">
+            <div className="w-full flex justify-center items-center gap-1 text-warning">
               <FontAwesomeIcon icon={faCircleXmark} size="lg" />
               <h3 className="text-lg font-bold py-5">
                 There is nothing more to show
               </h3>
-              <FontAwesomeIcon icon={faCircleXmark} size="lg" />
             </div>
           )}
 

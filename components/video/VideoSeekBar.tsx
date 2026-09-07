@@ -26,15 +26,17 @@ export default function VideoSeekBar() {
 
   const updateCurrentTime = useCallback(
     (pageX: number) => {
-      debounce(() => {
+      return debounce(() => {
         const seekingBar = seekingBarRef.current;
 
-        if (!seekingBar || !duration) return;
+        if (!seekingBar || !duration) return null;
         const bounds = seekingBar.getBoundingClientRect();
         const position = Math.max(bounds.left, Math.min(pageX, bounds.right));
         const ratio = (position - bounds.left) / bounds.width;
+        const newTime = Math.max(0, Math.min(ratio * duration, duration));
+        seek(newTime);
 
-        seek(ratio * duration);
+        return newTime;
       }, 20);
     },
     [debounce, duration, seek],
@@ -47,7 +49,7 @@ export default function VideoSeekBar() {
         | React.TouchEvent<HTMLDivElement>,
     ) => {
       event.stopPropagation();
-
+      let lastUpdatedTime: number | null = null;
       wasPlayingRef.current = isPlaying;
 
       if (isPlaying) {
@@ -64,9 +66,10 @@ export default function VideoSeekBar() {
         pageX = event.pageX;
       }
 
-      updateCurrentTime(pageX);
+      const value = updateCurrentTime(pageX);
+      lastUpdatedTime = value ?? lastUpdatedTime;
 
-      function handleSeeking(event: MouseEvent | TouchEvent) {
+      const handleSeeking = (event: MouseEvent | TouchEvent) => {
         event.preventDefault();
 
         let pageX: number;
@@ -79,21 +82,25 @@ export default function VideoSeekBar() {
           pageX = event.pageX;
         }
 
-        updateCurrentTime(pageX);
-      }
+        const value = updateCurrentTime(pageX);
+        lastUpdatedTime = value ?? lastUpdatedTime;
+      };
 
-      async function handleEnd() {
+      const handleEnd = async () => {
         document.removeEventListener("mousemove", handleSeeking);
         document.removeEventListener("touchmove", handleSeeking);
         document.removeEventListener("mouseup", handleEnd);
         document.removeEventListener("touchend", handleEnd);
 
-        if (wasPlayingRef.current) {
+        if (
+          wasPlayingRef.current &&
+          lastUpdatedTime !== duration // Don't resume playing if the user seeks to the end of the video
+        ) {
           await play();
         }
 
         wasPlayingRef.current = false;
-      }
+      };
 
       document.addEventListener("mousemove", handleSeeking);
       document.addEventListener("touchmove", handleSeeking, {
@@ -102,7 +109,7 @@ export default function VideoSeekBar() {
       document.addEventListener("mouseup", handleEnd);
       document.addEventListener("touchend", handleEnd);
     },
-    [isPlaying, pause, play, updateCurrentTime],
+    [isPlaying, pause, play, updateCurrentTime, duration],
   );
 
   return (

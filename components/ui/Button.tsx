@@ -16,15 +16,15 @@ export default function Button({
   const colorClasses = useMemo(() => {
     switch (color) {
       case "primary":
-        return "bg-primary text-primary-foreground shine-effect";
+        return "bg-primary text-primary-foreground reflect-bright";
       case "secondary":
-        return "bg-secondary text-secondary-foreground shine-effect";
+        return "bg-secondary text-secondary-foreground reflect-shine";
       case "warning":
-        return "bg-warning text-warning-foreground shine-effect";
+        return "bg-warning text-warning-foreground reflect-dark";
       case "danger":
-        return "bg-danger text-danger-foreground shine-effect";
+        return "bg-danger text-danger-foreground reflect-shine";
       default:
-        return "bg-surface-card text-surface-card-foreground shadow-shadow fade-effect";
+        return "bg-surface-card text-surface-card-foreground reflect-fade dark:reflect-light";
     }
   }, [color]);
 
@@ -33,7 +33,7 @@ export default function Button({
       type={type}
       className={twMerge(
         colorClasses,
-        "relative overflow-hidden py-2 w-32 rounded-soft font-medium cursor-pointer",
+        "relative overflow-hidden py-2 w-32 rounded-soft font-medium cursor-pointer reflect",
         "ring shadow-shadow ring-surface-card-foreground/10",
         "hover:shadow-none duration-500 transition-shadow ease-in-out",
         "disabled:cursor-default disabled:shadow-none",

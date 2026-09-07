@@ -43,7 +43,7 @@ export default function OnOffSwitch({
       <div
         className={twJoin(
           "absolute left-0 inset-y-0 pt-0.5 px-1.5 flex justify-start items-center leading-0 rounded-l-full bg-primary overflow-hidden",
-          "shine-effect duration-300",
+          "reflect reflect-bright duration-300",
         )}
         style={{ width: isOn ? sectionWidth : 0 }}
       >
@@ -52,8 +52,9 @@ export default function OnOffSwitch({
 
       <div
         className={twJoin(
-          "absolute right-0 inset-y-0 pt-0.5 px-1.5 flex justify-end items-center rounded-r-full bg-secondary leading-0 overflow-hidden",
-          "shine-effect duration-300",
+          "absolute right-0 inset-y-0 pt-0.5 px-1.5 flex justify-end items-center", 
+          "rounded-r-full bg-secondary leading-0 overflow-hidden",
+          "reflect reflect-shine duration-300",
         )}
         style={{ width: isOn ? 0 : sectionWidth }}
       >
@@ -62,10 +63,11 @@ export default function OnOffSwitch({
 
       <div
         className={twJoin(
-          "absolute! z-10 inset-y-0 duration-300 scale-125",
+          "absolute! z-10 inset-y-0 duration-300 scale-125 overflow-hidden",
           "origin-center aspect-square rounded-full",
           "bg-radial from-surface-card to-shadow from-50% cursor-pointer",
           "before:rounded-full",
+          "reflect reflect-fade dark:reflect-shine before:rounded-full",
         )}
         style={{ right: isOn ? 0 : knobPosition }}
       />

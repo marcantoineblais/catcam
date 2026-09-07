@@ -30,8 +30,8 @@ export default function Settings() {
     () => monitors.every((monitor) => isMonitorOnline(monitor)),
     [monitors],
   );
-  const allSwitchesDisabled = useMemo(
-    () => switchesDisabled.every((disabled) => disabled),
+  const someSwitchesDisabled = useMemo(
+    () => switchesDisabled.some((disabled) => disabled),
     [switchesDisabled],
   );
 
@@ -179,7 +179,7 @@ export default function Settings() {
                 <OnOffSwitch
                   isOn={areAllMonitorsOn}
                   onClick={() => toggleAllMonitors(!areAllMonitorsOn)}
-                  disabled={allSwitchesDisabled}
+                  disabled={someSwitchesDisabled}
                 />
               </div>
               {monitors.map((monitor, i) => {

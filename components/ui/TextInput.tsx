@@ -30,7 +30,7 @@ export default function TextInput({
           "transition-[border-color,box-shadow] duration-200",
           "focus-within:border-surface-foreground/50",
           "focus-within:ring-2 focus-within:ring-surface-foreground/15",
-          "shadow-shadow",
+          "shadow-shadow reflect dark:reflect-light",
         )}
       >
         <input

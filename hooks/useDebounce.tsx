@@ -14,11 +14,11 @@ export default function useDebounce() {
     };
   }, []);
 
-  const handler = (func: () => void, wait: number) => {
+  const handler = <T,> (func: () => T, wait: number) => {
     if (timer.current) return;
 
     timer.current = setTimeout(() => (timer.current = null), wait);
-    func();
+    return func();
   };
 
   return handler;

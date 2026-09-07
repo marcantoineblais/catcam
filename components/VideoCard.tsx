@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { MouseEventHandler } from "react";
 import { twJoin } from "tailwind-merge";
 
@@ -14,7 +14,6 @@ export default function VideoCard({
   thumbnail = "",
   timestamp = new Date(),
   isSelected = false,
-  containerRef,
   onClick,
 }: {
   src?: string;
@@ -25,19 +24,19 @@ export default function VideoCard({
   onClick?: MouseEventHandler;
 }) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const isVisible = useIntersectionObserver(cardRef);
+  const {
+    isVisible,
+    setElement: setCard,
+    element: card,
+  } = useIntersectionObserver();
   const imageWidth = 240;
   const imageHeight = 136;
 
   useEffect(() => {
-    const card = cardRef.current;
-    const container = containerRef?.current;
-
-    if (!card || !container || !isSelected) return;
+    if (!card || !isSelected) return;
 
     card.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [isSelected, containerRef]);
+  }, [card, isSelected]);
 
   useEffect(() => {
     if (!isVisible) {
@@ -50,7 +49,7 @@ export default function VideoCard({
   }
 
   return (
-    <div ref={cardRef} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
+    <div ref={setCard} className="p-1.5 basis-1/2 md:basis-1/3 aspect-4/3">
       {isVisible && (
         <div
           onClick={onClick}
