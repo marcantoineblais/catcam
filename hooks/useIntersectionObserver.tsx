@@ -23,10 +23,18 @@ const IntersectionObserverContext =
 
 type Props = {
   children: ReactNode;
-  root: RefObject<Element | null>;
+  root?: RefObject<Element | null> | Element | null;
   rootMargin?: string;
   threshold?: number | number[];
 };
+
+function getRootElement(
+  root?: RefObject<Element | null> | Element | null,
+): Element | null {
+  if (!root) return null;
+  if ("current" in root) return root.current;
+  return root;
+}
 
 export default function IntersectionObserverProvider({
   children,
@@ -36,16 +44,22 @@ export default function IntersectionObserverProvider({
 }: Props) {
   const callbacksRef = useRef(new Map<Element, IntersectionCallback>());
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const rootElementRef = useRef<Element | null>(null);
-
-  useEffect(() => {
-    rootElementRef.current = root?.current ?? null;
-  }, [root]);
+  const optionsRef = useRef({ rootMargin, threshold });
 
   const getObserver = useCallback(() => {
+    const rootElement = getRootElement(root);
+    const optionsChanged =
+      optionsRef.current.rootMargin !== rootMargin ||
+      optionsRef.current.threshold !== threshold;
+
     if (observerRef.current) {
-      return observerRef.current;
+      if (!optionsChanged && observerRef.current.root === rootElement) {
+        return observerRef.current;
+      }
+      observerRef.current.disconnect();
     }
+
+    optionsRef.current = { rootMargin, threshold };
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -54,7 +68,7 @@ export default function IntersectionObserverProvider({
         }
       },
       {
-        root: rootElementRef.current,
+        root: rootElement,
         rootMargin,
         threshold,
       },
@@ -62,8 +76,12 @@ export default function IntersectionObserverProvider({
 
     observerRef.current = observer;
 
+    callbacksRef.current.forEach((_, element) => {
+      observer.observe(element);
+    });
+
     return observer;
-  }, [rootMargin, threshold]);
+  }, [root, rootMargin, threshold]);
 
   const observe = useCallback(
     (element: Element, callback: IntersectionCallback) => {
@@ -78,13 +96,15 @@ export default function IntersectionObserverProvider({
     observerRef.current?.unobserve(element);
   }, []);
 
-  // Clean up the observer when the component unmounts
+  // Update observer when root/options change and clean up when unmounting
   useEffect(() => {
+    getObserver();
+
     return () => {
       observerRef.current?.disconnect();
       observerRef.current = null;
     };
-  }, []);
+  }, [getObserver]);
 
   return (
     <IntersectionObserverContext.Provider value={{ observe, unobserve }}>
@@ -94,7 +114,7 @@ export default function IntersectionObserverProvider({
 }
 
 export function useIntersectionObserver(
-  ref: React.RefObject<HTMLElement | null>,
+  ref: React.RefObject<Element | null>,
 ) {
   const context = useContext(IntersectionObserverContext);
 
