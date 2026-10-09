@@ -17,6 +17,14 @@ export function getDateTime(date: TZDate | Date) {
   return format(date, "yyyy-MM-dd'T'HH:mm:ss");
 }
 
+/**
+ * Shinobi's `start` / `end` query params are read as UTC.
+ * Converts an absolute date to "yyyy-MM-ddTHH:mm:ss" in UTC.
+ */
+export function getShinobiQueryTime(date: TZDate | Date) {
+  return getDateTime(new TZDate(date, "UTC"));
+}
+
 export function getFormattedDate(date: TZDate | Date) {
   return format(date, "dd-MM-yyyy");
 }

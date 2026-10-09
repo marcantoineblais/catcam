@@ -12,13 +12,18 @@ import DateTimePicker from "./ui/DateTimePicker";
 export type TimeRange = {
   start: string;
   end: string;
+  /** Label of the preset that produced this range, if any */
+  preset?: string;
 };
 
 export const EMPTY_RANGE: TimeRange = { start: "", end: "" };
 
 const toInputValue = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm");
 
-const PRESETS: { label: string; range: () => TimeRange }[] = [
+const PRESETS: {
+  label: string;
+  range: () => Omit<TimeRange, "preset">;
+}[] = [
   {
     label: "Last hour",
     range: () => ({ start: toInputValue(subHours(new Date(), 1)), end: "" }),
@@ -55,31 +60,50 @@ export default function TimeRangeFilter({
   onClear,
 }: Props) {
   const [draft, setDraft] = useState<TimeRange>(appliedRange ?? EMPTY_RANGE);
-  const [error, setError] = useState<string | null>(null);
   const [openField, setOpenField] = useState<"start" | "end" | null>(null);
+
+  // Keep the fields in sync when the range is applied or cleared from outside
+  // (e.g. the × on the range chip above the list).
+  const [prevApplied, setPrevApplied] = useState(appliedRange);
+  if (appliedRange !== prevApplied) {
+    setPrevApplied(appliedRange);
+    setDraft(appliedRange ?? EMPTY_RANGE);
+    setOpenField(null);
+  }
 
   const now = toInputValue(new Date());
   const isActive = appliedRange !== null;
   const hasDraft = Boolean(draft.start || draft.end);
+  const isOrderInvalid = Boolean(
+    draft.start && draft.end && draft.start >= draft.end,
+  );
+  const isUnchanged =
+    appliedRange !== null &&
+    draft.start === appliedRange.start &&
+    draft.end === appliedRange.end;
+  const canApply = hasDraft && !isOrderInvalid && !isUnchanged;
+
+  /** Editing a field turns the range into a custom one */
+  function editField(field: "start" | "end", value: string) {
+    setDraft((prev) => ({ ...prev, [field]: value, preset: undefined }));
+  }
 
   function apply(range: TimeRange) {
-    if (!range.start && !range.end) {
-      setError("Pick a start time, an end time, or both.");
-      return;
-    }
-    if (range.start && range.end && range.start >= range.end) {
-      setError("The start time must be before the end time.");
-      return;
-    }
-
-    setError(null);
     setOpenField(null);
     setDraft(range);
     onApply(range);
   }
 
+  function applyPreset(preset: (typeof PRESETS)[number]) {
+    apply({ ...preset.range(), preset: preset.label });
+  }
+
+  function applyCustom() {
+    if (!canApply) return;
+    apply({ start: draft.start, end: draft.end });
+  }
+
   function clear() {
-    setError(null);
     setOpenField(null);
     setDraft(EMPTY_RANGE);
     onClear();
@@ -101,16 +125,26 @@ export default function TimeRangeFilter({
       </div>
 
       <div className="mb-3 flex flex-wrap gap-1.5">
-        {PRESETS.map((preset) => (
-          <button
-            key={preset.label}
-            type="button"
-            onClick={() => apply(preset.range())}
-            className="h-8 px-3 rounded-full text-xs font-medium bg-text/4 ring-1 ring-border cursor-pointer transition-colors duration-200 hover:bg-text/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            {preset.label}
-          </button>
-        ))}
+        {PRESETS.map((preset) => {
+          // Highlighted while it is the applied range and the fields
+          // haven't been edited since
+          const isSelected =
+            draft.preset === preset.label ||
+            (isUnchanged && appliedRange?.preset === preset.label);
+
+          return (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => applyPreset(preset)}
+              aria-pressed={isSelected}
+              data-selected={isSelected || undefined}
+              className="h-8 px-3 rounded-full text-xs font-medium bg-text/4 ring-1 ring-border cursor-pointer transition-[background-color,color,box-shadow] duration-200 hover:bg-text/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary data-selected:bg-primary data-selected:text-primary-foreground data-selected:ring-primary data-selected:shadow-active data-selected:hover:bg-primary-hover"
+            >
+              {preset.label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 sm:items-start gap-3">
@@ -122,7 +156,7 @@ export default function TimeRangeFilter({
           placeholder="Beginning"
           isOpen={openField === "start"}
           onOpenChange={(open) => setOpenField(open ? "start" : null)}
-          onChange={(start) => setDraft((prev) => ({ ...prev, start }))}
+          onChange={(start) => editField("start", start)}
         />
         <DateTimePicker
           label="To"
@@ -133,13 +167,13 @@ export default function TimeRangeFilter({
           placeholder="Now"
           isOpen={openField === "end"}
           onOpenChange={(open) => setOpenField(open ? "end" : null)}
-          onChange={(end) => setDraft((prev) => ({ ...prev, end }))}
+          onChange={(end) => editField("end", end)}
         />
       </div>
 
-      {error && (
+      {isOrderInvalid && (
         <p role="alert" className="mt-2 text-sm text-danger">
-          {error}
+          The start time must be before the end time.
         </p>
       )}
 
@@ -152,7 +186,12 @@ export default function TimeRangeFilter({
           <FontAwesomeIcon icon={faXmark} className="text-xs" />
           Clear
         </Button>
-        <Button color="primary" onClick={() => apply(draft)}>
+        <Button
+          color="primary"
+          onClick={applyCustom}
+          disabled={!canApply}
+          className="disabled:opacity-40 disabled:shadow-none"
+        >
           Apply
         </Button>
       </div>

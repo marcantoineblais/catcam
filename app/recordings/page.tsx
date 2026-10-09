@@ -8,7 +8,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { startTransition, useEffect, useMemo, useRef, useState } from "react";
 import { twJoin } from "tailwind-merge";
 
@@ -21,15 +21,15 @@ import { useVideoPlayer } from "@/components/video/provider/VideoPlayerProvider"
 import VideoPlayer from "@/components/video/VideoPlayer";
 import { useSession } from "@/hooks/useSession";
 import { filterNewVideos } from "@/libs/filter-new-videos";
-import { getDateTime } from "@/libs/formatDate";
+import { getShinobiQueryTime } from "@/libs/formatDate";
 import { Monitor } from "@/models/monitor";
 import { Video } from "@/models/video";
 
 import RecordingsList from "./RecordingsList";
 
-/** "yyyy-MM-ddTHH:mm" (datetime-local) -> "yyyy-MM-ddTHH:mm:ss" (Shinobi) */
+/** Local "yyyy-MM-ddTHH:mm" picked by the user -> UTC time for Shinobi */
 function toShinobiTime(value: string) {
-  return value.length === 16 ? `${value}:00` : value;
+  return getShinobiQueryTime(parse(value, "yyyy-MM-dd'T'HH:mm", new Date()));
 }
 
 /**
@@ -46,7 +46,7 @@ function getRangeSearchParams(range: TimeRange, olderThan?: Date) {
   }
 
   if (olderThan) {
-    params.set("end", getDateTime(olderThan));
+    params.set("end", getShinobiQueryTime(olderThan));
     params.set("endOperator", "<");
   } else if (range.end) {
     params.set("end", toShinobiTime(range.end));
@@ -57,6 +57,8 @@ function getRangeSearchParams(range: TimeRange, olderThan?: Date) {
 }
 
 function formatRangeLabel(range: TimeRange) {
+  // Presets speak for themselves ("Yesterday"); dates only for custom ranges
+  if (range.preset) return range.preset;
   const fmt = (value: string) => format(new Date(value), "dd-MM-yyyy HH:mm");
   const start = range.start ? fmt(range.start) : "Beginning";
   const end = range.end ? fmt(range.end) : "Now";
@@ -169,7 +171,7 @@ export default function Recordings() {
     const searchParams = range
       ? getRangeSearchParams(range, new Date(lastVideoTime))
       : new URLSearchParams({
-          start: getDateTime(lastVideoTime),
+          start: getShinobiQueryTime(lastVideoTime),
           startOperator: "<",
         });
 
