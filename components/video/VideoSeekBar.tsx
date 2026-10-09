@@ -45,7 +45,8 @@ export default function VideoSeekBar() {
   const handleStartSeeking = useCallback(
     (
       event:
-        React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+        | React.MouseEvent<HTMLDivElement>
+        | React.TouchEvent<HTMLDivElement>,
     ) => {
       event.stopPropagation();
       let lastUpdatedTime: number | null = null;

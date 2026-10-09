@@ -6,7 +6,11 @@ import { ButtonHTMLAttributes, ComponentProps, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 type IconButtonColor =
-  "default" | "danger" | "primary" | "secondary" | "warning";
+  | "default"
+  | "danger"
+  | "primary"
+  | "secondary"
+  | "warning";
 type NativeButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   "aria-label" | "type" | "role" | "onClick" | "className" | "disabled"

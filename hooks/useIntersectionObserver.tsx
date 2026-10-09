@@ -50,7 +50,7 @@ export default function IntersectionObserverProvider({
       },
     );
 
-    setObserver(observer);  
+    setObserver(observer);
     return () => {
       observer.disconnect();
     };
