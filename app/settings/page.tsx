@@ -125,59 +125,89 @@ export default function Settings() {
 
   return (
     <>
-      <Container>
-        <form className="w-full px-4 py-6 shadow-shadow bg-surface-card rounded-soft space-y-4">
-          <h1 className="w-full pb-4 text-center text-3xl">Settings</h1>
+      <Container className="flex flex-col gap-6">
+        <div className="px-1">
+          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+            Settings
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Personalize how Catcam looks and behaves.
+          </p>
+        </div>
 
-          <SelectInput
-            label="Appearance"
-            value={formData.mode}
-            onChange={(value) => handleChange("mode", value)}
-            options={[
-              { value: "light", label: "Light" },
-              { value: "dark", label: "Dark" },
-              { value: "auto", label: "Auto" },
-            ]}
-          />
+        <section className="card p-5 md:p-6">
+          <div className="mb-5">
+            <p className="eyebrow">Preferences</p>
+            <h2 className="mt-0.5 text-lg font-semibold tracking-tight">
+              Display &amp; playback
+            </h2>
+          </div>
 
-          <SelectInput
-            label="Home page"
-            value={formData.home}
-            onChange={(value) => handleChange("home", value)}
-            options={[
-              { value: "/live", label: "Livestream" },
-              { value: "/recordings", label: "Recordings" },
-            ]}
-          />
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+            <SelectInput
+              label="Appearance"
+              value={formData.mode}
+              onChange={(value) => handleChange("mode", value)}
+              options={[
+                { value: "light", label: "Light" },
+                { value: "dark", label: "Dark" },
+                { value: "auto", label: "Auto" },
+              ]}
+            />
 
-          <SelectInput
-            label="Default camera"
-            value={formData.camera}
-            onChange={(value) => handleChange("camera", value)}
-            options={monitors.map((monitor) => {
-              return { label: monitor.name, value: monitor.id };
-            })}
-          />
+            <SelectInput
+              label="Home page"
+              value={formData.home}
+              onChange={(value) => handleChange("home", value)}
+              options={[
+                { value: "/live", label: "Livestream" },
+                { value: "/recordings", label: "Recordings" },
+              ]}
+            />
 
-          <SelectInput
-            label="Default quality"
-            value={formData.quality}
-            onChange={(value) => handleChange("quality", value)}
-            options={[
-              { label: "High", value: "HQ" },
-              { label: "Low", value: "SQ" },
-            ]}
-          />
-        </form>
+            <SelectInput
+              label="Default camera"
+              value={formData.camera}
+              onChange={(value) => handleChange("camera", value)}
+              options={monitors.map((monitor) => {
+                return { label: monitor.name, value: monitor.id };
+              })}
+            />
+
+            <SelectInput
+              label="Default quality"
+              value={formData.quality}
+              onChange={(value) => handleChange("quality", value)}
+              options={[
+                { label: "High", value: "HQ" },
+                { label: "Low", value: "SQ" },
+              ]}
+            />
+          </form>
+        </section>
 
         {isAdmin && (
-          <div className="w-full mt-4 px-4 py-6 shadow-shadow bg-surface-card rounded-soft">
-            <h2 className="w-full pb-4 text-center text-3xl">Monitors</h2>
-            <div className="w-full max-w-lg mx-auto flex flex-col items-start gap-3">
-              <div className="w-full flex justify-between items-center gap-10">
-                <div className="grow text-sm">All</div>
+          <section className="card p-5 md:p-6">
+            <div className="mb-4">
+              <p className="eyebrow">Admin</p>
+              <h2 className="mt-0.5 text-lg font-semibold tracking-tight">
+                Monitors
+              </h2>
+            </div>
+
+            <div className="w-full flex flex-col divide-y divide-border">
+              <div className="w-full py-3 flex justify-between items-center gap-6">
+                <div className="grow min-w-0">
+                  <div className="text-sm font-semibold">All monitors</div>
+                  <div className="text-xs text-muted">
+                    {areAllMonitorsOn
+                      ? "All cameras are on"
+                      : "Some cameras are off"}
+                  </div>
+                </div>
                 <OnOffSwitch
                   isOn={areAllMonitorsOn}
+                  aria-label="Toggle all monitors"
                   onClick={() => toggleAllMonitors(!areAllMonitorsOn)}
                   disabled={someSwitchesDisabled}
                 />
@@ -188,12 +218,19 @@ export default function Settings() {
 
                 return (
                   <div
-                    className="w-full flex justify-between items-center gap-10"
+                    className="w-full py-3 flex justify-between items-center gap-6"
                     key={monitor.id}
                   >
-                    <div className="grow text-sm">{monitor.name}</div>
+                    <div className="grow min-w-0 flex items-center gap-3">
+                      <span
+                        data-on={isOn || undefined}
+                        className="size-2 shrink-0 rounded-full bg-text/25 data-on:bg-success data-on:shadow-[0_0_0_3px_var(--color-success-soft)]"
+                      />
+                      <span className="text-sm truncate">{monitor.name}</span>
+                    </div>
                     <OnOffSwitch
                       isOn={isMonitorOnline(monitor)}
+                      aria-label={`Toggle ${monitor.name}`}
                       onClick={() => toggleMonitor(monitor, !isOn)}
                       disabled={isDisabled}
                     />
@@ -201,7 +238,7 @@ export default function Settings() {
                 );
               })}
             </div>
-          </div>
+          </section>
         )}
       </Container>
 

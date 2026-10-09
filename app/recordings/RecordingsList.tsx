@@ -1,6 +1,6 @@
 "use client";
 
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -14,10 +14,12 @@ import VideoCard from "../../components/VideoCard";
 type RecordingsListProps = {
   isLoading?: boolean;
   nothingToLoad?: boolean;
+  emptyMessage?: string;
 } & React.ComponentProps<"div">;
 export default function RecordingsList({
   isLoading = false,
   nothingToLoad = false,
+  emptyMessage = "No videos available",
   className,
   onScroll,
   onScrollEnd,
@@ -28,8 +30,11 @@ export default function RecordingsList({
 
   if (videos.length === 0 && !isLoading) {
     return (
-      <div className="pb-3 w-full flex justify-center items-center">
-        No videos available
+      <div className="w-full py-12 flex flex-col justify-center items-center gap-3 text-center">
+        <span className="grid size-12 place-items-center rounded-2xl bg-text/5 text-muted">
+          <FontAwesomeIcon icon={faVideoSlash} size="lg" />
+        </span>
+        <p className="text-sm text-muted">{emptyMessage}</p>
       </div>
     );
   }
@@ -38,13 +43,13 @@ export default function RecordingsList({
     <IntersectionObserverProvider root={container}>
       <div
         className={twMerge(
-          "pt-1 pb-3 w-full h-full flex flex-col items-center overflow-hidden bg-surface-card",
+          "w-full h-full flex flex-col items-center overflow-hidden",
           className,
         )}
         {...props}
       >
         <div
-          className="relative w-full h-full flex justify-start content-start flex-wrap overflow-y-auto"
+          className="relative w-full h-full px-2.5 md:px-3.5 pb-3 flex justify-start content-start flex-wrap overflow-y-auto"
           onScroll={onScroll}
           onScrollEnd={onScrollEnd}
           ref={setContainer}
@@ -64,18 +69,16 @@ export default function RecordingsList({
           })}
 
           {nothingToLoad && (
-            <div className="w-full flex justify-center items-center gap-1 text-warning">
-              <FontAwesomeIcon icon={faCircleXmark} size="lg" />
-              <h3 className="text-lg font-bold py-5">
-                There is nothing more to show
-              </h3>
+            <div className="w-full py-6 flex justify-center items-center gap-2 text-sm text-muted">
+              <FontAwesomeIcon icon={faCircleCheck} />
+              <span>You&apos;re all caught up</span>
             </div>
           )}
 
           {isLoading && (
             <Loading
-              className="w-full py-3 flex justify-center items-center"
-              size={"lg"}
+              className="w-full py-4 flex justify-center items-center"
+              size={"md"}
             />
           )}
         </div>

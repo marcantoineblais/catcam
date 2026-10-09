@@ -16,7 +16,7 @@ export default function TextInput({
   const inputId = useMemo(() => props.id || genId, [props.id, genId]);
 
   return (
-    <label className="flex w-full flex-col gap-0.5" htmlFor={inputId}>
+    <label className="flex w-full flex-col gap-1.5" htmlFor={inputId}>
       {label && (
         <span className="text-sm font-medium text-surface-foreground">
           {label}
@@ -26,20 +26,19 @@ export default function TextInput({
       <div
         className={twMerge(
           "relative overflow-hidden rounded-soft",
-          "bg-surface-card border border-surface-foreground/30 shadow-shadow",
-          "transition-[border-color,box-shadow] duration-200",
-          "focus-within:border-surface-foreground/50",
-          "focus-within:ring-2 focus-within:ring-surface-foreground/15",
-          "shadow-shadow reflect reflect-fade dark:reflect-light",
+          "bg-text/3 ring-1 ring-border",
+          "transition-[box-shadow,background-color] duration-200",
+          "hover:ring-text/15",
+          "focus-within:bg-surface-card focus-within:ring-2 focus-within:ring-primary/70",
         )}
       >
         <input
           id={inputId}
           onChange={(e) => onChange?.(e.target.value)}
           className={twMerge(
-            "relative z-10 w-full bg-transparent px-3 py-2",
+            "relative z-10 h-11 w-full bg-transparent px-3.5",
             "text-surface-foreground outline-none",
-            "placeholder:text-surface-foreground/40",
+            "placeholder:text-muted",
             "disabled:cursor-not-allowed disabled:opacity-50",
             className,
           )}

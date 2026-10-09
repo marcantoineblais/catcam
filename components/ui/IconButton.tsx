@@ -6,11 +6,7 @@ import { ButtonHTMLAttributes, ComponentProps, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 type IconButtonColor =
-  | "default"
-  | "danger"
-  | "primary"
-  | "secondary"
-  | "warning";
+  "default" | "danger" | "primary" | "secondary" | "warning";
 type NativeButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   "aria-label" | "type" | "role" | "onClick" | "className" | "disabled"
@@ -44,11 +40,11 @@ export default function IconButton({
 }: IconButtonProps) {
   const hoverClasses: Record<IconButtonColor, string> = useMemo(
     () => ({
-      default: "hover:text-text/50",
-      danger: "hover:text-danger/50",
-      primary: "hover:text-primary/50",
-      secondary: "hover:text-secondary/50",
-      warning: "hover:text-warning/50",
+      default: "hover:bg-text/6",
+      danger: "hover:bg-danger/10 hover:text-danger",
+      primary: "hover:bg-primary/10 hover:text-primary",
+      secondary: "hover:bg-secondary/10",
+      warning: "hover:bg-warning",
     }),
     [],
   );
@@ -62,8 +58,10 @@ export default function IconButton({
       disabled={isDisabled}
       onClick={onClick}
       className={twMerge(
-        "text-text duration-200 cursor-pointer",
-        "disabled:opacity-50 disabled:text-text-muted disabled:hover:text-text-muted",
+        "inline-flex size-10 shrink-0 items-center justify-center rounded-full text-text",
+        "cursor-pointer transition-[background-color,color,transform] duration-200 active:scale-95",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+        "disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent",
         hoverClasses[color],
         className,
       )}

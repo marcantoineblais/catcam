@@ -3,40 +3,106 @@
 /* Tailwind custom classes */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Design tokens
+ * Values that change between light and dark are redefined as literals in
+ * `.dark` below (custom properties resolve at the element that defines them,
+ * so derived values would otherwise keep their light-mode result).
+ */
 @theme {
-  --color-primary: #c46b1e;
+  /* Brand: burnt amber. Deeper than the old #c46b1e so white text on it
+     and orange text on light surfaces both pass WCAG AA (4.5:1). */
+  --color-primary: #b8541a;
+  --color-primary-hover: #a04814;
   --color-primary-foreground: #ffffff;
 
-  --color-secondary: #221513;
-  --color-secondary-foreground: #ffffff;
+  --color-secondary: #292524;
+  --color-secondary-foreground: #fafaf9;
 
-  --color-surface: #fafafa;
-  --color-surface-foreground: #0d0e07;
+  /* Neutrals: warm stone (the old #0d0e07 text leaned olive) */
+  --color-surface: #f7f6f4;
+  --color-surface-foreground: #1c1917;
 
   --color-surface-card: #ffffff;
-  --color-surface-card-foreground: #0d0e07;
+  --color-surface-card-foreground: #1c1917;
 
-  --color-warning: #fdeed0;
-  --color-warning-foreground: #0d0e07;
+  --color-text: #1c1917;
+  --color-muted: rgb(28 25 23 / 0.62);
+  --color-border: rgb(28 25 23 / 0.09);
 
-  --color-danger: #d10000;
-  --color-danger-foreground: #fffdfb;
+  /* Status */
+  --color-success: #059669;
+  --color-success-soft: rgb(5 150 105 / 0.18);
 
-  --color-text: #0d0e07;
+  --color-warning: #fef3c7;
+  --color-warning-foreground: #92400e;
+
+  --color-danger: #dc2626;
+  --color-danger-foreground: #ffffff;
 
   --color-fade: #acacac;
   --color-shine: #ffffff;
 
-  --color-shadow: rgb(0 0 0 / 0.2);
-  --shadow-shadow: 0 1px 4px var(--color-shadow);
+  --color-shadow: rgb(28 25 23 / 0.08);
+  --shadow-shadow:
+    0 1px 2px rgb(28 25 23 / 0.05), 0 4px 14px -6px rgb(28 25 23 / 0.12);
+  --shadow-elevated:
+    0 2px 6px rgb(28 25 23 / 0.06), 0 24px 48px -16px rgb(28 25 23 / 0.28);
+  /* Tight shadow for selected tiles: stays within ~6px so it is never
+     clipped by scroll containers */
+  --shadow-active:
+    0 1px 2px rgb(28 25 23 / 0.16), 0 3px 8px -3px rgb(184 84 26 / 0.45);
+  /* Soft brand glow for standalone primary elements */
+  --shadow-glow:
+    0 1px 2px rgb(28 25 23 / 0.12), 0 6px 16px -6px rgb(184 84 26 / 0.5);
 
-  --radius-soft: 0.5rem;
+  --radius-soft: 0.75rem;
+  --radius-card: 1.25rem;
+
+  --animate-pop: pop 160ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  --animate-fade: fade 180ms ease-out;
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
+  }
 }
 
 @layer base {
   * {
     user-select: none;
     box-sizing: border-box;
+  }
+
+  input,
+  textarea {
+    user-select: text;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    --skeleton-shine: rgb(255 255 255 / 0.65);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: color-mix(
+      in oklab,
+      var(--color-primary) 30%,
+      transparent
+    );
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -49,34 +115,112 @@
 
   ::-webkit-scrollbar {
     width: 0.5rem;
+    height: 0.5rem;
   }
 
   ::-webkit-scrollbar-thumb {
+    background-color: rgb(from var(--color-text) r g b / 0.18);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-primary);
-    border-radius: var(--radius-lg);
   }
 
   ::-webkit-scrollbar-track {
-    background-color: rgb(from var(--color-text) r g b / 0.1);
-    border-radius: var(--radius-lg);
+    background-color: transparent;
   }
 
   .dark {
-    --color-surface: #0a0804;
-    --color-surface-foreground: #ffffff;
+    color-scheme: dark;
 
-    --color-surface-card: #1a1514;
-    --color-surface-card-foreground: #ffffff;
+    /* Brighter amber reads better on dark; paired with dark text */
+    --color-primary: #f08a3e;
+    --color-primary-hover: #f49b57;
+    --color-primary-foreground: #1c1006;
 
-    --color-text: #ffffff;
+    --color-secondary: #e7e5e4;
+    --color-secondary-foreground: #1c1917;
+
+    --color-surface: #0f0e0d;
+    --color-surface-foreground: #f5f4f2;
+
+    --color-surface-card: #1a1816;
+    --color-surface-card-foreground: #f5f4f2;
+
+    --color-text: #f5f4f2;
+    --color-muted: rgb(245 244 242 / 0.62);
+    --color-border: rgb(255 255 255 / 0.08);
+
+    --color-success: #34d399;
+    --color-success-soft: rgb(52 211 153 / 0.2);
+
+    --color-warning: #3b2a0f;
+    --color-warning-foreground: #fcd34d;
 
     --color-fade: #3a3a3a;
     --color-shine: #ffffff;
 
-    --color-shadow: rgb(from var(--color-text) r g b / 0.1);
+    --color-shadow: rgb(0 0 0 / 0.4);
+    --shadow-shadow:
+      0 1px 2px rgb(0 0 0 / 0.3), 0 6px 18px -8px rgb(0 0 0 / 0.6);
+    --shadow-elevated:
+      0 2px 6px rgb(0 0 0 / 0.3), 0 24px 56px -12px rgb(0 0 0 / 0.75);
+    --shadow-active:
+      0 1px 2px rgb(0 0 0 / 0.4), 0 3px 8px -3px rgb(240 138 62 / 0.35);
+    --shadow-glow:
+      0 1px 2px rgb(0 0 0 / 0.3), 0 6px 16px -6px rgb(240 138 62 / 0.4);
+
+    --skeleton-shine: rgb(255 255 255 / 0.06);
   }
 }
 
+/* App background: warm surface with a soft primary glow at the top */
+@utility bg-app {
+  background-color: var(--color-surface);
+  background-image: radial-gradient(
+    60rem 28rem at 50% -10rem,
+    color-mix(in oklab, var(--color-primary) 14%, transparent),
+    transparent 70%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Elevated surface used by every panel */
+@utility card {
+  background-color: var(--color-surface-card);
+  color: var(--color-surface-card-foreground);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 0 0 1px var(--color-border),
+    var(--shadow-shadow);
+}
+
+/* Translucent, blurred surface (navbar) */
+@utility glass {
+  background-color: color-mix(
+    in oklab,
+    var(--color-surface-card) 72%,
+    transparent
+  );
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+}
+
+/* Small uppercase label above headings */
+@utility eyebrow {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Legacy glossy reflections (kept for backwards compatibility) */
 @utility reflect {
   @apply relative before:absolute before:bg-(image:--reflect-gradient) before:inset-x-0 before:bottom-(--reflect-bottom) before:top-(--reflect-top) before:pointer-events-none;
 }
@@ -142,30 +286,31 @@
 
 @utility cc-spinner-ring {
   display: block;
-  border: 3px solid color-mix(in srgb, currentColor 22%, transparent);
+  border: 3px solid color-mix(in srgb, currentColor 18%, transparent);
   border-top-color: currentColor;
   border-radius: 9999px;
-  animation: cc-spin 0.8s linear infinite;
+  animation: cc-spin 0.75s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
 }
 
 @utility cc-spinner-sm {
   & .cc-spinner-ring {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
   }
 }
 
 @utility cc-spinner-md {
   & .cc-spinner-ring {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 }
 
 @utility cc-spinner-lg {
   & .cc-spinner-ring {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
   }
 }
 
@@ -177,7 +322,7 @@
     background: linear-gradient(
       105deg,
       transparent 35%,
-      rgb(255 255 255 / 0.7) 50%,
+      var(--skeleton-shine) 50%,
       transparent 65%
     );
     animation: cc-skeleton-scan 1.5s ease-in-out infinite;

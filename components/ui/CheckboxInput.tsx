@@ -20,7 +20,7 @@ export default function CheckboxInput({
     <div className="flex flex-col gap-1">
       <label
         htmlFor={inputId}
-        className="group flex w-fit cursor-pointer items-center gap-2"
+        className="group flex w-fit cursor-pointer items-center gap-2.5"
       >
         <input
           id={inputId}
@@ -32,13 +32,12 @@ export default function CheckboxInput({
 
         <span
           className={twMerge(
-            "relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-soft",
-            "border border-surface-card-foreground/30 bg-surface-card shadow-shadow",
-            "transition-all duration-200",
-            "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-1/2",
-            "before:bg-linear-to-b before:from-shine/30 before:to-transparent",
-            "group-has-checked:border-surface-foreground/60",
-            "group-has-focus-visible:ring-2 group-has-focus-visible:ring-surface-foreground/30",
+            "relative flex size-5 shrink-0 items-center justify-center rounded-md",
+            "bg-text/3 ring-1 ring-text/20",
+            "transition-[background-color,box-shadow] duration-200",
+            "group-hover:ring-text/35",
+            "group-has-checked:bg-primary group-has-checked:ring-primary group-has-checked:shadow-glow",
+            "group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-2 group-has-focus-visible:outline-primary",
             className,
           )}
         >
@@ -46,21 +45,19 @@ export default function CheckboxInput({
             viewBox="0 0 16 16"
             fill="none"
             className="
-              relative z-10 size-3.5
-              scale-50 rotate-[-15deg] opacity-0
+              relative z-10 size-3.5 text-primary-foreground
+              scale-50 opacity-0
               transition-all duration-200 ease-out
               group-has-checked:scale-100
-              group-has-checked:rotate-0
               group-has-checked:opacity-100
             "
           >
             <path
               d="M3 8.5 6.25 12 13 4.5"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.25"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-surface-foreground"
             />
           </svg>
         </span>

@@ -7,8 +7,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     description: "Livestream of cats",
     start_url: "/",
     display: "standalone",
-    background_color: "#fafafa",
-    theme_color: "#c46b1e",
+    background_color: "#f7f6f4",
+    theme_color: "#b8541a",
     icons: [
       {
         src: "/favicon.ico",

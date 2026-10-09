@@ -77,7 +77,7 @@ export default function Modal({
     isMounted &&
     createPortal(
       <div
-        className="z-50 fixed inset-0 flex justify-center items-start px-4 py-[10%] bg-black/50 duration-500 opacity-0 data-visible:opacity-100"
+        className="group/modal z-50 fixed inset-0 flex justify-center items-start px-4 pt-[14vh] bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 data-visible:opacity-100"
         data-visible={isVisible || undefined}
         role="alert"
         aria-live="assertive"
@@ -85,17 +85,23 @@ export default function Modal({
         tabIndex={-1}
         onClick={handleOutsideClick}
       >
-        <div className="w-full md:w-md flex flex-col bg-surface-card dark:bg-neutral-700 rounded-soft overflow-hidden">
-          <div className="py-2 px-4 text-lg font-bold flex justify-between items-center gap-4">
-            <div>{header}</div>
-            <div className="self-end">
-              <IconButton icon={faXmark} ariaLabel="Close" onClick={onClose} />
-            </div>
+        <div
+          className="card w-full md:w-md flex flex-col overflow-hidden shadow-elevated translate-y-3 scale-[0.97] transition-transform duration-300 ease-out group-data-visible/modal:translate-y-0 group-data-visible/modal:scale-100"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="pt-4 pb-1 pl-5 pr-3 flex justify-between items-center gap-4">
+            <div className="text-lg font-semibold tracking-tight">{header}</div>
+            <IconButton
+              icon={faXmark}
+              ariaLabel="Close"
+              onClick={onClose}
+              className="size-9 text-muted hover:text-text"
+            />
           </div>
-          <div className="p-4 flex flex-col justify-center min-h-32">
+          <div className="px-5 pb-5 pt-1 flex flex-col justify-center min-h-20 text-sm leading-relaxed text-muted">
             {children}
           </div>
-          <div className="py-2 px-4 flex justify-end gap-2 items-center border-t border-text/10">
+          <div className="px-5 py-3.5 flex justify-end gap-2 items-center bg-text/3 border-t border-border">
             {footer}
           </div>
         </div>

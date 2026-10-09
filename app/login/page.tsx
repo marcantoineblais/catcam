@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import Container from "@/components/Container";
+import Logo from "@/components/Logo";
 import Modal from "@/components/modal/Modal";
 import { useModal } from "@/components/modal/useModal";
 import Button from "@/components/ui/Button";
@@ -56,15 +57,25 @@ export default function Login() {
 
   return (
     <>
-      <Container className="flex flex-col justify-center">
+      <Container className="flex flex-col justify-center items-center">
         <form
           onSubmit={submitForm}
-          className="w-full px-3 py-6 shadow-shadow bg-surface-card rounded-soft"
+          className="card w-full max-w-sm px-6 py-8 md:px-8 md:py-10 shadow-elevated"
           autoComplete="on"
         >
-          <h1 className="w-full text-center text-3xl font-bold">Login</h1>
+          <div className="flex flex-col items-center text-center">
+            <span className="grid size-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-glow">
+              <Logo className="size-11" />
+            </span>
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight">
+              Welcome back
+            </h1>
+            <p className="mt-1 text-sm text-muted">
+              Sign in to check on your cats.
+            </p>
+          </div>
 
-          <div className="mt-10 flex flex-col gap-4">
+          <div className="mt-8 flex flex-col gap-4">
             <TextInput
               label="Email"
               name="email"
@@ -104,9 +115,9 @@ export default function Login() {
               }
             />
 
-            <div className="pt-5 flex justify-center">
-              <Button type="submit" color="primary" className="w-44">
-                Submit
+            <div className="pt-3">
+              <Button type="submit" color="primary" className="w-full h-11">
+                Sign in
               </Button>
             </div>
           </div>

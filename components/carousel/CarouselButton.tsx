@@ -13,13 +13,16 @@ export default function CarouselButton({
 }: CarouselButtonProps) {
   return (
     <button
+      type="button"
       data-right={align === "right" || undefined}
       data-center={align === "center" || undefined}
       className={twMerge(
-        "px-3 basis-5/12 border-b-2 border-text/50 text-xl text-left duration-200 cursor-pointer",
-        "hover:opacity-80",
-        "disabled:border-primary disabled:cursor-default disabled:hover:opacity-100",
-        "data-right:text-right data-center:text-center",
+        "flex-1 min-w-0 h-9 px-4 inline-flex items-center justify-center gap-2 rounded-full",
+        "text-sm font-medium text-muted cursor-pointer truncate",
+        "transition-[background-color,color,box-shadow] duration-200",
+        "hover:text-text",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+        "disabled:cursor-default disabled:bg-surface-card disabled:text-text disabled:shadow-shadow dark:disabled:bg-text/10",
         className,
       )}
       {...props}

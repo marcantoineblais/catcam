@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Sora } from "next/font/google";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -33,6 +33,11 @@ export const metadata: Metadata = {
   applicationName: "Catcam",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#b8541a",
+  viewportFit: "cover",
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -47,7 +52,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={twMerge(
-          "h-lvh w-lvw bg-surface text-text overflow-y-auto overflow-x-hidden",
+          "h-lvh w-lvw bg-app text-text antialiased overflow-y-auto overflow-x-hidden",
           sora.className,
         )}
       >

@@ -48,37 +48,43 @@ export default function LiveStream() {
   }, [selectedMonitor, isHQ, isOnline, selectVideo]);
 
   return (
-    <Container className="flex flex-col gap-2">
-      <div
-        ref={containerRef}
-        className="w-full shadow-shadow rounded-soft bg-surface-card"
-      >
+    <Container className="flex flex-col gap-4">
+      <div ref={containerRef} className="w-full card overflow-hidden">
         <VideoPlayer />
       </div>
 
-      <div className="pt-4 pb-8 px-2 flex flex-col bg-surface-card rounded-soft shadow-shadow">
-        <div className="mb-2 flex justify-between items-center border-b-2 pb-1 border-text/30">
-          <h2 className="pl-2 text-2xl text-left">
-            {(selectedMonitor as Monitor)?.name || ""}
-          </h2>
+      <section className="card p-4 md:p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-center gap-4">
+          <div className="min-w-0">
+            <p className="eyebrow">Watching</p>
+            <h2 className="mt-0.5 text-xl md:text-2xl font-semibold tracking-tight truncate">
+              {(selectedMonitor as Monitor)?.name || "No camera"}
+            </h2>
+          </div>
 
-          <OnOffSwitch
-            onLabel="HQ"
-            offLabel="SQ"
-            isOn={isHQ}
-            height={24}
-            width={52}
-            onClick={() => setIsHQ(!isHQ)}
-            disabled={!(selectedMonitor as Monitor)?.streams?.length}
-          />
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="hidden sm:inline text-sm text-muted">Quality</span>
+            <OnOffSwitch
+              onLabel="HQ"
+              offLabel="SQ"
+              isOn={isHQ}
+              height={28}
+              width={60}
+              aria-label="High quality stream"
+              onClick={() => setIsHQ(!isHQ)}
+              disabled={!(selectedMonitor as Monitor)?.streams?.length}
+            />
+          </div>
         </div>
+
+        <div className="h-px bg-border" />
 
         <SourceSelector
           monitors={monitors}
           selectedMonitor={selectedMonitor}
           setSelectedMonitor={setSelectedMonitor}
         />
-      </div>
+      </section>
     </Container>
   );
 }

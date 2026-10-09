@@ -23,9 +23,9 @@ export default function Skeleton({
     >
       <div
         aria-hidden={isLoading || undefined}
-        className="group-data-loading/skeleton:cc-skeleton absolute inset-0 bg-secondary/10"
+        className="group-data-loading/skeleton:cc-skeleton absolute inset-0 overflow-hidden bg-text/6"
       />
-      <div className="w-full h-full group-data-loading/skeleton:invisible">
+      <div className="w-full h-full transition-opacity duration-300 group-data-loading/skeleton:invisible group-data-loading/skeleton:opacity-0">
         {children}
       </div>
     </div>

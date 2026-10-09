@@ -9,7 +9,7 @@ export default function Container({ children, className, ...props }: Props) {
   return (
     <main
       className={twMerge(
-        "w-full h-full min-h-max max-h-full py-2 px-2 container mx-auto max-w-4xl",
+        "w-full h-full min-h-max max-h-full px-3 py-4 md:px-4 md:py-6 container mx-auto max-w-4xl",
         className,
       )}
       {...props}

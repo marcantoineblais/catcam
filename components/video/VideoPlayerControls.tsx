@@ -6,13 +6,16 @@ import {
   faForwardStep,
   faPause,
   faPlay,
-  faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 
 import { formatVideoTime } from "./libs/videoPlayerUtils";
 import { useVideoPlayer } from "./provider/VideoPlayerProvider";
+
+const controlButtonClasses =
+  "inline-flex size-10 items-center justify-center rounded-full cursor-pointer transition-[background-color,transform] duration-200 hover:bg-white/15 active:scale-90 focus-visible:outline-2 focus-visible:outline-white/70";
 
 export default function VideoPlayerControls() {
   const {
@@ -53,58 +56,71 @@ export default function VideoPlayerControls() {
   }, [next]);
 
   return (
-    <div className="w-full py-1.5 flex justify-between items-center grow">
+    <div className="w-full py-1 flex justify-between items-center grow">
       <div>
         {isLive ? (
           <div
-            className="relative grow animate-pulse data-[online=false]:text-danger"
+            className="group/live inline-flex items-center gap-2 h-7 px-3 rounded-full bg-danger text-xs font-bold tracking-widest data-[online=false]:bg-white/15"
             data-online={isStreamOnline}
           >
-            <FontAwesomeIcon icon={faVideo} className="pe-1" size="xl" />
-            <span>LIVE</span>
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full rounded-full bg-white opacity-75 animate-ping group-data-[online=false]/live:hidden" />
+              <span className="relative inline-flex size-2 rounded-full bg-white group-data-[online=false]/live:bg-danger" />
+            </span>
+            <span>{isStreamOnline ? "LIVE" : "OFFLINE"}</span>
           </div>
         ) : (
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-0.5">
               <button
                 type="button"
+                aria-label="Previous"
                 onClick={handlePrevious}
-                className="cursor-pointer hover:opacity-80"
+                className={controlButtonClasses}
               >
-                <FontAwesomeIcon icon={faBackwardStep} size="xl" />
+                <FontAwesomeIcon icon={faBackwardStep} size="lg" />
               </button>
 
               {isPlaying ? (
                 <button
                   type="button"
+                  aria-label="Pause"
                   onClick={handlePause}
-                  className="w-8 cursor-pointer hover:opacity-80 text-center"
+                  className={twMerge(
+                    controlButtonClasses,
+                    "size-11 bg-white/10",
+                  )}
                 >
-                  <FontAwesomeIcon icon={faPause} size="xl" />
+                  <FontAwesomeIcon icon={faPause} size="lg" />
                 </button>
               ) : (
                 <button
                   type="button"
+                  aria-label="Play"
                   onClick={handlePlay}
-                  className="w-8 cursor-pointer hover:opacity-80 text-center"
+                  className={twMerge(
+                    controlButtonClasses,
+                    "size-11 bg-white/10",
+                  )}
                 >
-                  <FontAwesomeIcon icon={faPlay} size="xl" />
+                  <FontAwesomeIcon icon={faPlay} size="lg" />
                 </button>
               )}
 
               <button
                 type="button"
+                aria-label="Next"
                 onClick={handleNext}
-                className="cursor-pointer hover:opacity-80"
+                className={controlButtonClasses}
               >
-                <FontAwesomeIcon icon={faForwardStep} size="xl" />
+                <FontAwesomeIcon icon={faForwardStep} size="lg" />
               </button>
             </div>
 
-            <div className="flex items-center font-mono text-lg text-center gap-1">
+            <div className="flex items-center gap-1 text-xs md:text-sm font-medium tabular-nums">
               <span>{formatVideoTime(currentTime)}</span>
-              <span>/</span>
-              <span>{formatVideoTime(duration)}</span>
+              <span className="text-white/50">/</span>
+              <span className="text-white/70">{formatVideoTime(duration)}</span>
             </div>
           </div>
         )}
@@ -112,10 +128,11 @@ export default function VideoPlayerControls() {
 
       <button
         type="button"
+        aria-label="Toggle fullscreen"
         onClick={toggleFullscreen}
-        className="cursor-pointer hover:opacity-80"
+        className={controlButtonClasses}
       >
-        <FontAwesomeIcon icon={faExpand} size="xl" />
+        <FontAwesomeIcon icon={faExpand} size="lg" />
       </button>
     </div>
   );

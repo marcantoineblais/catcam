@@ -21,12 +21,18 @@ export default function VideoPlayer() {
     >
       <div
         className={twJoin(
-          "relative aspect-video w-full group-data-fullscreen/video-player:h-full flex shrink-0 items-center justify-center rounded-soft overflow-hidden bg-surface-card",
+          "relative aspect-video w-full group-data-fullscreen/video-player:h-full flex shrink-0 items-center justify-center rounded-card overflow-hidden bg-neutral-950",
           "group-data-fullscreen/video-player:bg-black group-data-fullscreen/video-player:rounded-none",
         )}
       >
         {!src && !isLiveStream && (
-          <Logo className="absolute inset-0 translate-y-1/2 scale-150" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white">
+            <Logo className="absolute inset-0 translate-y-1/2 scale-150 opacity-[0.07]" />
+            <Logo className="relative size-14 md:size-16 text-primary" />
+            <p className="relative text-sm text-white/60">
+              Nothing playing yet
+            </p>
+          </div>
         )}
 
         {src && isBuffering && (
@@ -34,7 +40,7 @@ export default function VideoPlayer() {
             <Loader />
           </div>
         )}
-        
+
         <video
           ref={videoRef}
           className="w-full h-full object-contain scale-100 bg-loading bg-no-repeat bg-center"

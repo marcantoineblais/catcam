@@ -1,6 +1,6 @@
 "use client";
 
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { twJoin } from "tailwind-merge";
@@ -45,7 +45,7 @@ export default function SelectInput({
   }, []);
 
   return (
-    <div className="flex w-full flex-col gap-1" ref={ref}>
+    <div className="flex w-full flex-col gap-1.5" ref={ref}>
       {label && (
         <label
           htmlFor={id}
@@ -59,60 +59,68 @@ export default function SelectInput({
         <button
           id={id}
           type="button"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          data-open={isOpen || undefined}
           onClick={() => setIsOpen((open) => !open)}
           className={twJoin(
-            "w-full overflow-hidden rounded-soft",
-            "border border-surface-foreground/30 bg-surface-card shadow-shadow",
-            "px-4 py-2 text-left text-surface-foreground",
+            "h-11 w-full rounded-soft px-3.5 text-left text-surface-foreground",
+            "bg-text/3 ring-1 ring-border",
             "outline-none cursor-pointer",
-            "transition-[border-color,box-shadow] duration-200",
-            "focus:border-surface-foreground/50",
-            "focus:ring-2 focus:ring-surface-foreground/15",
-            "shadow-shadow reflect reflect-fade dark:reflect-light",
+            "transition-[box-shadow,background-color] duration-200",
+            "hover:ring-text/15",
+            "focus-visible:ring-2 focus-visible:ring-primary/70",
+            "data-open:bg-surface-card data-open:ring-2 data-open:ring-primary/70",
           )}
         >
-          <span className="relative z-10 flex items-center justify-between">
-            <span>{selected?.label ?? ""}</span>
+          <span className="relative z-10 flex items-center justify-between gap-3">
+            <span className="truncate">{selected?.label ?? ""}</span>
             <FontAwesomeIcon
               icon={faChevronDown}
               data-open={isOpen || undefined}
-              className="data-open:rotate-180 duration-200"
+              className="text-xs text-muted transition-transform duration-200 data-open:rotate-180"
             />
           </span>
         </button>
 
         {isOpen && (
           <div
+            role="listbox"
             className={twJoin(
-              "absolute z-40 mt-1 w-full overflow-hidden rounded-soft space-y-0.5",
-              "border border-surface-foreground/30 bg-surface-card shadow-shadow",
-              "p-1",
+              "absolute z-40 mt-2 w-full overflow-hidden space-y-0.5 p-1.5",
+              "rounded-soft bg-surface-card ring-1 ring-border shadow-elevated",
+              "origin-top animate-pop",
             )}
           >
             {options.map((option) => (
               <button
                 key={option.value}
                 type="button"
+                role="option"
+                aria-selected={option.value === value}
                 data-selected={option.value === value || undefined}
                 onClick={() => {
                   onChange?.(option.value);
                   setIsOpen(false);
                 }}
                 className={twJoin(
-                  "w-full rounded-soft px-3 py-2 text-left text-sm cursor-pointer",
+                  "w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm cursor-pointer",
                   "text-surface-foreground",
-                  "transition-colors duration-200",
-                  "hover:bg-surface-foreground/10",
-                  "data-selected:bg-surface-foreground/10",
+                  "transition-colors duration-150",
+                  "hover:bg-text/5",
+                  "data-selected:bg-primary/10 data-selected:font-medium data-selected:text-primary",
                 )}
               >
-                {option.label}
+                <span className="truncate">{option.label}</span>
+                {option.value === value && (
+                  <FontAwesomeIcon icon={faCheck} className="text-xs" />
+                )}
               </button>
             ))}
           </div>
         )}
 
-        <input type="hidden" id={id} value={value} />
+        <input type="hidden" value={value} />
       </div>
     </div>
   );

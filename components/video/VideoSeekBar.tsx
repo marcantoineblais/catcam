@@ -45,8 +45,7 @@ export default function VideoSeekBar() {
   const handleStartSeeking = useCallback(
     (
       event:
-        | React.MouseEvent<HTMLDivElement>
-        | React.TouchEvent<HTMLDivElement>,
+        React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
     ) => {
       event.stopPropagation();
       let lastUpdatedTime: number | null = null;
@@ -113,30 +112,34 @@ export default function VideoSeekBar() {
   );
 
   return (
-    <div className="pt-5 pb-3 w-full flex justify-center">
-      <div
-        ref={seekingBarRef}
-        className="h-1.5 w-full relative bg-secondary rounded-soft cursor-pointer"
-        onMouseDown={handleStartSeeking}
-        onTouchStart={handleStartSeeking}
-        onClick={(event) => event.stopPropagation()}
-      >
+    <div
+      className="group/seek pt-1 pb-0.5 w-full flex justify-center cursor-pointer touch-none"
+      onMouseDown={handleStartSeeking}
+      onTouchStart={handleStartSeeking}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="w-full py-2.5">
         <div
-          className="absolute inset-y-0 left-0 bg-primary-foreground/25 rounded-soft"
-          style={{ width: `${bufferPosition}%` }}
-        />
-
-        <div
-          className="absolute inset-y-0 left-0 bg-primary rounded-soft"
-          style={{ width: `${seekingPosition}%` }}
-        />
-
-        {duration && (
+          ref={seekingBarRef}
+          className="h-1 w-full relative bg-white/25 rounded-full transition-[height] duration-200 group-hover/seek:h-1.5"
+        >
           <div
-            className="absolute size-7 -ms-1.5 -top-2.75 -translate-x-2 bg-primary-foreground rounded-full"
-            style={{ left: `${seekingPosition}%` }}
+            className="absolute inset-y-0 left-0 bg-white/35 rounded-full"
+            style={{ width: `${bufferPosition}%` }}
           />
-        )}
+
+          <div
+            className="absolute inset-y-0 left-0 bg-primary rounded-full"
+            style={{ width: `${seekingPosition}%` }}
+          />
+
+          {duration > 0 && (
+            <div
+              className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-primary)_40%,transparent)] transition-transform duration-200 scale-90 group-hover/seek:scale-110"
+              style={{ left: `${seekingPosition}%` }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

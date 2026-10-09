@@ -1,5 +1,7 @@
 "use client";
 
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { startTransition, useEffect, useState } from "react";
 import { MouseEventHandler } from "react";
 import { twJoin } from "tailwind-merge";
@@ -55,19 +57,18 @@ export default function VideoCard({
           onClick={onClick}
           data-active={isSelected ? true : undefined}
           className={twJoin(
-            "relative w-full h-full flex flex-col rounded-soft overflow-hidden bg-surface-card shadow-shadow group/video-card",
-            "duration-200 ease-in-out cursor-pointer",
-            "data-active:cursor-default data-active:text-primary-foreground data-active:bg-primary data-active:shadow-none",
-            "hover:shadow-none",
-            "transition-[box-shadow,transform]",
+            "relative w-full h-full flex flex-col rounded-2xl overflow-hidden bg-surface-card ring-1 ring-border group/video-card",
+            "cursor-pointer transition-[box-shadow,transform,background-color] duration-200 ease-out",
+            "hover:-translate-y-0.5 hover:shadow-shadow",
+            "data-active:cursor-default data-active:bg-primary data-active:text-primary-foreground data-active:ring-2 data-active:ring-primary data-active:shadow-active data-active:hover:translate-y-0",
           )}
         >
           <Skeleton
             isLoading={imageLoading}
-            className="w-full h-full aspect-video overflow-hidden"
+            className="w-full min-h-0 flex-1 overflow-hidden"
           >
             <img
-              className="w-full h-full duration-200 group-data-active/video-card:blur-xs group-data-active/video-card:scale-110"
+              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover/video-card:scale-105 group-data-active/video-card:scale-105"
               onLoad={onLoadHandle}
               loading="lazy"
               width={imageWidth}
@@ -80,11 +81,21 @@ export default function VideoCard({
               })}
               alt="Movement capture preview"
             />
+
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-data-active/video-card:bg-black/35">
+              <span className="grid size-10 place-items-center rounded-full bg-white/90 text-primary text-sm shadow-lg opacity-0 scale-75 transition duration-300 group-hover/video-card:opacity-100 group-hover/video-card:scale-100 group-data-active/video-card:opacity-100 group-data-active/video-card:scale-100">
+                <FontAwesomeIcon icon={faPlay} className="translate-x-px" />
+              </span>
+            </div>
           </Skeleton>
 
-          <div className="w-full p-2 pb-1 flex justify-between items-center text-xs md:text-sm xl:text-base">
-            <span>{getFormattedDate(timestamp)}</span>
-            <span>{getFormattedTime(timestamp)}</span>
+          <div className="w-full px-2.5 py-2 flex justify-between items-center gap-2 text-xs md:text-sm">
+            <span className="font-medium truncate">
+              {getFormattedDate(timestamp)}
+            </span>
+            <span className="tabular-nums opacity-70">
+              {getFormattedTime(timestamp)}
+            </span>
           </div>
         </div>
       )}

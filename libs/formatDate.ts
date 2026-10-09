@@ -18,7 +18,7 @@ export function getDateTime(date: TZDate | Date) {
 }
 
 export function getFormattedDate(date: TZDate | Date) {
-  return format(date, "MM-dd-yyyy");
+  return format(date, "dd-MM-yyyy");
 }
 
 export function getFormattedTime(date: TZDate | Date) {
