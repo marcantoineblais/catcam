@@ -3,7 +3,7 @@
 # Do not re-list them in environment: or Compose substitutes from the host and can overwrite with empty.
 services:
   catcam:
-    image: ghcr.io/marcantoineblais/catcam:latest
+    image: ghcr.io/marcantoineblais/catcam:975061077ae3327d6c77e783f7027e13be307a88
     container_name: catcam
     env_file: stack.env
     restart: unless-stopped
