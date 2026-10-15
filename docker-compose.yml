@@ -1,10 +1,9 @@
-# Image from GitHub Actions: ghcr.io/<your-github-username-or-org>/catcam:latest
-# Set CATCAM_IMAGE in stack.env when using the CI-built image (see README).
+# Catcam image: CI pins :latest to the commit's tag on the deploy branch, which the Portainer stack follows.
 # All app env vars (DOMAIN_NAME, SERVER_URL, etc.) come from env_file: stack.env.
 # Do not re-list them in environment: or Compose substitutes from the host and can overwrite with empty.
 services:
   catcam:
-    image: ghcr.io/marcantoineblais/catcam:4.2.0
+    image: ghcr.io/marcantoineblais/catcam:latest
     container_name: catcam
     env_file: stack.env
     restart: unless-stopped
