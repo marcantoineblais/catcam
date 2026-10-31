@@ -7,12 +7,15 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 import Footer from "@/components/Footer";
+import Splash from "@/components/splash/Splash";
+import { APPLE_STARTUP_IMAGES } from "@/libs/pwa";
 import { getSession } from "@/services/session-service";
 
 import DisplayMode from "../components/DisplayMode";
 import { ModalProvider } from "../components/modal/useModal";
 import Navbar from "../components/navbar/Navbar";
 import { SessionProvider } from "../hooks/useSession";
+import { DEFAULT_SETTINGS } from "./config";
 
 export const sora = Sora({
   subsets: ["latin"],
@@ -26,11 +29,30 @@ export const metadata: Metadata = {
     {
       rel: "icon",
       url: "/favicon.ico",
-      type: "image/x-icon",
-      sizes: "any",
+      sizes: "32x32",
+    },
+    {
+      rel: "icon",
+      url: "/pwa/icon.svg",
+      type: "image/svg+xml",
+    },
+    {
+      rel: "apple-touch-icon",
+      url: "/pwa/apple-touch-icon.png",
+      sizes: "180x180",
     },
   ],
   applicationName: "Catcam",
+  appleWebApp: {
+    capable: true,
+    title: "Catcam",
+    statusBarStyle: "default",
+    startupImage: APPLE_STARTUP_IMAGES,
+  },
+  // Launch images need the legacy tag on older iOS versions
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
 };
 
 export const viewport: Viewport = {
@@ -56,6 +78,7 @@ export default async function RootLayout({
           sora.className,
         )}
       >
+        <Splash mode={session?.settings.mode ?? DEFAULT_SETTINGS.mode} />
         <div className="w-dvw h-lvh flex flex-col">
           <SessionProvider initialSession={session}>
             <ModalProvider>
