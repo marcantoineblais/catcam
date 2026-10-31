@@ -2,19 +2,11 @@
 // screens. They are drawn by app/pwa/[asset]/route.ts and served under /pwa/.
 
 // Keep in sync with the color tokens and splash styles in app/globals.css
+export const PRIMARY = { color: "#f08a3e", foreground: "#1c1006" };
+
 export const PWA_THEMES = {
-  light: {
-    background: "#f7f6f4",
-    primary: "#b8541a",
-    primaryForeground: "#ffffff",
-    shadowOpacity: 0.5,
-  },
-  dark: {
-    background: "#0f0e0d",
-    primary: "#f08a3e",
-    primaryForeground: "#1c1006",
-    shadowOpacity: 0.35,
-  },
+  light: { background: "#f7f6f4", shadowOpacity: 0.5 },
+  dark: { background: "#0f0e0d", shadowOpacity: 0.35 },
 };
 
 export type PwaTheme = keyof typeof PWA_THEMES;

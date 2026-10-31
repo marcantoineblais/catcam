@@ -1,7 +1,7 @@
 import sharp from "sharp";
 
 import { LOGO_PATHS, LOGO_SIZE } from "@/libs/logo";
-import { MARK, PWA_ASSETS, PWA_THEMES, PwaAsset, PwaTheme } from "@/libs/pwa";
+import { MARK, PRIMARY, PWA_ASSETS, PWA_THEMES, PwaAsset } from "@/libs/pwa";
 
 // Every image is drawn once at build time
 export const dynamicParams = false;
@@ -40,16 +40,14 @@ function drawMark(
   size: number,
   radius: number,
   logo: number,
-  theme: PwaTheme = "light",
 ) {
-  const { primary, primaryForeground } = PWA_THEMES[theme];
   const logoSize = size * logo;
   const offset = (size - logoSize) / 2;
 
   return `
-    <rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${radius}" fill="${primary}"/>
+    <rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${radius}" fill="${PRIMARY.color}"/>
     <rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${radius}" fill="url(#sheen)"/>
-    ${drawLogo(x + offset, y + offset, logoSize, primaryForeground)}`;
+    ${drawLogo(x + offset, y + offset, logoSize, PRIMARY.foreground)}`;
 }
 
 const SHEEN = `
@@ -75,7 +73,8 @@ function drawSplash({
   scale,
   theme,
 }: Extract<PwaAsset, { kind: "splash" }>) {
-  const { background, primary, shadowOpacity } = PWA_THEMES[theme];
+  const { background, shadowOpacity } = PWA_THEMES[theme];
+  const primary = PRIMARY.color;
   const size = MARK.splashSize * scale;
   const radius = size * MARK.radius;
   const x = (width - size) / 2;
@@ -95,6 +94,6 @@ function drawSplash({
     <rect width="${width}" height="${height}" fill="${background}"/>
     <rect width="${width}" height="${height}" fill="url(#glow)"/>
     <rect x="${x + 12 * scale}" y="${y + 30 * scale}" width="${size - 24 * scale}" height="${size - 24 * scale}" rx="${radius}" fill="${primary}" opacity="${shadowOpacity}" filter="url(#shadow)"/>
-    ${drawMark(x, y, size, radius, MARK.logo, theme)}
+    ${drawMark(x, y, size, radius, MARK.logo)}
   </svg>`;
 }

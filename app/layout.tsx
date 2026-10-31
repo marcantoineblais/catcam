@@ -56,7 +56,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#b8541a",
+  // Light background; DisplayMode switches it with the theme
+  themeColor: "#f7f6f4",
   viewportFit: "cover",
 };
 

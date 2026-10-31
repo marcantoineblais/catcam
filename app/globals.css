@@ -10,11 +10,11 @@
  * so derived values would otherwise keep their light-mode result).
  */
 @theme {
-  /* Brand: burnt amber. Deeper than the old #c46b1e so white text on it
-     and orange text on light surfaces both pass WCAG AA (4.5:1). */
-  --color-primary: #b8541a;
-  --color-primary-hover: #a04814;
-  --color-primary-foreground: #ffffff;
+  /* Brand: bright amber, the same in both themes and in the app icon
+     (libs/pwa.ts); paired with dark text */
+  --color-primary: #f08a3e;
+  --color-primary-hover: #f49b57;
+  --color-primary-foreground: #1c1006;
 
   --color-secondary: #292524;
   --color-secondary-foreground: #fafaf9;
@@ -51,10 +51,10 @@
   /* Tight shadow for selected tiles: stays within ~6px so it is never
      clipped by scroll containers */
   --shadow-active:
-    0 1px 2px rgb(28 25 23 / 0.16), 0 3px 8px -3px rgb(184 84 26 / 0.45);
+    0 1px 2px rgb(28 25 23 / 0.16), 0 3px 8px -3px rgb(240 138 62 / 0.45);
   /* Soft brand glow for standalone primary elements */
   --shadow-glow:
-    0 1px 2px rgb(28 25 23 / 0.12), 0 6px 16px -6px rgb(184 84 26 / 0.5);
+    0 1px 2px rgb(28 25 23 / 0.12), 0 6px 16px -6px rgb(240 138 62 / 0.5);
 
   --radius-soft: 0.75rem;
   --radius-card: 1.25rem;
@@ -135,11 +135,6 @@
 
   .dark {
     color-scheme: dark;
-
-    /* Brighter amber reads better on dark; paired with dark text */
-    --color-primary: #f08a3e;
-    --color-primary-hover: #f49b57;
-    --color-primary-foreground: #1c1006;
 
     --color-secondary: #e7e5e4;
     --color-secondary-foreground: #1c1917;
@@ -337,11 +332,11 @@
  */
 @utility cc-splash {
   --cc-splash-background: #f7f6f4;
-  --cc-splash-primary: #b8541a;
-  --cc-splash-primary-foreground: #ffffff;
+  --cc-splash-primary: #f08a3e;
+  --cc-splash-primary-foreground: #1c1006;
   --cc-splash-text: #1c1917;
   --cc-splash-muted: rgb(28 25 23 / 0.62);
-  --cc-splash-shadow: rgb(184 84 26 / 0.5);
+  --cc-splash-shadow: rgb(240 138 62 / 0.5);
 
   position: fixed;
   inset: 0;
@@ -358,8 +353,6 @@
 
   &[data-theme="dark"] {
     --cc-splash-background: #0f0e0d;
-    --cc-splash-primary: #f08a3e;
-    --cc-splash-primary-foreground: #1c1006;
     --cc-splash-text: #f5f4f2;
     --cc-splash-muted: rgb(245 244 242 / 0.62);
     --cc-splash-shadow: rgb(240 138 62 / 0.35);

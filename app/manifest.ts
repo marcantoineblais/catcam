@@ -8,7 +8,8 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     start_url: "/",
     display: "standalone",
     background_color: "#f7f6f4",
-    theme_color: "#b8541a",
+    // Android colors the system bars of the installed app with it
+    theme_color: "#f7f6f4",
     icons: [
       {
         src: "/pwa/icon-192.png",
